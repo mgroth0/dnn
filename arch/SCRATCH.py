@@ -10,7 +10,7 @@ from tensorflow.keras.layers import BatchNormalization
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras import backend as K
 
-from lib.nn.symnet import SymNet
+from arch.symnet import SymNet
 
 class ScratchNet(SymNet):
     def ARCH_LABEL(cls): return "SCRATCH"

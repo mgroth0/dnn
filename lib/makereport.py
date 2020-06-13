@@ -1,11 +1,11 @@
 # EXP_GROUP__FOLDER_NAME =
 import argparse
 
-from JsonSerializable import obj
-from figapi import APIDict
-from makereport_lib import update_report, PUBLIC_URL, upload_webpage
-from web import HTMLDoc, Hyperlink, Br
-from web_widgets import FigureTable
+from lib.figs.JsonSerializable import obj
+from lib.figapi import APIDict
+from lib.makereport_lib import update_report, PUBLIC_URL, upload_webpage
+from lib.web import HTMLDoc, Hyperlink, Br
+from lib.web_widgets import FigureTable
 from lib.defaults import *
 TABLE_OF_CONTENTS_URL = None
 
@@ -24,8 +24,8 @@ EXP_GROUP_NAMES = listfilt(
 # EXP_GROUP_NAMES = []
 
 MR_API = APIDict('makereport')
-def main(prune=False):
-    log('running makereport')
+@log_invokation
+def main(prune):
     contents = []
     private_contents = []
     newPubURL = 'https://www.wolframcloud.com/obj/mjgroth/dnn/index.html'
@@ -143,10 +143,3 @@ def get_report(md, fig_folder, exp_name, api: APIDict = None, index_url=PUBLIC_U
 
     doc.js = api.js()
     return doc
-
-if __name__ == '__main__':
-    initFun.register_exception_handler()
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--prune', type=bool, required=False, default=False)
-    _FLAGS = parser.parse_args()
-    main(prune=_FLAGS.prune)

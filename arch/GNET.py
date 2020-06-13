@@ -1,15 +1,15 @@
+# credits to joel
 from __future__ import print_function
 
 from tensorflow.keras.layers import Activation, AveragePooling2D, Concatenate, Dropout, Flatten, Input, \
     MaxPooling2D, ZeroPadding2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.regularizers import l2
-from tensorflow.keras import backend as K
+from tensorflow.keras import backend as K, layers
 from tensorflow.python.keras.utils.conv_utils import convert_kernel
+from tensorflow.python.layers.base import Layer
 
-from lib.nn.arch.joel.lrn import LRN
-from lib.nn.arch.joel.pool_helper import PoolHelper
-from lib.nn.symnet import SymNet, data_folder
+from arch.symnet import SymNet, data_folder
 
 class GoogleNet(SymNet):
     def ARCH_LABEL(cls): return "GNET"
@@ -17,9 +17,9 @@ class GoogleNet(SymNet):
     def HEIGHT_WIDTH(self):
         return 224
     INTER_LAY = -13
-    def __init__(self, max_num_classes=2,weights_path=data_folder.resolve('googlenet_weights_permute.h5').abspath, batch_normalize=False):
+    def __init__(self, max_num_classes=2,weights_path=data_folder.resolve('googlenet_weights_permute.h5').abspath, batch_normalize=False,*args,**kwargs):
         self.weights_path = weights_path
-        super(GoogleNet, self).__init__(max_num_classes,batch_normalize)
+        super(GoogleNet, self).__init__(max_num_classes,batch_normalize,*args,**kwargs)
 
     def build_model(self):
         # creates GoogLeNet a.k.a. Inception v1 (Szegedy, 2015)
@@ -304,3 +304,55 @@ class GoogleNet(SymNet):
                 layer.kernel.assign(converted_w)
 
         return googlenet
+
+
+
+class LRN(Layer):
+
+    def __init__(self, alpha=0.0001, k=1, beta=0.75, n=5, **kwargs):
+        self.alpha = alpha
+        self.k = k
+        self.beta = beta
+        self.n = n
+        super(LRN, self).__init__(**kwargs)
+
+    def call(self, x, mask=None):
+        b, r, c, ch = x.shape
+        half_n = self.n // 2 # half the local region
+        input_sqr = K.square(x) # square the input
+        if K.backend() == 'theano':
+            # make an empty tensor with zero pads along channel dimension
+            zeros = T.alloc(0., b, ch + 2*half_n, r, c)
+            # set the center to be the squared input
+            input_sqr = T.set_subtensor(zeros[:, :, :, half_n:half_n+ch], input_sqr)
+        else:
+            input_sqr = tf.pad(input_sqr, [[0, 0], [0,0], [0, 0], [half_n, half_n]])
+        scale = self.k # offset for the scale
+        norm_alpha = self.alpha / self.n # normalized alpha
+        for i in range(self.n):
+            scale += norm_alpha * input_sqr[:, :, :, i:i+ch]
+        scale = scale ** self.beta
+        x = x / scale
+        return x
+
+    def get_config(self):
+        config = {"alpha": self.alpha,
+                  "k": self.k,
+                  "beta": self.beta,
+                  "n": self.n}
+        base_config = super(LRN, self).get_config()
+        return dict(list(base_config.items()) + list(config.items()))
+
+
+
+class PoolHelper(layers.Layer):
+    def __init__(self, **kwargs):
+        super(PoolHelper, self).__init__(**kwargs)
+
+    def call(self, x, mask=None):
+        return x[:, 1:, 1:, :]
+
+    def get_config(self):
+        config = {}
+        base_config = super(PoolHelper, self).get_config()
+        return dict(list(base_config.items()) + list(config.items()))

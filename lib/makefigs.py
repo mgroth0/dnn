@@ -1,28 +1,27 @@
 import argparse
 from collections import Counter
 
+from lib.boot import bootfun  # noqa
+
 from lib.figs.JsonSerializable import obj
-import initFun  # noqa
 from lib.defaults import *
-import lib.boot.loggy as loggy
 import lib.wolf.makefigslib as makefigslib
 from lib.wolf.makefigslib import getFigDats, wlexpr, wl
-from lib.wolf.wolf_lang import ImageSize, Background
-# from wolfpy import *
-
+from lib.wolf.wolf_lang import ImageSize
 # loggy.initTic()
 from lib.figs import *
 
+# from wolfpy import *
 
-def main(overwrite=False, root='figures2'):
+
+def main(overwrite=False, root=None):
     log(f'running makefigs overwrite={overwrite},root={root}')
-    makefigslib.ROOT_FOLDER = root
 
     makefigslib.init()
     # weval('<< src/main/wolfram/util.wl')
 
 
-    figDats = getFigDats()
+    figDats = getFigDats(root)
     log('got ' + str(len(figDats)) + ' figDats')
 
     # plots_made_count = 0
@@ -166,12 +165,3 @@ def lastFigurableFolder(compiled=False):
     if not compiled:
         figurableFolds = listfilt(lambda f: 'compile' not in f.name, figurableFolds)
     return figurableFolds[-1].abspath if len(figurableFolds) > 0 else None
-
-if __name__ == '__main__':
-    prep_log_file('dnn/makefigs')
-    initFun.register_exception_handler()
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--path', type=str, required=False, default=lastFigurableFolder(compiled=True))
-    parser.add_argument('--overwrite', required=False, action='store_true')
-    _FLAGS = parser.parse_args()
-    main(overwrite=_FLAGS.overwrite, root=_FLAGS.path)

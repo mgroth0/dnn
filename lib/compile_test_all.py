@@ -1,15 +1,14 @@
 import argparse
 import copy
 
-from TableData import ConfusionMatrix
-from cta_lib import *
-import initFun
-initFun.addSysPaths()
+from lib.figs.TableData import ConfusionMatrix
+from lib.cta_lib import *
+from lib.boot import bootfun
 from lib.defaults import *
-import loggy
-import makefigs
+from lib.boot import loggy
+from lib import makefigs
 
-def main(root_folder, overwrite=False):
+def main(root_folder, overwrite):
     log('running compile_test_all for ' + str(root_folder))
     COLORS = {
         'SCRATCH': [1, 0, 0],
@@ -130,30 +129,8 @@ def main(root_folder, overwrite=False):
                     res.j)
 
     log('finished compilation, running makefigs')
-    makefigs.main(root=compile_root.abspath, overwrite=overwrite)
+    makefigs.dnn(root=compile_root.abspath, overwrite=overwrite)
     log('finished makefigs, back in compile_test_all')
     final_t = log('done with compile_test_all!')
     File('_logs/timelog.txt').append(f'{round(final_t)}\t\t{root_folder.name}\n')
     reloadIdeaFilesFromDisk()
-
-
-if __name__ == '__main__':
-    initFun.register_exception_handler()
-    # if loggy.ticTime is None:
-    #     with open('bin/tic.txt', 'r') as myfile:
-    #         data = myfile.read().replace('\n', '')
-    #
-    #     setTic(long(data) * 1000)
-    #
-    #     log('got tic')
-
-    prep_log_file('dnn/compile_test_all')
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('--path', type=str, required=False, default=makefigs.lastFigurableFolder())
-    parser.add_argument('--overwrite', type=str, required=False, default=False)
-
-    _FLAGS = parser.parse_args()
-
-    main(root_folder=_FLAGS.path, overwrite=_FLAGS.overwrite)

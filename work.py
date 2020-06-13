@@ -7,6 +7,7 @@ import os
 # spec.loader.exec_module(initFun)
 from lib.boot import bootfun as initFun
 FLAGS = initFun.margparse(
+    cfg=str,
     para=str,
     tic=int,
     gpus=str,

@@ -2,14 +2,16 @@ from lib.boot.loggy import log
 from lib.misc.mutil import File, Temp
 from lib.nn.gen_preproc_ims import SymClassGroup, gen_images, get_class_dict
 
-def nn_gen(FLAGS, folder, num_gpus=4):
+def nn_gen(FLAGS, folder,
+           num_gpus=4,
+           TRAINING_SET_SIZES=(25, 50, 100, 150, 200, 1000),
+           EVAL_SIZE=500,
+           RSA_SIZE_PER_CLASS=10
+           ):
     import lib.nn.nnstate as nnstate
     nnstate.FLAGS = FLAGS
 
     # TEST_BANDS = [0,2,4,6,-4,]
-    TRAINING_SET_SIZES = (25, 50, 100, 150, 200) #1000
-    EVAL_SIZE = 500 # 5000
-    RSA_SIZE_PER_CLASS = 10
 
     TEST_BANDS = [
         SymClassGroup(0, False),
@@ -55,9 +57,8 @@ def nn_gen(FLAGS, folder, num_gpus=4):
     trainFold = folder.resolve('Training')
 
     gen_images(NUM_PAWAN_TEST_IMAGES, test_classes, bands=TEST_BANDS, folder=rsaFold)
+    gen_images(EVAL_SIZE * len(TEST_BANDS) * 2 ,             test_classes, bands=TEST_BANDS, folder=testFold)
 
-
-    gen_images(EVAL_SIZE, test_classes, bands=TEST_BANDS, folder=testFold)
     classes = get_class_dict(bands=bands)
     for n in TRAINING_SET_SIZES:
         size = n * 2 * len(bands)

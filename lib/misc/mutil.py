@@ -23,6 +23,7 @@ import pexpect
 from pexpect import TIMEOUT
 from scipy.io import loadmat, savemat
 from scipy.signal import butter, lfilter
+import yaml
 
 from ..boot import loggy
 from ..boot.bootutil import pwd
@@ -281,9 +282,10 @@ def log_instance_invokation(ff):
 
 def log_invokation(ff):
     def f(*args, **kwargs):
-        log(f'Invoking {ff.__name__}()...')
-        ff(*args, **kwargs)
-        log(f'Finished {ff.__name__}()!')
+        log(f'Invoking {ff.__name__}()...', ref=1)
+        r = ff(*args, **kwargs)
+        log(f'Finished {ff.__name__}()!', ref=1)
+        return r
     return f
 
 
@@ -417,6 +419,7 @@ class File(os.PathLike):
         else:
             self.isSSH = 'test-3' in abspath
         self.abspath = abspath
+        self.relpath = os.path.relpath(abspath, os.getcwd())
         self.name = os.path.basename(abspath)
         _, dot_extension = os.path.splitext(abspath)
         self.ext = dot_extension.replace('.', '')
@@ -463,11 +466,13 @@ class File(os.PathLike):
         return shutil.copyfile(self, dest)
 
     def load(self, as_object=False):
-        log('loading ' + self.abspath)
+        log('Loading ' + self.abspath, ref=1)
         if self.ext == 'edf':
             import mne
             import HEP_lib
             return HEP_lib.MNE_Set_Wrapper(mne.io.read_raw_edf(self.abspath, preload=False))
+        elif self.ext in ['yml', 'yaml']:
+            return yaml.load(self.read(), Loader=yaml.FullLoader)
         elif self.ext == 'set':
             import HEP_lib
             return HEP_lib.MNE_Set_Wrapper(mne.io.read_raw_eeglab(self.abspath, preload=False))
@@ -1508,22 +1513,18 @@ ignore = Path {plot.png}
         p = SSHProcess(com)
 
         def finishSync():
-        # # this has to be called or it will block
+            # # this has to be called or it will block
             if p.alive():
                 p.readlines()
                 p.wait()
                 f.__exit__()
         atexit.register(finishSync)
 
-
-
         p.login()
-
-
 
         p.interact()
 
-        f.__exit__(None,None,None)
+        f.__exit__(None, None, None)
 
 
 

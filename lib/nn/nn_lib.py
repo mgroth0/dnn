@@ -149,7 +149,7 @@ def RSA(nam, rep, y_true, ei, layer_name=None, layer_i=None):
     classes = []
 
     inter_activations = rep.tolist()
-    import nnstate
+    from lib.nn import nnstate
     TEST_CLASS_MAP = nnstate.CURRENT_TRUE_MAP
 
     alpha_keys = sort_human(list(TEST_CLASS_MAP.keys()))

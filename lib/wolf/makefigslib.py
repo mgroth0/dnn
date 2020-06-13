@@ -3,7 +3,6 @@ from lib.wolf.wolf_lang import *
 bg = None
 bgi = None
 
-ROOT_FOLDER = 'figures2'
 
 DEFAULT_TICK_SIZE = 15
 
@@ -66,7 +65,7 @@ def defaultPlotOptions(fd):
 
 this_exps = ''
 
-def getFigDats():
+def getFigDats(ROOT_FOLDER):
     files = []
     ids = []
     folders = []

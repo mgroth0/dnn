@@ -1,0 +1,2 @@
+#!/bin/sh
+exec "$HOME/miniconda3/envs/dnn/bin/python" "dnn.py" "$@"

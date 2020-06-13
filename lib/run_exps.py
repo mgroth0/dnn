@@ -1,36 +1,37 @@
-from PyQt5.QtCore import pyqtSignal, Qt, pyqtBoundSignal
+from PyQt5.QtCore import Qt, pyqtBoundSignal
 from PyQt5.QtGui import QFont
 
 from lib.misc.guiutil import SimpleApp
 import lib.run_exps_lib as run_exps_lib
 from lib.run_exps_lib import *
 from lib.defaults import *
-from exp_config import EXP_MOD
-
-exp_group_metadata = {}
-arch_md_strs = []
-archs = listmap(lambda e: e.arch, EXP_MOD.EXPS)
-if 'ALEX' in archs:
-    arch_md_strs.append('\tALEX = AlexNet (pre-trained on ImageNet)')
-if 'GNET' in archs:
-    arch_md_strs.append('\tGNET = GoogleNet (pre-trained on ImageNet)')
-if 'INC' in archs:
-    arch_md_strs.append('\tINC = Inception ResNet V2 (pre-trained on ImageNet)')
-if 'SCRATCH' in archs:
-    arch_md_strs.append('\tSCRATCH = ResNet18 (untrained)')
-
-exp_group_metadata['archs'] = arch_md_strs
-
-exp_group_metadata['nrepeats'] = EXP_MOD.REPEAT_ALL
-exp_group_metadata['nepochs'] = EXP_MOD.EPOCHS
-exp_group_metadata['batchsize'] = EXP_MOD.BATCH_SIZE
-exp_group_metadata['ntrainims'] = EXP_MOD.NTRAIN
-exp_group_metadata['normalized'] = EXP_MOD.NORM_TRAIN_IMS
 
 
 
-def main(run_exp_args,remote=False,gui=True):
-    log('starting run_exps.py')
+@log_invokation
+def main(cfg, remote=False, gui=True):
+    if not remote:
+        muscle = Muscle(num_gpus=0)
+    exp_group_metadata = {}
+    arch_md_strs = []
+    archs = listmap(lambda e: e.arch, cfg.EXPS)
+    if 'ALEX' in archs:
+        arch_md_strs.append('\tALEX = AlexNet (pre-trained on ImageNet)')
+    if 'GNET' in archs:
+        arch_md_strs.append('\tGNET = GoogleNet (pre-trained on ImageNet)')
+    if 'INC' in archs:
+        arch_md_strs.append('\tINC = Inception ResNet V2 (pre-trained on ImageNet)')
+    if 'SCRATCH' in archs:
+        arch_md_strs.append('\tSCRATCH = ResNet18 (untrained)')
+
+    exp_group_metadata['archs'] = arch_md_strs
+
+    exp_group_metadata['nrepeats'] = cfg.REPEAT_ALL
+    exp_group_metadata['nepochs'] = cfg.EPOCHS
+    exp_group_metadata['batchsize'] = cfg.BATCH_SIZE
+    exp_group_metadata['ntrainims'] = cfg.NTRAIN
+    exp_group_metadata['normalized'] = cfg.NORM_TRAIN_IMS
+
 
     def pingChecker():
         f = File('_logs/local/pingchecker.log')
@@ -53,8 +54,8 @@ def main(run_exp_args,remote=False,gui=True):
 
     jobs = [Job(
         {
-            'para'        : run_exp_args[0],
-            'tic'         : run_exp_args[1],
+            'para'        : cfg.para,
+            'tic'         : cfg.tic,
 
             'expid'       : '0',
 
@@ -63,62 +64,74 @@ def main(run_exp_args,remote=False,gui=True):
 
             'pipeline'    : ''.replace(' ', ''),
 
-            'epochs'      : EXP_MOD.EPOCHS,
+            'epochs'      : cfg.EPOCHS,
             'batchsize'   : 0,
-            'verbose'     : EXP_MOD.VERBOSE,
+            'verbose'     : cfg.VERBOSE,
             'normtrainims': False,
 
-            'deletenorms' : EXP_MOD.OVERWRITE_NORMS,
-            'gen'         : EXP_MOD.REGEN_DATA  # implies kill
+            'deletenorms' : cfg.OVERWRITE_NORMS,
+            'gen'         : cfg.REGEN_DATA  # implies kill
         },
+        exp_cfg_o=obj({
+            'gen_cfg': {
+                'num_gpus'          : max(len(listkeys(muscle.GPU_IN_USE)), 2),
+                'TRAINING_SET_SIZES': cfg.NTRAIN,
+                'EVAL_SIZE'         : cfg.eval_nperc,
+                'RSA_SIZE_PER_CLASS': cfg.rsa_nperc,
+            },
+            'root': cfg.root
+        }),
         gpus=None,  # actually set to use all 4 below
         commands=[
-            "rm -rf figures2",
+            "rm -rf " + cfg.root,
             "find . -name \"*.pyc\" -exec rm -f {} \\;",
             "pkill -f miniconda3",
             "pkill -f MATLAB"
         ] if not remote else [],
-        interact_with_nrc=EXP_MOD.INTERACT,
+        interact_with_nrc=cfg.INTERACT,
         remote=remote
     )]
     exp_id_file = File('_metastate.json')
-    old = EXP_MOD.EXPS
-    EXP_MOD.EXPS = []
-    for i in range(EXP_MOD.REPEAT_ALL):
+    old = cfg.EXPS
+    cfg.EXPS = []
+    for i in range(cfg.REPEAT_ALL):
         for j in old:
-            EXP_MOD.EXPS += [j]
-    for e in EXP_MOD.EXPS:
-        for ntrain in EXP_MOD.NTRAIN:
+            cfg.EXPS += [j]
+    for e in cfg.EXPS:
+        for ntrain in cfg.NTRAIN:
             exp_id = str(exp_id_file["next_exp_id"])
             exp_id_file["next_exp_id"] = int(exp_id) + 1
             jobs.append(Experiment(
                 {
-                    'para'        : run_exp_args[0],
-                    'tic'         : run_exp_args[1],
+                    'para'        : cfg.para,
+                    'tic'         : cfg.tic,
 
                     'expid'       : exp_id,
 
                     'arch'        : e.arch,
                     'ntrain'      : ntrain,
 
-                    'pipeline'    : EXP_MOD.PIPELINE.replace(' ', ''),
+                    'pipeline'    : cfg.PIPELINE.replace(' ', ''),
 
-                    'epochs'      : EXP_MOD.EPOCHS,
-                    'batchsize'   : EXP_MOD.BATCH_SIZE,
-                    'verbose'     : EXP_MOD.VERBOSE,
-                    'normtrainims': EXP_MOD.NORM_TRAIN_IMS,
+                    'epochs'      : cfg.EPOCHS,
+                    'batchsize'   : cfg.BATCH_SIZE,
+                    'verbose'     : cfg.VERBOSE,
+                    'normtrainims': cfg.NORM_TRAIN_IMS,
 
                     'deletenorms' : False,
                     'gen'         : False  # implies kill
                 },
+                exp_cfg_o=obj({
+                    'root': cfg.root
+                }),
                 gpus=e.gpus,  # [0,1,2,3] if RUN_EXPS_IN_SERIAL else
-                interact_with_nrc=EXP_MOD.INTERACT,
+                interact_with_nrc=cfg.INTERACT,
                 remote=remote
             ))
 
     run_exps_lib.Job.TOTAL_TODO = len(jobs)
 
-    jobs[0].run([0, 1, 2, 3])
+    muscle.runjob(jobs[0], listkeys(muscle.GPU_IN_USE))
     exps = jobs[1:]
 
     def all_done():
@@ -197,7 +210,7 @@ def main(run_exp_args,remote=False,gui=True):
             f'''echo "CPU `LC_ALL=C top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\\1/" | awk '{{print 100 - $1}}'`% RAM `free -m | awk '/Mem:/ {{ printf("%3.1f%%", $3/$2*100) }}'` HDD `df -h / | awk '/\// {{print $(NF-1)}}'`"; echo ${DONE_VAR}''')
         log('SENT CPU LINE')
         report += cpu_report
-        cpu_report=''
+        cpu_report = ''
         while True:
             line = statusP.readline_nonblocking(1)
             if line is None or DONE_STR in line: break
@@ -210,9 +223,9 @@ def main(run_exp_args,remote=False,gui=True):
             cpu_perc = float(cpu_stuff[1])
             ram_perc = float(cpu_stuff[3])
             hdd_perc = float(cpu_stuff[5])
-            cpu_report = f'\nCPU\t{insertZeros(cpu_perc,4)}% {Progress.prog_bar(cpu_perc, BAR_LENGTH=REP_BAR_LENGTH)}'
-            cpu_report += f'\nRAM\t{insertZeros(ram_perc,4)}% {Progress.prog_bar(ram_perc, BAR_LENGTH=REP_BAR_LENGTH)}'
-            cpu_report += f'\nHDD\t{insertZeros(hdd_perc,4)}% {Progress.prog_bar(hdd_perc, BAR_LENGTH=REP_BAR_LENGTH)}'
+            cpu_report = f'\nCPU\t{insertZeros(cpu_perc, 4)}% {Progress.prog_bar(cpu_perc, BAR_LENGTH=REP_BAR_LENGTH)}'
+            cpu_report += f'\nRAM\t{insertZeros(ram_perc, 4)}% {Progress.prog_bar(ram_perc, BAR_LENGTH=REP_BAR_LENGTH)}'
+            cpu_report += f'\nHDD\t{insertZeros(hdd_perc, 4)}% {Progress.prog_bar(hdd_perc, BAR_LENGTH=REP_BAR_LENGTH)}'
 
             report += cpu_report
         else:
@@ -228,27 +241,29 @@ def main(run_exp_args,remote=False,gui=True):
             signal.emit('Preparing to run all jobs...')
         else:
             log('Preparing to run all jobs...')
-        t = None #in case no exps
+        t = None  # in case no exps
         while not all_done():
             t = time.time()
             if t >= next_report['']:
                 report(signal, t)
             for e in exps:
                 if not e.started:
-                    gpus_avail = []
-                    for g in list(GPU_IN_USE.keys()):
-                        if not GPU_IN_USE[g]:
-                            gpus_avail.append(g)
-                    if len(gpus_avail) >= e.gpus:
-                        use_gpus = gpus_avail[0:e.gpus]
-                        e.run(use_gpus, a_sync=not EXP_MOD.RUN_EXPS_IN_SERIAL)
+                    if len(listkeys(muscle.GPU_IN_USE)) == 0:
+                        muscle.runjob(e, [], a_sync=False)
                     else:
-                        break
+                        gpus_avail = []
+                        for g in list(muscle.GPU_IN_USE.keys()):
+                            if not muscle.GPU_IN_USE[g]:
+                                gpus_avail.append(g)
+                        if len(gpus_avail) >= e.gpus:
+                            use_gpus = gpus_avail[0:e.gpus]
+                            muscle.runjob(e, use_gpus, a_sync=not cfg.RUN_EXPS_IN_SERIAL)
+                        else:
+                            break
             time.sleep(0.1)
         report(signal, t)  # one last report when all are done
 
         [e.wait() for e in exps]  # wait 1
-
 
         if signal is not None:
             log('quiting app')
@@ -278,22 +293,12 @@ def main(run_exp_args,remote=False,gui=True):
     else:
         run_all_jobs(None)
 
-
     [e.wait() for e in exps]  # wait 2, after app exits. Should not be needed.
     Job.kill_all_jobs()  # should not be needed, but just in case
 
-    log('finished run_exps.py')
     # File('exp_group_name.txt').write(EXP_GROUP_NAME)
     rr = ''
-    if EXP_MOD.SAVE_DATA: rr = rr + 'SAVE'
-    if EXP_MOD.GET_LOGS: rr = rr + 'LOG'
+    if cfg.SAVE_DATA: rr = rr + 'SAVE'
+    if cfg.GET_LOGS: rr = rr + 'LOG'
 
     return rr
-
-if __name__ == '__main__':
-    prep_log_file('dnn/run_exps')
-    if len(sys.argv) > 1:
-        args = sys.argv[1:]
-    else:
-        args = []
-    main(args)

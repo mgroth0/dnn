@@ -1,21 +1,22 @@
+from lib import getfigdata
 import lib.boot
-from lib.boot.bootfun import margparse
 from lib.defaults import *
+from lib.figs.JsonSerializable import obj
 from lib.gui import answer_request
 from lib.misc.google_compute import gcloud_config
 
-
-def main(
-        FLAGS
+@log_invokation
+def dnn(
+        cfg
 ):
-    mode = FLAGS.mode
+    TEMP_FIGS_FODLER = cfg.root
+    mode = cfg.MODE
     FULL = 'FULL' in mode
-    log('starting pushr')
     if 'CLEAN' in mode or FULL:
         shell('pkill -f miniconda3')
         shell('pkill -f MATLAB')
-    import exec.run_exps as run_exps
-    if FULL and run_exps.EXP_MOD.SAVE_DATA:
+    import lib.run_exps as run_exps
+    if FULL and cfg.SAVE_DATA:
         metastate = File("_metastate.json")
         def check(a):
             figs_folder = get_figs_folder(a)
@@ -26,7 +27,7 @@ def main(
                 return (True,)
         figsFolder = answer_request.answer_request(metastate["last_submitted_exp_group_name"], "Experiment Name:",
                                                    check,
-                                                   gui=FLAGS.gui)
+                                                   gui=cfg.GUI)
         metastate["last_submitted_exp_group_name"] = figsFolder
         figsFolder = File(figsFolder).abspath
 
@@ -36,7 +37,7 @@ def main(
         log('figsFolder=$', figsFolder)
     if 'CLEAN' in mode or FULL:
         log('cleaning')
-        File('figures2').deleteIfExists()
+        File(TEMP_FIGS_FODLER).deleteIfExists()
         File('_logs/local/dnn').deleteIfExists()
         File('_logs/remote/dnn').deleteIfExists()
     if FULL or 'JUSTRUN' in mode or 'PUSH' in mode:
@@ -46,7 +47,7 @@ def main(
         # File(pwd()+'/bin/tic.txt').write(d)
         log('pushing')
 
-        if FLAGS.muscle != 'LOCAL':
+        if cfg.MUSCLE != 'local':
             gcloud_config()
 
             # this used to just readlines instead of interact. might break if no terminal?
@@ -83,36 +84,38 @@ def main(
 
         if FULL or 'JUSTRUN' in mode:
             log('running in gc')
-            result = run_exps.main([sys.argv[1], str(d)], remote=FLAGS.muscle != 'LOCAL',gui=FLAGS.gui)
+            cfg.para = 'whatever'
+            cfg.tic = str(d)
+            result = run_exps.main(cfg, remote=cfg.MUSCLE != 'local', gui=cfg.GUI)
             log('finished justrun with result: $', result)
             log('getting any results')
 
     if 'GETANDMAKE' in mode or (FULL and 'SAVE' in result):
         if mode != FULL:
-            gcloud_config()
+            if cfg.MUSCLE != 'local':
+                gcloud_config()
             result = 'SAVELOG'
         if 'SAVE' in result:
+            getfigdata.main(result,TEMP_FIGS_FODLER,cfg)
             log("should call make figs next")
             # bin/makefigs overwrite
             from lib import makefigs
-            makefigs.main(overwrite=False)
+            makefigs.main(overwrite=False,root = TEMP_FIGS_FODLER)
 
         log('got result arg: ' + result)
-    log('between getandmake and compile_test_all')
     if FULL and 'SAVE' in result:
-        File('figures2').moveto(figsFolder)
+        File(TEMP_FIGS_FODLER).moveto(figsFolder)
         File(figsFolder).resolve('metadata.json').save(run_exps.exp_group_metadata)
         if FULL or 'COMPILE_TEST_ALL' in mode:
-            import compile_test_all
-            compile_test_all.main(figsFolder)
+            from lib import compile_test_all
+            compile_test_all.dnn(figsFolder)
         # shell('/Users/matt/miniconda3/bin/python3 bin/compile_test_all.py ' + figsFolder).interact()
 
         if FULL or 'MAKEREPORT' in mode:
             import makereport
-            makereport.main()
+            makereport.dnn()
         log('finished makereport')
 
-    log('finished pushr')
 # returns None if name was already used
 FIGS_FOLDER = File('_figs/figs_dnn')
 def get_figs_folder(nameRequest):
@@ -126,13 +129,47 @@ def get_figs_folder(nameRequest):
     return FIGS_FOLDER.resolve(f'{next_num + 1}-{nameRequest}')
 if __name__ == '__main__':
     lib.boot.bootfun.register_exception_handler()
-    main(margparse(
-        mode=str,
-        muscle=str,
-        gui=int
-        # FULL=int,
-        # CLEAN=int,
-        # JUSTRUN=int,
-        # GETANDMAKE=int,
-        # MAKEREPORT=int
-    ))
+    kmscript('activate run tool window')
+
+    prof = 'default'
+    cfg = 'default'
+
+    changes = {}
+
+    if len(sys.argv) > 1:
+        for a in sys.argv[1:]:
+            if a.startswith('--'):
+                k, v = tuple(a.replace('--', '').split('='))
+                changes[k] = v
+            elif a.startswith('-'):
+                k, v = tuple(a.replace('-', '').split('='))
+                if k == 'prof':
+                    prof = v
+                elif k == 'cfg':
+                    cfg = v
+                else:
+                    err('arguments with one dash (-) need to be prof= or cfg=')
+            else:
+                err(f'invalid argument:{a} please see README')
+
+    yml = File('cfg.yml').load()
+    prof = yml['profiles'][prof]
+    cfg = yml['configs'][cfg]
+
+    if 'NTRAIN' in listkeys(cfg):
+        prof_ntrain = prof['NTRAIN']
+        for i, n in enum(cfg['NTRAIN']):
+            if isstr(n) and n[0] == 'i':
+                cfg['NTRAIN'][i] = prof_ntrain[int(n[1])]
+
+    cfg = {**prof, **cfg}
+
+    for k, v in listitems(changes):
+        if k not in listkeys(cfg):
+            err(f'invalid -- arguments: {k}, please see cfg.yml for configuration options')
+        cfg[k] = v
+
+    # hardcoded cfg
+    cfg['root'] = '_figures'
+
+    dnn(obj(cfg))

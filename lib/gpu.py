@@ -52,7 +52,12 @@ import os
 def mygpus():
     if "CUDA_VISIBLE_DEVICES" not in list(os.environ.keys()):
         return "all?"
-    return list(map(int, os.environ["CUDA_VISIBLE_DEVICES"].split(',')))
+    else:
+        devs = os.environ["CUDA_VISIBLE_DEVICES"]
+        if devs == '':
+            return []
+        else:
+            return list(map(int, devs.split(',')))
 def gpu_mem_str():
     devices = mygpus()
     if isinstance(devices, str): return devices

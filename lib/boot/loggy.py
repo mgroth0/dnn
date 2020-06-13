@@ -1,7 +1,7 @@
 import os
 import time
 
-from ..mynvidia import gpu_mem_str
+from ..gpu import gpu_mem_str
 from ..vals import USE_THREADING
 ticTime = None
 LOG_FILE = None
@@ -66,7 +66,7 @@ def prep_log_file(filename, new=False):
         LOG_FILE.delete()
     LOG_FILE.mkparents()
     LOG_FILE.touch()
-    print('initialized LOG_FILE:' + str(LOG_FILE))
+    log(f'Initialized log file: {mutil.File(LOG_FILE).relpath}')
 
 def setTic(t):
     global ticTime
@@ -126,7 +126,7 @@ mac = platform.system() == 'Darwin'
 
 
 
-def get_log_info(ss, *args):
+def get_log_info(ss, *args,ref=0):
     global STARTED_GPU_INFO_THREAD, gpu_q, latest_gpu_str
     if not mac and not STARTED_GPU_INFO_THREAD:
         STARTED_GPU_INFO_THREAD = True
@@ -140,7 +140,6 @@ def get_log_info(ss, *args):
     # print('log time 1: ' + str(time.time() - t_start))
 
     if LOG_FILE is None:
-        print('auto-prepping log file')
         prep_log_file(None)
 
     # print('log time 2: ' + str(time.time() - t_start))
@@ -168,7 +167,7 @@ def get_log_info(ss, *args):
     if len(stack) == 1:
         file = 'MATLAB'
     else:
-        file = os.path.basename(stack[-3][0]).split('.')[0]
+        file = os.path.basename(stack[-3 - ref][0]).split('.')[0]
 
     # print('log time 6: ' + str(time.time() - t_start))
     # except:
@@ -202,8 +201,8 @@ def get_log_info(ss, *args):
 
     return line, file_line, t
 
-def log(ss, *args, silent=False):
-    line, file_line, v = get_log_info(ss, *args)
+def log(ss, *args, silent=False,ref=0):
+    line, file_line, v = get_log_info(ss, *args,ref=ref)
 
     if not silent:
         print(line)

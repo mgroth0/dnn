@@ -89,7 +89,9 @@ def gen_images(N_IMAGES, classes, bands, folder):
             label = ns_classname
 
         im_data = np.expand_dims(im_data, 2)
-        im_data = np.concatenate((im_data, im_data, im_data), axis=2)
+
+        # i think Darius' data was single channeled
+        # im_data = np.concatenate((im_data, im_data, im_data), axis=2)
 
         im_file = File(f'{folder.abspath}/{label}/sym{i}.png')
         im_file.save(im_data, silent=True)
@@ -124,7 +126,6 @@ def getReal(
             (20, 20, 3)
         )
     if normalize_single_ims and not USING_STD_DIR:
-        err('dev: smallify if files are large but blocky')
         def smallify():
             err('dev')
             files = glob.glob(sys.argv[1] + "/**/*.png", recursive=True)
@@ -139,6 +140,7 @@ def getReal(
             log('resized ' + str(i) + ' images')
             import os
             os._exit(0)
+        assert len(real.data.getdata()) == 20 * 20, 'dev: smallify if files are large but blocky'
         real.data = np.reshape(
             arr(
                 real.data.getdata()

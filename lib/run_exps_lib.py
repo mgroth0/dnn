@@ -6,12 +6,7 @@ import lib.misc.google_compute as google_compute
 # intercept.MULTI_INTERCEPT = True
 from lib.defaults import *
 
-GPU_IN_USE = {
-    0: False,
-    1: False,
-    2: False,
-    3: False
-}
+
 
 
 class Job:
@@ -21,13 +16,14 @@ class Job:
     next_instance_mindex = 1
     def __init__(self,
                  exp_args: dict,
+                 exp_cfg_o,
                  gpus=(),
                  commands=(),
                  interact_with_nrc=False,
                  remote=False
                  ):
         self.remote = remote
-
+        self.exp_cfg_j = json.dumps(exp_cfg_o.toDict()).replace('"', '\\"')
         self.commands = commands
 
         self.interact_with_nrc = interact_with_nrc
@@ -87,12 +83,12 @@ class Job:
 
     def status(self): return Job.JobStatus(self)
     @log_instance_invokation
-    def run(self, gpus_to_use, a_sync=False):
-        for g in gpus_to_use: GPU_IN_USE[g] = True
+    def run(self, gpus_to_use, muscle, a_sync=False):
         self.started = True
         self.start_time = time.time()
         self.using_gpus = gpus_to_use
         nrc_args = [f'--gpus={"".join(strs(gpus_to_use))}'] + self.main_args
+        nrc_args += [f"--cfg=\"\"\"{self.exp_cfg_j}\"\"\""]
         if self.remote:
             p = google_compute.gc(AUTO_LOGIN=True)
             p.cd("~/mitili")
@@ -127,9 +123,9 @@ class Job:
                             break
             p.log_to_stdout(fun=save_last_log, o=self)
         if a_sync:
-            run_in_thread(self.inter_p_wrap, args=(p, gpus_to_use))
+            run_in_thread(self.inter_p_wrap, args=(p, gpus_to_use, muscle))
         else:
-            self.inter_p_wrap(p, gpus_to_use)
+            self.inter_p_wrap(p, gpus_to_use, muscle)
 
 
     def run_time_str(self):
@@ -140,10 +136,9 @@ class Job:
         else:
             return min_sec_form(self.end_time - self.start_time)
 
-    def inter_p_wrap(self, p, gpus_im_using):
+    def inter_p_wrap(self, p, gpus_im_using, muscle):
         if not self.interact_with_nrc:
             log('waiting for child...')
-            # pdb.set_trace()
             r = p.expect(["NRC IS FINISHED", pexpect.EOF, 'ERROR ERROR ERROR'])
             log({
                     0: 'run_exps got a success',
@@ -157,7 +152,7 @@ class Job:
         print(f'Finished Job {self} ({Job.TOTAL_FINISHED}/{Job.TOTAL_TODO})')
         self.done = True
         self.end_time = time.time()
-        for g in gpus_im_using: GPU_IN_USE[g] = False
+        for g in gpus_im_using: muscle.GPU_IN_USE[g] = False
 
     def wait(self):
         while not self.done:
@@ -185,3 +180,11 @@ class Experiment(Job):
         return f'{super().__str__()}\tEXPID={self.expid}\t{arch_str}'
 
 
+class Muscle:
+    def __init__(self, num_gpus=0):
+        self.GPU_IN_USE = {}
+        for i in range(num_gpus):
+            self.GPU_IN_USE[i] = False
+    def runjob(self, j: Job, gpus_to_use, a_sync=False):
+        for g in gpus_to_use: self.GPU_IN_USE[g] = True
+        j.run(gpus_to_use, self, a_sync=a_sync)

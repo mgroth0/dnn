@@ -4,6 +4,10 @@ import tensorflow.keras as keras
 from tensorflow.keras.layers import Conv2D
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import BatchNormalization
+from tensorflow.python.keras import Input
+from tensorflow.python.keras.layers import Activation
+from tensorflow.python.keras.models import Model
+import tensorflow as tf
 from lib.nn.gen_preproc_ims import PreDataset
 import lib.nn.net_mets as net_mets
 import lib.nn.nnstate as nnstate
@@ -23,12 +27,12 @@ class SymNet(ABC):
 
     VERBOSE_MODE = 2  # 0=silent,1=progress bar,2=one line per epoch
     INTER_LAY = -2
-    def __init__(self, max_num_classes=2, batch_normalize=False,baby=False):
+    def __init__(self, max_num_classes=2, batch_normalize=False, proto=False):
         self.batch_normalize = batch_normalize
         self.max_num_classes = max_num_classes
         self.startTime = log('creating DNN: ' + self.__class__.__name__)
-        if baby:
-            self.net = self.build_baby_model()
+        if proto:
+            self.net = self.build_proto_model(max_num_classes)
         else:
             self.net = self.build_model()
         log('created DNN')
@@ -167,8 +171,15 @@ class SymNet(ABC):
     @abstractmethod
     def HEIGHT_WIDTH(cls): pass
 
-    @abstractmethod
-    def build_baby_model(self): pass
+    def build_proto_model(self, num_classes):
+        inputs = Input(shape=(self.HEIGHT_WIDTH(), self.HEIGHT_WIDTH(), 3))
+
+        flat = tf.keras.layers.Flatten()(inputs)
+        dense = Dense(num_classes+1)(flat)
+        prediction = Activation('softmax', name='softmax')(dense)
+        m = Model(inputs, prediction)
+        # breakpoint()
+        return m
 
     @abstractmethod
     def build_model(self): pass

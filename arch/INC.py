@@ -8,7 +8,7 @@ from tensorflow.keras import backend
 from tensorflow.keras import layers
 from tensorflow.keras import models
 # from tensorflow.keras import keras_utils
-from lib.nn.symnet import SymNet
+from arch.symnet import SymNet
 
 class IRNV2(SymNet):
     def ARCH_LABEL(cls): return "INC"

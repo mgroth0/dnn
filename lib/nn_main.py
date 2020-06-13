@@ -1,17 +1,18 @@
-import lib.data_saving
-from lib.mynvidia import mygpus
-import lib.nn.nn_plotting
-from lib.nn.arch.convnets.alexnet import AlexNet
-from lib.nn.arch.irnv2 import IRNV2
-from lib.nn.arch.joel.googlenet import GoogleNet
-from lib.nn.arch.scratchnet import ScratchNet
+import tensorflow as tf
+
+from lib import data_saving
+from lib.gpu import mygpus
+from arch.ALEX import AlexNet
+from arch.INC import IRNV2
+from arch.GNET import GoogleNet
+from arch.SCRATCH import ScratchNet
+from lib.nn import nn_plotting
 from lib.nn.gen_preproc_ims import *
 from lib.defaults import *
 from lib.nn.nnstate import reset_global_met_log
 from lib.data_saving import savePlotAndTableData, saveTestValResults
-from lib.nn.symnet import SymNet
+from arch.symnet import SymNet
 from lib.boot import nn_init_fun
-import tensorflow as tf
 def sym_net_main(FLAGS):
     log('running sym_net_main')
     import lib.nn.nnstate as nnstate
@@ -20,14 +21,25 @@ def sym_net_main(FLAGS):
     normalize_single_images = nnstate.FLAGS.normtrainims
 
     BASE_IMAGE_FOLDER = File(os.getcwd()).resolve('_images')
-    MY_DATA_FOLDER = File(BASE_IMAGE_FOLDER.abspath + '/gpu' + str(mygpus()[0]+1))
+    mygpufordata = mygpus()[0]+1 if not isempty(mygpus()) else 1
+    MY_DATA_FOLDER = File(BASE_IMAGE_FOLDER.abspath + '/gpu' + str(mygpufordata))
     MY_TRAIN_FOLDER = NN_Data_Dir(f'{MY_DATA_FOLDER.abspath}/Training/{FLAGS.ntrain}')
     MY_TEST_FOLDER = NN_Data_Dir(f'{MY_DATA_FOLDER.abspath}/Testing')
     MY_RSA_FOLDER = NN_Data_Dir(f'{MY_DATA_FOLDER.abspath}/ForMatt')
 
+    cfg_cfg = json.loads(FLAGS.cfg)
+    root = cfg_cfg['root']
+    data_saving.root = root
+
     if FLAGS.gen:
         from lib.nn import nn_gen
-        nn_gen.nn_gen(FLAGS, BASE_IMAGE_FOLDER, num_gpus=4)
+        gen_cfg = cfg_cfg['gen_cfg']
+        nn_gen.nn_gen(FLAGS, BASE_IMAGE_FOLDER,
+                      num_gpus=gen_cfg['num_gpus'],
+                      TRAINING_SET_SIZES=gen_cfg['TRAINING_SET_SIZES'],
+                      EVAL_SIZE=gen_cfg['EVAL_SIZE'],
+                      RSA_SIZE_PER_CLASS=gen_cfg['RSA_SIZE_PER_CLASS']
+                      )
         nn_init_fun.NRC_IS_FINISHED()  # must be invoked this way since value of function changes
     elif FLAGS.deletenorms:
         log('just deleting norm dirs...')
@@ -65,7 +77,7 @@ def sym_net_main(FLAGS):
             'SCRATCH': True
         }[FLAGS.arch],
         max_num_classes=len(listkeys(datasetTest.class_label_map)),
-        baby=get_available_gpus() == 0
+        proto=len(get_available_gpus()) == 0
     )
     datasetTrain.prep(net.HEIGHT_WIDTH())
     datasetVal.prep(net.HEIGHT_WIDTH())
@@ -75,7 +87,7 @@ def sym_net_main(FLAGS):
     net.test_data = datasetTest
     trainTestRecord(net, '', FLAGS.epochs)
     loggy.log('finished sym_net_main')
-    return data_saving.EXP_FOLDER()
+    return data_saving.EXP_FOLDER(root)
 
 
 def trainTestRecord(net: SymNet, nam, nepochs):
@@ -134,7 +146,7 @@ def trainTestRecord(net: SymNet, nam, nepochs):
 
         log('Done with epoch $.', i + 1)
     old_name = nam
-    import net_mets
+    from lib.nn import net_mets
     if 'TRAIN' in nnstate.FLAGS.pipeline and 'VAL' in nnstate.FLAGS.pipeline:
         for met in net_mets.METS_TO_USE():
             nam = met.__name__
