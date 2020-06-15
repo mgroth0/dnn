@@ -32,7 +32,8 @@ class obj(object):
                 if forceNP:
                     new = arr(new)
                 setattr(self, a, new)
-            elif isinstance(b, wolframclient.language.expression.WLFunction):
+            # isinstance(b, wolframclient.language.expression.WLFunction):
+            elif 'WLFunction' in cn(b):
                 if 'Rational[' in str(b):
                     b = str(b).split('[')[1]
                     b = str(b).split(']')[0]
