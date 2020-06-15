@@ -5,7 +5,8 @@ Installation
 
 2. `conda update conda`
 
-3. `conda config --add channels conda-forge`
+
+3. `conda config --add channels conda-forge` (might not be required)
 
 4. `conda create --name dnn --file requirements.txt; pip install -r reqs_pip.txt`  
 -- When updating, use `conda install --file requirements.txt; pip install -r reqs_pip.txt`
