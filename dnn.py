@@ -16,7 +16,8 @@ def dnn(
         shell('pkill -f miniconda3')
         shell('pkill -f MATLAB')
     import lib.run_exps as run_exps
-    figsFolder = get_last_figs_folder() # for if MODE=COMPILE_TEST_ALL
+    if File('_figs/figs_dnn').exists():
+        figsFolder = get_last_figs_folder() # for if MODE=COMPILE_TEST_ALL
     if FULL and cfg.SAVE_DATA:
         metastate = File("_metastate.json")
         def check(a):
