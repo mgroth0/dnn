@@ -82,7 +82,7 @@ class MakeFigsBackend(ABC):
                     backgrounds[r][c] = cls.color(0, 0, 0)
                     if data[r][c] is None:
                         data[r][c] = ''
-                        if cls == WolfMakeFigsBackend:
+                        if 'Wolf' in cls.__name__:
                             backgrounds[r][c] = cls.none()
                         else:
                             backgrounds[r][c] = cls.color(0, 0, 0)
