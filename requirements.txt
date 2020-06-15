@@ -1,6 +1,7 @@
 # This file may be used to create an environment using:
 # $ conda create --name <env> --file <this file>
 # platform: osx-64
+bcrypt=3.1.7=py38h64e0658_1
 brotlipy=0.7.0=py38h64e0658_1000
 ca-certificates=2020.4.5.2=hecda079_0
 certifi=2020.4.5.2=py38h32f6830_0
@@ -47,11 +48,13 @@ numpy=1.18.5=py38h1f821a2_0
 olefile=0.46=py_0
 openssl=1.1.1g=h0b31af3_0
 pandas=1.0.4=py38h5fc983b_0
+paramiko=2.7.1=py38_0
 pcre=8.44=h4a8c4bd_0
 pillow=7.1.2=py38h83dc5e5_0
 pip=20.1.1=py_1
 pycosat=0.6.3=py38h64e0658_1004
 pycparser=2.20=py_0
+pynacl=1.3.0=py38h0b31af3_1001
 pyopenssl=19.1.0=py_1
 pyparsing=2.4.7=pyh9f0ad1d_0
 pyqt=5.12.3=py38hf180056_3

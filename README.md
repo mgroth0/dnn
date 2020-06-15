@@ -14,7 +14,7 @@ Installation
 Basic Usage
 -
 
-- `./dnn gen_images`
+- `./dnn -cfg=gen_images`
 - `./dnn`
 - `./dnn default --gui=1`
 
@@ -34,7 +34,7 @@ If there is anything hardcoded that you'd like to be configurable, please submit
 Development
 - 
 
-- use `conda list -e > requirements.txt; sed -i '' '/pypi/d' requirements.txt;` to store dependencies
+- use `conda list -e > requirements.txt; sed -i '' '/pypi/d' requirements.txt` to store dependencies
 
 Credits
 -
