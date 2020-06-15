@@ -1,9 +1,16 @@
+
+import mlib
+print(f'{mlib.mlib_var=}')
+exit(0)
+
+
 from lib import getfigdata
 import lib.boot
 from lib.defaults import *
 from lib.figs.JsonSerializable import obj
 from lib.gui import answer_request
 from lib.misc.google_compute import gcloud_config
+
 
 @log_invokation()
 def dnn(
