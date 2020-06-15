@@ -18,7 +18,7 @@ EXP_GROUP_NAMES = listfilt(
     lambda n: 'compile' in n,
     listmap(
         lambda f: File(f).name,
-        File('figs_/figs_dnn').listfiles()))
+        File('_figs/figs_dnn').listfiles()))
 
 # for pruning
 # EXP_GROUP_NAMES = []

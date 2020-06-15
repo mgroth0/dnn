@@ -115,7 +115,7 @@ def dnn(
             makefigs.makefigs(cfg, overwrite=True)
 
         log('got result arg: ' + result)
-    if FULL and 'SAVE' in result or 'COMPILE_TEST_ALL' in mode:
+    if FULL and 'SAVE' in result or 'COMPILE_TEST_ALL' in mode or 'MAKEREPORT' in mode:
         if FULL:
             File(TEMP_FIGS_FODLER).moveto(figsFolder)
             File(figsFolder).resolve('metadata.json').save(exp_group_metadata)
@@ -194,6 +194,8 @@ if __name__ == '__main__':
     for k, v in listitems(changes):
         if k not in listkeys(cfg):
             err(f'invalid -- arguments: {k}, please see cfg.yml for configuration options')
+        if isinstance(cfg[k], bool):
+            v = bool(int(v))
         cfg[k] = v
 
     # hardcoded cfg

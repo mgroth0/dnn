@@ -4,8 +4,9 @@ import pdb
 from wolframclient.evaluation import WolframLanguageSession
 from wolframclient.language import wl, wlexpr
 
-from loggy import log
-from mutil import File, strcmp, err, ismac
+from lib.boot.loggy import log
+from lib.misc.mutil import File, strcmp, err
+from mlib.boot.bootutil import ismac
 
 class WolfPy:
     MADE = False

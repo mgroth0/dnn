@@ -131,7 +131,9 @@ def run_exps(cfg, remote=False, gui=True):
 
     run_exps_lib.Job.TOTAL_TODO = len(jobs)
 
+
     muscle.runjob(jobs[0], listkeys(muscle.GPU_IN_USE))
+
     exps = jobs[1:]
 
     def all_done():

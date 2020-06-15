@@ -18,8 +18,10 @@ Basic Usage
 
 Generate some images, train/test a model, run analyses, and generate plots. Tested on Mac, but not yet on linux/Windows.
 
-- `./dnn -cfg=gen_images`
-- `./dnn -cfg=test_one`
+- `./dnn -cfg=gen_images --INTERACT=0`
+- `./dnn -cfg=test_one --INTERACT=0`
+
+The second command will fail with a Mathematica-related error, but your results will be saved in `_figs`.
 
 Configuration
 -

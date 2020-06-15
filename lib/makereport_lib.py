@@ -3,7 +3,7 @@
 from wolframclient.language import wl
 
 from lib.defaults import *
-from wolfpy import WOLFRAM
+from lib.wolf.wolfpy import WOLFRAM
 PUBLIC_URL = 'https://www.wolframcloud.com/obj/9e1d2a8d-660a-4119-a31c-7ebacab6ae57'
 def update_report(new_url):
     co = WOLFRAM.cloud_deploy(wl.HTTPRedirect(new_url), url=PUBLIC_URL, public=True)

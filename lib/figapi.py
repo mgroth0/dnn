@@ -2,10 +2,10 @@ from copy import deepcopy
 
 from wolframclient.language import wlexpr, wl
 
-from loggy import log
-from mutil import enum, listkeys, listfilt
-from web import HTMLVar
-from wolfpy import WOLFRAM, weval
+from lib.boot.loggy import log
+from lib.misc.mutil import enum, listkeys, listfilt
+from lib.web import HTMLVar
+from lib.wolf.wolfpy import WOLFRAM, weval
 class APIDict:
     def __init__(self, symbolName):
         csb = weval(wl.ToString(wlexpr("$CloudSymbolBase[[1]]"))) + '/'

@@ -1,7 +1,7 @@
 import pdb
 
-from web import *
-from wolfpy import WOLFRAM
+from lib.web import *
+from lib.wolf.wolfpy import WOLFRAM
 
 def FigureTable(*figs_captions, apiURL=None, exp_id=None, editable=False):
     children = []
