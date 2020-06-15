@@ -7,8 +7,8 @@ Installation
 
 3. `conda config --add channels conda-forge`
 
-4. `conda create --name dnn --file requirements.txt`  
--- When updating, use `conda install --file requirements.txt`
+4. `conda create --name dnn --file requirements.txt; pip install -r reqs_pip.txt`  
+-- When updating, use `conda install --file requirements.txt; pip install -r reqs_pip.txt`
 
 5. `conda activate dnn`
 
