@@ -23,6 +23,7 @@ def dnn(
         if not metastate.exists():
             metastate['next_exp_id'] = 1
             metastate['last_submitted_exp_group_name'] = ''
+        File('_figs/figs_dnn').mkdirs()
         def check(a):
             metastate["last_submitted_exp_group_name"] = a
             figs_folder = get_figs_folder(a)
