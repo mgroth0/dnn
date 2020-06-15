@@ -16,7 +16,7 @@ from pathlib import Path
 import traceback
 from types import SimpleNamespace
 
-from asyncio_pool import AioPool
+
 import imageio
 
 import numpy as np
@@ -421,6 +421,7 @@ def testInPools(f, li, af,
         log(f'\t\ttotal time: {t2 - t1}s')
 
     if test_async:
+        from asyncio_pool import AioPool
         t1 = log('Starting AIO Pool Test')
         pool = AioPool()
         coro = pool.map(af, li)
