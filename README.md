@@ -16,13 +16,15 @@ Installation
 Basic Usage
 -
 
+Generate some images, train/test a model, run analyses, and generate plots. Tested on Mac, but not yet on linux/Windows.
+
 - `./dnn -cfg=gen_images`
 - `./dnn -cfg=test_one`
 
 Configuration
 -
 
-Mode: (default = FULL) is a string that can contain any combination of the following (example: "CLEAN JUSTRUN")
+-MODE: (default = FULL) is a string that can contain any combination of the following (example: "CLEAN JUSTRUN")
 - CLEAN
 - JUSTRUN
 - GETANDMAKE
@@ -30,14 +32,16 @@ Mode: (default = FULL) is a string that can contain any combination of the follo
 
 Edit [cfg.yml]() to save configuration options. Feel free to push these.
 
-If there is anything hardcoded that you'd like to be configurable, please submit an issue.'
+If there is anything hardcoded that you'd like to be configurable, please submit an issue.
 
 Development
 - 
 
-- use `conda list -e > requirements.txt; sed -i '' '/pypi/d' requirements.txt` to store dependencies
+- use `conda list -e > requirements.txt; sed -i '' '/pypi/d' requirements.txt` to store dependencies.
+- There are also a couple of pip dependencies manually written in reqs_pip.txt, since these cannot be found through conda
 
 Credits
 -
 
-Darius,Xavier,nn arch writers, Pawan
+- Darius, Xavier, Pawan
+- heuritech, raghakot, joel
