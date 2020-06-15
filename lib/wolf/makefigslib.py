@@ -141,7 +141,7 @@ class MakeFigsBackend(ABC):
                     else:
                         data[ri][ci] = cls.tableItem(el, backgrounds[ri][ci])
             if fd.top_header_label is not None or fd.side_header_label is not None:
-                if cls == MPLFigsBackend:
+                if 'Wolf' in cls.__name__:
                     data = addHeaderLabels(data, fd.top_header_label, fd.side_header_label).tolist()
                 else:
                     cls.tabl.auto_set_font_size(False)
