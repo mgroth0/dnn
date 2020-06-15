@@ -148,26 +148,51 @@ class MakeFigsBackend(ABC):
                     h = cls.tabl.get_celld()[(0, 0)].get_height()
                     w = cls.tabl.get_celld()[(0, 0)].get_width()
                     # Create an additional Header
+
+                    # weird = "Header Header Header Header"
+                    weird = fd.top_header_label * 4
+
+
                     header = [cls.tabl.add_cell(
                         -1, pos, w, h, loc="center", facecolor="red"
                     ) for pos in
                         range(1, len(data[0]) + 1)]
-                    header[0].visible_edges = "TBL"
-                    header[1].visible_edges = "TB"
-                    header[2].visible_edges = "TBR"
-                    # weird = "Header Header Header Header"
-                    weird = fd.top_header_label * 4
-                    header[1].get_text().set_text(weird)
+                    if len(header) > 2:
+                        for idx, head in enum(header):
+                            if idx == 0:
+                                head.visible_edges = "TBL"
+                            elif idx == len(header) - 1:
+                                head.visible_edges = "TBR"
+                            else:
+                                head.visible_edges = 'TB'
+                        header[1].get_text().set_text(weird)
+                    elif len(header) == 2:
+                        header[0].visible_edges = 'TBL'
+                        header[1].visible_edges = 'TBR'
+                        header[1].get_text().set_text(weird)
+                    else:
+                        header[0].visible_edges = 'TBLR'
+                        header[0].get_text().set_text(weird)
 
                     # Create an additional Header
-                    header = [cls.tabl.add_cell(pos, -1, w, h, loc="center", facecolor="none") for pos in
-                              range(1, len(data) + 1)]
-                    header[0].visible_edges = "TBL"
-                    header[1].visible_edges = "TB"
-                    header[2].visible_edges = "TBR"
-                    # weird = "Header Header Header Header"
                     weird = fd.side_header_label * 4
-                    header[1].get_text().set_text(weird)
+                    header = [cls.tabl.add_cell(pos, -1, w, h, loc="center", facecolor="none") for pos in range(1, len(data) + 1)]
+                    if len(header) > 2:
+                        for idx, head in enum(header):
+                            if idx == 0:
+                                head.visible_edges = "LTR"
+                            elif idx == len(header) - 1:
+                                head.visible_edges = "LRB"
+                            else:
+                                head.visible_edges = 'LR'
+                        header[1].get_text().set_text(weird)
+                    elif len(header) == 2:
+                        header[0].visible_edges = 'TLR'
+                        header[1].visible_edges = 'BLR'
+                        header[1].get_text().set_text(weird)
+                    else:
+                        header[0].visible_edges = 'TBLR'
+                        header[0].get_text().set_text(weird)
 
         if cls != MPLFigsBackend:
             insets = [Inset(
@@ -232,7 +257,7 @@ class MakeFigsBackend(ABC):
 
             # ticks start from the bottom but I want these to start from the top
             # labellocs_labels.reverse()
-            if cls == WolfMakeFigsBackend:
+            if 'Wolf' in cls.__name__:
                 gridlines = LinePlotGrid(line_values, triangle=fd.confuse_is_identical)
             else:
                 # gl = line_values[-1]
