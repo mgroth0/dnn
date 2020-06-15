@@ -186,7 +186,6 @@ def RSA(nam, rep, y_true, ei, layer_name=None, layer_i=None):
     if nam == 'Inter':
         title = f'{title}(Layer{layer_i}:{layer_name})'
 
-    breakpoint()
     savePlotAndTableData(RSAMatrix(
         data=special_confuse_mat,
         title=title,

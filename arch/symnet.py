@@ -157,7 +157,6 @@ class SymNet(ABC):
 
         inter_shape = inter_activations.shape
         inter_activations = np.reshape(inter_activations, (inter_shape[0], -1))
-        breakpoint()
 
         RSA('Output', y_pred, y_true, ei, layer_name='Output', layer_i='-1')
         RSA('Inter', inter_activations, y_true, ei, layer_name=inter_lay_name, layer_i=self.INTER_LAY)
