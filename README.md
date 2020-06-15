@@ -3,7 +3,13 @@ Installation
 
 1. install [miniconda](https://docs.conda.io/en/latest/miniconda.html)
 
-1. `conda create --name dnn --file requirements.txt; conda activate dnn`
+2. `conda update conda`
+
+3. `conda config --add channels conda-forge`
+
+6. `conda create --name dnn --file requirements.txt`
+
+7. `conda activate dnn`
 
 Basic Usage
 -
@@ -28,7 +34,7 @@ If there is anything hardcoded that you'd like to be configurable, please submit
 Development
 - 
 
-- use `conda list -e > requirements.txt` to store dependencies
+- use `conda list -e > requirements.txt; sed -i '' '/pypi/d' requirements.txt;` to store dependencies
 
 Credits
 -
