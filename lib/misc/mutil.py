@@ -27,7 +27,7 @@ from scipy.signal import butter, lfilter
 import yaml
 
 from ..boot import loggy
-from ..boot.bootutil import pwd
+from mlib.boot.bootutil import pwd
 from ..boot.loggy import log
 
 
@@ -116,7 +116,7 @@ def prep_log_file(name, new=False):
     loggy.prep_log_file(name, new=new)
 
 def MITILI_FOLDER():
-    import lib.boot.bootutil as bootutil
+    import mlib.boot.bootutil as bootutil
     if bootutil.ismac():
         return File(pwd())
     else:

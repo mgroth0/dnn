@@ -48,7 +48,7 @@ def prep_log_file(filename, new=False):
         filename = os.path.basename(sys.argv[0]).replace('.py', '')
 
     import lib.misc.mutil as mutil
-    import lib.boot.bootutil as bootutil
+    import mlib.boot.bootutil as bootutil
     if bootutil.ismac():
         filename = '_logs/local/' + filename
     else:

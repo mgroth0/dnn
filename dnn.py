@@ -1,9 +1,3 @@
-
-import mlib
-print(f'{mlib.mlib_var=}')
-exit(0)
-
-
 from lib import getfigdata
 import lib.boot
 from lib.defaults import *

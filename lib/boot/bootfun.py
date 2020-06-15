@@ -1,5 +1,5 @@
 import sys, os, argparse
-from ..boot.bootutil import ismac
+from mlib.boot.bootutil import ismac
 LOCAL_CWD = os.getcwd()
 REMOTE_CWD = None
 def register_exception_handler():
