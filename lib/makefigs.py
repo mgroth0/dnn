@@ -2,15 +2,19 @@ from lib.boot import bootfun  # noqa
 from lib.defaults import *
 from lib.figs.JsonSerializable import obj
 from lib.wolf.makefigslib import MPLFigsBackend
+
 @log_invokation(with_args=True)
-def makefigs(cfg,overwrite=False):
-    from lib.wolf.wolf_figs import WolfMakeFigsBackend
+def makefigs(cfg, overwrite=False):
     root = cfg.root
     figDats = getFigDats(root)
-    backend = WolfMakeFigsBackend if cfg.fig_backend == 'wolfram' else MPLFigsBackend
+    if cfg.fig_backend == 'wolfram':
+        from lib.wolf.wolf_figs import WolfMakeFigsBackend
+        backend = WolfMakeFigsBackend
+    else:
+        backend = MPLFigsBackend
     figDats = [obj(fd) for fd in figDats]
     figDats = [fd for fd in figDats if overwrite or not fd.pngExists]
-    backend.makeAllPlots(figDats,overwrite)
+    backend.makeAllPlots(figDats, overwrite)
     log('finished making plots!')
 
 
