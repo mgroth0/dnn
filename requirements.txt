@@ -18,6 +18,7 @@ gettext=0.19.8.1=h46ab8bc_1002
 glib=2.64.3=h577aef8_0
 icu=64.2=h6de7cb9_1
 idna=2.9=py_1
+imageio=2.8.0=py_0
 joblib=0.15.1=py_0
 jpeg=9d=h0b31af3_0
 kiwisolver=1.2.0=py38ha0d09dd_0
