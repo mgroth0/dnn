@@ -65,7 +65,7 @@ class GCShell(GCProcess, InteractiveShell):
     def login(self):
         super().login()
         self.expect("matt@test-3")
-    @log_instance_invokation
+    @log_invokation(with_instance=True)
     def restart(self):
         log('this function probably wont fix the issue if the process is blocking elsewhere')
         self.p.close()

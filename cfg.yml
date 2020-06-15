@@ -50,6 +50,7 @@ configs:
 
   # should be fully optional down to each execution, with no need for consistency
     GUI: False
+    fig_backend: matplotlib # or wolfram
     RUN_EXPS_IN_SERIAL: False
     VERBOSE: True
     INTERACT: False

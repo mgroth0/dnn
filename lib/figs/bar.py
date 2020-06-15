@@ -3,7 +3,9 @@ from wolframclient.language import wl, wlexpr
 import lib.wolf.makefigslib as makefigslib
 from lib.defaults import *
 # from wolfpy import weval
-def bar(fd,x,y,fdwl):
+def bar(fd):
+    x = fd.x
+    y = fd.y
     maxY = wl.All if fd.maxY is None or fd.maxY == -np.inf else fd.maxY
     minY = wl.All if fd.minY is None or fd.maxY == np.inf else fd.minY
     maxX = wl.All if fd.maxX is None or fd.maxY == -np.inf else fd.maxX

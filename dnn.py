@@ -5,7 +5,7 @@ from lib.figs.JsonSerializable import obj
 from lib.gui import answer_request
 from lib.misc.google_compute import gcloud_config
 
-@log_invokation
+@log_invokation()
 def dnn(
         cfg
 ):
@@ -16,19 +16,21 @@ def dnn(
         shell('pkill -f miniconda3')
         shell('pkill -f MATLAB')
     import lib.run_exps as run_exps
+    figsFolder = get_last_figs_folder() # for if MODE=COMPILE_TEST_ALL
     if FULL and cfg.SAVE_DATA:
         metastate = File("_metastate.json")
         def check(a):
+            metastate["last_submitted_exp_group_name"] = a
             figs_folder = get_figs_folder(a)
             if figs_folder is None:
-                return (False, f"{folName} was already used!")
+                return (False, f"{a} was already used!")
             else:
                 log('figs_folder:' + figs_folder.abspath)
-                return (True,)
+                return (True, figs_folder)
         figsFolder = answer_request.answer_request(metastate["last_submitted_exp_group_name"], "Experiment Name:",
                                                    check,
                                                    gui=cfg.GUI)
-        metastate["last_submitted_exp_group_name"] = figsFolder
+
         figsFolder = File(figsFolder).abspath
 
         if not figsFolder:
@@ -86,38 +88,55 @@ def dnn(
             log('running in gc')
             cfg.para = 'whatever'
             cfg.tic = str(d)
-            result = run_exps.main(cfg, remote=cfg.MUSCLE != 'local', gui=cfg.GUI)
+            result, exp_group_metadata = run_exps.run_exps(cfg, remote=cfg.MUSCLE != 'local', gui=cfg.GUI)
             log('finished justrun with result: $', result)
             log('getting any results')
 
-    if 'GETANDMAKE' in mode or (FULL and 'SAVE' in result):
+    if 'GETANDMAKE' in mode or 'MAKEFIGS' in mode or (FULL and 'SAVE' in result):
         if mode != FULL:
             if cfg.MUSCLE != 'local':
                 gcloud_config()
             result = 'SAVELOG'
         if 'SAVE' in result:
-            getfigdata.main(result,TEMP_FIGS_FODLER,cfg)
+            if 'GETANDMAKE' in mode or FULL:
+                getfigdata.main(result, TEMP_FIGS_FODLER, cfg)
             log("should call make figs next")
             # bin/makefigs overwrite
             from lib import makefigs
-            makefigs.main(overwrite=False,root = TEMP_FIGS_FODLER)
+            cfg.root = TEMP_FIGS_FODLER
+            if 'MAKEFIGS' in mode:
+                cfg.root = figsFolder.abspath + '-compile'
+            makefigs.makefigs(cfg, overwrite=True)
 
         log('got result arg: ' + result)
-    if FULL and 'SAVE' in result:
-        File(TEMP_FIGS_FODLER).moveto(figsFolder)
-        File(figsFolder).resolve('metadata.json').save(run_exps.exp_group_metadata)
+    if FULL and 'SAVE' in result or 'COMPILE_TEST_ALL' in mode:
+        if FULL:
+            File(TEMP_FIGS_FODLER).moveto(figsFolder)
+            File(figsFolder).resolve('metadata.json').save(exp_group_metadata)
         if FULL or 'COMPILE_TEST_ALL' in mode:
             from lib import compile_test_all
-            compile_test_all.dnn(figsFolder)
+            cfg.root = figsFolder
+            compile_test_all.compile_test_all(cfg, overwrite=True)
         # shell('/Users/matt/miniconda3/bin/python3 bin/compile_test_all.py ' + figsFolder).interact()
 
         if FULL or 'MAKEREPORT' in mode:
-            import makereport
-            makereport.dnn()
+            from lib import makereport
+            makereport.makereport()
         log('finished makereport')
 
 # returns None if name was already used
 FIGS_FOLDER = File('_figs/figs_dnn')
+
+def get_last_figs_folder():
+    ns = []
+    files = [f for f in FIGS_FOLDER.listmfiles() if 'compile' not in f.abspath]
+    if len(files) == 0: return
+    for f in files:
+        n, nam = tuple(f.name.split('-', 1))
+        ns += [int(n)]
+    return files[maxindex(ns)]
+
+
 def get_figs_folder(nameRequest):
     all_names = []
     next_num = 0
@@ -127,6 +146,8 @@ def get_figs_folder(nameRequest):
         all_names += [nam]
     if nameRequest in all_names: return None
     return FIGS_FOLDER.resolve(f'{next_num + 1}-{nameRequest}')
+
+
 if __name__ == '__main__':
     lib.boot.bootfun.register_exception_handler()
     kmscript('activate run tool window')

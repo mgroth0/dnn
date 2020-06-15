@@ -1,14 +1,12 @@
-import argparse
 import copy
 
 from lib.figs.TableData import ConfusionMatrix
 from lib.cta_lib import *
-from lib.boot import bootfun
 from lib.defaults import *
-from lib.boot import loggy
 from lib import makefigs
 
-def main(root_folder, overwrite):
+def compile_test_all(cfg, overwrite):
+    root_folder = cfg.root
     log('running compile_test_all for ' + str(root_folder))
     COLORS = {
         'SCRATCH': [1, 0, 0],
@@ -129,7 +127,8 @@ def main(root_folder, overwrite):
                     res.j)
 
     log('finished compilation, running makefigs')
-    makefigs.dnn(root=compile_root.abspath, overwrite=overwrite)
+    cfg.root = compile_root.abspath
+    makefigs.makefigs(cfg, overwrite=overwrite)
     log('finished makefigs, back in compile_test_all')
     final_t = log('done with compile_test_all!')
     File('_logs/timelog.txt').append(f'{round(final_t)}\t\t{root_folder.name}\n')

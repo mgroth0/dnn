@@ -165,13 +165,13 @@ def RSA(nam, rep, y_true, ei, layer_name=None, layer_i=None):
     sorted_acts = arr([a[0] for a in sorted_acts])
 
     log('getting norms...')
-    prog = Progress(len(sorted_acts))
-    for i in itr(sorted_acts):
-        classes.append(list(TEST_CLASS_MAP.keys())[y_true[i]])
-        for j in itr(sorted_acts):
-            norm = np.linalg.norm(sorted_acts[i, :] - sorted_acts[j, :])
-            special_confuse_mat[i, j] = norm
-        prog.tick()
+    with Progress(len(sorted_acts)) as prog:
+        for i in itr(sorted_acts):
+            classes.append(list(TEST_CLASS_MAP.keys())[y_true[i]])
+            for j in itr(sorted_acts):
+                norm = np.linalg.norm(sorted_acts[i, :] - sorted_acts[j, :])
+                special_confuse_mat[i, j] = norm
+            prog.tick()
     log('finished getting norms!')
 
     mx = np.max(special_confuse_mat)
@@ -186,6 +186,7 @@ def RSA(nam, rep, y_true, ei, layer_name=None, layer_i=None):
     if nam == 'Inter':
         title = f'{title}(Layer{layer_i}:{layer_name})'
 
+    breakpoint()
     savePlotAndTableData(RSAMatrix(
         data=special_confuse_mat,
         title=title,

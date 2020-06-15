@@ -8,8 +8,8 @@ from lib.defaults import *
 
 
 
-@log_invokation
-def main(cfg, remote=False, gui=True):
+@log_invokation()
+def run_exps(cfg, remote=False, gui=True):
     if not remote:
         muscle = Muscle(num_gpus=0)
     exp_group_metadata = {}
@@ -301,4 +301,4 @@ def main(cfg, remote=False, gui=True):
     if cfg.SAVE_DATA: rr = rr + 'SAVE'
     if cfg.GET_LOGS: rr = rr + 'LOG'
 
-    return rr
+    return rr,exp_group_metadata

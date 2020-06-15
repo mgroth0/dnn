@@ -25,7 +25,7 @@ EXP_GROUP_NAMES = listfilt(
 
 MR_API = APIDict('makereport')
 @log_invokation
-def main(prune):
+def makereport(prune):
     contents = []
     private_contents = []
     newPubURL = 'https://www.wolframcloud.com/obj/mjgroth/dnn/index.html'

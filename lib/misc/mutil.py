@@ -13,6 +13,7 @@ import threading
 # log('mutil imports..')
 from collections.abc import Iterable
 from pathlib import Path
+import traceback
 from types import SimpleNamespace
 
 from asyncio_pool import AioPool
@@ -37,11 +38,22 @@ def name(o):
     return File(o).name
 
 class Progress:
+    erase = '\x1b[1A\x1b[2K'
+
+    _instances = []
     def __init__(self, goal):
         self.last = 0
         self.goal = goal
         self._internal_n = 1
         log('doing $ things', goal)
+        self._instances += [self]
+        self.entered = False
+
+    def __enter__(self):
+        self.entered = True
+        return self
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._instances.remove(self)
 
     @staticmethod
     def prog_bar(n, d=100, BAR_LENGTH=50):
@@ -55,23 +67,28 @@ class Progress:
         s += f']'
         return s
 
+    def print(self, logfile=True):
+        assert self.entered
+        progress = round((self._internal_n / self.goal) * 100)
+        if progress > self.last:
+            self.last = progress
+            bar = self.prog_bar(self._internal_n, self.goal)
+            s = f'Progress: {bar} {progress}%'
+            if progress == 100:
+                print(s)
+            else:
+                print(f'{s}\r', end="")
+
+            if logfile:
+                log('$%', progress, silent=True)
+
     def tick(self, n=None, logfile=True):
         if n is None:
             self.tick(self._internal_n)
             self._internal_n += 1
         else:
-            progress = round((n / self.goal) * 100)
-            if progress > self.last:
-                self.last = progress
-                bar = self.prog_bar(n, self.goal)
-                s = f'Progress: {bar} {progress}%'
-                if progress == 100:
-                    print(s)
-                else:
-                    print(f'{s}\r', end="")
-
-                if logfile:
-                    log('$%', progress, silent=True)
+            self._internal_n = n
+            self.print()
 
 def assert_int(f):
     if not float(f).is_integer():
@@ -238,9 +255,17 @@ class SSHProcess(ShellProcess):
         self.p.sendline(File('/Users/matt/.pass').read()[::-1])
 
 class InteractiveShell(ShellProcess):
+    def __init__(self, *command, **kwargs):
+        if len(command) == 0:
+            command = ['bash']
+        super().__init__(*command, **kwargs)
+
+
     def __getattr__(self, item):
         def f(*args):
-            self.sendline(f'{item} {shell.command_str(*args)}'.strip())
+            # problem = shell.command_str(*args)
+            # print(f'{problem=}')
+            return self.sendline(f'{item} {shell.command_str(*args)}'.strip())
         return f
 
 
@@ -258,6 +283,12 @@ def struct():
 
 class MException(Exception): pass
 
+def TODO():
+    trace = traceback.extract_stack()[-2]
+    fun_todo = trace[0]
+    line = trace[1]
+    return err(f'\n\n\t\t--TODO--\nFile "{fun_todo}", line {line}')
+
 # log('mutil imports done')
 def err(s, exc_class=MException):
     log(f'err:{s}')
@@ -266,35 +297,29 @@ def err(s, exc_class=MException):
 def min2sec(m): return float(m) * 60
 
 
-def log_class_invokation(ff):
-    def f(*args, **kwargs):
-        log(f'Invoking {cn(args[0])}.{ff.__name__}()...')
-        ff(*args, **kwargs)
-        log(f'Finished {cn(args[0])}.{ff.__name__}()!')
+def log_return(as_count=False):
+    def f(ff):
+        def fff(*args, **kwargs):
+            r = ff(*args, **kwargs)
+            s = f'{r}' if not as_count else f'{len(r)} {"items" if len(r) == 0 else r[0].__class__.__name__ + "s"}'
+            log(f'{ff.__name__} returned {s}', ref=1)
+            return r
+        return fff
     return f
 
-def log_instance_invokation(ff):
-    def f(*args, **kwargs):
-        log(f'Invoking {ff.__name__} of {args[0]}...')
-        ff(*args, **kwargs)
-        log(f'Finished {ff.__name__} of {args[0]}!')
+def log_invokation(with_class=False, with_instance=False, with_args=False):
+    def f(ff):
+        def fff(*args, **kwargs):
+            ags = '' if not with_args else f'{args=}{kwargs=}'
+            inst = '' if not with_instance else f' of {args[0]}'
+            cls = '' if not with_class else f'{cn(ags[0])}.'
+            s = f'{cls}.{ff.__name__}(){inst}'
+            log(f'Invoking {s}...', ref=1)
+            r = ff(*args, **kwargs)
+            log(f'Finished {s}!', ref=1)
+            return r
+        return fff
     return f
-
-def log_invokation(ff):
-    def f(*args, **kwargs):
-        log(f'Invoking {ff.__name__}()...', ref=1)
-        r = ff(*args, **kwargs)
-        log(f'Finished {ff.__name__}()!', ref=1)
-        return r
-    return f
-
-
-
-
-
-
-
-
 
 def ls(d=pwd()):
     import os
@@ -359,11 +384,11 @@ def do_twice(func):
 
 def track_progress(f):
     def runAndTrackProgress(iterable):
-        p = Progress(len(iterable))
-        for item in iterable:
-            y = f(item)
-            p.tick()
-            yield y
+        with Progress(len(iterable)) as p:
+            for item in iterable:
+                y = f(item)
+                p.tick()
+                yield y
     return runAndTrackProgress
 
 AIO_LOOP = asyncio.new_event_loop()
@@ -453,8 +478,19 @@ class File(os.PathLike):
 
     def zip_to(self, dest):
         loggy.log('zipping...')
-        shell(['zip', '-r', self.abspath, File(dest).abspath]).readlines()
-        return File(File(dest).abspath + '.zip')
+        p = ishell()
+        p.cd(self.parentDir)
+        p.sendline('DONEVAR=DONEWITHZIP')
+        p.sendline('DONEVARR=REALLYDONEWITHZIP')
+        p.zip([
+            '-r',
+            File(dest).abspath,
+            self.name
+        ])
+        p.echo('$DONEVAR$DONEVARR')
+        p.expect('DONEWITHZIPREALLYDONEWITHZIP')
+        p.close()
+        return File(f'{File(dest).abspath}.zip')
 
     def copy_to(self, dest):
         import shutil
@@ -465,6 +501,8 @@ class File(os.PathLike):
 
         return shutil.copyfile(self, dest)
 
+    def loado(self):
+        return self.load(as_object=True)
     def load(self, as_object=False):
         log('Loading ' + self.abspath, ref=1)
         if self.ext == 'edf':
@@ -551,9 +589,10 @@ class File(os.PathLike):
         mkdirs(self.parentDir)
 
     def moveto(self, new):
-        if isinstsafe(new, File):
-            new = new.abspath
-        os.rename(self.abspath, new)
+        # if isinstsafe(new, File):
+        #     new = new.abspath
+        # os.rename(self.abspath, new)
+        shutil.move(self.abspath, File(new).abspath)
 
     def listmfiles(self):
         return listmap(File, self.listfiles())

@@ -82,7 +82,7 @@ class Job:
             return f'{self.job}\t{self.status}\tGPU={self.gpu}\t{self.run_time_str}\t\t{self.last}'
 
     def status(self): return Job.JobStatus(self)
-    @log_instance_invokation
+    @log_invokation(with_instance=True)
     def run(self, gpus_to_use, muscle, a_sync=False):
         self.started = True
         self.start_time = time.time()

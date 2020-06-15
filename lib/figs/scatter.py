@@ -3,7 +3,7 @@ from wolframclient.language import wl
 import lib.wolf.makefigslib
 # from wolfpy import weval
 
-def scatter(fd,fdwl):
+def scatter(fd):
     color_y = []
     cols = []
     for xx, yy, col in zip(fd.x, fd.y, fd.item_colors):

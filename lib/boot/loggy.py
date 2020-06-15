@@ -2,13 +2,15 @@ import os
 import time
 
 from ..gpu import gpu_mem_str
+
 from ..vals import USE_THREADING
 ticTime = None
 LOG_FILE = None
 STATUS = dict()
 import numpy as np
 import sys
-
+import traceback
+import os.path
 def initTic():
     # err('')
     if ticTime is None:
@@ -126,94 +128,45 @@ mac = platform.system() == 'Darwin'
 
 
 
-def get_log_info(ss, *args,ref=0):
+def get_log_info(old_s, *args, ref=0):
     global STARTED_GPU_INFO_THREAD, gpu_q, latest_gpu_str
     if not mac and not STARTED_GPU_INFO_THREAD:
         STARTED_GPU_INFO_THREAD = True
         gpu_q = Queue(maxsize=1)
-        p = Process(target=gpu_info_fun, args=(gpu_q, GPU_WATCH_PERIOD_SECS))
-        p.start()
-        # p.join()
-
-    t_start = time.time()
-
-    # print('log time 1: ' + str(time.time() - t_start))
-
-    if LOG_FILE is None:
-        prep_log_file(None)
-
-    # print('log time 2: ' + str(time.time() - t_start))
-
+        Process(
+            target=gpu_info_fun,
+            args=(gpu_q, GPU_WATCH_PERIOD_SECS)
+        ).start()
+    if LOG_FILE is None: prep_log_file(None)
     t = toc() / 1000
-    v = toc_str(t)
-    import os.path
-    import traceback
-    old_s = str(ss)
-
-    # print('log time 3: ' + str(time.time() - t_start))
-
+    ss = old_s
     for idx, aa in enumerate(args):
         ss = ss.replace("$", str(aa), 1)
-
-    # print('log time 4: ' + str(time.time() - t_start))
-
-    # print('might log: ' + str(vals.IN_SERIAL_MODE))
-    # try:
-
     stack = traceback.extract_stack()
-
-    # print('log time 5: ' + str(time.time() - t_start))
-
-    if len(stack) == 1:
-        file = 'MATLAB'
-    else:
-        file = os.path.basename(stack[-3 - ref][0]).split('.')[0]
-
-    # print('log time 6: ' + str(time.time() - t_start))
-    # except:
-    #     print('weird thing happened')
-    #     print(traceback.extract_stack())
-    #     print(traceback.extract_stack()[-2])
-    #     print(traceback.extract_stack()[-2][0])
-    #     print(traceback.extract_stack()[-2][0].split('.'))
-    #     print(os.path.basename(traceback.extract_stack()[-2][0]).split('.')[0])
-    # if vals.IN_SERIAL_MODE or vvars.i == 0 :
-
-
-    line_start = '[' + processTag() + '|' + v + '|'
-
-    # print('log time 7: ' + str(time.time() - t_start))
-
+    file = {
+        1: 'MATLAB'
+    }.get(len(stack), os.path.basename(stack[-3 - ref][0]).split('.')[0])
+    line_start = f'[{processTag()}|{toc_str(t)}|'
     if not mac:
         if not gpu_q.empty():
             latest_gpu_str = gpu_q.get()
-        line_start = line_start + latest_gpu_str + '|'
-
-    # print('log time 8: ' + str(time.time() - t_start))
-
-    line = line_start + resize_str(file, 14) + '] ' + str(ss)
-
-    # file_line = line_start + resize_str(file, 10) + ') ' + ss
-    # why was I using old_s for file_line??? for the LogViewer!
-    file_line = line_start + resize_str(file, 10) + ') ' + old_s
-
-    # print('log time 9: ' + str(time.time() - t_start))
-
+        line_start = f'{line_start}{latest_gpu_str}|'
+    line = f'{line_start}{resize_str(file, 14)}] {ss}'
+    file_line = f'{line_start}{resize_str(file, 10)}) {old_s}'
     return line, file_line, t
 
-def log(ss, *args, silent=False,ref=0):
-    line, file_line, v = get_log_info(ss, *args,ref=ref)
+def log(ss, *args, silent=False, ref=0):
+    line, file_line, v = get_log_info(ss, *args, ref=ref)
 
     if not silent:
+        from ..misc.mutil import Progress
+        for p in Progress._instances:
+            line = Progress.erase + line
         print(line)
-
-    # print('log time 10: ' + str(time.time() - t_start))
-
+        for p in Progress._instances:
+            p.print()
     with open(LOG_FILE.abspath, "a") as myfile:
         myfile.write(file_line + "\n")
-
-    # print('log time 11: ' + str(time.time() - t_start))
-
     return v
 
 def processTag():

@@ -54,6 +54,7 @@ def sym_net_main(FLAGS):
     _, datasetVal = load_and_preprocess_ims(0,
                                             data_dir=MY_TEST_FOLDER,
                                             normalize_single_images=normalize_single_images)
+
     _, datasetTest = load_and_preprocess_ims(0, data_dir=MY_RSA_FOLDER,
                                              normalize_single_images=normalize_single_images)
 

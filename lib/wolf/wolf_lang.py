@@ -1,5 +1,7 @@
 from wolframclient.language import wl, wlexpr
 
+
+
 # from wolfpy import WOLFRAM
 
 Right = wl.Right
@@ -7,6 +9,10 @@ def Rule(one, two): return wl.Rule(one, two)
 def Color(*rgb): return wl.RGBColor(rgb)
 Black = wl.Black
 White = wl.White
+
+bg = Black
+bgi = White
+
 Blue = wl.Blue
 Red = wl.Red
 Yellow = wl.Yellow

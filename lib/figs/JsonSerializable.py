@@ -44,7 +44,13 @@ class obj(object):
 
             else:
                 setattr(self, a, obj(b, forceNP) if isinstance(b, dict) else b)
-
+    def fixInfs(self):
+        for k, v in listitems(self.__dict__):
+            if v in ['inf', '-inf']:
+                self.__dict__[k] = parse_inf(v)
+            elif isinstance(v,obj):
+                v.fixInfs()
+        return self
 
 def jsonReprCP(o):
     # log('jsonReprCP of a ' + str(type(o)))

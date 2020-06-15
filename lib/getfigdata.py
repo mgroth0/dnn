@@ -37,5 +37,5 @@ def main(arg, root,cfg):
         log('unzipped')
 
         for f in glob(f'{root}/*.zip'):
-            shell('rm ' + f).interact()
-        shell(f'rm -rf {root}/0').interact()
+            shell(f'rm {f}').interact()
+        # shell(f'rm -rf {root}/0').interact()

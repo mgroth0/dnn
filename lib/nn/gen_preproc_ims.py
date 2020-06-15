@@ -56,46 +56,47 @@ def gen_images(N_IMAGES, classes, bands, folder):
     band_group_size = N_IMAGES / len(bands)
     band_group = 0
     band_group_i = 0
-    prog = Progress(N_IMAGES)
-    for i in range(N_IMAGES):
-        im_data = np.random.rand(BLOCK_HEIGHT_WIDTH, BLOCK_HEIGHT_WIDTH)
-        if BLACK_AND_WHITE:
-            im_data = np.vectorize(round)(im_data)
 
-        band = bands[band_group]
-        ns_classname, s_classname = band.get_classnames()
-        darken = band.dark
-        if darken:
-            im_data = im_data / 2
-        band = band.bandsize
-        bar_start = int((BLOCK_HEIGHT_WIDTH / 2) - (band / 2))
-        bar_end = bar_start + band
-        for w in range(bar_start, bar_end):
-            im_data[:, w] = 0.5
+    with Progress(N_IMAGES) as prog:
+        for i in range(N_IMAGES):
+            im_data = np.random.rand(BLOCK_HEIGHT_WIDTH, BLOCK_HEIGHT_WIDTH)
+            if BLACK_AND_WHITE:
+                im_data = np.vectorize(round)(im_data)
 
-        band_group_i = band_group_i + 1
-        if band_group_i == band_group_size:
-            band_group = band_group + 1
-            band_group_i = 0
+            band = bands[band_group]
+            ns_classname, s_classname = band.get_classnames()
+            darken = band.dark
+            if darken:
+                im_data = im_data / 2
+            band = band.bandsize
+            bar_start = int((BLOCK_HEIGHT_WIDTH / 2) - (band / 2))
+            bar_end = bar_start + band
+            for w in range(bar_start, bar_end):
+                im_data[:, w] = 0.5
 
-        im_data = make255(im_data)
+            band_group_i = band_group_i + 1
+            if band_group_i == band_group_size:
+                band_group = band_group + 1
+                band_group_i = 0
 
-        if iseven(i):
-            im_data = nn_lib.symm(im_data, 1)
-            y.append(classes[s_classname])
-            label = s_classname
-        else:
-            y.append(classes[ns_classname])
-            label = ns_classname
+            im_data = make255(im_data)
 
-        im_data = np.expand_dims(im_data, 2)
+            if iseven(i):
+                im_data = nn_lib.symm(im_data, 1)
+                y.append(classes[s_classname])
+                label = s_classname
+            else:
+                y.append(classes[ns_classname])
+                label = ns_classname
 
-        # i think Darius' data was single channeled
-        # im_data = np.concatenate((im_data, im_data, im_data), axis=2)
+            im_data = np.expand_dims(im_data, 2)
 
-        im_file = File(f'{folder.abspath}/{label}/sym{i}.png')
-        im_file.save(im_data, silent=True)
-        prog.tick()
+            # i think Darius' data was single channeled
+            # im_data = np.concatenate((im_data, im_data, im_data), axis=2)
+
+            im_file = File(f'{folder.abspath}/{label}/sym{i}.png')
+            im_file.save(im_data, silent=True)
+            prog.tick()
 
     log('done generating images')
     return classes
@@ -131,12 +132,12 @@ def getReal(
             files = glob.glob(sys.argv[1] + "/**/*.png", recursive=True)
             i = 0
             log('found ' + str(len(files)) + ' images')
-            prog = Progress(len(files))
-            for f in files:
-                p = shell(['convert', f, '-resize', '20x20', f], silent=True)
-                p.interact()
-                i = i + 1
-                prog.tick()
+            with Progress(len(files)) as prog:
+                for f in files:
+                    p = shell(['convert', f, '-resize', '20x20', f], silent=True)
+                    p.interact()
+                    i = i + 1
+                    prog.tick()
             log('resized ' + str(i) + ' images')
             import os
             os._exit(0)
@@ -179,6 +180,7 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
     # global USING_STD_DIR
     USING_STD_DIR = False
     if norm_dir.exists() and normalize_single_images:
+        assert len(data_dir.glob('*/**/.png')) == len(norm_dir.glob('*/**/.png'))
         data_dir = norm_dir
         USING_STD_DIR = True
 
@@ -321,32 +323,32 @@ class PreDataset:
             # twentyLabel = []
             twentyPairs = []
             i = 0
-            prog = Progress(len(self.imds))
-            for imd in self.imds:
-                i += 1
-                if i <= nnstate.FLAGS.batchsize:
-                    twentyPairs += [getReal((imd, HW),
-                                            self.class_label_map,
-                                            self.normalize_single_ims,
-                                            self.std_d,
-                                            self.USING_STD_DIR)]
-                    # twentyData.append(imd.data)
-                    # twentyLabel.append(imd.label)
-                if i == nnstate.FLAGS.batchsize:
-                    # batch = SimpleNamespace()
-                    # batch.data = twentyData
-                    # batch.label = twentyLabel
-                    yield (
-                        [imd.data for imd in twentyPairs],
-                        [imd.label for imd in twentyPairs]
-                    )
-                    twentyPairs.clear()
-                    # twentyData = []
-                    # twentyLabel = []
-                    i = 0
+            with Progress(len(self.imds)) as prog:
+                for imd in self.imds:
+                    i += 1
+                    if i <= nnstate.FLAGS.batchsize:
+                        twentyPairs += [getReal((imd, HW),
+                                                self.class_label_map,
+                                                self.normalize_single_ims,
+                                                self.std_d,
+                                                self.USING_STD_DIR)]
+                        # twentyData.append(imd.data)
+                        # twentyLabel.append(imd.label)
+                    if i == nnstate.FLAGS.batchsize:
+                        # batch = SimpleNamespace()
+                        # batch.data = twentyData
+                        # batch.label = twentyLabel
+                        yield (
+                            [imd.data for imd in twentyPairs],
+                            [imd.label for imd in twentyPairs]
+                        )
+                        twentyPairs.clear()
+                        # twentyData = []
+                        # twentyLabel = []
+                        i = 0
 
-                #     this is maybe better than logging in fill_cmat because it also works during net.predict()
-                prog.tick()
+                    #     this is maybe better than logging in fill_cmat because it also works during net.predict()
+                    prog.tick()
 
 
         self.gen = gen

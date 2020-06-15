@@ -9,15 +9,17 @@ from lib.misc.mutil import simple_downsample, ziplist
 from lib.wolf.wolf_lang import *
 # from wolfpy import weval
 
-def line(fd, fdwl, x, y, DS):
+def line(fd):
+    x = fd.x
+    y = fd.y
     log('creating a line with length: ' + str(len(fd.y)))
 
-    if DS is not None and len(x) > DS:
-        ds = floor(len(x) / DS)
-        x = simple_downsample(x, ds)
-        y = simple_downsample(y, ds)
-
-        log("downsampled")
+    # if DS is not None and len(x) > DS:
+    #     ds = floor(len(x) / DS)
+    #     x = simple_downsample(x, ds)
+    #     y = simple_downsample(y, ds)
+    #
+    #     log("downsampled")
     calcedMinY = min(list(filter(lambda x: x is not None, y)))
     calcedMaxY = max(list(filter(lambda x: x is not None, y)))
 
@@ -77,10 +79,10 @@ def line(fd, fdwl, x, y, DS):
         fd2 = viss[1]
         x2 = fd2.x
         y2 = fd2.y
-        if DS is not None and len(x) > DS:
-            ds = floor(len(x2) / DS)
-            x2 = simple_downsample(x2, ds)
-            y2 = downsample(y2, ds)
-
+        # if DS is not None and len(x) > DS:
+        #     ds = floor(len(x2) / DS)
+        #     x2 = simple_downsample(x2, ds)
+        #     y2 = downsample(y2, ds)
+    #
     #     TwoAxisListLinePlot of fd and x2/y2?
     # rectangele for x? patches?

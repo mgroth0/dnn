@@ -15,16 +15,16 @@ def answer_request(default,q,check,gui=True):
             folName = textInput.text()
         else:
             folName = answer
-        r = check(folName)
-        if r[0]:
-            to_return['r'] = folName
+        r,figs_folder = check(folName)
+        if r:
+            to_return['r'] = figs_folder
             if gui:
                 app.close()
         else:
             if gui:
-                status.setText(r[1])
+                status.setText(figs_folder)
             else:
-                print(r[1])
+                print(figs_folder)
 
     if gui:
         app.button("Submit", fun)

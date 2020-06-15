@@ -36,4 +36,5 @@ if float(1) == float(2):
 else:
     result_folder = sym_net_main(FLAGS)
 result_folder.zip_in_place()
+result_folder.delete()
 nn_init_fun.NRC_IS_FINISHED()
