@@ -17,9 +17,12 @@ def dnn(
         shell('pkill -f MATLAB')
     import lib.run_exps as run_exps
     if File('_figs/figs_dnn').exists():
-        figsFolder = get_last_figs_folder() # for if MODE=COMPILE_TEST_ALL
+        figsFolder = get_last_figs_folder()  # for if MODE=COMPILE_TEST_ALL
     if FULL and cfg.SAVE_DATA:
         metastate = File("_metastate.json")
+        if not metastate.exists():
+            metastate['next_exp_id'] = 1
+            metastate['last_submitted_exp_group_name'] = ''
         def check(a):
             metastate["last_submitted_exp_group_name"] = a
             figs_folder = get_figs_folder(a)
