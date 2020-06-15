@@ -255,7 +255,7 @@ class MakeFigsBackend(ABC):
                 for sub in listpoints:
                     cls.ax.plot(sub[:, 0], sub[:, 1], 'y--')
             # rasters start from the bottom but I want this to start from the top
-            if cls == WolfMakeFigsBackend:
+            if 'Wolf' in cls.__name__:
                 rast = OneWayOfShowingARaster(Raster(reversed(data)), gl)
             else:
                 cls.ax.imshow(list(data))
@@ -289,7 +289,7 @@ class MakeFigsBackend(ABC):
                 # y ticks not reversed for mpl?
                 yt_mpl_t += [(t[0] / gl)]
                 yt_mpl_l += [t[1]]
-            if cls == WolfMakeFigsBackend:
+            if 'Wolf' in cls.__name__:
                 insets = [
                     Inset(
                         obj=Rasterize(scale),
@@ -365,7 +365,7 @@ class MakeFigsBackend(ABC):
                 # cax.set_yticks(arr(yt_mpl_t) * gl)
                 # cax.set_yticklabels(yt_mpl_l)
 
-        if cls == WolfMakeFigsBackend:
+        if 'Wolf' in cls.__name__:
             return r
 
 
