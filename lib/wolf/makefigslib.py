@@ -57,7 +57,8 @@ class MakeFigsBackend(ABC):
 
     @classmethod
     def table(cls, fd):
-        from lib.wolf.wolf_figs import addHeaderLabels, LinePlotGrid, WolfMakeFigsBackend, OneWayOfShowingARaster
+        if 'Wolf' in cls.__name__:
+            from lib.wolf.wolf_figs import addHeaderLabels, LinePlotGrid, WolfMakeFigsBackend, OneWayOfShowingARaster
         if cls == MPLFigsBackend:
             cls.fig = plt.figure(
                 figsize=(16, 12),
