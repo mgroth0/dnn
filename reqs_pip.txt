@@ -1,1 +1,2 @@
 wolframclient==1.1.4
+tensorflow==2.2.0
