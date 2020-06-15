@@ -7,16 +7,16 @@ Installation
 
 3. `conda config --add channels conda-forge`
 
-6. `conda create --name dnn --file requirements.txt`
+4. `conda create --name dnn --file requirements.txt`  
+-- When updating, use `conda install --file requirements.txt`
 
-7. `conda activate dnn`
+5. `conda activate dnn`
 
 Basic Usage
 -
 
 - `./dnn -cfg=gen_images`
-- `./dnn`
-- `./dnn default --gui=1`
+- `./dnn -cfg=test_one`
 
 Configuration
 -
