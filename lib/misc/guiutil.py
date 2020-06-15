@@ -8,10 +8,10 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout, QLabel, QPushButt
 from ..boot.loggy import log
 from ..misc.mutil import log_invokation
 
-spec = importlib.util.spec_from_file_location("breeze_resources",
-                                              "/Users/matt/Desktop/BreezeStyleSheets/breeze_resources.py")
-foo = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(foo)
+# spec = importlib.util.spec_from_file_location("breeze_resources",
+#                                               "/Users/matt/Desktop/BreezeStyleSheets/breeze_resources.py")
+# foo = importlib.util.module_from_spec(spec)
+# spec.loader.exec_module(foo)
 
 
 palette = QPalette()
