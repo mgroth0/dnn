@@ -1,5 +1,3 @@
-from paramiko import SSHClient
-
 from lib.defaults import *
 PROJECT_NAME = 'test-3'
 PROJECT = ['--project', 'neat-beaker-261120', '--zone', 'us-central1-a', PROJECT_NAME]

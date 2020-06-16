@@ -66,7 +66,6 @@ opencv=4.3.0=py38_1
 openh264=2.1.1=hd174df1_0
 openssl=1.1.1g=h0b31af3_0
 pandas=1.0.4=py38h5fc983b_0
-paramiko=2.7.1=py38_0
 pcre=8.44=h4a8c4bd_0
 pexpect=4.8.0=py38h32f6830_1
 pillow=7.1.2=py38h83dc5e5_0
