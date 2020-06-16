@@ -1,5 +1,5 @@
-from lib.figs.FigData import FigData
-from lib.figs.JsonSerializable import FigSet
+from mlib.FigData import FigData
+from mlib.JsonSerializable import FigSet
 from lib.defaults import *
 
 from lib.data_saving import savePlotAndTableData

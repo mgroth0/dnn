@@ -1,6 +1,6 @@
 # noinspection PyUnresolvedReferences
 
-from lib.figs.JsonSerializable import obj
+from mlib.JsonSerializable import obj
 import lib.misc.google_compute as google_compute
 # import intercept
 # intercept.MULTI_INTERCEPT = True

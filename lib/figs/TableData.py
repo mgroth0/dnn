@@ -1,6 +1,6 @@
 from typing import Optional
 
-from lib.figs.FigData import PlotOrSomething
+from mlib.FigData import PlotOrSomething
 class TableData(PlotOrSomething):
     def __init__(self,
                  data,

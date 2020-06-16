@@ -1,6 +1,6 @@
 from lib.boot import bootfun  # noqa
 from lib.defaults import *
-from lib.figs.JsonSerializable import obj
+from mlib.JsonSerializable import obj
 from lib.wolf.makefigslib import MPLFigsBackend
 
 @log_invokation(with_args=True)

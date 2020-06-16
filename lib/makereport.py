@@ -1,7 +1,7 @@
 # EXP_GROUP__FOLDER_NAME =
 import argparse
 
-from lib.figs.JsonSerializable import obj
+from mlib.JsonSerializable import obj
 from lib.figapi import APIDict
 from lib.makereport_lib import update_report, PUBLIC_URL, upload_webpage
 from lib.web import HTMLDoc, Hyperlink, Br
