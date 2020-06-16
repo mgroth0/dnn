@@ -7,8 +7,8 @@ import scipy
 
 import tensorflow.keras
 
-from lib.boot.loggy import log
-from lib.misc.mutil import arr,catfun
+from mlib.boot.mlog import log
+from mlib.boot.mutil import arr,catfun
 def make255(x):
     return np.uint8(x * 255)
 

@@ -1,5 +1,5 @@
-from lib.boot.loggy import log
-from lib.misc.mutil import File, Temp
+from mlib.boot.mlog import log
+from mlib.boot.mutil import File, Temp
 from lib.nn.gen_preproc_ims import SymClassGroup, gen_images, get_class_dict
 
 def nn_gen(FLAGS, folder,

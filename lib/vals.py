@@ -1,4 +1,4 @@
-USE_THREADING = False
+
 # ONLY_LOG_ONE = True
 IN_SERIAL_MODE = False
 

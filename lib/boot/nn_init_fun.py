@@ -33,5 +33,29 @@ def runWithMultiProcess(main_nn_fun):
 def NRC_IS_FINISHED():
     # when imported, loggy upgrades this function to use log
     print('NRC IS FINISHED')
+
+
+    # this used to be in loggy which is now in mlib
+    from . import nn_init_fun
+    def nrc_is_finished_upgrade(old):
+        def f():
+            log('NRC_IS_FINISHED')
+            old()
+        return f
+    if nn_init_fun.NRC_IS_FINISHED.__name__ != 'f':
+        nn_init_fun.NRC_IS_FINISHED = nrc_is_finished_upgrade(nn_init_fun.NRC_IS_FINISHED)
+
+
+
+
+
+
+
+
+
+
+
+
     import os
     os._exit(0)
+

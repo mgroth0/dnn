@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 from lib import data_saving
-from lib.gpu import mygpus
+from mlib.gpu import mygpus
 from arch.ALEX import AlexNet
 from arch.INC import IRNV2
 from arch.GNET import GoogleNet
@@ -87,7 +87,7 @@ def sym_net_main(FLAGS):
     net.val_data = datasetVal
     net.test_data = datasetTest
     trainTestRecord(net, '', FLAGS.epochs)
-    loggy.log('finished sym_net_main')
+    mlog.log('finished sym_net_main')
     return data_saving.EXP_FOLDER(root)
 
 

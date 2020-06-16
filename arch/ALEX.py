@@ -13,7 +13,7 @@ from imageio import imread
 from PIL import Image
 from tensorflow.python.layers.base import Layer
 
-from lib.boot.loggy import log
+from mlib.boot.mlog import log
 import arch.symnet as symnet
 
 class AlexNet(symnet.SymNet):

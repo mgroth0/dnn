@@ -6,7 +6,7 @@ def register_exception_handler():
     import traceback
     def my_except_hook(exctype, value, tb):
         listing = traceback.format_exception(exctype, value, tb)
-        import lib.misc.mutil as mutil
+        import mlib.boot.mutil as mutil
         if not ismac():
             for i, line in mutil.enum(listing):
                 if line.startswith('  File "'):
@@ -35,7 +35,7 @@ def margparse(**kwargs):
 def setup_logging(verbose=True):
     import logging
     import tensorflow as tf
-    import lib.boot.loggy as loggy
+    import mlib.boot.mlog as loggy
     class TF_Log_Filter(logging.Filter):
         def filter(self, record):
             line, file_line, v = loggy.get_log_info(record.msg)

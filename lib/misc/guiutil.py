@@ -5,8 +5,8 @@ from PyQt5.QtCore import pyqtSignal, QObject, Qt
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout, QLabel, QPushButton, QLineEdit, QApplication
 
-from ..boot.loggy import log
-from ..misc.mutil import log_invokation
+from mlib.boot.mlog import log
+from mlib.boot.mutil import log_invokation
 
 # spec = importlib.util.spec_from_file_location("breeze_resources",
 #                                               "/Users/matt/Desktop/BreezeStyleSheets/breeze_resources.py")

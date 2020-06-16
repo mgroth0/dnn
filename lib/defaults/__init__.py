@@ -1,6 +1,6 @@
-from ..boot.loggy import *
+from mlib.boot.mlog import *
 import pdb
-from ..misc.mutil import *
+from mlib.boot.mutil import *
 from ..misc import ext
 import numpy as np
 np.seterr(all='raise')

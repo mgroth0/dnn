@@ -4,8 +4,8 @@ import pdb
 from wolframclient.language import wlexpr, wl
 
 import lib.wolf.makefigslib
-from lib.boot.loggy import log
-from lib.misc.mutil import simple_downsample, ziplist
+from mlib.boot.mlog import log
+from mlib.boot.mutil import simple_downsample, ziplist
 from lib.wolf.wolf_lang import *
 # from wolfpy import weval
 

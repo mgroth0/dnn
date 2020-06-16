@@ -2,7 +2,7 @@ import copy
 
 from lib.figs.TableData import RSAMatrix
 from lib.defaults import *
-from lib.misc.mutil import arr, itr, zeros
+from mlib.boot.mutil import arr, itr, zeros
 from lib.nn.nn_plotting import sort_human
 from lib.data_saving import savePlotAndTableData
 

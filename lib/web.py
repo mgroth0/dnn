@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from lib.boot.loggy import log
-from lib.misc.mutil import File, isstr
+from mlib.boot.mlog import log
+from mlib.boot.mutil import File, isstr
 DARK_CSS = '''
 body {
     background:black;

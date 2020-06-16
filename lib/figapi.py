@@ -2,8 +2,8 @@ from copy import deepcopy
 
 from wolframclient.language import wlexpr, wl
 
-from lib.boot.loggy import log
-from lib.misc.mutil import enum, listkeys, listfilt
+from mlib.boot.mlog import log
+from mlib.boot.mutil import enum, listkeys, listfilt
 from lib.web import HTMLVar
 from lib.wolf.wolfpy import WOLFRAM, weval
 class APIDict:

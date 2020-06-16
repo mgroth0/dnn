@@ -1,11 +1,12 @@
 from typing import Optional
 
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt, rcParams
 
+from mlib.boot.mlog import log
 from lib.figs.JsonSerializable import JsonSerializable, FigSet
-from lib.defaults import *
+import numpy as np
 
-
+from mlib.boot.mutil import make2d
 class PlotOrSomething(JsonSerializable):
     def __init__(self, title='', make=False):
         self.title = title
@@ -28,11 +29,11 @@ class MultiPlot:
         xlab = ''
         hideYTicks = False
         title = ''
-        xmin = inf
-        ymin = inf
-        ymax = -inf
+        xmin = np.inf
+        ymin = np.inf
+        ymax = -np.inf
 
-        xmax = -inf
+        xmax = -np.inf
         # noinspection PyProtectedMember
         AUTO_Y = any(map(lambda a_plot: a_plot._ylim == 'auto', args))
         for p in args:
@@ -72,14 +73,12 @@ class MultiPlot:
 def Line(*args, **kwargs):
     return FigData(*args, item_type='line', **kwargs)
 
-from matplotlib import rcParams
-
 
 def makefig(subplots=None, plotarg=''):
     log('making figure')
     if subplots is None:
         subplots = _CurrentFigSet.viss
-    subplots = arr(subplots)
+    subplots = np.array(subplots)
     rcParams['figure.figsize'] = 6, 8
     rcParams["savefig.dpi"] = 200
     with plt.style.context('dark_background'):
@@ -94,8 +93,8 @@ def makefig(subplots=None, plotarg=''):
         if len(axs.shape) == 1:
             # noinspection PyUnresolvedReferences
             axs.shape = (axs.shape[0], 1)
-        for r, row in enum(subplots):
-            for c, fd in enum(row):
+        for r, row in enumerate(subplots):
+            for c, fd in enumerate(row):
                 if isinstance(fd, MultiPlot):
                     [d.show(axs[r, c]) for d in fd]
                 else:
@@ -198,7 +197,7 @@ class FigData(PlotOrSomething):
 
     def fixAutoLims(self):
         if self._ylim == 'auto':
-            rel_y = arr(self.y)[bitwise_and(arr(self.x) >= self.minX, arr(self.x) < self.maxX)]
+            rel_y = np.array(self.y)[np.bitwise_and(np.array(self.x) >= self.minX, np.array(self.x) < self.maxX)]
             dif = 0.1 * (max(rel_y) - min(rel_y))
             self.minY = min(rel_y) - dif
             self.maxY = max(rel_y) + dif

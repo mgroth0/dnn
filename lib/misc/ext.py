@@ -1,4 +1,4 @@
-from ..misc import mutil
+from mlib.boot import mutil
 from ..defaults import *
 
 mutil.mparray.__iadd__ = mutil.append
