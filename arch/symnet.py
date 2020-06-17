@@ -47,6 +47,7 @@ class SymNet(ABC):
 
     WEIGHTS_PATH = Folder('_weights')
     def weightsf(self): return self.WEIGHTS_PATH[self.META().WEIGHTS].abspath
+    def oweightsf(self): return self.WEIGHTS_PATH['matlab'].resolve(self.META().ARCH_LABEL + '.onnx').abspath
 
 
 
@@ -83,6 +84,9 @@ class SymNet(ABC):
                 weights_report_file = arch_summary_folder[
                     f'{self.META().ARCH_LABEL}_weights.txt'
                 ]
+                o_weights_report_file = arch_summary_folder[
+                    f'{self.META().ARCH_LABEL}_weights_matlab.txt'
+                ]
                 weights_report_file.write('')
 
                 def processGroup(group, rep, indent=0):
@@ -108,7 +112,12 @@ class SymNet(ABC):
                 weights_report_file.write(report)
                 log('finished writing weights report')
 
-                breakpoint()
+                log('writing matlab weight report...')
+                import onnx
+                o_model = onnx.load(self.oweightsf())
+                o_weights_report_file.write(repr(o_model.graph.node))
+                log('finished writing matlab weight report...')
+
 
             # Theano > Tensorflow, just flips the weight arrays in the first 2 dims. Doesn't change shape.
             if self.META().FLIPPED_CONV_WEIGHTS:
