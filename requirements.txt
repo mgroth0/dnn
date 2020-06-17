@@ -50,6 +50,7 @@ libopenblas=0.3.9=h3d69b6c_0
 libopencv=4.3.0=py38_1
 libpng=1.6.37=hbbe82c9_1
 libpq=12.2=h489d428_1
+libprotobuf=3.12.3=hd174df1_0
 libtiff=4.1.0=h2ae36a8_6
 libwebp-base=1.1.0=h0b31af3_3
 libxml2=2.9.10=h53d96d6_0
@@ -63,6 +64,7 @@ nspr=4.20=h0a44026_1000
 nss=3.47=hc0980d9_0
 numpy=1.18.5=py38h1f821a2_0
 olefile=0.46=py_0
+onnx=1.7.0=py38h8126d8c_2
 opencv=4.3.0=py38_1
 openh264=2.1.1=hd174df1_0
 openssl=1.1.1g=h0b31af3_0
@@ -72,6 +74,7 @@ pexpect=4.8.0=py38h32f6830_1
 pillow=7.1.2=py38h83dc5e5_0
 pip=20.1.1=py_1
 pixman=0.38.0=h01d97ff_1003
+protobuf=3.12.3=py38hc84c608_0
 ptyprocess=0.6.0=py_1001
 py-opencv=4.3.0=py38h23f93f0_1
 pycosat=0.6.3=py38h64e0658_1004
@@ -100,6 +103,8 @@ threadpoolctl=2.1.0=pyh5ca1d4c_0
 tk=8.6.10=hbbe82c9_0
 tornado=6.0.4=py38h64e0658_1
 tqdm=4.46.1=pyh9f0ad1d_0
+typing-extensions=3.7.4.2=0
+typing_extensions=3.7.4.2=py_0
 urllib3=1.25.9=py_0
 wheel=0.34.2=py_1
 x264=1!152.20180806=h1de35cc_0

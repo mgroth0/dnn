@@ -71,9 +71,44 @@ class SymNet(ABC):
                 name=self.META().FULL_NAME.replace(' ', '_')
             )
 
+            arch_summary_folder = Folder('_arch')
+            arch_summary_folder.mkdirs()
+
             if self.META().WEIGHTS is not None:
                 # transfer learning
                 self.net.load_weights(self.weightsf())
+
+                import h5py
+                weights_file = h5py.File(self.weightsf(), "r")
+                weights_report_file = arch_summary_folder[
+                    f'{self.META().ARCH_LABEL}_weights.txt'
+                ]
+                weights_report_file.write('')
+
+                def processGroup(group, rep, indent=0):
+                    for k in listkeys(group):
+                        rep += '\t' * indent
+                        rep += k
+                        item = group[k]
+                        if 'Dataset' in cn(item):
+                            # c = 'Dataset'
+                            rep += f'\t\t{item.shape} {item.dtype}\n'
+                        elif 'Group' in cn(item):
+                            # c = 'Group'
+                            rep += '\n'
+                            rep = processGroup(item, rep, indent + 1)
+                            # sub = f'{item.shape} {item.dtype}'
+                        else:
+                            err(f'what is this: {cn(item)}')
+                    return rep
+
+                report = ''
+                report = processGroup(weights_file, report)
+                log('writing weights report...')
+                weights_report_file.write(report)
+                log('finished writing weights report')
+
+                breakpoint()
 
             # Theano > Tensorflow, just flips the weight arrays in the first 2 dims. Doesn't change shape.
             if self.META().FLIPPED_CONV_WEIGHTS:
@@ -83,8 +118,6 @@ class SymNet(ABC):
                         converted_w = convert_kernel(original_w)
                         layer.kernel.assign(converted_w)
 
-            arch_summary_folder = Folder('_arch')
-            arch_summary_folder.mkdirs()
             arch_summary_file = arch_summary_folder[f'{self.META().ARCH_LABEL}.txt']
             log('writing summary')
             with open(arch_summary_file, 'w') as fh:
