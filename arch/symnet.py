@@ -160,6 +160,16 @@ class SymNet(ABC):
         self.net.run_eagerly = True
 
         log('compiled network!')
+
+        log('saving model')
+        model_save_file = f'_arch/{self.META().ARCH_LABEL}'
+        if self.META().WEIGHTS is not None:
+            model_save_file = f'{model_save_file}_pretrained'
+        self.net.save(model_save_file)
+        log('saved model')
+
+
+
         # num_classes
         reset_global_met_log()
         self.train_data: Optional[PreDataset] = None
