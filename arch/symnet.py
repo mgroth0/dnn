@@ -75,9 +75,28 @@ class SymNet(ABC):
             arch_summary_folder = Folder('_arch')
             arch_summary_folder.mkdirs()
 
+            model_save_file = f'_arch/{self.META().ARCH_LABEL}'
+            model_pretrained_save_file = f'{model_save_file}_pretrained'
+
+            self.net.compile(
+                optimizer='adam',
+                loss='sparse_categorical_crossentropy'
+            )
+            log('saving model...')
+            self.net.save(model_save_file)
+            log('saved model')
+
             if self.META().WEIGHTS is not None:
                 # transfer learning
                 self.net.load_weights(self.weightsf())
+
+                self.net.compile(
+                    optimizer='adam',
+                    loss='sparse_categorical_crossentropy'
+                )
+                log('saving model...')
+                self.net.save(model_pretrained_save_file)
+                log('saved model')
 
                 import h5py
                 weights_file = h5py.File(self.weightsf(), "r")
@@ -152,6 +171,8 @@ class SymNet(ABC):
         for m in net_mets.METS_TO_USE():
             mets_for_compile.append(m)
 
+        breakpoint()
+
         self.net.compile(
             optimizer='adam',
             loss='sparse_categorical_crossentropy',
@@ -160,14 +181,6 @@ class SymNet(ABC):
         self.net.run_eagerly = True
 
         log('compiled network!')
-
-        log('saving model')
-        model_save_file = f'_arch/{self.META().ARCH_LABEL}'
-        if self.META().WEIGHTS is not None:
-            model_save_file = f'{model_save_file}_pretrained'
-        self.net.save(model_save_file)
-        log('saved model')
-
 
 
         # num_classes
