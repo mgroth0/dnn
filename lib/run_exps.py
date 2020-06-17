@@ -62,6 +62,7 @@ def run_exps(cfg, remote=False, gui=True):
             'arch'        : 'JUST_CLEAR_FILES_AND_GEN_DATASET',
             'ntrain'      : 0,
 
+            'proto_model' : cfg.proto_model,
             'pipeline'    : ''.replace(' ', ''),
 
             'epochs'      : cfg.EPOCHS,
@@ -111,6 +112,7 @@ def run_exps(cfg, remote=False, gui=True):
                     'arch'        : e.arch,
                     'ntrain'      : ntrain,
 
+                    'proto_model' : cfg.proto_model,
                     'pipeline'    : cfg.PIPELINE.replace(' ', ''),
 
                     'epochs'      : cfg.EPOCHS,

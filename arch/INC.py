@@ -1,171 +1,197 @@
-import os
+from arch import *
+from tensorflow.keras.layers import (
 
-from keras_applications import get_submodules_from_kwargs
-from keras_applications.imagenet_utils import _obtain_input_shape
-import tensorflow.keras.utils as keras_utils
-from keras_applications.inception_resnet_v2 import BASE_WEIGHT_URL
-from tensorflow.keras import backend
-from tensorflow.keras import layers
-from tensorflow.keras import models
-# from tensorflow.keras import keras_utils
-from arch.symnet import SymNet
-
-class IRNV2(SymNet):
-    def ARCH_LABEL(cls): return "INC"
-    @classmethod
-    def HEIGHT_WIDTH(self):
-        return 299
-    def build_model(self):
-        include_top = True
-        weights = 'imagenet'
-        input_tensor = None
-        input_shape = None
-        pooling = None
-        classes = 1000
+    AveragePooling2D,
+    BatchNormalization,
+    Concatenate,
 
 
-        if not (weights in {'imagenet', None} or os.path.exists(weights)):
-            raise ValueError('The `weights` argument should be either '
-                             '`None` (random initialization), `imagenet` '
-                             '(pre-training on ImageNet), '
-                             'or the path to the weights file to be loaded.')
+    GlobalAveragePooling2D,
+    Lambda
 
-        if weights == 'imagenet' and include_top and classes != 1000:
-            raise ValueError('If using `weights` as `"imagenet"` with `include_top`'
-                             ' as true, `classes` should be 1000')
 
-        # Determine proper input shape
-        input_shape = _obtain_input_shape(
-            input_shape,
-            default_size=299,
-            min_size=75,
-            # data_format=backend.image_data_format(),
-            data_format=backend.image_data_format(),
-            require_flatten=include_top,
-            weights=weights)
 
-        if input_tensor is None:
-            img_input = layers.Input(shape=input_shape)
-        else:
-            if not backend.is_keras_tensor(input_tensor):
-                img_input = layers.Input(tensor=input_tensor, shape=input_shape)
-            else:
-                img_input = input_tensor
+)
 
+
+
+class INC(SymNet):
+    def META(self): return self.Meta(
+        WEIGHTS='inception_resnet_v2_weights_tf_dim_ordering_tf_kernels.h5',
+
+        FULL_NAME='Inception Resnet V2',
+        CREDITS='Keras Applications',
+        ARCH_LABEL='INC',
+        HEIGHT_WIDTH=299
+
+    )
+    def assemble_layers(self):
         # Stem block: 35 x 35 x 192
-        x = self.conv2d_bn(img_input, 32, 3, strides=2, padding='valid')
-        x = self.conv2d_bn(x, 32, 3, padding='valid')
-        x = self.conv2d_bn(x, 64, 3)
-        x = layers.MaxPooling2D(3, strides=2)(x)
-        x = self.conv2d_bn(x, 80, 1, padding='valid')
-        x = self.conv2d_bn(x, 192, 3, padding='valid')
-        x = layers.MaxPooling2D(3, strides=2)(x)
+        x = MaxPooling2D(3, strides=2)(
+            self.conv2d_bn(
+                self.conv2d_bn(
+                    MaxPooling2D(
+                        3,
+                        strides=2
+                    )(
+                        self.conv2d_bn(
+                            self.conv2d_bn(
+                                self.conv2d_bn(
+                                    self.inputs,
+                                    32,
+                                    3,
+                                    strides=2,
+                                    padding='valid'
+                                ),
+                                32,
+                                3,
+                                padding='valid'
+                            ),
+                            64,
+                            3
+                        )
+                    ),
+                    80,
+                    1,
+                    padding='valid'
+                ),
+                192,
+                3,
+                padding='valid'
+            )
+        )
 
         # Mixed 5b (Inception-A block): 35 x 35 x 320
-        branch_0 = self.conv2d_bn(x, 96, 1)
-        branch_1 = self.conv2d_bn(x, 48, 1)
-        branch_1 = self.conv2d_bn(branch_1, 64, 5)
-        branch_2 = self.conv2d_bn(x, 64, 1)
-        branch_2 = self.conv2d_bn(branch_2, 96, 3)
-        branch_2 = self.conv2d_bn(branch_2, 96, 3)
-        branch_pool = layers.AveragePooling2D(3, strides=1, padding='same')(x)
-        branch_pool = self.conv2d_bn(branch_pool, 64, 1)
-        branches = [branch_0, branch_1, branch_2, branch_pool]
-        channel_axis = 1 if backend.image_data_format() == 'channels_first' else 3
-        x = layers.Concatenate(axis=channel_axis, name='mixed_5b')(branches)
+        x = Concatenate(
+            axis=self.META().CHANNEL_AXIS,
+            name='mixed_5b'
+        )([
+            # branches
+            self.conv2d_bn(x, 96, 1),
+            self.conv2d_bn(self.conv2d_bn(x, 48, 1), 64, 5),
+            self.conv2d_bn(
+                self.conv2d_bn(
+                    self.conv2d_bn(x, 64, 1), 96, 3
+                ),
+                96,
+                3
+            ),
+            # branch_pool
+            self.conv2d_bn(
+                AveragePooling2D(3, strides=1, padding='same')(x),
+                64,
+                1
+            )
+        ])
 
         # 10x block35 (Inception-ResNet-A block): 35 x 35 x 320
         for block_idx in range(1, 11):
-            x = self.inception_resnet_block(x,
-                                            scale=0.17,
-                                            block_type='block35',
-                                            block_idx=block_idx)
+            x = self.inception_resnet_block(
+                x,
+                scale=0.17,
+                block_type='block35',
+                block_idx=block_idx
+            )
 
         # Mixed 6a (Reduction-A block): 17 x 17 x 1088
-        branch_0 = self.conv2d_bn(x, 384, 3, strides=2, padding='valid')
-        branch_1 = self.conv2d_bn(x, 256, 1)
-        branch_1 = self.conv2d_bn(branch_1, 256, 3)
-        branch_1 = self.conv2d_bn(branch_1, 384, 3, strides=2, padding='valid')
-        branch_pool = layers.MaxPooling2D(3, strides=2, padding='valid')(x)
-        branches = [branch_0, branch_1, branch_pool]
-        x = layers.Concatenate(axis=channel_axis, name='mixed_6a')(branches)
+        x = Concatenate(
+            axis=self.META().CHANNEL_AXIS,
+            name='mixed_6a'
+        )([
+            # branches
+            self.conv2d_bn(x, 384, 3, strides=2, padding='valid'),
+            self.conv2d_bn(
+                self.conv2d_bn(
+                    self.conv2d_bn(x, 256, 1),
+                    256,
+                    3
+                ),
+                384,
+                3,
+                strides=2,
+                padding='valid'
+            ),
+
+            # branch_pool
+            MaxPooling2D(3, strides=2, padding='valid')(x)
+        ])
 
         # 20x block17 (Inception-ResNet-B block): 17 x 17 x 1088
         for block_idx in range(1, 21):
-            x = self.inception_resnet_block(x,
-                                            scale=0.1,
-                                            block_type='block17',
-                                            block_idx=block_idx)
+            x = self.inception_resnet_block(
+                x,
+                scale=0.1,
+                block_type='block17',
+                block_idx=block_idx
+            )
 
         # Mixed 7a (Reduction-B block): 8 x 8 x 2080
-        branch_0 = self.conv2d_bn(x, 256, 1)
-        branch_0 = self.conv2d_bn(branch_0, 384, 3, strides=2, padding='valid')
-        branch_1 = self.conv2d_bn(x, 256, 1)
-        branch_1 = self.conv2d_bn(branch_1, 288, 3, strides=2, padding='valid')
-        branch_2 = self.conv2d_bn(x, 256, 1)
-        branch_2 = self.conv2d_bn(branch_2, 288, 3)
-        branch_2 = self.conv2d_bn(branch_2, 320, 3, strides=2, padding='valid')
-        branch_pool = layers.MaxPooling2D(3, strides=2, padding='valid')(x)
-        branches = [branch_0, branch_1, branch_2, branch_pool]
-        x = layers.Concatenate(axis=channel_axis, name='mixed_7a')(branches)
+        x = Concatenate(axis=self.META().CHANNEL_AXIS, name='mixed_7a')(
+            [
+                # branches
+                self.conv2d_bn(
+                    self.conv2d_bn(x, 256, 1),
+                    384,
+                    3,
+                    strides=2,
+                    padding='valid'
+                ),
+                self.conv2d_bn(
+                    self.conv2d_bn(x, 256, 1),
+                    288,
+                    3,
+                    strides=2,
+                    padding='valid'
+                ),
+                self.conv2d_bn(
+                    self.conv2d_bn(
+                        self.conv2d_bn(x, 256, 1),
+                        288,
+                        3
+                    ),
+                    320,
+                    3,
+                    strides=2,
+                    padding='valid'
+                ),
+
+                # branch pool
+                MaxPooling2D(3, strides=2, padding='valid')(x)
+            ]
+        )
 
         # 10x block8 (Inception-ResNet-C block): 8 x 8 x 2080
         for block_idx in range(1, 10):
-            x = self.inception_resnet_block(x,
-                                            scale=0.2,
-                                            block_type='block8',
-                                            block_idx=block_idx)
-        x = self.inception_resnet_block(x,
-                                        scale=1.,
-                                        activation=None,
-                                        block_type='block8',
-                                        block_idx=10)
+            x = self.inception_resnet_block(
+                x,
+                scale=0.2,
+                block_type='block8',
+                block_idx=block_idx
+            )
+        x = self.inception_resnet_block(
+            x,
+            scale=1.,
+            activation=None,
+            block_type='block8',
+            block_idx=10
+        )
 
-        # Final convolution block: 8 x 8 x 1536
-        x = self.conv2d_bn(x, 1536, 1, name='conv_7b')
-
-        if include_top:
+        # original class threw error if this 1000 was changed... but I wonder...
+        return Dense(
+            1000,
+            activation='softmax',
+            name='predictions'
+        )(GlobalAveragePooling2D(
             # Classification block
-            x = layers.GlobalAveragePooling2D(name='avg_pool')(x)
-            x = layers.Dense(classes, activation='softmax', name='predictions')(x)
-        else:
-            if pooling == 'avg':
-                x = layers.GlobalAveragePooling2D()(x)
-            elif pooling == 'max':
-                x = layers.GlobalMaxPooling2D()(x)
+            name='avg_pool'
+        )(self.conv2d_bn(
+            # Final convolution block: 8 x 8 x 1536
+            x,
+            1536,
+            1,
+            name='conv_7b'
+        )))
 
-        # Ensure that the model takes into account
-        # any potential predecessors of `input_tensor`.
-        if input_tensor is not None:
-            inputs = keras_utils.get_source_inputs(input_tensor)
-        else:
-            inputs = img_input
-
-        # Create model.
-        model = models.Model(inputs, x, name='inception_resnet_v2')
-
-        # Load weights.
-        if weights == 'imagenet':
-            if include_top:
-                fname = 'inception_resnet_v2_weights_tf_dim_ordering_tf_kernels.h5'
-                weights_path = keras_utils.get_file(
-                    fname,
-                    BASE_WEIGHT_URL + fname,
-                    cache_subdir='models',
-                    file_hash='e693bd0210a403b3192acc6073ad2e96')
-            else:
-                fname = ('inception_resnet_v2_weights_'
-                         'tf_dim_ordering_tf_kernels_notop.h5')
-                weights_path = keras_utils.get_file(
-                    fname,
-                    BASE_WEIGHT_URL + fname,
-                    cache_subdir='models',
-                    file_hash='d19885ff4a710c122648d3b5c3b684e4')
-            model.load_weights(weights_path)
-        elif weights is not None:
-            model.load_weights(weights)
-
-        return model
 
     def conv2d_bn(self, x,
                   filters,
@@ -191,22 +217,20 @@ class IRNV2(SymNet):
         # Returns
             Output tensor after applying `Conv2D` and `BatchNormalization`.
         """
-        x = layers.Conv2D(filters,
-                          kernel_size,
-                          strides=strides,
-                          padding=padding,
-                          use_bias=use_bias,
-                          name=name)(x)
+        x = Conv2D(filters,
+                   kernel_size,
+                   strides=strides,
+                   padding=padding,
+                   use_bias=use_bias,
+                   name=name)(x)
         if not use_bias:
-            bn_axis = 1 if backend.image_data_format() == 'channels_first' else 3
             bn_name = None if name is None else name + '_bn'
-            if self.batch_normalize:
-                x = layers.BatchNormalization(axis=bn_axis,
-                                              scale=False,
-                                              name=bn_name)(x)
+            x = BatchNormalization(axis=self.META().CHANNEL_AXIS,
+                                   scale=False,
+                                   name=bn_name)(x)
         if activation is not None:
             ac_name = None if name is None else name + '_ac'
-            x = layers.Activation(activation, name=ac_name)(x)
+            x = Activation(activation, name=ac_name)(x)
         return x
 
     def inception_resnet_block(self, x, scale, block_type, block_idx, activation='relu'):
@@ -275,20 +299,20 @@ class IRNV2(SymNet):
                              'but got: ' + str(block_type))
 
         block_name = block_type + '_' + str(block_idx)
-        channel_axis = 1 if backend.image_data_format() == 'channels_first' else 3
-        mixed = layers.Concatenate(
+        channel_axis = self.META().CHANNEL_AXIS
+        mixed = Concatenate(
             axis=channel_axis, name=block_name + '_mixed')(branches)
         up = self.conv2d_bn(mixed,
-                            backend.int_shape(x)[channel_axis],
+                            tuple(x.shape.as_list())[channel_axis],
                             1,
                             activation=None,
                             use_bias=True,
                             name=block_name + '_conv')
 
-        x = layers.Lambda(lambda inputs, scale: inputs[0] + inputs[1] * scale,
-                          output_shape=backend.int_shape(x)[1:],
-                          arguments={'scale': scale},
-                          name=block_name)([x, up])
+        x = Lambda(lambda inputs, the_scale: inputs[0] + inputs[1] * the_scale,
+                   output_shape=tuple(x.shape.as_list())[1:],
+                   arguments={'the_scale': scale},
+                   name=block_name)([x, up])
         if activation is not None:
-            x = layers.Activation(activation, name=block_name + '_ac')(x)
+            x = Activation(activation, name=block_name + '_ac')(x)
         return x

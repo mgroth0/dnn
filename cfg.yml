@@ -1,10 +1,12 @@
 profiles:
   proto: &proto
+    proto_model: True
     NTRAIN: [10,20]
     eval_nperc: 10
     rsa_nperc: 10
     MUSCLE: local
   darius:
+    proto_model: False
     #  needs to be somewhat consistent between fileops and train/test
     NTRAIN: [25, 50, 100, 150, 200, 1000]
     #  only for generation. Training and testing just counts files, so this doesn't need to be worried about when importing data
@@ -97,7 +99,7 @@ configs:
       -
         <<: *default_exp
         arch: INC
-  test_one:
+  test_one: &test_one
     <<: *debug
     EPOCHS: 2
     NTRAIN: ["i0"] #  these are now indexes
@@ -105,5 +107,29 @@ configs:
       -
         <<: *default_exp
         arch: SCRATCH
+  test_GNET:
+      <<: *test_one
+      EXPS:
+        -
+          <<: *default_exp
+          arch: GNET
+  test_SCRATCH:
+      <<: *test_one
+      EXPS:
+        -
+          <<: *default_exp
+          arch: SCRATCH
+  test_INC:
+      <<: *test_one
+      EXPS:
+        -
+          <<: *default_exp
+          arch: INC
+  test_ALEX:
+        <<: *test_one
+        EXPS:
+          -
+            <<: *default_exp
+            arch: ALEX
   default:
         <<: *all

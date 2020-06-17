@@ -1,13 +1,13 @@
+from tensorflow.keras import backend
+from tensorflow.python.keras.utils.conv_utils import convert_kernel
 from typing import Optional
-
 import tensorflow.keras as keras
-from tensorflow.keras.layers import Conv2D
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import BatchNormalization
 from tensorflow.python.keras import Input
 from tensorflow.python.keras.layers import Activation
 from tensorflow.python.keras.models import Model
 import tensorflow as tf
+
 from lib.nn.gen_preproc_ims import PreDataset
 import lib.nn.net_mets as net_mets
 import lib.nn.nnstate as nnstate
@@ -18,23 +18,90 @@ data_folder = File('/home/matt/data')
 from abc import abstractmethod, ABC
 
 class SymNet(ABC):
+    class Meta:
+        ROW_AXIS = 1
+        COL_AXIS = 2
+        CHANNEL_AXIS = 3
+        def __init__(
+                self, *,
+                WEIGHTS,
+                FLIPPED_CONV_WEIGHTS=False,
+                FULL_NAME,
+                CREDITS,
+                ARCH_LABEL,
+                HEIGHT_WIDTH,
+                INTER_LAY=-2
+        ):
+            self.WEIGHTS = WEIGHTS
+            self.FLIPPED_CONV_WEIGHTS = FLIPPED_CONV_WEIGHTS
+            self.FULL_NAME = FULL_NAME
+            self.CREDITS = CREDITS
+            self.ARCH_LABEL = ARCH_LABEL
+            self.HEIGHT_WIDTH = HEIGHT_WIDTH
+            self.INTER_LAY = INTER_LAY
 
-    @classmethod
     @abstractmethod
-    def ARCH_LABEL(cls): pass
+    def META(self) -> Meta: pass
+
+
+
+    WEIGHTS_PATH = Folder('_weights')
+    def weightsf(self): return self.WEIGHTS_PATH[self.META().WEIGHTS].abspath
+
+
 
 
 
     VERBOSE_MODE = 2  # 0=silent,1=progress bar,2=one line per epoch
-    INTER_LAY = -2
-    def __init__(self, max_num_classes=2, batch_normalize=False, proto=False):
-        self.batch_normalize = batch_normalize
+    def __init__(self, max_num_classes=2, proto=False):
         self.max_num_classes = max_num_classes
         self.startTime = log('creating DNN: ' + self.__class__.__name__)
         if proto:
             self.net = self.build_proto_model(max_num_classes)
         else:
-            self.net = self.build_model()
+            self.inputs = Input((
+                self.META().HEIGHT_WIDTH,
+                self.META().HEIGHT_WIDTH,
+                3
+            ))
+
+            self.net = Model(
+                inputs=self.inputs,
+                outputs=self.assemble_layers(),
+                name=self.META().FULL_NAME.replace(' ', '_')
+            )
+
+            if self.META().WEIGHTS is not None:
+                # transfer learning
+                self.net.load_weights(self.weightsf())
+
+            # Theano > Tensorflow, just flips the weight arrays in the first 2 dims. Doesn't change shape.
+            if self.META().FLIPPED_CONV_WEIGHTS:
+                for layer in self.net.layers:
+                    if layer.__class__.__name__ == 'Conv2D':
+                        original_w = backend.eval(layer.kernel)
+                        converted_w = convert_kernel(original_w)
+                        layer.kernel.assign(converted_w)
+
+            arch_summary_folder = Folder('_arch')
+            arch_summary_folder.mkdirs()
+            arch_summary_file = arch_summary_folder[f'{self.META().ARCH_LABEL}.txt']
+            log('writing summary')
+            with open(arch_summary_file, 'w') as fh:
+                self.net.summary(print_fn=lambda x: fh.write(x + '\n'))
+            arch_summary_im = arch_summary_folder[f'{self.META().ARCH_LABEL}.png']
+            log('plotting model')
+            tf.keras.utils.plot_model(
+                self.net,
+                to_file=arch_summary_im.abspath,
+                show_shapes=False,
+                show_layer_names=True,
+                rankdir="TB",
+                expand_nested=False,
+                dpi=96,
+            )
+            log('finished plotting model')
+
         log('created DNN')
         log('compiling network...')
         mets_for_compile = []
@@ -167,38 +234,13 @@ class SymNet(ABC):
 
         log('done recording.')
 
-    @classmethod
-    @abstractmethod
-    def HEIGHT_WIDTH(cls): pass
-
     def build_proto_model(self, num_classes):
         inputs = Input(shape=(self.HEIGHT_WIDTH(), self.HEIGHT_WIDTH(), 3))
-
-        flat = tf.keras.layers.Flatten()(inputs)
-        dense = Dense(num_classes+1)(flat)
+        flat_layer = tf.keras.layers.Flatten()(inputs)
+        dense = Dense(num_classes + 1)(flat_layer)
         prediction = Activation('softmax', name='softmax')(dense)
         m = Model(inputs, prediction)
         return m
 
     @abstractmethod
-    def build_model(self): pass
-
-    def DenseB(self, *args, **kwargs):
-        def f(inp):
-            layer = Dense(*args, **kwargs)(inp)
-            if self.batch_normalize:
-                # noinspection PyCallingNonCallable
-                layer = BatchNormalization()(layer)
-            return layer
-
-        return f
-
-    def Conv2DB(self, *args, **kwargs):
-        def f(input):
-            layer = Conv2D(*args, **kwargs)(input)
-            if self.batch_normalize:
-                # noinspection PyCallingNonCallable
-                layer = BatchNormalization(axis=3)(layer)
-            return layer
-
-        return f
+    def assemble_layers(self): pass

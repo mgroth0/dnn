@@ -20,7 +20,8 @@ FLAGS = initFun.margparse(
     batchsize=int,
     normtrainims=int,
     deletenorms=int,
-    verbose=int
+    verbose=int,
+    proto_model=int
 )
 from lib.boot import nn_init_fun
 tf = nn_init_fun.setupTensorFlow(FLAGS)

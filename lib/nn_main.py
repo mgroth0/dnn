@@ -3,9 +3,9 @@ import tensorflow as tf
 from lib import data_saving
 from mlib.gpu import mygpus
 from arch.ALEX import AlexNet
-from arch.INC import IRNV2
-from arch.GNET import GoogleNet
-from arch.SCRATCH import ScratchNet
+from arch.INC import INC
+from arch.GNET import GNET
+from arch.SCRATCH import SCRATCH
 from lib.nn import nn_plotting
 from lib.nn.gen_preproc_ims import *
 from lib.defaults import *
@@ -61,28 +61,20 @@ def sym_net_main(FLAGS):
     def get_available_gpus():
         local_device_protos = tf.python.client.device_lib.list_local_devices()
         return [x.name for x in local_device_protos if x.device_type == 'GPU']
-
-
     net = {
         'ALEX'   : AlexNet,
-        'GNET'   : GoogleNet,
-        'INC'    : IRNV2,
-        'SCRATCH': ScratchNet
+        'GNET'   : GNET,
+        'INC'    : INC,
+        'SCRATCH': SCRATCH
     }[FLAGS.arch](
         # num_classes=len(band_groups[i]) * 2
         # ,
-        batch_normalize={
-            'ALEX'   : False,
-            'GNET'   : False,
-            'INC'    : True,
-            'SCRATCH': True
-        }[FLAGS.arch],
         max_num_classes=len(listkeys(datasetTest.class_label_map)),
-        proto=len(get_available_gpus()) == 0
+        proto=FLAGS.proto_model
     )
-    datasetTrain.prep(net.HEIGHT_WIDTH())
-    datasetVal.prep(net.HEIGHT_WIDTH())
-    datasetTest.prep(net.HEIGHT_WIDTH())
+    datasetTrain.prep(net.META().HEIGHT_WIDTH)
+    datasetVal.prep(net.META().HEIGHT_WIDTH)
+    datasetTest.prep(net.META().HEIGHT_WIDTH)
     net.train_data = datasetTrain
     net.val_data = datasetVal
     net.test_data = datasetTest
@@ -103,7 +95,7 @@ def trainTestRecord(net: SymNet, nam, nepochs):
         if 'TRAIN' in nnstate.FLAGS.pipeline:
             net_mets.total_steps = len(net.train_data)
             net_mets.batch_count = 0
-            if isinstance(net, GoogleNet):
+            if isinstance(net, GNET):
                 net_mets.batch_sub_count = 1
             else:
                 net_mets.batch_sub_count = None
@@ -119,7 +111,7 @@ def trainTestRecord(net: SymNet, nam, nepochs):
             if 'VAL' in nnstate.FLAGS.pipeline:
                 net_mets.total_steps = len(net.val_data)
                 net_mets.batch_count = 0
-                if isinstance(net, GoogleNet):
+                if isinstance(net, GNET):
                     net_mets.batch_sub_count = 1
                 else:
                     net_mets.batch_sub_count = None
@@ -137,7 +129,7 @@ def trainTestRecord(net: SymNet, nam, nepochs):
             if 'REC' in nnstate.FLAGS.pipeline:
                 net_mets.total_steps = len(net.test_data)
                 net_mets.batch_count = 0
-                if isinstance(net, GoogleNet):
+                if isinstance(net, GNET):
                     net_mets.batch_sub_count = 1
                 else:
                     net_mets.batch_sub_count = None
