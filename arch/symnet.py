@@ -155,10 +155,10 @@ class SymNet(ABC):
             tf.keras.utils.plot_model(
                 self.net,
                 to_file=arch_summary_im.abspath,
-                show_shapes=False,
+                show_shapes=True,
                 show_layer_names=True,
                 rankdir="TB",
-                expand_nested=False,
+                expand_nested=True,
                 dpi=96,
             )
             log('finished plotting model')
