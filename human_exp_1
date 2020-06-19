@@ -25,8 +25,8 @@ print(upload_webpage(
             Div('''
         Welcome to our symmetry detection experiment!
         Before continuing, please:\n
-        \t1. Make your browser fullscreen
-        \t2. Ensure you have 10 minutes to focus on the experiment without distraction
+        \t1. Make your browser fullscreen.
+        \t2. Ensure you have 10 minutes to focus on the experiment without distraction. 
         
         This experiment has no sound.
         Press SPACE when you are ready to begin.
