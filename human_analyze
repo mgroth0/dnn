@@ -1,0 +1,9 @@
+#!/bin/sh
+"""exec" "$HOME/miniconda3/envs/dnn/bin/python" "$0" "$@"""
+from mlib.boot.mutil import Folder
+
+for line in Folder('_data_human').listmfiles()[0].read().split("\n"):
+    y_true = line.split("/")[0]
+    t = int(line.split("|")[1].split("=")[0])
+    c = line.split("=")[1]
+    y_pred = "S4" if "ArrowRight"

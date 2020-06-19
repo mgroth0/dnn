@@ -180,7 +180,8 @@ S4/sym4.png
 NS4/sym41.png
 S4/sym74.png
 NS4/sym21.png
-S4/sym66.png`;
+S4/sym66.png
+S4/sym0.png`;
 
 perm = perm.split("\\n")
 
@@ -312,7 +313,7 @@ WOLFRAM.terminate()
 
 if False:
     import numpy as np
-    perm = np.random.permutation(100) + 1
+    perm = np.random.permutation(100)
     for p in perm:
         for fold in Folder('_images_human/TimePilot').listmfiles():
             for file in fold.listmfiles():
