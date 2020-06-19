@@ -232,6 +232,26 @@ class HTMLLabel(HTMLContainer):
     @staticmethod
     def sep(): return ''
     def attributes(self): return f'for="{self.forr}"'
+
+class HTMLFigure(HTMLContainer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    @staticmethod
+    def tag(): return 'figure'
+    @staticmethod
+    def sep(): return ''
+    def attributes(self): return ''
+
+class HTMLFigCaption(HTMLContainer):
+    def __init__(self, label, *args, **kwargs):
+        super().__init__(label, *args, **kwargs)
+        self.label = label
+    @staticmethod
+    def tag(): return 'figcaption'
+    @staticmethod
+    def sep(): return ''
+    def attributes(self): return ''
+
 class HTMLChild(HTMLObject, ABC):
     def contents(self): return ''
     def closingTag(self): return ''

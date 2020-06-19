@@ -2,46 +2,83 @@
 """exec" "$HOME/miniconda3/envs/dnn/bin/python" "$0" "$@"""
 
 from lib.makereport_lib import upload_webpage
-from lib.web import HTMLDoc, HTMLImage, Div, Hyperlink, HTMLProgress, HTMLLabel, Span
+from lib.web import HTMLDoc, HTMLImage, Div, Hyperlink, HTMLProgress, HTMLLabel, Span, Br, HTMLFigure, HTMLFigCaption
 from lib.wolf.wolfpy import WOLFRAM
 
 print(upload_webpage(
     HTMLDoc(
-        Span(
-            HTMLLabel(
-                label='Progress: ',
-                forr='prog'
+        Div(
+            Span(
+                HTMLLabel(
+                    label='Progress: ',
+                    forr='prog'
+                ),
+                HTMLProgress(
+                    value=0,
+                    maxx=0,
+                    id='prog',
+                    style='background-color: red;'
+                ),
+                clazz='center',
+                style='width:100%'
             ),
-            HTMLProgress(
-                value=0,
-                maxx=0,
-                id='prog',
-                style='background-color: red;'
-            ),
-            clazz='center'
-        ),
-        Div('''
-        Welcome to our Symmetry Experiment!
-        Before continuing, please:
+            Div('''
+        Welcome to our symmetry detection experiment!
+        Before continuing, please:\n
         \t1. Make your browser fullscreen
         \t2. Ensure you have 10 minutes to focus on the experiment without distraction
         
         This experiment has no sound.
         Press SPACE when you are ready to begin.
         ''',
-            clazz='center', id='text'),
-        HTMLImage(
-            "",
-            clazz='pixel center',
-            # style='width: auto; height: 100%;',
-            id='im'
-        ),
-        Hyperlink(
-            label="Click here to send data and feedback",
-            url="mailto:mjgroth@mit.edu,dsinha@bbns.org?subject=SymTest&",
+                clazz='center',
+                id='text',
+                style='width:100%'
+                ),
+            HTMLImage(
+                "",
+                clazz='pixel center',
+                # style='width: auto; height: 100%;',
+                id='im',
+                style='display:none;width: 224px; height: 224px;'
+            ),
+            Div(
+                Br,
+                Div(
+                    HTMLFigure(
+                        HTMLFigCaption("Example of an ASYMMETRIC image (hit LEFT)"),
+                        HTMLImage(
+                            "../../Resources/Symmetry/Exp1/NS4/sym1.png",
+                            clazz='pixel',
+                            style='width: 224px; height: 224px; padding: 20px;',
+                            # id='ExampleNS'
+                        ),
+                        style='display: inline-block;'
+                    ),
+                    HTMLFigure(
+                        HTMLFigCaption("Example of an SYMMETRIC image (hit RIGHT)"),
+                        HTMLImage(
+                            "../../Resources/Symmetry/Exp1/S4/sym0.png",
+                            clazz='pixel',
+                            style='width: 224px; height: 224px; padding: 20px;',
+                            # id='ExampleS'
+                        ),
+                        style='display: inline-block;'
+                    ),
+                ),
+                clazz='center',
+                id='examples',
+                style='display:none;width:100%'
+            ),
+            Hyperlink(
+                label="Click here to send data and feedback",
+                url="mailto:mjgroth@mit.edu,dsinha@bbns.org?subject=SymTest&",
+                clazz='center',
+                id='link',
+                style='display: none;'
+            ),
             clazz='center',
-            id='link',
-            style='display: none;'
+            style='width: 1000px;'
         ),
         js='''
 
@@ -145,32 +182,63 @@ S4/sym74.png
 NS4/sym21.png
 S4/sym66.png`;
 
-perm = perm.split("\\n").slice(1,5)
+perm = perm.split("\\n")
+
+
+// perm = perm.slice(1,5) // for prototyping
 
 
 seq = ['An image which is either symmetric or asymmetric will briefly flash on the screen. If you think the image is symmetric, press RIGHT. If you think it is asymmetric, press LEFT. 100 images will be shown, and then you will be done. Press SPACE to begin.']
 
 seq = seq.concat(perm)
 
+// If I edit this, I need to also edit the switcher below
 seq = seq.concat(['Thank you so much for participating!'])
 
 var i = -1
 var readyToAdvance = true
 var readyForChoice = false
 
-choices = []
+const choices = []
+
+const times = [100,200,300,400,500]
+var nextSymTime = 0
+var nextAsymTime = 0
+const usedTimes = []
 
 function showI(i) {
     console.log('showI')
     let thing = seq[i]
-    if (!thing.includes("THANK YOU") && !thing.includes('.png')) {
+    if (!thing.includes("Thank you") && !thing.includes('.png')) {
         console.log('isString')
         // document.getElementById("im").style.visibility = "hidden"
         document.getElementById("im").style.display = "none"
         document.getElementById("text").style.display = "block"
         document.getElementById("text").innerHTML = thing
+        
+        if (i == 0) {
+            console.log('showing examples')
+            document.getElementById("examples").style.display = "block"
+        } else {
+            console.log('hiding examples')
+            document.getElementById("examples").style.display = "none"
+        }
+        
         readyToAdvance = true
     } else if (thing.includes(".png")) {
+        console.log('hiding examples')
+        document.getElementById("examples").style.display = "none"
+        if (thing.includes("NS")) {
+            t = times[nextAsymTime]
+            usedTimes.push(t)
+            nextAsymTime += 1
+            if (nextAsymTime == times.length) {nextAsymTime = 0}
+        } else {
+            t = times[nextSymTime]
+            usedTimes.push(t)
+            nextSymTime += 1
+            if (nextSymTime == times.length) {nextSymTime = 0}
+        }
         document.getElementById("text").style.display = "none"
         document.getElementById("im").src="../../Resources/Symmetry/Exp1/" + thing;
         setTimeout(function(){ 
@@ -179,7 +247,7 @@ function showI(i) {
                 document.getElementById("text").innerHTML = "asymmetric<- ->symmetric"
                 document.getElementById("text").style.display = "block"
                 readyForChoice = true
-            }, 100);
+            }, t);
             // document.getElementById("im").style.visibility = "visible"
             document.getElementById("im").style.display = "block"
         }, 1000);
@@ -189,7 +257,7 @@ function showI(i) {
         document.getElementById("text").innerHTML = thing
         
         let data = perm.map(function(e, i) {
-          return "\\t" + e + "=" + choices[i] + "\\n"
+          return "\\t" + e + '|' + usedTimes[i].toString() + "=" + choices[i] + "\\n"
         }).join("");
         
         
