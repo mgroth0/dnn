@@ -1,9 +1,8 @@
 # EXP_GROUP__FOLDER_NAME =
-import argparse
 
 from mlib.JsonSerializable import obj
 from lib.figapi import APIDict
-from lib.makereport_lib import update_report, PUBLIC_URL, upload_webpage
+from lib.makereport_lib import update_report, PUBLIC_REPORT_URL, upload_webpage
 from lib.web import HTMLDoc, Hyperlink, Br
 from lib.web_widgets import FigureTable
 from lib.defaults import *
@@ -66,7 +65,7 @@ def makereport(prune):
             log(f'pruning: {k}')
             del MR_API[k]
     refreshSafariReport()
-def get_report(md, fig_folder, exp_name, api: APIDict = None, index_url=PUBLIC_URL, exp_id=None, editable=False):
+def get_report(md, fig_folder, exp_name, api: APIDict = None, index_url=PUBLIC_REPORT_URL, exp_id=None, editable=False):
     example_folds = fig_folder.glob('example*')
     all_examples = []
     for example_fold in example_folds:

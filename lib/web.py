@@ -1,11 +1,38 @@
 from abc import ABC, abstractmethod
 
 from mlib.boot.mlog import log
-from mlib.boot.mutil import File, isstr
+from mlib.boot.mutil import isstr
 DARK_CSS = '''
 body {
     background:black;
     color: white;
+}
+ .center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  text-align: center;
+}
+.pixel {
+    image-rendering: optimizeSpeed;             /* Older versions of FF */
+    image-rendering: -moz-crisp-edges;          /* FF 6.0+ */
+    image-rendering: -webkit-optimize-contrast; /* Webkit (non standard naming) */
+    image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+    image-rendering: crisp-edges;               /* Possible future browsers. */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE (non standard naming) */
+}
+.textcell {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.parentcell {
+position:relative;
+width:100%;
 }
 '''
 
@@ -45,8 +72,9 @@ class HTMLDoc:
         return ml
 
 class HTMLObject(ABC):
-    def __init__(self, style='', id=None):
+    def __init__(self, style='', clazz='', id=None):
         self.style = style
+        self.clazz = clazz
         self.id = id
     @staticmethod
     @abstractmethod
@@ -75,6 +103,12 @@ class HTMLObject(ABC):
     def closingTag():
         pass
 
+    def _class(self):
+        if self.clazz:
+            return ' class="' + self.clazz + '"'
+        else:
+            return ''
+
     def _style(self):
         if self.style:
             return ' style="' + self.style + '"'
@@ -83,7 +117,7 @@ class HTMLObject(ABC):
 
     def getCode(
             self):
-        return '<' + self.tag() + self._style() + self._attributes() + '>' + self.contents() + self.closingTag()
+        return '<' + self.tag() + self._class() + self._style() + self._attributes() + '>' + self.contents() + self.closingTag()
 
 class HTMLContainer(HTMLObject):
     def __init__(self, *args, **kwargs):
@@ -180,8 +214,8 @@ class TextArea(HTMLContainer):
     def sep(): return ''
 
 class Hyperlink(HTMLContainer):
-    def __init__(self, label, url):
-        super(Hyperlink, self).__init__(label)
+    def __init__(self, label, url, *args, **kwargs):
+        super().__init__(label, *args, **kwargs)
         self.url = url
     @staticmethod
     def tag(): return 'a'
@@ -189,6 +223,15 @@ class Hyperlink(HTMLContainer):
     def sep(): return ''
     def attributes(self): return f'href="{self.url}"'
 
+class HTMLLabel(HTMLContainer):
+    def __init__(self, label, forr, *args, **kwargs):
+        super().__init__(label, *args, **kwargs)
+        self.forr = forr
+    @staticmethod
+    def tag(): return 'label'
+    @staticmethod
+    def sep(): return ''
+    def attributes(self): return f'for="{self.forr}"'
 class HTMLChild(HTMLObject, ABC):
     def contents(self): return ''
     def closingTag(self): return ''
@@ -201,10 +244,21 @@ class _Br(HTMLChild):
         return ''
 Br = _Br()
 
+
+
 class HTMLImage(HTMLChild):
     def __init__(self, url, *args, **kwargs):
-        super(HTMLImage, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.url = url
     @staticmethod
     def tag(): return 'img'
     def attributes(self): return f'src="{self.url}" alt="an image" width="500"'
+
+class HTMLProgress(HTMLChild):
+    def __init__(self, value, maxx, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.value = value
+        self.maxx = maxx
+    @staticmethod
+    def tag(): return 'progress'
+    def attributes(self): return f'value="{self.value}" max="{self.maxx}"'

@@ -1,0 +1,252 @@
+#!/bin/sh
+"""exec" "$HOME/miniconda3/envs/dnn/bin/python" "$0" "$@"""
+
+from lib.makereport_lib import upload_webpage
+from lib.web import HTMLDoc, HTMLImage, Div, Hyperlink, HTMLProgress, HTMLLabel, Span
+from lib.wolf.wolfpy import WOLFRAM
+
+print(upload_webpage(
+    HTMLDoc(
+        Span(
+            HTMLLabel(
+                label='Progress: ',
+                forr='prog'
+            ),
+            HTMLProgress(
+                value=0,
+                maxx=0,
+                id='prog',
+                style='background-color: red;'
+            ),
+            clazz='center'
+        ),
+        Div('''
+        Welcome to our Symmetry Experiment!
+        Before continuing, please:
+        \t1. Make your browser fullscreen
+        \t2. Ensure you have 10 minutes to focus on the experiment without distraction
+        
+        This experiment has no sound.
+        Press SPACE when you are ready to begin.
+        ''',
+            clazz='center', id='text'),
+        HTMLImage(
+            "",
+            clazz='pixel center',
+            # style='width: auto; height: 100%;',
+            id='im'
+        ),
+        Hyperlink(
+            label="Click here to send data and feedback",
+            url="mailto:mjgroth@mit.edu,dasinha@mit.edu?subject=SymTest&",
+            clazz='center',
+            id='link',
+            style='display: none;'
+        ),
+        js='''
+
+var perm = `S4/sym6.png
+NS4/sym75.png
+NS4/sym83.png
+S4/sym32.png
+S4/sym16.png
+S4/sym54.png
+NS4/sym47.png
+S4/sym70.png
+S4/sym72.png
+NS4/sym53.png
+NS4/sym85.png
+NS4/sym7.png
+NS4/sym11.png
+NS4/sym59.png
+S4/sym94.png
+S4/sym58.png
+S4/sym62.png
+S4/sym24.png
+S4/sym86.png
+NS4/sym99.png
+S4/sym88.png
+S4/sym38.png
+NS4/sym73.png
+NS4/sym25.png
+S4/sym40.png
+NS4/sym77.png
+NS4/sym1.png
+NS4/sym71.png
+S4/sym10.png
+NS4/sym9.png
+NS4/sym95.png
+S4/sym48.png
+NS4/sym93.png
+NS4/sym57.png
+NS4/sym3.png
+NS4/sym5.png
+NS4/sym27.png
+S4/sym34.png
+S4/sym18.png
+NS4/sym17.png
+NS4/sym55.png
+NS4/sym35.png
+NS4/sym37.png
+S4/sym60.png
+S4/sym44.png
+S4/sym22.png
+S4/sym78.png
+NS4/sym89.png
+NS4/sym45.png
+NS4/sym81.png
+NS4/sym61.png
+NS4/sym39.png
+S4/sym46.png
+NS4/sym51.png
+S4/sym82.png
+NS4/sym69.png
+NS4/sym33.png
+NS4/sym67.png
+S4/sym80.png
+S4/sym98.png
+NS4/sym87.png
+S4/sym90.png
+S4/sym92.png
+NS4/sym65.png
+NS4/sym13.png
+NS4/sym97.png
+NS4/sym15.png
+S4/sym42.png
+S4/sym96.png
+S4/sym84.png
+S4/sym12.png
+S4/sym52.png
+S4/sym14.png
+S4/sym68.png
+NS4/sym49.png
+S4/sym28.png
+S4/sym64.png
+NS4/sym63.png
+NS4/sym91.png
+S4/sym20.png
+S4/sym8.png
+NS4/sym43.png
+NS4/sym29.png
+S4/sym50.png
+S4/sym26.png
+S4/sym2.png
+S4/sym30.png
+S4/sym76.png
+NS4/sym31.png
+NS4/sym19.png
+S4/sym56.png
+NS4/sym79.png
+NS4/sym23.png
+S4/sym36.png
+S4/sym4.png
+NS4/sym41.png
+S4/sym74.png
+NS4/sym21.png
+S4/sym66.png`;
+
+perm = perm.split("\\n").slice(1,5)
+
+
+seq = ['An image which is either symmetric or asymmetric will briefly flash on the screen. If you think the image is symmetric, press RIGHT. If you think it is asymmetric, press LEFT. 100 images will be shown, and then you will be done. Press SPACE to begin.']
+
+seq = seq.concat(perm)
+
+seq = seq.concat(['THANK YOU FOR PARTICIPATING!'])
+
+var i = -1
+var readyToAdvance = true
+var readyForChoice = false
+
+choices = []
+
+function showI(i) {
+    console.log('showI')
+    let thing = seq[i]
+    if (!thing.includes("THANK YOU") && !thing.includes('.png')) {
+        console.log('isString')
+        // document.getElementById("im").style.visibility = "hidden"
+        document.getElementById("im").style.display = "none"
+        document.getElementById("text").style.display = "block"
+        document.getElementById("text").innerHTML = thing
+        readyToAdvance = true
+    } else if (thing.includes(".png")) {
+        document.getElementById("text").style.display = "none"
+        document.getElementById("im").src="../../Resources/Symmetry/Exp1/" + thing;
+        setTimeout(function(){ 
+            setTimeout(function(){ 
+                document.getElementById("im").style.display = "none"
+                document.getElementById("text").innerHTML = "asymmetric<- ->symmetric"
+                document.getElementById("text").style.display = "block"
+                readyForChoice = true
+            }, 100);
+            // document.getElementById("im").style.visibility = "visible"
+            document.getElementById("im").style.display = "block"
+        }, 1000);
+    } else {
+        document.getElementById("im").style.display = "none"
+        document.getElementById("text").style.display = "block"
+        document.getElementById("text").innerHTML = thing
+        
+        var data = perm.map(function(e, i) {
+          return e + "=" + choices[i] + "\\n"
+        }).join("");
+        
+        
+        document.getElementById("link").href = document.getElementById("link").href + "body=" + encodeURI(
+`--FEEDBACK--
+    Please write any feedback here
+    
+--DATA--\\n` + data
+        )
+        document.getElementById("link").style.display = "block"
+    }
+}
+
+window.onload = function() {
+    document.getElementById("prog").max = perm.length
+    // document.getElementById("im").style.visibility = "hidden"
+    document.getElementById("im").style.display = "none"
+    document.addEventListener('keyup', event => {
+      console.log(event.key + ' pressed')
+      if (event.keyCode == 32 && readyToAdvance) {
+        i = i + 1
+        readyToAdvance = false
+        showI(i)
+      }
+      else if (event.key == 'ArrowLeft' && readyForChoice) {
+        i = i + 1
+        choices.push(event.key)
+        document.getElementById("prog").value += 1
+        readyForChoice = false
+        showI(i)
+      }
+      else if (event.key == 'ArrowRight' && readyForChoice) {
+        i = i + 1
+        choices.push(event.key)
+        document.getElementById("prog").value += 1
+        readyForChoice = false
+        showI(i)
+      }
+    })
+}
+
+
+
+        '''
+    ),
+    "Symmetry/Exp1",
+    "Public",
+    # resource_folder='_images_human/TimePilot'
+))
+
+WOLFRAM.terminate()
+
+if False:
+    import numpy as np
+    perm = np.random.permutation(100) + 1
+    for p in perm:
+        for fold in Folder('_images_human/TimePilot').listmfiles():
+            for file in fold.listmfiles():
+                if file.name == f'sym{p}.png':
+                    print(f'{file.parentFile.name}/{file.name}')

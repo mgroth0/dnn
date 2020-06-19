@@ -1,11 +1,9 @@
 import logging
-import pdb
-
 from wolframclient.evaluation import WolframLanguageSession
-from wolframclient.language import wl, wlexpr
+from wolframclient.language import wl
 
 from mlib.boot.mlog import log
-from mlib.boot.mutil import File, strcmp, err
+from mlib.boot.mutil import File, strcmp, err, pwdf
 from mlib.boot.bootutil import ismac
 
 class WolfPy:
@@ -24,8 +22,11 @@ class WolfPy:
             self.session = WolframLanguageSession(
                 kernel_loglevel=logging.DEBUG,
                 # kernel_loglevel=logging.FATAL,
-                                                  kernel='/home/matt/WOLFRAM/Executables/WolframKernel')
 
+                kernel='/home/matt/WOLFRAM/Executables/WolframKernel'
+            )
+
+    def terminate(self): self.session.terminate()
     def eval(self, s):
         ev = self.session.evaluate_wrap_future(wl.UsingFrontEnd(s))
         ev = ev.result()
@@ -56,6 +57,7 @@ class WolfPy:
         co = self.eval(exp)
         return co
 
+
     def cloud_deploy(self, wlstuff, url=None, public=False, *args):
         myargs = []
         if url is not None:
@@ -71,17 +73,23 @@ class WolfPy:
 
     def copy_file(self, fromm, to, permissions='Private'):
         tos = File(to).names()
-        # if os.path.isabs(to):
         flag = True
         while flag:
-            if strcmp(tos[0], 'mitili', ignore_case=True):
+            if strcmp(tos[0], pwdf().name, ignore_case=True):
                 flag = False
             tos = tos[1:]
 
-        return self.eval(wl.CopyFile(
-            File(fromm).abspath,
-            wl.CloudObject(wl.FileNameJoin(tos), wl.Rule(wl.Permissions, permissions))
-        ))
+        if File(fromm).isdir():
+            return self.eval(wl.CopyDirectory(
+                File(fromm).abspath,
+                wl.CloudObject(wl.FileNameJoin(tos), wl.Rule(wl.Permissions, permissions))
+            ))
+        else:
+            return self.eval(wl.CopyFile(
+                File(fromm).abspath,
+                wl.CloudObject(wl.FileNameJoin(tos), wl.Rule(wl.Permissions, permissions))
+            ))
+
 
 
 WOLFRAM = WolfPy()
