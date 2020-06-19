@@ -65,13 +65,17 @@ def accuracy(y_true, y_pred):
     rrr = 1 - error_rate(y_true, y_pred, real_error=False)
     return update_met_log(accuracy, rrr)
 
+def error_rate_basic(FP, FN, P, N):
+    return (FP + FN) / (P + N)
+
+
 def error_rate(y_true, y_pred, real_error=True):
     rrr, TP, FP, TN, FN, P, N = basics(y_true, y_pred, error_rate)
     if TP is not None:
         if (P + N) == 0:
             rrr = _EMPTY_TENSOR
         else:
-            rrr = (FP + FN) / (P + N)
+            rrr = error_rate_basic(FP, FN, P, N)
     elif rrr == _NON_BINARY:
         y_true, y_pred = prep_ys(y_true, y_pred)
         rrr = count_nonzero(y_pred != y_true) / len(y_pred)
