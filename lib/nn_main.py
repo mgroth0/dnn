@@ -36,17 +36,17 @@ def sym_net_main(FLAGS):
         gen_images(
             folder=_IMAGES_FOLDER['RSA'],
             class_pairs=test_class_pairs,
-            # ims_per_class=10,
-            ims_per_class=1
+            ims_per_class=10,
+            # ims_per_class=1
         )
         gen_images(
             folder=_IMAGES_FOLDER['Testing'],
             class_pairs=test_class_pairs,
-            # ims_per_class=500,
-            ims_per_class=1
+            ims_per_class=500,
+            # ims_per_class=1
         )
-        # for n in (25, 50, 100, 150, 200, 1000):
-        for n in (1,):
+        for n in (25, 50, 100, 150, 200, 1000):
+        # for n in (1,):
             gen_images(folder=_IMAGES_FOLDER['Training'][n], class_pairs=class_pairs, ims_per_class=n)
 
         with TempFolder('_temp_ims') as temp:
