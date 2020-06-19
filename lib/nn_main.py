@@ -1,86 +1,100 @@
-import tensorflow as tf
+from itertools import chain
 
-from lib import data_saving
-from mlib.gpu import mygpus
-from arch.ALEX import AlexNet
-from arch.INC import INC
-from arch.GNET import GNET
-from arch.SCRATCH import SCRATCH
-from lib.nn import nn_plotting
-from lib.nn.gen_preproc_ims import *
-from lib.defaults import *
-from lib.nn.nnstate import reset_global_met_log
-from lib.data_saving import savePlotAndTableData, saveTestValResults
-from arch.symnet import SymNet
+from mlib.boot.mutil import *
+from lib.nn import nn_plotting, nnstate
+from lib.nn.gen_preproc_ims import NN_Data_Dir, load_and_preprocess_ims, SymAsymClassPair, gen_images
+from lib.data_saving import savePlotAndTableData, saveTestValResults, EXP_FOLDER
 from lib.boot import nn_init_fun
+from arch import *
+@log_invokation()
 def sym_net_main(FLAGS):
-    log('running sym_net_main')
-    import lib.nn.nnstate as nnstate
-    nnstate.FLAGS = FLAGS
-    reset_global_met_log()
-    normalize_single_images = nnstate.FLAGS.normtrainims
-
-    BASE_IMAGE_FOLDER = File(os.getcwd()).resolve('_images')
-    mygpufordata = mygpus()[0]+1 if not isempty(mygpus()) else 1
-    MY_DATA_FOLDER = File(BASE_IMAGE_FOLDER.abspath + '/gpu' + str(mygpufordata))
-    MY_TRAIN_FOLDER = NN_Data_Dir(f'{MY_DATA_FOLDER.abspath}/Training/{FLAGS.ntrain}')
-    MY_TEST_FOLDER = NN_Data_Dir(f'{MY_DATA_FOLDER.abspath}/Testing')
-    MY_RSA_FOLDER = NN_Data_Dir(f'{MY_DATA_FOLDER.abspath}/ForMatt')
-
-    cfg_cfg = json.loads(FLAGS.cfg)
-    root = cfg_cfg['root']
-    data_saving.root = root
+    _IMAGES_FOLDER = pwdf()['_images']
+    HUMAN_IMAGE_FOLDER = pwdf()['_images_human']
 
     if FLAGS.gen:
-        from lib.nn import nn_gen
-        gen_cfg = cfg_cfg['gen_cfg']
-        nn_gen.nn_gen(FLAGS, BASE_IMAGE_FOLDER,
-                      num_gpus=gen_cfg['num_gpus'],
-                      TRAINING_SET_SIZES=gen_cfg['TRAINING_SET_SIZES'],
-                      EVAL_SIZE=gen_cfg['EVAL_SIZE'],
-                      RSA_SIZE_PER_CLASS=gen_cfg['RSA_SIZE_PER_CLASS']
-                      )
-        nn_init_fun.NRC_IS_FINISHED()  # must be invoked this way since value of function changes
-    elif FLAGS.deletenorms:
-        log('just deleting norm dirs...')
-        MY_TRAIN_FOLDER.delete_norm_dir()
-        MY_TEST_FOLDER.delete_norm_dir()
-        MY_RSA_FOLDER.delete_norm_dir()
-        log('deleted norm dirs!')
-        nn_init_fun.NRC_IS_FINISHED()  # must be invoked this way since value of function changes
-    datasetTrain, _ = load_and_preprocess_ims(1,
-                                              data_dir=MY_TRAIN_FOLDER,
-                                              normalize_single_images=normalize_single_images)
-    _, datasetVal = load_and_preprocess_ims(0,
-                                            data_dir=MY_TEST_FOLDER,
-                                            normalize_single_images=normalize_single_images)
+        test_class_pairs = [
+            pair for pair in chain(*[
+                (
+                    SymAsymClassPair(n, False),
+                    SymAsymClassPair(n, True)
+                ) for n in ints(np.linspace(0, 10, 6))
+            ])
+        ]
+        class_pairs = [
+            SymAsymClassPair(0, False),
+            SymAsymClassPair(4, False)
+        ]
+        human_class_pairs = [SymAsymClassPair(4, False)]
+        gen_cfg = FLAGS.cfg_cfg['gen_cfg']
+        _IMAGES_FOLDER = _IMAGES_FOLDER.deleteIfExists().mkdirs(mker=True)
+        HUMAN_IMAGE_FOLDER = HUMAN_IMAGE_FOLDER.deleteIfExists().mkdirs(mker=True)
+        gen_images(
+            folder=HUMAN_IMAGE_FOLDER['TimePilot'],
+            class_pairs=human_class_pairs,
+            ims_per_class=50
+        )
+        gen_images(
+            folder=_IMAGES_FOLDER['RSA'],
+            class_pairs=test_class_pairs,
+            # ims_per_class=10,
+            ims_per_class=1
+        )
+        gen_images(
+            folder=_IMAGES_FOLDER['Testing'],
+            class_pairs=test_class_pairs,
+            # ims_per_class=500,
+            ims_per_class=1
+        )
+        # for n in (25, 50, 100, 150, 200, 1000):
+        for n in (1,):
+            gen_images(folder=_IMAGES_FOLDER['Training'][n], class_pairs=class_pairs, ims_per_class=n)
 
-    _, datasetTest = load_and_preprocess_ims(0, data_dir=MY_RSA_FOLDER,
-                                             normalize_single_images=normalize_single_images)
+        with TempFolder('_temp_ims') as temp:
+            temp.mkdirs()
+            [_IMAGES_FOLDER.copy_to(temp[f'gpu{i + 1}']) for i in range(gen_cfg['num_gpus'])]
+            _IMAGES_FOLDER.clear()
+            [temp[f'gpu{i + 1}'].moveinto(_IMAGES_FOLDER) for i in range(gen_cfg['num_gpus'])]
+        nn_init_fun.NRC_IS_FINISHED()  # must be invoked this way since value of function changes
 
-    def get_available_gpus():
-        local_device_protos = tf.python.client.device_lib.list_local_devices()
-        return [x.name for x in local_device_protos if x.device_type == 'GPU']
+    GPU_IMAGES_FOLDER = _IMAGES_FOLDER[f'gpu{FLAGS.mygpufordata}']
+
+    GPU_TRAIN_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'Training/{FLAGS.ntrain}'])
+    GPU_TEST_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'Testing'])
+    GPU_RSA_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'RSA'])
+
+    if FLAGS.deletenorms:
+        GPU_TRAIN_FOLDER.delete_norm_dir()
+        GPU_TEST_FOLDER.delete_norm_dir()
+        GPU_RSA_FOLDER.delete_norm_dir()
+        nn_init_fun.NRC_IS_FINISHED()  # must be invoked this way since value of function changes
+
+    datasetTrain, _ = load_and_preprocess_ims(
+        TRAIN_TEST_SPLIT=1,
+        data_dir=GPU_TRAIN_FOLDER,
+        normalize_single_images=FLAGS.normtrainims)
+    _, datasetVal = load_and_preprocess_ims(
+        TRAIN_TEST_SPLIT=0,
+        data_dir=GPU_TEST_FOLDER,
+        normalize_single_images=FLAGS.normtrainims)
+    _, datasetTest = load_and_preprocess_ims(
+        TRAIN_TEST_SPLIT=0,
+        data_dir=GPU_RSA_FOLDER,
+        normalize_single_images=FLAGS.normtrainims
+    )
+
     net = {
-        'ALEX'   : AlexNet,
+        'ALEX'   : ALEX,
         'GNET'   : GNET,
         'INC'    : INC,
         'SCRATCH': SCRATCH
     }[FLAGS.arch](
-        # num_classes=len(band_groups[i]) * 2
-        # ,
         max_num_classes=len(listkeys(datasetTest.class_label_map)),
         proto=FLAGS.proto_model
     )
-    datasetTrain.prep(net.META().HEIGHT_WIDTH)
-    datasetVal.prep(net.META().HEIGHT_WIDTH)
-    datasetTest.prep(net.META().HEIGHT_WIDTH)
-    net.train_data = datasetTrain
-    net.val_data = datasetVal
-    net.test_data = datasetTest
-    trainTestRecord(net, '', FLAGS.epochs)
-    mlog.log('finished sym_net_main')
-    return data_saving.EXP_FOLDER(root)
+    net.train_data = datasetTrain.prep(net.META().HEIGHT_WIDTH)
+    net.val_data = datasetVal.prep(net.META().HEIGHT_WIDTH)
+    net.test_data = datasetTest.prep(net.META().HEIGHT_WIDTH)
+    return trainTestRecord(net, '', FLAGS.epochs)
 
 
 def trainTestRecord(net: SymNet, nam, nepochs):
@@ -103,7 +117,7 @@ def trainTestRecord(net: SymNet, nam, nepochs):
             net.train()
             log(f'finished another fit epoch!({i + 1}/{nepochs})')
             if i == 0:
-                for ex in net.train_data.examples(net.HEIGHT_WIDTH()):
+                for ex in net.train_data.examples():
                     savePlotAndTableData(ex[1], nam, ex[0], isFigSet=False)
 
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':eval'
@@ -119,9 +133,9 @@ def trainTestRecord(net: SymNet, nam, nepochs):
                 mets = net.val_eval()
                 mets_for_each_epoch.append(mets)
                 nam = 'val'
-                saveTestValResults(net.ARCH_LABEL(), nam, net.val_data, i)
+                saveTestValResults(net.META().ARCH_LABEL, nam, net.val_data, i)
                 if i == 0:
-                    for ex in net.val_data.examples(net.HEIGHT_WIDTH()):
+                    for ex in net.val_data.examples():
                         savePlotAndTableData(ex[1], nam, ex[0], isFigSet=False)
 
             nnstate.MET_PHASE = None
@@ -135,7 +149,7 @@ def trainTestRecord(net: SymNet, nam, nepochs):
                     net_mets.batch_sub_count = None
 
                 net.test_record(i)
-                saveTestValResults(net.ARCH_LABEL(), nam, net.test_data, i)
+                saveTestValResults(net.META().ARCH_LABEL, nam, net.test_data, i)
 
         log('Done with epoch $.', i + 1)
     old_name = nam
@@ -145,3 +159,5 @@ def trainTestRecord(net: SymNet, nam, nepochs):
             nam = met.__name__
             if met == net_mets.fill_cmat: continue
             nn_plotting.plot_metric(nam, nnstate.GLOBAL_MET_LOG[nam], old_name)
+
+    return EXP_FOLDER()

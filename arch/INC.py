@@ -1,4 +1,4 @@
-from arch import *
+from arch.shared import *
 from tensorflow.keras.layers import (
 
     AveragePooling2D,

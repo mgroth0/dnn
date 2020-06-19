@@ -1,5 +1,4 @@
 import glob
-from os.path import isdir
 import random
 
 from PIL import Image
@@ -15,12 +14,13 @@ class NN_Data_Dir(File):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.norm = File(f'{self.abspath}_std')
+    @log_invokation(with_args=True)
     def delete_norm_dir(self):
         return self.norm.deleteIfExists()
 
 BLACK_AND_WHITE = False
 
-class SymClassGroup:
+class SymAsymClassPair:
     def __init__(self, bandsize, dark):
         self.bandsize = bandsize
         self.dark = dark
@@ -45,15 +45,17 @@ def get_class_dict(bands):
         n = n + 1
     return classes
 
-def gen_images(N_IMAGES, classes, bands, folder):
-    log('generating images...')
+@log_invokation()
+def gen_images(*, folder, class_pairs, ims_per_class):
+    N_IMAGES = ims_per_class * 2 * len(class_pairs)
+    classes = get_class_dict(class_pairs)
     File(folder).deleteAllContents()
 
     BLOCK_HEIGHT_WIDTH = 20
 
     y = []
 
-    band_group_size = N_IMAGES / len(bands)
+    band_group_size = N_IMAGES / len(class_pairs)
     band_group = 0
     band_group_i = 0
 
@@ -63,7 +65,7 @@ def gen_images(N_IMAGES, classes, bands, folder):
             if BLACK_AND_WHITE:
                 im_data = np.vectorize(round)(im_data)
 
-            band = bands[band_group]
+            band = class_pairs[band_group]
             ns_classname, s_classname = band.get_classnames()
             darken = band.dark
             if darken:
@@ -98,7 +100,6 @@ def gen_images(N_IMAGES, classes, bands, folder):
             im_file.save(im_data, silent=True)
             prog.tick()
 
-    log('done generating images')
     return classes
 
 
@@ -127,6 +128,7 @@ def getReal(
             (20, 20, 3)
         )
     if normalize_single_ims and not USING_STD_DIR:
+        # noinspection PyUnusedLocal
         def smallify():
             err('dev')
             files = glob.glob(sys.argv[1] + "/**/*.png", recursive=True)
@@ -139,8 +141,7 @@ def getReal(
                     i = i + 1
                     prog.tick()
             log('resized ' + str(i) + ' images')
-            import os
-            os._exit(0)
+            sys.exit()
         assert len(real.data.getdata()) == 20 * 20, 'dev: smallify if files are large but blocky'
         real.data = np.reshape(
             arr(
@@ -210,7 +211,7 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
                 log('problem with $', ff)
                 err('all files in data_dir folders should be images')
 
-    CLASS_NAMES = np.array([item.name for item in data_dir.glob('*') if item.name != "LICENSE.txt"])
+    CLASS_NAMES = np.array([item.name for item in data_dir.glob('*') if item.filename != "LICENSE.txt"])
 
     images = []
     for image in data_dir.glob('*/*.png'):
@@ -284,7 +285,6 @@ class PreDataset:
                  std_d, USING_STD_DIR):
         self.imds = imds
         self.class_label_map = class_label_map
-        import lib.nn.nnstate as nnstate
         self.num_steps = assert_int(len(self.imds) / nnstate.FLAGS.batchsize)
         self.gen = None
         self.gen_for_ds = None
@@ -296,7 +296,7 @@ class PreDataset:
     def __len__(self):
         return len(self.imds)
 
-    def examples(self, HW):
+    def examples(self):
         examples = []
         if len(self.imds) > 0:
             for c, lab in listitems(self.class_label_map):
@@ -361,6 +361,8 @@ class PreDataset:
         # for o in gen():
         #     yield o.data, o.label
         # self.gen_for_ds = gen_for_ds
+
+        return self
 
     # def myseq(self):
     #     seq = MySeq(self.gen)

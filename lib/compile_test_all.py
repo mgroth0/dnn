@@ -35,7 +35,7 @@ def compile_test_all(cfg, overwrite):
     sub_root.mkdirs()
 
     compile_root.mkdir()
-    metadataFile.copy_to(compile_root)
+    metadataFile.copy_into(compile_root)
 
     experiments = arr()
     for exp_folder in root_folder.listfiles():

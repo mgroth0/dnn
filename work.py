@@ -1,10 +1,3 @@
-import importlib.util
-import os
-# INIT_FUN = f'{os.getcwd()}/src/main/python/lib/boot/initFun.py'
-# INIT_FUN_NAME = INIT_FUN.split('/')[-1].split('.')[0]
-# spec = importlib.util.spec_from_file_location(INIT_FUN_NAME, INIT_FUN)
-# initFun = importlib.util.module_from_spec(spec)
-# spec.loader.exec_module(initFun)
 from lib.boot import bootfun as initFun
 FLAGS = initFun.margparse(
     cfg=str,
@@ -32,6 +25,15 @@ initFun.setup_logging(verbose=FLAGS.verbose)
 if FLAGS.tic is not None: setTic(FLAGS.tic * 1000)
 prep_log_file('dnn/NRC', new=True)
 from lib.nn_main import sym_net_main
+from mlib.gpu import mygpus
+FLAGS.mygpus = mygpus()
+FLAGS.cfg_cfg = json.loads(FLAGS.cfg)
+FLAGS.mygpufordata = FLAGS.mygpus[0] + 1 if not isempty(FLAGS.mygpus) else 1
+from lib import data_saving
+data_saving.root = FLAGS.cfg_cfg['root']
+from lib.nn import nnstate
+nnstate.FLAGS = FLAGS
+nnstate.reset_global_met_log()
 if float(1) == float(2):
     result_folder = nn_init_fun.runWithMultiProcess(sym_net_main)
 else:

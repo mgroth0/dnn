@@ -1,13 +1,7 @@
-# noinspection PyUnresolvedReferences
-from tensorflow.keras.models import Model
-
-# noinspection PyUnresolvedReferences
-from tensorflow.keras.layers import (
-    # Each of these are included at least once in all four models
-    Dense,
-    MaxPooling2D,
-    Conv2D,
-    Activation,
-)
-
+from arch import shared
+from arch.ALEX import ALEX
+from arch.GNET import GNET
+from arch.INC import INC
+from arch.SCRATCH import SCRATCH
 from arch.symnet import SymNet
+__all__ = ['ALEX', 'GNET', 'INC', 'SCRATCH', 'SymNet']

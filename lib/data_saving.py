@@ -17,13 +17,13 @@ def saveTestValResults(ARCH, nam, ds, ei):
         headers_included=True
     ), f'{nam}', f'CM{ei + 1}')
 
-def EXP_FOLDER(root):
+root = None
+def EXP_FOLDER():
     from lib.nn import nnstate
     return File(f'{pwd()}/{root}/{nnstate.FLAGS.expid}')
-root = None
-def savePlotAndTableData(fs, domain, nam,isFigSet=True):
+def savePlotAndTableData(fs, domain, nam, isFigSet=True):
     fs_str = '_fs' if isFigSet else ''
     ext = 'json' if isFigSet else 'png'
     domain = f'__{domain}' if len(domain) > 0 else ''
     from lib.nn import nnstate
-    File(f'{EXP_FOLDER(root).abspath}/{nnstate.FLAGS.arch}_{nnstate.FLAGS.ntrain}{domain}/{nam}{fs_str}.{ext}').save(fs)
+    File(f'{EXP_FOLDER().abspath}/{nnstate.FLAGS.arch}_{nnstate.FLAGS.ntrain}{domain}/{nam}{fs_str}.{ext}').save(fs)

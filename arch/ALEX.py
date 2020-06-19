@@ -1,4 +1,4 @@
-from arch import *
+from arch.shared import *
 from tensorflow.keras.layers import (
 
 
@@ -15,7 +15,7 @@ from tensorflow.keras.layers import (
 from tensorflow import pad, constant
 from tensorflow.keras import backend as K
 
-class AlexNet(SymNet):
+class ALEX(SymNet):
     def META(self): return self.Meta(
         WEIGHTS='alexnet_weights_permute.h5',
 
