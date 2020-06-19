@@ -8,7 +8,8 @@ import urllib.parse
 
 from mlib.boot.mutil import listitems
 VERSIONS = {
-    '1.0.0': 'First-Release'
+    '1.0.0': 'First-Release',
+    '1.0.1': 'Fix Grammar'
 }
 THIS_VERSION = listitems(VERSIONS)[-1]
 
@@ -197,7 +198,7 @@ perm = perm.split("\\n")
 // perm = perm.slice(1,5) // for prototyping
 
 
-seq = ['An image which is either symmetric or asymmetric will briefly flash on the screen. If you think the image is symmetric, press the RIGHT ARROW KEY. If you think it is asymmetric, press the LEFT ARROW KEY. Some of the images will only be visible for a very small time interval, and will be very difficult to see. Do not worry, this is by design. If you are not sure if it was symmetric or asymmetric, simply guess. 100 images will be shown, and then you will be done. Press SPACE to begin.']
+seq = ['An image that is either symmetric or asymmetric will briefly flash on the screen. If you think the image is symmetric, press the RIGHT ARROW KEY. If you think it is asymmetric, press the LEFT ARROW KEY. Some of the images will only be visible for a very small time interval and will be very difficult to see. Do not worry, this is by design. If you are not sure if it was symmetric or asymmetric, simply guess. 100 images will be shown, and then you will be done. Press SPACE to begin.']
 
 seq = seq.concat(perm)
 
