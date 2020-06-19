@@ -4,6 +4,13 @@
 from lib.makereport_lib import upload_webpage
 from lib.web import HTMLDoc, HTMLImage, Div, Hyperlink, HTMLProgress, HTMLLabel, Span, Br, HTMLFigure, HTMLFigCaption
 from lib.wolf.wolfpy import WOLFRAM
+import urllib.parse
+
+from mlib.boot.mutil import listitems
+VERSIONS = {
+    '1.0.0': 'First-Release'
+}
+THIS_VERSION = listitems(VERSIONS)[-1]
 
 print(upload_webpage(
     HTMLDoc(
@@ -11,7 +18,8 @@ print(upload_webpage(
             Span(
                 HTMLLabel(
                     label='Progress: ',
-                    forr='prog'
+                    forr='prog',
+                    style='font-size: large;'
                 ),
                 HTMLProgress(
                     value=0,
@@ -33,7 +41,7 @@ print(upload_webpage(
         ''',
                 clazz='center',
                 id='text',
-                style='width:100%'
+                style='width:100%;font-size: large;'
                 ),
             HTMLImage(
                 "",
@@ -46,7 +54,7 @@ print(upload_webpage(
                 Br,
                 Div(
                     HTMLFigure(
-                        HTMLFigCaption("Example of an ASYMMETRIC image (hit LEFT)"),
+                        HTMLFigCaption("Example of an ASYMMETRIC image (hit LEFT)",style='font-size: large;'),
                         HTMLImage(
                             "../../Resources/Symmetry/Exp1/NS4/sym1.png",
                             clazz='pixel',
@@ -56,7 +64,7 @@ print(upload_webpage(
                         style='display: inline-block;'
                     ),
                     HTMLFigure(
-                        HTMLFigCaption("Example of an SYMMETRIC image (hit RIGHT)"),
+                        HTMLFigCaption("Example of an SYMMETRIC image (hit RIGHT)",style='font-size: large;'),
                         HTMLImage(
                             "../../Resources/Symmetry/Exp1/S4/sym0.png",
                             clazz='pixel',
@@ -72,13 +80,13 @@ print(upload_webpage(
             ),
             Hyperlink(
                 label="Click here to send data and feedback",
-                url="mailto:mjgroth@mit.edu,dsinha@bbns.org?subject=SymTest&",
+                url=f"mailto:mjgroth@mit.edu,dsinha@bbns.org?subject=SymTest{urllib.parse.quote(THIS_VERSION[0])}&",
                 clazz='center',
                 id='link',
-                style='display: none;'
+                style='display: none;font-size: large;'
             ),
             clazz='center',
-            style='width: 1000px;'
+            style='width: 1000px;font-size: large;'
         ),
         js='''
 
@@ -189,7 +197,7 @@ perm = perm.split("\\n")
 // perm = perm.slice(1,5) // for prototyping
 
 
-seq = ['An image which is either symmetric or asymmetric will briefly flash on the screen. If you think the image is symmetric, press RIGHT. If you think it is asymmetric, press LEFT. 100 images will be shown, and then you will be done. Press SPACE to begin.']
+seq = ['An image which is either symmetric or asymmetric will briefly flash on the screen. If you think the image is symmetric, press the RIGHT ARROW KEY. If you think it is asymmetric, press the LEFT ARROW KEY. Some of the images will only be visible for a very small time interval, and will be very difficult to see. Do not worry, this is by design. If you are not sure if it was symmetric or asymmetric, simply guess. 100 images will be shown, and then you will be done. Press SPACE to begin.']
 
 seq = seq.concat(perm)
 
@@ -245,7 +253,7 @@ function showI(i) {
         setTimeout(function(){ 
             setTimeout(function(){ 
                 document.getElementById("im").style.display = "none"
-                document.getElementById("text").innerHTML = "asymmetric<- ->symmetric"
+                document.getElementById("text").innerHTML = "Asymmetric<- ->Symmetric"
                 document.getElementById("text").style.display = "block"
                 readyForChoice = true
             }, t);
