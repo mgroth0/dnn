@@ -38,7 +38,7 @@ print(upload_webpage(
         ),
         Hyperlink(
             label="Click here to send data and feedback",
-            url="mailto:mjgroth@mit.edu,dasinha@mit.edu?subject=SymTest&",
+            url="mailto:mjgroth@mit.edu,dsinha@bbns.org?subject=SymTest&",
             clazz='center',
             id='link',
             style='display: none;'
@@ -152,7 +152,7 @@ seq = ['An image which is either symmetric or asymmetric will briefly flash on t
 
 seq = seq.concat(perm)
 
-seq = seq.concat(['THANK YOU FOR PARTICIPATING!'])
+seq = seq.concat(['Thank you so much for participating!'])
 
 var i = -1
 var readyToAdvance = true
@@ -188,8 +188,8 @@ function showI(i) {
         document.getElementById("text").style.display = "block"
         document.getElementById("text").innerHTML = thing
         
-        var data = perm.map(function(e, i) {
-          return e + "=" + choices[i] + "\\n"
+        let data = perm.map(function(e, i) {
+          return "\\t" + e + "=" + choices[i] + "\\n"
         }).join("");
         
         
@@ -197,7 +197,7 @@ function showI(i) {
 `--FEEDBACK--
     Please write any feedback here
     
---DATA--\\n` + data
+--DATA-- (please do not edit below this line)\\n` + data
         )
         document.getElementById("link").style.display = "block"
     }

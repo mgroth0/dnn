@@ -16,7 +16,7 @@ def upload_webpage(htmlDoc, wolfFolder, permissions='Private',resource_folder=No
     with Temp('temp.html', w=htmlDoc.getCode()) as t:
         co = WOLFRAM.copy_file(t, f'{wolfFolder}/index.html', permissions=permissions)
     with Temp('temp.css', w=htmlDoc.stylesheet) as t:
-        WOLFRAM.copy_file(t, f'{wolfFolder}/style.css')
+        WOLFRAM.copy_file(t, f'{wolfFolder}/style.css', permissions=permissions)
     if resource_folder is not None:
-        WOLFRAM.copy_file(resource_folder, f'Resources/{wolfFolder}')
+        WOLFRAM.copy_file(resource_folder, f'Resources/{wolfFolder}', permissions=permissions)
     return co[0]

@@ -80,6 +80,9 @@ class WolfPy:
             tos = tos[1:]
 
         if File(fromm).isdir():
+            if self.eval(wl.DirectoryQ(wl.CloudObject(wl.FileNameJoin(tos)))):
+                log('cloud dir exists. deleting.')
+                self.eval(wl.DeleteDirectory(wl.CloudObject(wl.FileNameJoin(tos)), wl.Rule(wl.DeleteContents, True)))
             return self.eval(wl.CopyDirectory(
                 File(fromm).abspath,
                 wl.CloudObject(wl.FileNameJoin(tos), wl.Rule(wl.Permissions, permissions))
