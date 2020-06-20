@@ -3,17 +3,18 @@ Installation
 
 1. `git clone --recurse-submodules https://github.com/mgroth0/dnn`
 
-1. install [miniconda](https://docs.conda.io/en/latest/miniconda.html)
+2. install [miniconda](https://docs.conda.io/en/latest/miniconda.html)
 
-2. `conda update conda`
+3. `conda update conda`
 
 
-3. `conda config --add channels conda-forge` (might not be required)
+4. `conda config --add channels conda-forge` (might not be required)
 
-4. `conda create --name dnn --file requirements.txt; pip install -r reqs_pip.txt`  
+5. `conda create --name dnn --file requirements.txt`  
 -- When updating, use `conda install --file requirements.txt; pip install -r reqs_pip.txt`
 
-5. `conda activate dnn`
+6. `conda activate dnn`
+6. `pip install -r reqs_pip.txt`
 
 Basic Usage
 -

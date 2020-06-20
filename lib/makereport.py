@@ -2,12 +2,12 @@
 
 from mlib.JsonSerializable import obj
 from lib.figapi import APIDict
-from lib.makereport_lib import update_report, PUBLIC_REPORT_URL, upload_webpage
+from lib.makereport_lib import update_report, upload_webpage
 from lib.web import HTML, Hyperlink, Br
 from lib.web_widgets import FigureTable
 from lib.defaults import *
 TABLE_OF_CONTENTS_URL = None
-
+DNN_PUB_REP_URL = 'https://www.wolframcloud.com/obj/9e1d2a8d-660a-4119-a31c-7ebacab6ae57'
 # EXP_GROUP_NAMES = [
 #     '4-AddDarkZeros-compile',
 #     '5-NormSingleIms-compile'
@@ -58,14 +58,14 @@ def makereport(prune):
     upload_webpage(HTML(*private_contents), 'dnn_private')
     toc_url = upload_webpage(HTML(*contents), 'dnn', permissions="Public")
 
-    update_report(toc_url)
+    update_report(toc_url,DNN_PUB_REP_URL)
     if prune:
         log('pruning unused keys')
         for k in MR_API.unusedKeys:
             log(f'pruning: {k}')
             del MR_API[k]
     refreshSafariReport()
-def get_report(md, fig_folder, exp_name, api: APIDict = None, index_url=PUBLIC_REPORT_URL, exp_id=None, editable=False):
+def get_report(md, fig_folder, exp_name, api: APIDict = None, index_url=DNN_PUB_REP_URL, exp_id=None, editable=False):
     example_folds = fig_folder.glob('example*')
     all_examples = []
     for example_fold in example_folds:
