@@ -172,7 +172,6 @@ class SymNet(ABC):
         for m in net_mets.METS_TO_USE():
             mets_for_compile.append(m)
 
-        breakpoint()
 
         self.net.compile(
             optimizer='adam',
