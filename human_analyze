@@ -34,7 +34,6 @@ for sub_file in subject_files:
 
     for k, v in listitems(results):
         TP, FP, TN, FN, P, N = binary_results(arr(v['y_true']), arr(v['y_pred']))
-        breakpoint()
         v['mcc'] = mcc_basic(TP, FP, TN, FN)
         v['acc'] = 1 - error_rate_basic(FP, FN, P, N)
 
