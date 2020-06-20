@@ -4,8 +4,8 @@ from abc import abstractmethod
 from collections import Counter
 
 from lib.wolf.makefigslib import MakeFigsBackend
-from lib.wolf.wolf_lang import *
-from lib.figs import line, scatter, bar
+from mlib.wolf.wolf_lang import *
+from lib.wolf import line, scatter, bar
 from lib.defaults import *
 
 class WolfMakeFigsBackend(MakeFigsBackend):
@@ -32,7 +32,7 @@ class WolfMakeFigsBackend(MakeFigsBackend):
         log('making image')
         im = wl.Image(str(fd.x).replace('[', '{').replace(']', '}'))  # "Byte"
         im = str(im).replace("'", "")
-        from lib.wolf.wolfpy import weval
+        from mlib.wolf.wolfpy import weval
         im = weval(im)
         log('made image')
         return im
