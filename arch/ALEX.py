@@ -28,57 +28,56 @@ class ALEX(SymNet):
         HEIGHT_WIDTH=227
 
     )
-    def assemble_layers(self):
-        return Activation('softmax', name='softmax')(
-            self._dense(
-                1000,
-            )(self._dense(
-                4096,
-                activation='relu',
-                dropout=True
-            )(self._dense(
-                4096,
-                activation='relu',
-                dropout=True
-            )(Flatten(
-                name='flatten'
-            )(self.max_pool(
-                strides=2,
-                name='convpool_5'
-            )(self._conv_group(
-                128,
+    def assemble_layers(self): return Activation('softmax', name='softmax')(
+        self._dense(
+            1000,
+        )(self._dense(
+            4096,
+            activation='relu',
+            dropout=True
+        )(self._dense(
+            4096,
+            activation='relu',
+            dropout=True
+        )(Flatten(
+            name='flatten'
+        )(self.max_pool(
+            strides=2,
+            name='convpool_5'
+        )(self._conv_group(
+            128,
+            3,
+            'conv_5',
+            zero_pad=1,
+            inputs=self._conv_group(
+                192,
                 3,
-                'conv_5',
+                'conv_4',
                 zero_pad=1,
-                inputs=self._conv_group(
-                    192,
+                inputs=self._conv(
+                    384,
                     3,
-                    'conv_4',
-                    zero_pad=1,
-                    inputs=self._conv(
-                        384,
-                        3,
-                        name='conv_3'
-                    )(ZeroPadding2D(
-                        1
-                    )(self.crosschannelnormalization(
+                    name='conv_3'
+                )(ZeroPadding2D(
+                    1
+                )(self.crosschannelnormalization(
+                )(self.max_pool(
+                    strides=2
+                )(self._conv_group(
+                    128,
+                    5,
+                    'conv_2',
+                    zero_pad=2,
+                    inputs=self.crosschannelnormalization(
+                        name='convpool_1'
                     )(self.max_pool(
-                        strides=2
-                    )(self._conv_group(
-                        128,
-                        5,
-                        'conv_2',
-                        zero_pad=2,
-                        inputs=self.crosschannelnormalization(
-                            name='convpool_1'
-                        )(self.max_pool(
-                            strides=3
-                        )(self._conv(
-                            96,
-                            11,
-                            strides=4,
-                            name='conv_1'
-                        )(self.inputs))))))))))))))))
+                        strides=3
+                    )(self._conv(
+                        96,
+                        11,
+                        strides=4,
+                        name='conv_1'
+                    )(self.inputs))))))))))))))))
 
     def max_pool(self, *args, **kwargs): return MaxPooling2D(3, *args, **kwargs)
 
