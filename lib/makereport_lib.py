@@ -11,8 +11,12 @@ def update_report(new_url):
     co = WOLFRAM.cloud_deploy(wl.HTTPRedirect(new_url), url=PUBLIC_REPORT_URL, public=True)
     log(f'finished deploying redirect:{co[0]}')
 
+RESOURCES_ROOT = "https://www.wolframcloud.com/obj/mjgroth/Resources/"
+
 @log_invokation(with_args=True)
-def upload_webpage(htmlDoc, wolfFolder, permissions='Private',resource_folder=None):
+def upload_webpage(htmlDoc, wolfFolder, permissions='Private',resource_folder=None,DEV=False):
+    if DEV:
+        wolfFolder = 'Dev/' + wolfFolder
     with Temp('temp.html', w=htmlDoc.getCode()) as t:
         co = WOLFRAM.copy_file(t, f'{wolfFolder}/index.html', permissions=permissions)
     with Temp('temp.css', w=htmlDoc.stylesheet) as t:

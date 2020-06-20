@@ -1,15 +1,19 @@
 #!/bin/sh
 """exec" "$HOME/miniconda3/envs/dnn/bin/python" "$0" "$@"""
 
-from lib.makereport_lib import upload_webpage
-from lib.web import HTMLDoc, HTMLImage, Div, Hyperlink, HTMLProgress, HTMLLabel, Span, Br, HTMLFigure, HTMLFigCaption
+from lib.makereport_lib import upload_webpage, RESOURCES_ROOT
+from lib.web import HTMLDoc, HTMLImage, Div, Hyperlink, HTMLProgress, HTMLLabel, Span, Br, HTMLFigure, HTMLFigCaption, TextArea, P
 from lib.wolf.wolfpy import WOLFRAM
 import urllib.parse
+
+
 
 from mlib.boot.mutil import listitems
 VERSIONS = {
     '1.0.0': 'First-Release',
-    '1.0.1': 'Fix Grammar'
+    '1.0.1': 'Fix Grammar',
+    '1.0.2': 'improve instructions: R/L Arrow Key',
+    '1.1.0': 'Allow copy and pasting data'
 }
 THIS_VERSION = listitems(VERSIONS)[-1]
 
@@ -55,9 +59,10 @@ print(upload_webpage(
                 Br,
                 Div(
                     HTMLFigure(
-                        HTMLFigCaption("Example of an ASYMMETRIC image (hit LEFT)",style='font-size: large;'),
+                        HTMLFigCaption("Example of an ASYMMETRIC image (hit LEFT arrow key)",
+                                       style='font-size: large;'),
                         HTMLImage(
-                            "../../Resources/Symmetry/Exp1/NS4/sym1.png",
+                            RESOURCES_ROOT + "Symmetry/Exp1/NS4/sym1.png",
                             clazz='pixel',
                             style='width: 224px; height: 224px; padding: 20px;',
                             # id='ExampleNS'
@@ -65,9 +70,10 @@ print(upload_webpage(
                         style='display: inline-block;'
                     ),
                     HTMLFigure(
-                        HTMLFigCaption("Example of an SYMMETRIC image (hit RIGHT)",style='font-size: large;'),
+                        HTMLFigCaption("Example of an SYMMETRIC image (hit RIGHT arrow key)",
+                                       style='font-size: large;'),
                         HTMLImage(
-                            "../../Resources/Symmetry/Exp1/S4/sym0.png",
+                            RESOURCES_ROOT + "Symmetry/Exp1/S4/sym0.png",
                             clazz='pixel',
                             style='width: 224px; height: 224px; padding: 20px;',
                             # id='ExampleS'
@@ -80,14 +86,29 @@ print(upload_webpage(
                 style='display:none;width:100%'
             ),
             Hyperlink(
-                label="Click here to send data and feedback",
+                label="Click here to automatically open a pre-filled email",
                 url=f"mailto:mjgroth@mit.edu,dsinha@bbns.org?subject=SymTest{urllib.parse.quote(THIS_VERSION[0])}&",
                 clazz='center',
                 id='link',
                 style='display: none;font-size: large;'
             ),
+            P(
+                THIS_VERSION[0],
+                id='VERSION',
+                style='display: none;font-size: large;'
+            ),
+            P(
+                RESOURCES_ROOT,
+                id='RESOURCES_ROOT',
+                style='display: none;font-size: large;'
+            ),
+            TextArea(
+                clazz='center',
+                id='textarea',
+                style='display: none;font-size: small;height: 700px;text-align: left;'
+            ),
             clazz='center',
-            style='width: 1000px;font-size: large;'
+            style='width: 1200px;font-size: large;'
         ),
         js='''
 
@@ -195,7 +216,7 @@ S4/sym0.png`;
 perm = perm.split("\\n")
 
 
-// perm = perm.slice(1,5) // for prototyping
+perm = perm.slice(1,5) // for prototyping
 
 
 seq = ['An image that is either symmetric or asymmetric will briefly flash on the screen. If you think the image is symmetric, press the RIGHT ARROW KEY. If you think it is asymmetric, press the LEFT ARROW KEY. Some of the images will only be visible for a very small time interval and will be very difficult to see. Do not worry, this is by design. If you are not sure if it was symmetric or asymmetric, simply guess. 100 images will be shown, and then you will be done. Press SPACE to begin.']
@@ -203,7 +224,7 @@ seq = ['An image that is either symmetric or asymmetric will briefly flash on th
 seq = seq.concat(perm)
 
 // If I edit this, I need to also edit the switcher below
-seq = seq.concat(['Thank you so much for participating!'])
+seq = seq.concat(['Thank you so much for participating! Click the link below to open a pre-filled email for sending results and feedback, or alternatively you may copy and paste the same content from below and email it to mjgroth@mit.edu and dsinha@bbns.org'])
 
 var i = -1
 var readyToAdvance = true
@@ -250,7 +271,8 @@ function showI(i) {
             if (nextSymTime == times.length) {nextSymTime = 0}
         }
         document.getElementById("text").style.display = "none"
-        document.getElementById("im").src="../../Resources/Symmetry/Exp1/" + thing;
+        let RESOURCES_ROOT = document.getElementById("RESOURCES_ROOT").innerHTML
+        document.getElementById("im").src=RESOURCES_ROOT+"Symmetry/Exp1/" + thing;
         setTimeout(function(){ 
             setTimeout(function(){ 
                 document.getElementById("im").style.display = "none"
@@ -270,14 +292,20 @@ function showI(i) {
           return "\\t" + e + '|' + usedTimes[i].toString() + "=" + choices[i] + "\\n"
         }).join("");
         
-        
-        document.getElementById("link").href = document.getElementById("link").href + "body=" + encodeURI(
-`--FEEDBACK--
+        let template = `--FEEDBACK--
     Please write any feedback here
     
 --DATA-- (please do not edit below this line)\\n` + data
-        )
+        
+        document.getElementById("link").href = document.getElementById("link").href + "body=" + encodeURI(template)
         document.getElementById("link").style.display = "block"
+        
+        let VERSION = document.getElementById("VERSION").innerHTML
+        
+        template = VERSION + "\\n" + template
+        
+        document.getElementById("textarea").innerHTML = template
+        document.getElementById("textarea").style.display = "block"
     }
 }
 
@@ -316,6 +344,7 @@ window.onload = function() {
     "Symmetry/Exp1",
     "Public",
     # resource_folder='_images_human/TimePilot'
+    DEV=False
 ))
 
 WOLFRAM.terminate()
