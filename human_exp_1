@@ -2,7 +2,7 @@
 """exec" "$HOME/miniconda3/envs/dnn/bin/python" "$0" "$@"""
 
 from lib.makereport_lib import upload_webpage, RESOURCES_ROOT
-from lib.web import HTMLDoc, HTMLImage, Div, Hyperlink, HTMLProgress, HTMLLabel, Span, Br, HTMLFigure, HTMLFigCaption, TextArea, P
+from lib.web import HTML, HTMLImage, Div, Hyperlink, HTMLProgress, HTMLLabel, Span, Br, HTMLFigure, HTMLFigCaption, TextArea, P
 from lib.wolf.wolfpy import WOLFRAM
 import urllib.parse
 
@@ -19,7 +19,7 @@ VERSIONS = {
 THIS_VERSION = listitems(VERSIONS)[-1]
 
 print(upload_webpage(
-    HTMLDoc(
+    HTML(
         Div(
             Span(
                 HTMLLabel(

@@ -3,7 +3,7 @@
 from mlib.JsonSerializable import obj
 from lib.figapi import APIDict
 from lib.makereport_lib import update_report, PUBLIC_REPORT_URL, upload_webpage
-from lib.web import HTMLDoc, Hyperlink, Br
+from lib.web import HTML, Hyperlink, Br
 from lib.web_widgets import FigureTable
 from lib.defaults import *
 TABLE_OF_CONTENTS_URL = None
@@ -55,8 +55,8 @@ def makereport(prune):
     [private_contents.insert(0, Br) for _ in range(5)]
     private_contents.append(Hyperlink("to public version", newPubURL))
 
-    upload_webpage(HTMLDoc(*private_contents), 'dnn_private')
-    toc_url = upload_webpage(HTMLDoc(*contents), 'dnn', permissions="Public")
+    upload_webpage(HTML(*private_contents), 'dnn_private')
+    toc_url = upload_webpage(HTML(*contents), 'dnn', permissions="Public")
 
     update_report(toc_url)
     if prune:
@@ -113,7 +113,7 @@ def get_report(md, fig_folder, exp_name, api: APIDict = None, index_url=PUBLIC_R
         api[exp_name, f'{mcc_name}_{n}']
     ), ntrain_figs)
 
-    doc = HTMLDoc(
+    doc = HTML(
         'Symmetry Detection Report by Matt Groth'
         , ''
         , str(len(md.archs)) + ' Architectures: ',

@@ -37,7 +37,7 @@ width:100%;
 '''
 
 
-class HTMLDoc:
+class HTML:
     def __init__(self,
                  *children,
                  # stylesheet=DARK_CSS.name,
