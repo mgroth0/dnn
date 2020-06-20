@@ -16,6 +16,9 @@ from tensorflow import pad, constant
 from tensorflow.keras import backend as K
 
 class ALEX(SymNet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._next_dense_i = 1
     def META(self): return self.Meta(
         WEIGHTS='alexnet_weights_permute.h5',
 
@@ -26,118 +29,65 @@ class ALEX(SymNet):
 
     )
     def assemble_layers(self):
-        conv_2 = ZeroPadding2D(
-            (2, 2)
-        )(self.crosschannelnormalization(
-            name='convpool_1'
-        )(MaxPooling2D(
-            (3, 3),
-            strides=(2, 2)
-        )(Conv2D(
-            96,
-            (11, 11),
-            strides=4,
-            activation='relu',
-            name='conv_1'
-        )(self.inputs))))
-
-        conv_4 = ZeroPadding2D(
-            (1, 1)
-        )(Conv2D(
-            384,
-            (3, 3),
-            activation='relu',
-            name='conv_3'
-        )(ZeroPadding2D(
-            (1, 1)
-        )(self.crosschannelnormalization(
-
-        )(MaxPooling2D(
-            (3, 3),
-            strides=(2, 2)
-        )(Concatenate(
-            axis=3,
-            name='conv_2'
-        )(
-            [
-                Conv2D(
-                    128,
-                    (5, 5),
-                    activation='relu',
-                    name=f'conv_2_{i + 1}'
-                )(
-                    self.splittensor(
-                        ratio_split=2,
-                        id_split=i
-                    )(conv_2)
-                ) for i in range(2)
-            ]
-        ))))))
-
-        conv_5 = ZeroPadding2D(
-            (1, 1)
-        )(
-            Concatenate(
-                axis=3,
-                name='conv_4'
-            )(
-                [
-                    Conv2D(
-                        192,
-                        (3, 3),
-                        activation='relu',
-                        name=f'conv_4_{i + 1}'
-                    )(
-                        self.splittensor(
-                            ratio_split=2,
-                            id_split=i
-                        )(conv_4)
-                    ) for i in range(2)
-                ]
-            )
-        )
-
         return Activation('softmax', name='softmax')(
-            Dense(
+            self._dense(
                 1000,
-                name='dense_3'
-            )(Dropout(
-                0.5
-            )(Dense(
+            )(self._dense(
                 4096,
                 activation='relu',
-                name='dense_2'
-            )(Dropout(
-                0.5
-            )(Dense(
+                dropout=True
+            )(self._dense(
                 4096,
                 activation='relu',
-                name='dense_1'
+                dropout=True
             )(Flatten(
                 name='flatten'
-            )(MaxPooling2D(
-                (3, 3),
-                strides=(2, 2),
+            )(self.max_pool(
+                strides=2,
                 name='convpool_5'
-            )(Concatenate(
-                axis=3,
-                name='conv_5'
-            )(
-                [
-                    Conv2D(
+            )(self._conv_group(
+                128,
+                3,
+                'conv_5',
+                zero_pad=1,
+                inputs=self._conv_group(
+                    192,
+                    3,
+                    'conv_4',
+                    zero_pad=1,
+                    inputs=self._conv(
+                        384,
+                        3,
+                        name='conv_3'
+                    )(ZeroPadding2D(
+                        1
+                    )(self.crosschannelnormalization(
+                    )(self.max_pool(
+                        strides=2
+                    )(self._conv_group(
                         128,
-                        (3, 3),
-                        activation='relu',
-                        name=f'conv_5_{i + 1}'
-                    )(
-                        self.splittensor(
-                            ratio_split=2,
-                            id_split=i
-                        )(conv_5)
-                    ) for i in range(2)
-                ]
-            )))))))))
+                        5,
+                        'conv_2',
+                        zero_pad=2,
+                        inputs=self.crosschannelnormalization(
+                            name='convpool_1'
+                        )(self.max_pool(
+                            strides=3
+                        )(self._conv(
+                            96,
+                            11,
+                            strides=4,
+                            name='conv_1'
+                        )(self.inputs))))))))))))))))
 
+    def max_pool(self, *args, **kwargs): return MaxPooling2D(3, *args, **kwargs)
+
+    def _dense(self, *args, dropout=False, **kwargs):
+        d = Dense(*args, name=f'dense_{self._next_dense_i}', **kwargs)
+        if dropout:
+            d = Dropout(0.5)(d)
+        self._next_dense_i = self._next_dense_i + 1
+        return d
 
     @staticmethod
     def crosschannelnormalization(alpha=1e-4, k=2, beta=0.75, n=5, **kwargs):
@@ -191,18 +141,28 @@ class ALEX(SymNet):
         return Lambda(f, output_shape=lambda input_shape: g(input_shape), **kwargs)
 
 
-    def convolution2Dgroup(self, n_group, nb_filter, nb_row, nb_col):
-        def f(input_layer):
-            return Concatenate(axis=1)([
-                Conv2D(nb_filter // n_group, nb_row, nb_col)(
-                    self.splittensor(axis=1,
-                                     ratio_split=n_group,
-                                     id_split=i)(input_layer))
-                for i in range(n_group)
-            ])
+    def _conv(self, n_filters, k_len, *args, **kwargs): return Conv2D(n_filters, (k_len, k_len), *args,
+                                                                      activation="relu", **kwargs)
+    def _cat(self, name): return Concatenate(axis=3, name=name)
 
-        return f
-
+    def _conv_group(self, n_filters, k_len, name, zero_pad, inputs):
+        inputs = ZeroPadding2D(zero_pad)(inputs)
+        return self._cat(
+            name='name'
+        )(
+            [
+                self._conv(
+                    n_filters,
+                    k_len,
+                    name=f'{name}_{i + 1}'
+                )(
+                    self.splittensor(
+                        ratio_split=2,
+                        id_split=i
+                    )(inputs)
+                ) for i in range(2)
+            ]
+        )
 
     class Softmax4D(Layer):
         def __init__(self, axis=-1, **kwargs):

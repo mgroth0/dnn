@@ -46,7 +46,7 @@ def sym_net_main(FLAGS):
             # ims_per_class=1
         )
         for n in (25, 50, 100, 150, 200, 1000):
-        # for n in (1,):
+            # for n in (1,):
             gen_images(folder=_IMAGES_FOLDER['Training'][n], class_pairs=class_pairs, ims_per_class=n)
 
         with TempFolder('_temp_ims') as temp:
@@ -91,6 +91,7 @@ def sym_net_main(FLAGS):
         max_num_classes=len(listkeys(datasetTest.class_label_map)),
         proto=FLAGS.proto_model
     )
+    net.build()
     net.train_data = datasetTrain.prep(net.META().HEIGHT_WIDTH)
     net.val_data = datasetVal.prep(net.META().HEIGHT_WIDTH)
     net.test_data = datasetTest.prep(net.META().HEIGHT_WIDTH)

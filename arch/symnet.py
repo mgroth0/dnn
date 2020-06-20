@@ -56,9 +56,11 @@ class SymNet(ABC):
     VERBOSE_MODE = 2  # 0=silent,1=progress bar,2=one line per epoch
     def __init__(self, max_num_classes=2, proto=False):
         self.max_num_classes = max_num_classes
+        self.proto = proto
+    def build(self):
         self.startTime = log('creating DNN: ' + self.__class__.__name__)
-        if proto:
-            self.net = self.build_proto_model(max_num_classes)
+        if self.proto:
+            self.net = self.build_proto_model(self.max_num_classes)
         else:
             self.inputs = Input((
                 self.META().HEIGHT_WIDTH,
@@ -137,7 +139,6 @@ class SymNet(ABC):
                 o_weights_report_file.write(repr(o_model.graph.node))
                 log('finished writing matlab weight report...')
 
-
             # Theano > Tensorflow, just flips the weight arrays in the first 2 dims. Doesn't change shape.
             if self.META().FLIPPED_CONV_WEIGHTS:
                 for layer in self.net.layers:
@@ -181,7 +182,6 @@ class SymNet(ABC):
         self.net.run_eagerly = True
 
         log('compiled network!')
-
 
         # num_classes
         reset_global_met_log()
