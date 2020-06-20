@@ -13,7 +13,8 @@ VERSIONS = {
     '1.0.0': 'First-Release',
     '1.0.1': 'Fix Grammar',
     '1.0.2': 'improve instructions: R/L Arrow Key',
-    '1.1.0': 'Allow copy and pasting data'
+    '1.1.0': 'Allow copy and pasting data',
+    '1.1.1': 'Add version label'
 }
 THIS_VERSION = listitems(VERSIONS)[-1]
 
@@ -35,8 +36,8 @@ print(upload_webpage(
                 clazz='center',
                 style='width:100%'
             ),
-            Div('''
-        Welcome to our symmetry detection experiment!
+            Div(f'''
+        Welcome to our symmetry detection experiment (version:{THIS_VERSION[0]})!
         Before continuing, please:\n
         \t1. Make your browser fullscreen.
         \t2. Ensure you have 10 minutes to focus on the experiment without distraction. 
