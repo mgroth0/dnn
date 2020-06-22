@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+../mlib/build.sh
+git status
+read -p "Ok to add, commit and push? [y/n] > " -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    git add .
+    read -p "Commit Message: " -n 1 -r
+    git commit -m $REPLY
+    git push
+fi

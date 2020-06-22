@@ -11,10 +11,17 @@ Installation
 4. `conda config --add channels conda-forge` (might not be required)
 
 5. `conda create --name dnn --file requirements.txt`  
--- When updating, use `conda install --file requirements.txt; pip install -r reqs_pip.txt`
+-- When updating, use `conda install --file requirements.txt; pip install --upgrade -r reqs_pip.txt`
 
 6. `conda activate dnn`
-6. `pip install -r reqs_pip.txt`
+7. `pip install -r reqs_pip.txt`
+
+NORMAL USAGE
+- pip install --upgrade -r reqs_matt.txt
+DEV
+- pip uninstall -r reqs_matt.txt
+- clone https://github.com/mgroth0/mlib
+- Use an an IDE like PyCharm to link mlib and develop it in parallel
 
 Basic Usage
 -
@@ -42,6 +49,10 @@ If there is anything hardcoded that you'd like to be configurable, please submit
 Development
 - 
 
+just use `./build`. This is a powerful but dangerous build script (it deletes old folders as part of the process). Only use it if files are all in the right place and you know what you are doing.
+matt's packages (just mlib for now) must be located in the same parent directory, as this will automatically be pushed as well.
+
+(old)
 - use `conda list -e > requirements.txt; sed -i '' '/pypi/d' requirements.txt` to store dependencies.
 - There are also a couple of pip dependencies manually written in reqs_pip.txt, since these cannot be found through conda
 
