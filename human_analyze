@@ -1,7 +1,8 @@
 #!/bin/sh
+"""export""" "MPLBACKEND=Agg"
 """exec" "$HOME/miniconda3/envs/dnn/bin/python" "$0" "$@"""
 from matplotlib import pyplot as plt
-
+from mlib.boot.mutil import Folder, listitems
 from lib.nn.net_mets import *
 
 
@@ -13,6 +14,7 @@ labels = {
 subject_files = Folder('_data_human').listmfiles()
 
 for sub_file in subject_files:
+    subjectname = sub_file.name_pre_ext
     results = {
         100: {'y_true': [], 'y_pred': []},
         200: {'y_true': [], 'y_pred': []},
@@ -37,7 +39,7 @@ for sub_file in subject_files:
         v['mcc'] = mcc_basic(TP, FP, TN, FN)
         v['acc'] = 1 - error_rate_basic(FP, FN, P, N)
 
-    print(results)
+    log(f'{subjectname}: MCC100: {results[100]["mcc"]}')
 
     w = 0.3
 
@@ -70,10 +72,11 @@ for sub_file in subject_files:
         # tick_label=[100, 200, 300, 400, 500],
     )
 
-    plt.title("Symmetry Detection, subject=" + sub_file.name_pre_ext)
+    plt.title(f"Symmetry Detection, subject={subjectname}")
     plt.ylabel("Metrics")
     plt.ylim([-1, 1])
     plt.xlabel("Stimulus Time Interval (ms)")
     plt.legend(['MCC', 'Accuracy'])
     fold = Folder('_figs/sym/human').mkdirs()
-    plt.savefig(fold[f'{sub_file.name_pre_ext}.png'])
+    plt.savefig(fold[f'{subjectname}.png'])
+    plt.clf()
