@@ -7,7 +7,7 @@ echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     git add .
-    read -p "Commit Message: " -n 1 -r
-    git commit -m $REPLY
+    read -p "Commit Message: " -r
+    git commit -m "$REPLY"
     git push
 fi
