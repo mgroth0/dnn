@@ -4,11 +4,12 @@
 bcrypt=3.1.7=py38h64e0658_1
 brotlipy=0.7.0=py38h64e0658_1000
 bzip2=1.0.8=h0b31af3_2
-ca-certificates=2020.4.5.2=hecda079_0
+ca-certificates=2020.6.20=hecda079_0
 cairo=1.16.0=hec6a9b0_1003
-certifi=2020.4.5.2=py38h32f6830_0
+certifi=2020.6.20=py38h32f6830_0
 cffi=1.14.0=py38h356ff06_0
 chardet=3.0.4=py38h32f6830_1006
+colorama=0.4.3=py_0
 conda=4.8.3=py38h32f6830_2
 conda-package-handling=1.6.0=py38h64e0658_2
 cryptography=2.9.2=py38hb761dab_0
@@ -68,6 +69,7 @@ onnx=1.7.0=py38h8126d8c_2
 opencv=4.3.0=py38_1
 openh264=2.1.1=hd174df1_0
 openssl=1.1.1g=h0b31af3_0
+packaging=20.4=pyh9f0ad1d_0
 pandas=1.0.4=py38h5fc983b_0
 pcre=8.44=h4a8c4bd_0
 pexpect=4.8.0=py38h32f6830_1

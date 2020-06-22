@@ -1,7 +1,10 @@
-from lib.defaults import *
+from numpy import count_nonzero
+
 from lib.nn.nn_sym_lib import reduced_label
 import lib.nn.nnstate as nnstate
 from lib.nn.nnstate import update_met_log
+from mlib.boot import log
+from mlib.boot.mutil import sqrt, err, inv_map, arr2d, inc, mparray, arr, bitwise_and,maxindex
 
 def METS_TO_USE(): return [accuracy, matthews_correlation_coefficient, mcc_multi, fill_cmat]
 

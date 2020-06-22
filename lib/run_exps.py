@@ -92,7 +92,6 @@ def run_exps(cfg, remote=False, gui=True):
         interact_with_nrc=cfg.INTERACT,
         remote=remote
     )]
-    exp_id_file = File('_metastate.json')
     old = cfg.EXPS
     cfg.EXPS = []
     for i in range(cfg.REPEAT_ALL):
@@ -100,8 +99,8 @@ def run_exps(cfg, remote=False, gui=True):
             cfg.EXPS += [j]
     for e in cfg.EXPS:
         for ntrain in cfg.NTRAIN:
-            exp_id = str(exp_id_file["next_exp_id"])
-            exp_id_file["next_exp_id"] = int(exp_id) + 1
+            exp_id = str(METASTATE["next_exp_id"])
+            METASTATE["next_exp_id"] = int(exp_id) + 1
             jobs.append(Experiment(
                 {
                     'para'        : cfg.para,

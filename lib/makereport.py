@@ -64,7 +64,7 @@ def makereport(prune):
         for k in MR_API.unusedKeys:
             log(f'pruning: {k}')
             del MR_API[k]
-    refreshSafariReport()
+    refreshSafariReport(err('I need to specify report url in here'))
 def get_report(md, fig_folder, exp_name, api: APIDict = None, index_url=DNN_PUB_REP_URL, exp_id=None, editable=False):
     example_folds = fig_folder.glob('example*')
     all_examples = []

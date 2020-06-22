@@ -1,10 +1,11 @@
 from lib import getfigdata
 import lib.boot
-from lib.defaults import *
+from mlib import project
 from mlib.JsonSerializable import obj
 from lib.gui import answer_request
 from lib.misc.google_compute import gcloud_config
 
+project.init()
 
 @log_invokation()
 def dnn(
@@ -20,13 +21,12 @@ def dnn(
     if File('_figs/figs_dnn').exists():
         figsFolder = get_last_figs_folder()  # for if MODE=COMPILE_TEST_ALL
     if FULL and cfg.SAVE_DATA:
-        metastate = File("_metastate.json")
-        if not metastate.exists():
-            metastate['next_exp_id'] = 1
-            metastate['last_submitted_exp_group_name'] = ''
+        if not METASTATE.exists():
+            METASTATE['next_exp_id'] = 1
+            METASTATE['last_submitted_exp_group_name'] = ''
         File('_figs/figs_dnn').mkdirs()
         def check(a):
-            metastate["last_submitted_exp_group_name"] = a
+            METASTATE["last_submitted_exp_group_name"] = a
             figs_folder = get_figs_folder(a)
             if figs_folder is None:
                 return (False, f"{a} was already used!")
