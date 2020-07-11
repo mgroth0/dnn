@@ -1,5 +1,8 @@
-from lib.figs.TableData import ConfusionMatrix
-from lib.defaults import *
+from mlib.boot import log
+from mlib.boot.bootutil import pwd
+from mlib.boot.mutil import add_headers_to_mat, listkeys
+from mlib.fig.TableData import ConfusionMatrix
+from mlib.file import File
 
 def saveTestValResults(ARCH, nam, ds, ei):
     from lib.nn import net_mets
@@ -22,8 +25,18 @@ def EXP_FOLDER():
     from lib.nn import nnstate
     return File(f'{pwd()}/{root}/{nnstate.FLAGS.expid}')
 def savePlotAndTableData(fs, domain, nam, isFigSet=True):
+    log('here1')
     fs_str = '_fs' if isFigSet else ''
+    log('here2')
     ext = 'json' if isFigSet else 'png'
+    log('here3')
     domain = f'__{domain}' if len(domain) > 0 else ''
+    log('here4')
     from lib.nn import nnstate
-    File(f'{EXP_FOLDER().abspath}/{nnstate.FLAGS.arch}_{nnstate.FLAGS.ntrain}{domain}/{nam}{fs_str}.{ext}').save(fs)
+    log('here5')
+    filename = f'{EXP_FOLDER().abspath}/{nnstate.FLAGS.arch}_{nnstate.FLAGS.ntrain}{domain}/{nam}{fs_str}.{ext}'
+    log('here6')
+    file = File(filename)
+    log('here7')
+    file.save(fs)
+    log('here8')

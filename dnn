@@ -1,3 +1,4 @@
 #!/bin/sh
-export MPLBACKEND=Agg
+export MPLBACKEND=Agg # prevents matplotlib 'app' from opening
+"export" "PYTHONPATH=../mlib"
 exec "$HOME/miniconda3/envs/dnn/bin/python" "dnn.py" "$@"

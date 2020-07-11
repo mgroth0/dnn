@@ -4,15 +4,13 @@ from lib.nn.nn_sym_lib import reduced_label
 import lib.nn.nnstate as nnstate
 from lib.nn.nnstate import update_met_log
 from mlib.boot import log
-from mlib.boot.mutil import sqrt, err, inv_map, arr2d, inc, mparray, arr, bitwise_and,maxindex
+from mlib.boot.mutil import err, inv_map, arr2d, inc, arr, maxindex
+from mlib.boot.stream import mparray
+from mlib.class_mets import binary_results, mcc_basic, error_rate_basic
 
 def METS_TO_USE(): return [accuracy, matthews_correlation_coefficient, mcc_multi, fill_cmat]
 
-def mcc_basic(TP, FP, TN, FN):
-    denom = sqrt((TP + FP) * (TP + FN) * (TN + FP) * (TN + FN))
-    if denom == 0: denom = 1
-    rrr = (TP * TN - FP * FN) / denom
-    return rrr
+
 
 def mcc_multi(y_true, y_pred):
     rrr, TP, FP, TN, FN, P, N = basics(y_true, y_pred, mcc_multi)
@@ -29,7 +27,7 @@ def mcc_multi(y_true, y_pred):
                 go = False
                 break
         if go:
-            rrr = sklearn.metrics.matthews_corrcoef(y_true, y_pred)
+            rrr = sklearn.metrics.matthews_corrcoef(list(map(int, y_true)), y_pred.tolist())
 
         else:
             rrr = -6
@@ -68,9 +66,13 @@ def accuracy(y_true, y_pred):
     rrr = 1 - error_rate(y_true, y_pred, real_error=False)
     return update_met_log(accuracy, rrr)
 
-def error_rate_basic(FP, FN, P, N):
-    return (FP + FN) / (P + N)
 
+
+
+def error_rate_core(y_true, y_pred):
+    y_true = arr(y_true)
+    y_pred = arr(y_pred)
+    return count_nonzero(y_pred != y_true) / len(y_pred)
 
 def error_rate(y_true, y_pred, real_error=True):
     rrr, TP, FP, TN, FN, P, N = basics(y_true, y_pred, error_rate)
@@ -81,7 +83,7 @@ def error_rate(y_true, y_pred, real_error=True):
             rrr = error_rate_basic(FP, FN, P, N)
     elif rrr == _NON_BINARY:
         y_true, y_pred = prep_ys(y_true, y_pred)
-        rrr = count_nonzero(y_pred != y_true) / len(y_pred)
+        rrr = error_rate_core(y_true, y_pred)
     return update_met_log(error_rate, rrr) if real_error else rrr
 
 # recall (REC), true positive rate (TPR)
@@ -164,20 +166,7 @@ def prep_ys(y_true, y_pred):
 
 
 
-def binary_results(y_true, y_pred):
-    y_true = arr(y_true)
-    y_pred = arr(y_pred)
-    if any(arr(y_true) > 1) or any(arr(y_pred) > 1):
-        err('binary results cannot be done when there are more than two classes')
-    neg = 0
-    pos = 1
-    P = count_nonzero(y_true == pos)
-    N = count_nonzero(y_true == neg)
-    TP = count_nonzero(bitwise_and(y_pred == pos, y_true == pos))
-    FP = count_nonzero(bitwise_and(y_pred == pos, y_true == neg))
-    TN = count_nonzero(bitwise_and(y_pred == neg, y_true == neg))
-    FN = count_nonzero(bitwise_and(y_pred == neg, y_true == pos))
-    return TP, FP, TN, FN, P, N
+
 
 def basics(y_true, y_pred, fun):
     rrr = _DEFAULT_RESULT

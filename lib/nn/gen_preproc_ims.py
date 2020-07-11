@@ -1,13 +1,21 @@
 import glob
 import random
 
+from types import SimpleNamespace
+import sys
 from PIL import Image
 import tensorflow as tf
+import numpy as np
 
 from lib.nn import nn_lib
 from lib.misc.imutil import make1, make255, resampleim
-from lib.defaults import *
 import lib.nn.nnstate as nnstate
+from mlib.boot import log
+from mlib.boot.mutil import Progress, iseven, arr, err, randperm, concat, assert_int, listitems
+import mlib.file
+from mlib.file import File
+from mlib.shell import shell
+from mlib.term import log_invokation
 LINUX_HOME = '/home/matt/'
 
 class NN_Data_Dir(File):
@@ -96,7 +104,7 @@ def gen_images(*, folder, class_pairs, ims_per_class):
             # i think Darius' data was single channeled
             # im_data = np.concatenate((im_data, im_data, im_data), axis=2)
 
-            im_file = File(f'{folder.abspath}/{label}/sym{i}.png')
+            im_file = File(f'{File(folder).abspath}/{label}/sym{i}.png')
             im_file.save(im_data, silent=True)
             prog.tick()
 
@@ -180,7 +188,7 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
     norm_dir = data_dir.norm
     # global USING_STD_DIR
     USING_STD_DIR = False
-    if norm_dir.exists() and normalize_single_images:
+    if norm_dir.exists and normalize_single_images:
         assert len(data_dir.glob('*/**/.png')) == len(norm_dir.glob('*/**/.png'))
         data_dir = norm_dir
         USING_STD_DIR = True
@@ -197,8 +205,8 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
     class_label_map = {}
     next_label = 0
 
-    for f in data_dir.listmfiles():
-        if not f.isdir():
+    for f in data_dir.files:
+        if not f.isdir:
             log('problem with $', f)
             err('all files in data_dir should be folders')
         else:
@@ -206,12 +214,12 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
             labels.append(next_label)
             class_label_map[f.name] = next_label
             next_label = next_label + 1
-        for ff in f.listmfiles():
+        for ff in f.files:
             if not ff.ext == 'png':
                 log('problem with $', ff)
                 err('all files in data_dir folders should be images')
 
-    CLASS_NAMES = np.array([item.name for item in data_dir.glob('*') if item.filename != "LICENSE.txt"])
+    CLASS_NAMES = np.array([item.name for item in data_dir.glob('*') if mlib.file.filename != "LICENSE.txt"])
 
     images = []
     for image in data_dir.glob('*/*.png'):
@@ -221,7 +229,7 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
 
     log('loading $ images...', len(images))
 
-    num_classes = len(data_dir.listfiles())
+    num_classes = len(data_dir.files)
     numTrainPerClass = round(TRAIN_TEST_SPLIT * (len(images) / num_classes))
 
     # RANDOMNESS HERE
@@ -379,19 +387,19 @@ class PreDataset:
         shape = list(ar.shape[2:])
         shape.insert(0, -1)
         rrr = ar
-        if net.ARCH_LABEL == 'INC' or net.ARCH_LABEL == 'SCRATCH':
+        if net.META().ARCH_LABEL == 'INC' or net.META().ARCH_LABEL == 'SCRATCH':
             rrr = np.reshape(ar, tuple(shape))
         return rrr, shape
 
     def y(self, net):
         y = list()
         for tup in self.xy():
-            y.append(arr(tup[1]))
+            y.append(arr(tup[1]).tolist())
         rrr = y
 
-        if net.ARCH_LABEL == 'GNET' or net.ARCH_LABEL == 'INC' or net.ARCH_LABEL == 'SCRATCH':
+        if net.META().ARCH_LABEL == 'GNET' or net.META().ARCH_LABEL == 'INC' or net.META().ARCH_LABEL == 'SCRATCH':
             rrr = arr(y).flatten()
-        return rrr
+        return arr(rrr)
 
     def dataset(self, HEIGHT_WIDTH):
         return tf.data.Dataset.from_generator(self.gen,

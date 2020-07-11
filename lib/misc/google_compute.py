@@ -1,4 +1,10 @@
-from lib.defaults import *
+import sys
+
+from mlib.boot import log
+from mlib.boot.mutil import utf_decode
+from mlib.file import File, abspath
+from mlib.shell import SSHExpectProcess, InteractiveExpectShell
+from mlib.term import log_invokation
 PROJECT_NAME = 'test-3'
 PROJECT = ['--project', 'neat-beaker-261120', '--zone', 'us-central1-a', PROJECT_NAME]
 def isrunning():
@@ -58,8 +64,8 @@ def gc(*args, AUTO_LOGIN=False, RECURSE=False):
     return p
 
 
-class GCProcess(SSHProcess): pass
-class GCShell(GCProcess, InteractiveShell):
+class GCProcess(SSHExpectProcess): pass
+class GCShell(GCProcess, InteractiveExpectShell):
     def login(self):
         super().login()
         self.expect("matt@test-3")
@@ -74,8 +80,8 @@ def gcloud_config():
     # I think, but not sure, that this doesn't have to be run every single time the instance restarts but rather every time it changes ip or something. like once a week or something? idk
     # this solved a problem I was having where rsync was throwing an error
     # https://stackoverflow.com/questions/27857532/rsync-to-google-compute-engine-instance-from-jenkins
-    child = SSHProcess('/Users/matt/google-cloud-sdk/bin/gcloud compute config-ssh', timeout=None,
-                       logfile_read=sys.stdout.buffer)
+    child = SSHExpectProcess('/Users/matt/google-cloud-sdk/bin/gcloud compute config-ssh', timeout=None,
+                             logfile_read=sys.stdout.buffer)
     r = child.expect(['You should', "passphrase"])
 
     if r == 1:

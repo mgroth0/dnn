@@ -15,6 +15,8 @@ from tensorflow.keras.layers import (
 from tensorflow import pad
 from tensorflow.keras.backend import square
 from tensorflow.keras.regularizers import l2
+
+from lib.misc.imutil import resampleim
 class GNET(SymNet):
     def META(self): return self.Meta(
         WEIGHTS='googlenet_weights_permute.h5',
@@ -440,6 +442,24 @@ class GNET(SymNet):
     @staticmethod
     def _act(**kwargs):
         return Activation('softmax', **kwargs)
+    @staticmethod
+    def preprocess_image(img, img_resize_height=None,img_resize_width=None, crop_size=None):
+        # if img_size:
+        img = resampleim(img, img_resize_height, img_resize_width, nchan=3)
+        img = img.astype('float32')
+        # We normalize the colors (in RGB space) with the empirical means on the training set
+        img[:, :, 0] -= 123.68
+        img[:, :, 1] -= 116.779
+        img[:, :, 2] -= 103.939
+        # We permute the colors to get them in the BGR order
+        # if crop_size:
+        #     # if _ALEX_CA == 1:
+        #     #     img = img[:, (img_resize_height - crop_size[0]) // 2:(img_resize_height + crop_size[0]) // 2
+        #     #     , (img_resize_width - crop_size[1]) // 2:(img_resize_width + crop_size[1]) // 2]
+        #     # else:
+        #     img = img[(img_resize_height - crop_size[0]) // 2:(img_resize_height + crop_size[0]) // 2
+        #     , (img_resize_width - crop_size[1]) // 2:(img_resize_width + crop_size[1]) // 2, :]
+        return img
 
 
 
@@ -475,6 +495,8 @@ class LRN(Layer):
         yes_this_makes_a_dict = dict(list(base_config.items()) + list(config.items()))
 
         return yes_this_makes_a_dict
+
+
 
 
 

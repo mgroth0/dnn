@@ -1,10 +1,19 @@
+import sys
 from PyQt5.QtCore import Qt, pyqtBoundSignal
 from PyQt5.QtGui import QFont
 
-from lib.misc.guiutil import SimpleApp
 import lib.run_exps_lib as run_exps_lib
 from lib.run_exps_lib import *
-from lib.defaults import *
+from mlib.JsonSerializable import obj
+from mlib.boot.mlog import toc_str
+from mlib.boot.mutil import run_in_daemon, listkeys, enum, insertZeros
+from mlib.boot.stream import listmap
+from mlib.guiutil import SimpleApp
+from mlib.km import activateIdea
+from mlib.file import File
+from mlib.proj.struct import Project
+from mlib.shell import shell
+from mlib.term import Progress
 
 
 
@@ -80,7 +89,7 @@ def run_exps(cfg, remote=False, gui=True):
                 'EVAL_SIZE'         : cfg.eval_nperc,
                 'RSA_SIZE_PER_CLASS': cfg.rsa_nperc,
             },
-            'root': cfg.root
+            'root'   : cfg.root
         }),
         gpus=None,  # actually set to use all 4 below
         commands=[
@@ -99,8 +108,8 @@ def run_exps(cfg, remote=False, gui=True):
             cfg.EXPS += [j]
     for e in cfg.EXPS:
         for ntrain in cfg.NTRAIN:
-            exp_id = str(METASTATE["next_exp_id"])
-            METASTATE["next_exp_id"] = int(exp_id) + 1
+            exp_id = str(Project.STATE["next_exp_id"])
+            Project.STATE["next_exp_id"] = int(exp_id) + 1
             jobs.append(Experiment(
                 {
                     'para'        : cfg.para,
@@ -131,7 +140,6 @@ def run_exps(cfg, remote=False, gui=True):
             ))
 
     run_exps_lib.Job.TOTAL_TODO = len(jobs)
-
 
     muscle.runjob(jobs[0], listkeys(muscle.GPU_IN_USE))
 
@@ -304,4 +312,4 @@ def run_exps(cfg, remote=False, gui=True):
     if cfg.SAVE_DATA: rr = rr + 'SAVE'
     if cfg.GET_LOGS: rr = rr + 'LOG'
 
-    return rr,exp_group_metadata
+    return rr, exp_group_metadata

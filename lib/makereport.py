@@ -1,92 +1,132 @@
-# EXP_GROUP__FOLDER_NAME =
 
-from mlib.JsonSerializable import obj
-from lib.figapi import APIDict
-from lib.makereport_lib import update_report, upload_webpage
-from lib.web import HTML, Hyperlink, Br
-from lib.web_widgets import FigureTable
-from lib.defaults import *
-TABLE_OF_CONTENTS_URL = None
-DNN_PUB_REP_URL = 'https://www.wolframcloud.com/obj/9e1d2a8d-660a-4119-a31c-7ebacab6ae57'
-# EXP_GROUP_NAMES = [
-#     '4-AddDarkZeros-compile',
-#     '5-NormSingleIms-compile'
-# ]
+from mlib.boot.bootutil import pwd
+from mlib.boot.mutil import err, listkeys
+from mlib.boot.stream import listmap
+from mlib.proj.struct import Project
+from mlib.term import log_invokation
+from mlib.web.database import Database
+from mlib.web.makereport_lib import write_webpage, FigureTable, DNN_REPORT_CSS
+from mlib.web.simple_admin_api import SimpleAdminAPI
+from mlib.web.web import Hyperlink, Br, HTMLPage
 
-EXP_GROUP_NAMES = listfilt(
-    lambda n: 'compile' in n,
-    listmap(
-        lambda f: File(f).name,
-        File('_figs/figs_dnn').listfiles()))
-
-# for pruning
-# EXP_GROUP_NAMES = []
-
-MR_API = APIDict('makereport')
 @log_invokation
-def makereport(prune):
-    contents = []
-    private_contents = []
-    newPubURL = 'https://www.wolframcloud.com/obj/mjgroth/dnn/index.html'
-    newPrivURL = 'https://www.wolframcloud.com/obj/mjgroth/dnn_private/index.html'
+def makereport():
+    MR_Database = Database('makereport.json')
+    MR_API = SimpleAdminAPI(MR_Database)
+    toc = []
+    private_toc = []
+    index_root = Project.DNN_FIGS_FIGS_FOLDER['0-web'].mkdir()
+    index_root_private = Project.DNN_FIGS_FIGS_FOLDER['0-web-private'].mkdir()
+    resource_root = Project.DNN_FIGS_FIGS_FOLDER['0-web-resources'].mkdir()
+    for exp in Project.DNN_FIGS_FIGS_FOLDER.files.arrayof.name.filt_includes(
+            'compile'
+    ):
+        exp_name = exp.split('-')[1].replace('-compile', '')
+        exp_group_folder = Project.DNN_FIGS_FIGS_FOLDER[exp]
+        FIG_FOLDER = exp_group_folder[f'1/compiled']
+        md = exp_group_folder[f'metadata.json'].quiet()
 
-    for exp in EXP_GROUP_NAMES:
-        exp_name = exp.split('-')[1]
-        FIG_FOLDER = File('figs_/figs_dnn/' + exp + '/1/compiled')
+        exp_root_priv = exp_group_folder.parent[exp.replace('-compile', '-web-private')]
+        write_webpage(
+            get_report(
+                md,
+                resources_root=FIG_FOLDER,
+                exp_name=exp_name,
+                index_url=f'../{index_root_private.edition_wolf_dev.name}',  # index_root_private.wcurl,
+                database=MR_Database,
+                api=MR_API,
+                exp_id=exp.split('-')[1],
+                editable=True,
+                web_resources_root=resource_root
+            ),
+            root=exp_root_priv,
+            resource_root_file=resource_root,
+            upload_resources=False,
+            WOLFRAM=True,
+            DEV=True,  # private,
+        )
+        private_toc.append(Hyperlink(exp_name, exp_root_priv.edition_wolf_dev.wcurl))
 
-        md = obj(File('figs_/figs_dnn/' + exp + '/metadata.json').load())
+        exp_root = exp_group_folder.parent[exp.replace('-compile', '-web')]
+        write_webpage(
+            get_report(
+                md,
+                resources_root=FIG_FOLDER,
+                exp_name=exp_name,
+                index_url=f'../{index_root.edition_wolf_pub.name}',
+                database=MR_Database,
+                api=MR_API,
+                exp_id=exp.split('-')[1],
+                editable=False,
+                web_resources_root=resource_root
+            ),
+            root=exp_root,
+            resource_root_file=resource_root,
+            upload_resources=False,
+            WOLFRAM=True,
+            DEV=False,  # public
+        )
+        toc.append(Hyperlink(exp_name, exp_root.edition_wolf_pub.wcurl))
 
-        priv_url = upload_webpage(
-            get_report(md, FIG_FOLDER, exp_name, api=MR_API, index_url=newPrivURL, exp_id=exp.split('-')[1],
-                       editable=True), exp_name + '_private')
+    [toc.insert(0, Br) for _ in range(5)]
+    toc.append(Hyperlink("to private version", index_root_private.edition_wolf_dev.wcurl))
 
-        private_contents.append(Hyperlink(exp_name, priv_url))
+    [private_toc.insert(0, Br) for _ in range(5)]
+    private_toc.append(Hyperlink("to public version", index_root.edition_wolf_pub.wcurl))
 
-        url = upload_webpage(get_report(md, FIG_FOLDER, exp_name, api=MR_API, exp_id=exp.split('-')[1]), exp_name,
-                             permissions="Public")
+    write_webpage(
+        HTMLPage('index', *private_toc),
+        root=index_root_private,
+        resource_root_file=resource_root,
+        upload_resources=True,
+        WOLFRAM=True,
+        DEV=True
+    )
+    write_webpage(
+        HTMLPage('index', *toc),
+        root=index_root,
+        resource_root_file=resource_root,
+        upload_resources=False,
+        WOLFRAM=True,
+        DEV=False
+    )
 
-        contents.append(Hyperlink(exp_name, url))
 
+@log_invokation
+def get_report(
+        md,
+        resources_root,
+        exp_name,
+        index_url,
+        database: Database = None,
+        api: SimpleAdminAPI = None,
+        exp_id=None,
+        editable=False,
+        web_resources_root=None
+):
+    if exp_name not in listkeys(database):
+        database[exp_name] = {}
 
-
-    [contents.insert(0, Br) for _ in range(5)]
-    contents.append(Hyperlink("to private version", newPrivURL))
-
-    [private_contents.insert(0, Br) for _ in range(5)]
-    private_contents.append(Hyperlink("to public version", newPubURL))
-
-    upload_webpage(HTML(*private_contents), 'dnn_private')
-    toc_url = upload_webpage(HTML(*contents), 'dnn', permissions="Public")
-
-    update_report(toc_url,DNN_PUB_REP_URL)
-    if prune:
-        log('pruning unused keys')
-        for k in MR_API.unusedKeys:
-            log(f'pruning: {k}')
-            del MR_API[k]
-    refreshSafariReport(err('I need to specify report url in here'))
-def get_report(md, fig_folder, exp_name, api: APIDict = None, index_url=DNN_PUB_REP_URL, exp_id=None, editable=False):
-    example_folds = fig_folder.glob('example*')
     all_examples = []
-    for example_fold in example_folds:
-
-        # example_fold.name + '_' +
-        # api key definition is ugly. It has to be the file name since thats whats used in figure function for now
-
-        all_examples += listmap(lambda f: (
-            f.abspath,
-            api[exp_name, f.name_pre_ext]
-        ), example_fold.glob("*.png"))
-
+    for example_fold in resources_root.glob('example*'):
+        for example_im in example_fold.glob("*.png"):
+            example_type = example_fold.name.replace('examples_', '')
+            if example_im.name.startswith(example_type): continue
+            single_file = example_im.copy_to(example_im.parent[f'{example_type}-{example_im.name}'])
+            all_examples += [(
+                single_file.abspath,
+                database.get_or_set_default(
+                    '',
+                    exp_name,
+                    single_file.name_pre_ext
+                )
+            )]
 
     all_arch_figs = []
     ntrain_figs = md.ntrainims
     nepochs = md.nepochs
 
-    log(f'getting report for {fig_folder}')
-
     for n in ntrain_figs:
-        # f'__test_CM{nepochs}',
         for suffix in [
             f'__val_CM{nepochs}',
             f'__L2-Output_CM{nepochs}',
@@ -97,11 +137,15 @@ def get_report(md, fig_folder, exp_name, api: APIDict = None, index_url=DNN_PUB_
                 'SCRATCH' if 'SCRATCH' in a else
                 'INC' if 'INC' in a else
                 'ALEX' if 'ALEX' in a else
-                'GNET' if 'GNET' in a else err('do not know net: ' + a))
+                'GNET' if 'GNET' in a else err(f'do not know net: {a}'))
                                 , md.archs)
             arch_figs = listmap(lambda a: (
-                fig_folder.respath(f'{a}_{n}{suffix}' + '.png'),
-                api[exp_name, f'{a}_{n}{suffix}']
+                resources_root.respath(f'{a}_{n}{suffix}.png'),
+                database.get_or_set_default(
+                    '',
+                    exp_name,
+                    f'{a}_{n}{suffix}'
+                )
             ), arch_figs)
 
             all_arch_figs.extend(arch_figs)
@@ -109,36 +153,53 @@ def get_report(md, fig_folder, exp_name, api: APIDict = None, index_url=DNN_PUB_
     mcc_name = f'Matthews_Correlation_Coefficient'
 
     ntrain_figs = listmap(lambda n: (
-        fig_folder.respath(f'{mcc_name}_{n}.png'),
-        api[exp_name, f'{mcc_name}_{n}']
+        resources_root.respath(f'{mcc_name}_{n}.png'),
+        database.get_or_set_default(
+            '',
+            exp_name,
+            f'{mcc_name}_{n}'
+        )
     ), ntrain_figs)
 
-    doc = HTML(
-        'Symmetry Detection Report by Matt Groth'
-        , ''
-        , str(len(md.archs)) + ' Architectures: ',
+    doc = HTMLPage(
+        f'index',
+        f'Symmetry Detection Report by Matt Groth'
+        , f''
+        , f'{len(md.archs)} Architectures: ',
         *md.archs
-        , 'Experiments: ' + str(md.nrepeats) + ' per architecture'
-        , 'Epochs: ' + str(md.nepochs) + ' per experiment'
-        , 'Batch Size: ' + str(md.batchsize) + ''
-        , 'Training Images: ' + str(md.ntrainims)
-        , 'Normalized Individual Images: ' + str(md.normalized)
+        , f'Experiments: {md.nrepeats} per architecture'
+        , f'Epochs: {md.nepochs} per experiment'
+        , f'Batch Size: {md.batchsize}'
+        , f'Training Images: {md.ntrainims}'
+        , f'Normalized Individual Images: {md.normalized}'
         , FigureTable(
             *all_examples,
             (
-                fig_folder.resolve('Final_Train_MCC.png'),
-                api[exp_name, 'Final_Train_MCC']
+                resources_root.resolve('Final_Train_MCC.png'),
+                database.get_or_set_default(
+                    '',
+                    exp_name,
+                    'Final_Train_MCC'
+                )
             ),
             *ntrain_figs,
             (
-                pwd()+"/_figs/figs_misc/RSA_patterns/RSA_patterns.001.jpeg",
-                api[exp_name, 'RSA_patterns']
-            )
-            , *all_arch_figs
-            , apiURL=api.apiURL, exp_id=exp_id, editable=editable),
+                f"{pwd()}/_figs/figs_misc/RSA_patterns/RSA_patterns.001.jpeg",
+                database.get_or_set_default(
+                    '',
+                    exp_name,
+                    'RSA_patterns'
+                )
+            ),
+            *all_arch_figs,
+            resources_root=web_resources_root,
+            exp_id=exp_id,
+            editable=editable
+        ),
         Hyperlink('back to index', index_url),
-        *api.apiElements()
+        *api.apiElements(),
+        js=api.cs(),
+        style=DNN_REPORT_CSS
     )
 
-    doc.js = api.js()
     return doc

@@ -1,16 +1,16 @@
-from mlib.FigData import FigData
 from mlib.JsonSerializable import FigSet
-from lib.defaults import *
 
 from lib.data_saving import savePlotAndTableData
 from lib.nn.nnstate import EVAL_AND_REC_EVERY_EPOCH
+from mlib.boot.mutil import safemean
+from mlib.fig.PlotData import PlotData
 
 def plot_metric(met, met_log, met_name):
     fs = FigSet(
-        FigData()
+        PlotData()
     )
     if EVAL_AND_REC_EVERY_EPOCH:
-        fs.viss.append(FigData())
+        fs.viss.append(PlotData())
     tit = met.title()
     fs[0].title = tit
     fs[0].title_size = 50
@@ -38,7 +38,7 @@ def plot_metric(met, met_log, met_name):
                 y_eval += [eval_y]
                 eval_ys = []
 
-                fs.viss += [FigData()]
+                fs.viss += [PlotData()]
                 fs[-1].item_type = 'line'
                 fs[-1].y = [0, 1]
                 fs[-1].x = [eval_x, eval_x]

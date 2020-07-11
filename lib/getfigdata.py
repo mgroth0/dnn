@@ -3,7 +3,9 @@
 from glob import glob
 
 from lib.misc.google_compute import gc
-from lib.defaults import *
+from mlib.boot import log
+from mlib.boot.mutil import mkdir
+from mlib.shell import shell
 
 def main(arg, root,cfg):
     if cfg.MUSCLE != 'local':

@@ -1,7 +1,9 @@
-from . import bootfun
+import os
 
+import time
 
-
+from mlib.boot.bootutil import ismac, pwd
+from mlib.file import File
 def miniconda():
     if ismac():
         return '/Users/matt/miniconda3'

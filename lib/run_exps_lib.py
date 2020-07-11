@@ -1,10 +1,19 @@
 # noinspection PyUnresolvedReferences
+import traceback
 
-from mlib.JsonSerializable import obj
+import pexpect
+import time
+from math import inf
+import json
+
 import lib.misc.google_compute as google_compute
 # import intercept
 # intercept.MULTI_INTERCEPT = True
-from lib.defaults import *
+from mlib.boot import log
+from mlib.boot.mutil import arg_str, shorten_str, utf_decode, isblank, run_in_thread, min_sec_form, lengthen_str
+from mlib.boot.stream import strs
+from mlib.shell import InteractiveExpectShell, ishell
+from mlib.term import log_invokation, reds
 
 
 
@@ -102,7 +111,7 @@ class Job:
         Job.ALL_Ps += [p]
         for com in self.commands: p.sendline(com)
         if self.remote:
-            p: InteractiveShell
+            p: InteractiveExpectShell
             p.py(f'src/main/python/exec/work.py {" ".join(nrc_args)}')
         else:
             # p: Process
@@ -139,7 +148,12 @@ class Job:
     def inter_p_wrap(self, p, gpus_im_using, muscle):
         if not self.interact_with_nrc:
             log('waiting for child...')
-            r = p.expect(["NRC IS FINISHED", pexpect.EOF, 'ERROR ERROR ERROR'])
+            try:
+                r = p.expect(["NRC IS FINISHED", pexpect.EOF, 'ERROR ERROR ERROR'])
+            except UnicodeDecodeError as e:
+                log(reds(f'got {repr(e)}'))
+                print(traceback.format_exc())
+                r = 2
             log({
                     0: 'run_exps got a success',
                     1: 'run_exps got an EOF... what? exiting run_exps',

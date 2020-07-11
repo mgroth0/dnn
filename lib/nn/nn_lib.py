@@ -1,10 +1,11 @@
 import copy
 
-from lib.figs.TableData import RSAMatrix
-from lib.defaults import *
-from mlib.boot.mutil import arr, itr, zeros
-from lib.nn.nn_plotting import sort_human
+import numpy as np
+
+from mlib.boot import log
+from mlib.boot.mutil import arr, itr, zeros, mod, numel, randperm, ismember, sort_human, inv_map, Progress
 from lib.data_saving import savePlotAndTableData
+from mlib.fig.TableData import RSAMatrix
 
 def calc_steps(N_IMAGES, TRAIN_TEST_SPLIT, BATCH_SIZE):
     N_TRAIN_IMAGES = int(N_IMAGES * TRAIN_TEST_SPLIT)

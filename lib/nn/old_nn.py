@@ -59,7 +59,7 @@ def old(net):
         else:
             label = net.predict(arr([I]))
             label = maxindex(label)
-            label = irn2.classes[label]
+            label = irn2.ImageNetClasses[label]
         log('label:$', label)
         #     # Show the image and the classification results
         fs.viss[0].x = I.tolist()

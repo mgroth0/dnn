@@ -7,7 +7,7 @@ def make255(x):
     return np.uint8(x * 255)
 
 def make1(x):
-    return x/255.0
+    return x / 255.0
 
 make255 = np.vectorize(make255)
 make1 = np.vectorize(make1)
@@ -17,8 +17,7 @@ import numpy as np
 
 
 
-def resampleim(im,heigh,width):
-
+def resampleim(im, heigh, width, nchan=1):
     # data = np.array(list(Image.fromarray(im).resize((width,heigh)).getdata()))
 
     # img = cv2.imread('your_image.jpg')
@@ -43,7 +42,7 @@ def resampleim(im,heigh,width):
     # data= np.array(data)
 
     # log('resampleim3.5',silent=True)
-    imA.shape = (heigh,width,1)
+    imA.shape = (heigh, width, nchan)
     # log('resampleim3.6',silent=True)
     # np.reshape(data,(heigh,width,1))
     return imA
@@ -80,22 +79,22 @@ class MySequence(tensorflow.keras.utils.Sequence):
         return math.ceil(self.len / self.batch_size)
 
     def __getitem__(self, idx):
-        idxs= range(idx * self.batch_size,(idx + 1) *self.batch_size)
-        datas=[]
-        labels=[]
+        idxs = range(idx * self.batch_size, (idx + 1) * self.batch_size)
+        datas = []
+        labels = []
         idx = -1
         for x in self.ims.as_numpy_iterator():
             idx = idx + 1
             if idx in idxs:
                 datas.append(x)
                 labels.append(self.ys[idx])
-        datas=arr(datas)
-        labels=arr(labels)
+        datas = arr(datas)
+        labels = arr(labels)
 
         # batch_y = self.y[idx * self.batch_size:(idx + 1) *
         #                                        self.batch_size]
 
-        return datas,labels
+        return datas, labels
         # return np.array([
         #     resize(imread(file_name), (200, 200))
         #     for file_name in batch_x]), np.array(batch_y)

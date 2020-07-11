@@ -1,11 +1,11 @@
 profiles:
   proto: &proto
     proto_model: True
-    NTRAIN: [10,20]
+    NTRAIN: [10]
     eval_nperc: 10
     rsa_nperc: 10
     MUSCLE: local
-  darius:
+  darius: &darius
     proto_model: False
     #  needs to be somewhat consistent between fileops and train/test
     NTRAIN: [25, 50, 100, 150, 200, 1000]
@@ -13,6 +13,9 @@ profiles:
     eval_nperc: 500
     rsa_nperc: 10
     MUSCLE: local #  needs to be consistent but not scientifically relevant
+  dariusSmall:
+    <<: *darius
+    NTRAIN: [10]
   default:
       <<: *proto
 
@@ -22,7 +25,6 @@ configs:
   # theres an order and procedure to these
     REGEN_DATA: False
     PIPELINE: TRAIN VAL REC
-    MODE: FULL
     NORM_TRAIN_IMS: True
     OVERWRITE_NORMS: False
 
@@ -58,8 +60,8 @@ configs:
     INTERACT: False
 
 
-
-
+#    was hardcoded before
+    root: _figures
 
 
 
@@ -99,6 +101,15 @@ configs:
       -
         <<: *default_exp
         arch: INC
+  run_one: &run_one
+    <<: *all
+    RUN_EXPS_IN_SERIAL: True
+    EPOCHS: 1
+    NTRAIN: ["i0"] #  these are now indexes
+    EXPS:
+      -
+        <<: *default_exp
+        arch: ALEX
   test_one: &test_one
     <<: *debug
     EPOCHS: 2
@@ -106,7 +117,7 @@ configs:
     EXPS:
       -
         <<: *default_exp
-        arch: SCRATCH
+        arch: ALEX
   test_GNET:
       <<: *test_one
       EXPS:
@@ -131,5 +142,11 @@ configs:
           -
             <<: *default_exp
             arch: ALEX
+  run_ALEX: &run_ALEX
+        <<: *run_one
+        EXPS:
+          -
+            <<: *default_exp
+            arch: ALEX
   default:
-        <<: *all
+        <<: *run_ALEX

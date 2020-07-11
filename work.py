@@ -1,5 +1,9 @@
-from lib.boot import bootfun as initFun
-FLAGS = initFun.margparse(
+import json
+
+from mlib.boot.bootutil import margparse, setup_logging
+from mlib.boot.mlog import setTic
+from mlib.boot.mutil import isempty, prep_log_file
+FLAGS = margparse(
     cfg=str,
     para=str,
     tic=int,
@@ -18,10 +22,8 @@ FLAGS = initFun.margparse(
 )
 from lib.boot import nn_init_fun
 tf = nn_init_fun.setupTensorFlow(FLAGS)
-from lib.defaults import *
 if FLAGS.expid == '0' and (not FLAGS.gen) and (not FLAGS.deletenorms): nn_init_fun.NRC_IS_FINISHED()
-initFun.register_exception_handler()
-initFun.setup_logging(verbose=FLAGS.verbose)
+setup_logging(verbose=FLAGS.verbose)
 if FLAGS.tic is not None: setTic(FLAGS.tic * 1000)
 prep_log_file('dnn/NRC', new=True)
 from lib.nn_main import sym_net_main

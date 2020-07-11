@@ -1,10 +1,15 @@
 import copy
 
-from lib.figs.TableData import ConfusionMatrix
-from lib.cta_lib import *
-from lib.defaults import *
-from lib import makefigs
-
+from lib.cta_lib import FinalResult, AverageResult
+from mlib.boot import log
+from mlib.boot.bootutil import struct
+from mlib.boot.mutil import err, enum, itr, flatmax, arr2d
+from mlib.boot.stream import listmap
+from mlib.fig import makefigs
+from mlib.fig.TableData import ConfusionMatrix
+from mlib.file import Folder, File
+from mlib.km import reloadIdeaFilesFromDisk
+import numpy as np
 def compile_test_all(cfg, overwrite):
     root_folder = cfg.root
     log('running compile_test_all for ' + str(root_folder))
@@ -37,18 +42,18 @@ def compile_test_all(cfg, overwrite):
     compile_root.mkdir()
     metadataFile.copy_into(compile_root)
 
-    experiments = arr()
-    for exp_folder in root_folder.listfiles():
+    experiments = []
+    for exp_folder in root_folder.paths:
         if File(exp_folder).name == 'metadata.json':
             continue
         exp = struct()
-        exp.folder = File(exp_folder)
+        exp.folder = Folder(exp_folder)
         exp.id = exp.folder.name
-        parts = File(exp.folder.listfiles()[0]).name.split('_')
+        parts = File(exp.folder.paths[0]).name.split('_')
         exp.arch = parts[0]
         exp.ntrainim = parts[1]
         exp.prefix = exp.folder.abspath + '/' + exp.arch + '_' + exp.ntrainim
-        experiments += exp
+        experiments += [exp]
 
     TrainTable = FinalResult(2, '__test/Matthews_Correlation_Coefficient_fs.json',
                              is_table=True, rows=ARCHS, cols=NTRAINS)
@@ -120,6 +125,7 @@ def compile_test_all(cfg, overwrite):
                         )]
                         sub_root.resolve(f'Final_Train_MCC_fs.json').save(res.j)
 
+        # noinspection PyUnboundLocalVariable
         for res in results_to_compile:
             if res.dims == 1:
                 sub_root.resolve(
