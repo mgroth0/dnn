@@ -25,7 +25,7 @@ From: ubuntu:20.04
     git clone https://github.com/mgroth0/dnn
     git clone https://github.com/mgroth0/mlib
     ~/miniconda3/bin/conda init
-    source .bashrc
+    # source .bashrc
     conda activate dnn
     #cd dnn
     #conda install --file requirements.txt
