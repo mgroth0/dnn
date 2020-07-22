@@ -2,7 +2,7 @@ import os
 
 import time
 
-from mlib.boot.bootutil import ismac, pwd
+from mlib.boot.lang import ismac, pwd
 from mlib.file import File
 def miniconda():
     if ismac():

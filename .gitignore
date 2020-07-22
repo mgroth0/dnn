@@ -2,3 +2,10 @@
 */**/__pycache__
 */**/*password*
 human_exps/
+*.simg*
+.vagrant/
+Vagrantfile
+backups/
+docs_local/
+image_net_map.p
+makereport*

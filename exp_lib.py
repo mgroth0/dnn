@@ -1,19 +1,17 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
-
 import inspect
 
+from mlib.boot.lang import pwd, isitr
+from mlib.secure import gen_password
+from mlib.web.html import arg_tags, HTMLPage, JScript
 from experiment_databin_api import ExperimentDataBinAPI
-from mlib.boot.bootutil import pwd
-from mlib.boot.mutil import isitr, gen_password
 from mlib.boot.stream import listitems
 from mlib.file import Folder, File
 from mlib.term import log_invokation
 from mlib.web.database import Database
 from mlib.web.js import JS, compile_coffeescript
-from mlib.web.makereport_lib import write_webpage
 from mlib.web.simple_admin_api import SimpleAdminAPI
-from mlib.web.web import arg_tags, HTMLPage, JScript
+from mlib.web.webpage import write_index_webpage
 
 class OnlineHumanExperiment(ABC):
     def __init__(self, RESOURCES_ROOT: Folder, _DEV: bool = None):
@@ -37,7 +35,8 @@ class OnlineHumanExperiment(ABC):
             self.DATABASE_DATA = self._setup_database_and_api('data', hidden=False)
         self.EXP_API = ExperimentDataBinAPI(
             self.EXP_FOLDER,
-            self.DATABASE_DATA, self.DATABASE_IDS
+            self.DATABASE_DATA, self.DATABASE_IDS,
+            dev=self._DEV
         )
 
     def retrieve_api_info(self, name, hidden):
@@ -88,7 +87,7 @@ class OnlineHumanExperiment(ABC):
             ),
             style=self.css()
         )
-        write_webpage(
+        write_index_webpage(
             htmlDoc=htmlDoc,
             root=self.ROOT,
             resource_root_file=self.RESOURCES_ROOT,

@@ -4,18 +4,21 @@ import random
 from types import SimpleNamespace
 import sys
 from PIL import Image
-import tensorflow as tf
+
 import numpy as np
 
 from lib.nn import nn_lib
 from lib.misc.imutil import make1, make255, resampleim
 import lib.nn.nnstate as nnstate
 from mlib.boot import log
-from mlib.boot.mutil import Progress, iseven, arr, err, randperm, concat, assert_int, listitems
+from mlib.boot.mlog import warn, err
+from mlib.boot.stream import arr, randperm, concat, listitems
+from mlib.err import assert_int
 import mlib.file
 from mlib.file import File
+from mlib.math import iseven
 from mlib.shell import shell
-from mlib.term import log_invokation
+from mlib.term import log_invokation, Progress
 LINUX_HOME = '/home/matt/'
 
 class NN_Data_Dir(File):
@@ -127,6 +130,7 @@ def getReal(
         std_d,
         USING_STD_DIR
 ):
+    warn('use preprocessor')
     real, HW = image_HW
     if GRAY_SCALE:
         real.data = Image.open(real.file.abspath)
@@ -387,7 +391,7 @@ class PreDataset:
         shape = list(ar.shape[2:])
         shape.insert(0, -1)
         rrr = ar
-        if net.META().ARCH_LABEL == 'INC' or net.META().ARCH_LABEL == 'SCRATCH':
+        if net.ARCH_LABEL == 'INC' or net.ARCH_LABEL == 'SCRATCH':
             rrr = np.reshape(ar, tuple(shape))
         return rrr, shape
 
@@ -397,11 +401,12 @@ class PreDataset:
             y.append(arr(tup[1]).tolist())
         rrr = y
 
-        if net.META().ARCH_LABEL == 'GNET' or net.META().ARCH_LABEL == 'INC' or net.META().ARCH_LABEL == 'SCRATCH':
+        if net.ARCH_LABEL == 'GNET' or net.ARCH_LABEL == 'INC' or net.ARCH_LABEL == 'SCRATCH':
             rrr = arr(y).flatten()
         return arr(rrr)
 
     def dataset(self, HEIGHT_WIDTH):
+        import tensorflow as tf  # keep modular
         return tf.data.Dataset.from_generator(self.gen,
                                               (tf.float32, tf.int64),
                                               output_shapes=(

@@ -1,42 +1,172 @@
-from arch.shared import *
-from tensorflow.keras.layers import (
-
-    AveragePooling2D,
-    BatchNormalization,
-    Concatenate,
-
-
-    GlobalAveragePooling2D,
-    Lambda
+from arch.INC_ORIG import INC_HW
+from arch.assembled_model import AssembledModel
 
 
 
-)
-
-
-
-class INC(SymNet):
-    def META(self): return self.Meta(
-        WEIGHTS='inception_resnet_v2_weights_tf_dim_ordering_tf_kernels.h5',
-
-        FULL_NAME='Inception Resnet V2',
-        CREDITS='Keras Applications',
-        ARCH_LABEL='INC',
-        HEIGHT_WIDTH=299
-
-    )
+class INC(AssembledModel):
+    # STATIC = AssembledModel.STATIC_ATTS(
+    FULL_NAME = 'Inception Resnet V2'
+    CREDITS = 'Keras Applications'
+    ARCH_LABEL = 'INC'
+    HEIGHT_WIDTH = INC_HW
+    WEIGHTS = 'inception_resnet_v2_weights_tf_dim_ordering_tf_kernels.h5'
+    # )
     def assemble_layers(self):
+        from tensorflow.keras.layers import (
+            Dense,
+            MaxPooling2D,
+            Conv2D,
+            Activation,
+            AveragePooling2D,
+            BatchNormalization,
+            Concatenate,
+            GlobalAveragePooling2D,
+            Lambda
+        )
+        def conv2d_bn(x,
+                      filters,
+                      kernel_size,
+                      strides=1,
+                      padding='same',
+                      activation='relu',
+                      use_bias=False,
+                      name=None):
+            """Utility function to apply conv + BN.
+
+            # Arguments
+                x: input tensor.
+                filters: filters in `Conv2D`.
+                kernel_size: kernel size as in `Conv2D`.
+                strides: strides in `Conv2D`.
+                padding: padding mode in `Conv2D`.
+                activation: activation in `Conv2D`.
+                use_bias: whether to use a bias in `Conv2D`.
+                name: name of the ops; will become `name + '_ac'` for the activation
+                    and `name + '_bn'` for the batch norm layer.
+
+            # Returns
+                Output tensor after applying `Conv2D` and `BatchNormalization`.
+            """
+            x = Conv2D(filters,
+                       kernel_size,
+                       strides=strides,
+                       padding=padding,
+                       use_bias=use_bias,
+                       name=name)(x)
+            if not use_bias:
+                bn_name = None if name is None else name + '_bn'
+                x = BatchNormalization(axis=self.CHANNEL_AXIS,
+                                       scale=False,
+                                       name=bn_name)(x)
+            if activation is not None:
+                ac_name = None if name is None else name + '_ac'
+                x = Activation(activation, name=ac_name)(x)
+            return x
+
+        def inception_resnet_block(x, scale, block_type, block_idx, activation='relu'):
+            """Adds a Inception-ResNet block.
+
+            This function builds 3 types of Inception-ResNet blocks mentioned
+            in the paper, controlled by the `block_type` argument (which is the
+            block name used in the official TF-slim implementation):
+                - Inception-ResNet-A: `block_type='block35'`
+                - Inception-ResNet-B: `block_type='block17'`
+                - Inception-ResNet-C: `block_type='block8'`
+
+            # Arguments
+                x: input tensor.
+                scale: scaling factor to scale the residuals (i.e., the output of
+                    passing `x` through an inception module) before adding them
+                    to the shortcut branch.
+                    Let `r` be the output from the residual branch,
+                    the output of this block will be `x + scale * r`.
+                block_type: `'block35'`, `'block17'` or `'block8'`, determines
+                    the network structure in the residual branch.
+                block_idx: an `int` used for generating layer names.
+                    The Inception-ResNet blocks
+                    are repeated many times in this network.
+                    We use `block_idx` to identify
+                    each of the repetitions. For example,
+                    the first Inception-ResNet-A block
+                    will have `block_type='block35', block_idx=0`,
+                    and the layer names will have
+                    a common prefix `'block35_0'`.
+                activation: activation function to use at the end of the block
+                    (see [activations](../activations.md)).
+                    When `activation=None`, no activation is applied
+                    (i.e., "linear" activation: `a(x) = x`).
+
+            # Returns
+                Output tensor for the block.
+
+            # Raises
+                ValueError: if `block_type` is not one of `'block35'`,
+                    `'block17'` or `'block8'`.
+            """
+            if block_type == 'block35':
+                branch_0 = conv2d_bn(x, 32, 1)
+                branch_1 = conv2d_bn(x, 32, 1)
+                branch_1 = conv2d_bn(branch_1, 32, 3)
+                branch_2 = conv2d_bn(x, 32, 1)
+                branch_2 = conv2d_bn(branch_2, 48, 3)
+                branch_2 = conv2d_bn(branch_2, 64, 3)
+                branches = [branch_0, branch_1, branch_2]
+            elif block_type == 'block17':
+                branch_0 = conv2d_bn(x, 192, 1)
+                branch_1 = conv2d_bn(x, 128, 1)
+                branch_1 = conv2d_bn(branch_1, 160, [1, 7])
+                branch_1 = conv2d_bn(branch_1, 192, [7, 1])
+                branches = [branch_0, branch_1]
+            elif block_type == 'block8':
+                branch_0 = conv2d_bn(x, 192, 1)
+                branch_1 = conv2d_bn(x, 192, 1)
+                branch_1 = conv2d_bn(branch_1, 224, [1, 3])
+                branch_1 = conv2d_bn(branch_1, 256, [3, 1])
+                branches = [branch_0, branch_1]
+            else:
+                raise ValueError('Unknown Inception-ResNet block type. '
+                                 'Expects "block35", "block17" or "block8", '
+                                 'but got: ' + str(block_type))
+
+            block_name = block_type + '_' + str(block_idx)
+            channel_axis = self.CHANNEL_AXIS
+            mixed = Concatenate(
+                axis=channel_axis, name=block_name + '_mixed')(branches)
+            up = conv2d_bn(mixed,
+                           tuple(x.shape.as_list())[channel_axis],
+                           1,
+                           activation=None,
+                           use_bias=True,
+                           name=block_name + '_conv')
+
+            x = Lambda(lambda inputs, the_scale: inputs[0] + inputs[1] * the_scale,
+                       output_shape=tuple(x.shape.as_list())[1:],
+                       arguments={'the_scale': scale},
+                       name=block_name)([x, up])
+            if activation is not None:
+                x = Activation(activation, name=block_name + '_ac')(x)
+            return x
+
+
+
+
+
+
+
+
+
+
         # Stem block: 35 x 35 x 192
         x = MaxPooling2D(3, strides=2)(
-            self.conv2d_bn(
-                self.conv2d_bn(
+            conv2d_bn(
+                conv2d_bn(
                     MaxPooling2D(
                         3,
                         strides=2
                     )(
-                        self.conv2d_bn(
-                            self.conv2d_bn(
-                                self.conv2d_bn(
+                        conv2d_bn(
+                            conv2d_bn(
+                                conv2d_bn(
                                     self.inputs,
                                     32,
                                     3,
@@ -63,21 +193,21 @@ class INC(SymNet):
 
         # Mixed 5b (Inception-A block): 35 x 35 x 320
         x = Concatenate(
-            axis=self.META().CHANNEL_AXIS,
+            axis=self.CHANNEL_AXIS,
             name='mixed_5b'
         )([
             # branches
-            self.conv2d_bn(x, 96, 1),
-            self.conv2d_bn(self.conv2d_bn(x, 48, 1), 64, 5),
-            self.conv2d_bn(
-                self.conv2d_bn(
-                    self.conv2d_bn(x, 64, 1), 96, 3
+            conv2d_bn(x, 96, 1),
+            conv2d_bn(conv2d_bn(x, 48, 1), 64, 5),
+            conv2d_bn(
+                conv2d_bn(
+                    conv2d_bn(x, 64, 1), 96, 3
                 ),
                 96,
                 3
             ),
             # branch_pool
-            self.conv2d_bn(
+            conv2d_bn(
                 AveragePooling2D(3, strides=1, padding='same')(x),
                 64,
                 1
@@ -86,7 +216,7 @@ class INC(SymNet):
 
         # 10x block35 (Inception-ResNet-A block): 35 x 35 x 320
         for block_idx in range(1, 11):
-            x = self.inception_resnet_block(
+            x = inception_resnet_block(
                 x,
                 scale=0.17,
                 block_type='block35',
@@ -95,14 +225,14 @@ class INC(SymNet):
 
         # Mixed 6a (Reduction-A block): 17 x 17 x 1088
         x = Concatenate(
-            axis=self.META().CHANNEL_AXIS,
+            axis=self.CHANNEL_AXIS,
             name='mixed_6a'
         )([
             # branches
-            self.conv2d_bn(x, 384, 3, strides=2, padding='valid'),
-            self.conv2d_bn(
-                self.conv2d_bn(
-                    self.conv2d_bn(x, 256, 1),
+            conv2d_bn(x, 384, 3, strides=2, padding='valid'),
+            conv2d_bn(
+                conv2d_bn(
+                    conv2d_bn(x, 256, 1),
                     256,
                     3
                 ),
@@ -118,7 +248,7 @@ class INC(SymNet):
 
         # 20x block17 (Inception-ResNet-B block): 17 x 17 x 1088
         for block_idx in range(1, 21):
-            x = self.inception_resnet_block(
+            x = inception_resnet_block(
                 x,
                 scale=0.1,
                 block_type='block17',
@@ -126,26 +256,26 @@ class INC(SymNet):
             )
 
         # Mixed 7a (Reduction-B block): 8 x 8 x 2080
-        x = Concatenate(axis=self.META().CHANNEL_AXIS, name='mixed_7a')(
+        x = Concatenate(axis=self.CHANNEL_AXIS, name='mixed_7a')(
             [
                 # branches
-                self.conv2d_bn(
-                    self.conv2d_bn(x, 256, 1),
+                conv2d_bn(
+                    conv2d_bn(x, 256, 1),
                     384,
                     3,
                     strides=2,
                     padding='valid'
                 ),
-                self.conv2d_bn(
-                    self.conv2d_bn(x, 256, 1),
+                conv2d_bn(
+                    conv2d_bn(x, 256, 1),
                     288,
                     3,
                     strides=2,
                     padding='valid'
                 ),
-                self.conv2d_bn(
-                    self.conv2d_bn(
-                        self.conv2d_bn(x, 256, 1),
+                conv2d_bn(
+                    conv2d_bn(
+                        conv2d_bn(x, 256, 1),
                         288,
                         3
                     ),
@@ -162,13 +292,13 @@ class INC(SymNet):
 
         # 10x block8 (Inception-ResNet-C block): 8 x 8 x 2080
         for block_idx in range(1, 10):
-            x = self.inception_resnet_block(
+            x = inception_resnet_block(
                 x,
                 scale=0.2,
                 block_type='block8',
                 block_idx=block_idx
             )
-        x = self.inception_resnet_block(
+        x = inception_resnet_block(
             x,
             scale=1.,
             activation=None,
@@ -184,135 +314,10 @@ class INC(SymNet):
         )(GlobalAveragePooling2D(
             # Classification block
             name='avg_pool'
-        )(self.conv2d_bn(
+        )(conv2d_bn(
             # Final convolution block: 8 x 8 x 1536
             x,
             1536,
             1,
             name='conv_7b'
         )))
-
-
-    def conv2d_bn(self, x,
-                  filters,
-                  kernel_size,
-                  strides=1,
-                  padding='same',
-                  activation='relu',
-                  use_bias=False,
-                  name=None):
-        """Utility function to apply conv + BN.
-
-        # Arguments
-            x: input tensor.
-            filters: filters in `Conv2D`.
-            kernel_size: kernel size as in `Conv2D`.
-            strides: strides in `Conv2D`.
-            padding: padding mode in `Conv2D`.
-            activation: activation in `Conv2D`.
-            use_bias: whether to use a bias in `Conv2D`.
-            name: name of the ops; will become `name + '_ac'` for the activation
-                and `name + '_bn'` for the batch norm layer.
-
-        # Returns
-            Output tensor after applying `Conv2D` and `BatchNormalization`.
-        """
-        x = Conv2D(filters,
-                   kernel_size,
-                   strides=strides,
-                   padding=padding,
-                   use_bias=use_bias,
-                   name=name)(x)
-        if not use_bias:
-            bn_name = None if name is None else name + '_bn'
-            x = BatchNormalization(axis=self.META().CHANNEL_AXIS,
-                                   scale=False,
-                                   name=bn_name)(x)
-        if activation is not None:
-            ac_name = None if name is None else name + '_ac'
-            x = Activation(activation, name=ac_name)(x)
-        return x
-
-    def inception_resnet_block(self, x, scale, block_type, block_idx, activation='relu'):
-        """Adds a Inception-ResNet block.
-
-        This function builds 3 types of Inception-ResNet blocks mentioned
-        in the paper, controlled by the `block_type` argument (which is the
-        block name used in the official TF-slim implementation):
-            - Inception-ResNet-A: `block_type='block35'`
-            - Inception-ResNet-B: `block_type='block17'`
-            - Inception-ResNet-C: `block_type='block8'`
-
-        # Arguments
-            x: input tensor.
-            scale: scaling factor to scale the residuals (i.e., the output of
-                passing `x` through an inception module) before adding them
-                to the shortcut branch.
-                Let `r` be the output from the residual branch,
-                the output of this block will be `x + scale * r`.
-            block_type: `'block35'`, `'block17'` or `'block8'`, determines
-                the network structure in the residual branch.
-            block_idx: an `int` used for generating layer names.
-                The Inception-ResNet blocks
-                are repeated many times in this network.
-                We use `block_idx` to identify
-                each of the repetitions. For example,
-                the first Inception-ResNet-A block
-                will have `block_type='block35', block_idx=0`,
-                and the layer names will have
-                a common prefix `'block35_0'`.
-            activation: activation function to use at the end of the block
-                (see [activations](../activations.md)).
-                When `activation=None`, no activation is applied
-                (i.e., "linear" activation: `a(x) = x`).
-
-        # Returns
-            Output tensor for the block.
-
-        # Raises
-            ValueError: if `block_type` is not one of `'block35'`,
-                `'block17'` or `'block8'`.
-        """
-        if block_type == 'block35':
-            branch_0 = self.conv2d_bn(x, 32, 1)
-            branch_1 = self.conv2d_bn(x, 32, 1)
-            branch_1 = self.conv2d_bn(branch_1, 32, 3)
-            branch_2 = self.conv2d_bn(x, 32, 1)
-            branch_2 = self.conv2d_bn(branch_2, 48, 3)
-            branch_2 = self.conv2d_bn(branch_2, 64, 3)
-            branches = [branch_0, branch_1, branch_2]
-        elif block_type == 'block17':
-            branch_0 = self.conv2d_bn(x, 192, 1)
-            branch_1 = self.conv2d_bn(x, 128, 1)
-            branch_1 = self.conv2d_bn(branch_1, 160, [1, 7])
-            branch_1 = self.conv2d_bn(branch_1, 192, [7, 1])
-            branches = [branch_0, branch_1]
-        elif block_type == 'block8':
-            branch_0 = self.conv2d_bn(x, 192, 1)
-            branch_1 = self.conv2d_bn(x, 192, 1)
-            branch_1 = self.conv2d_bn(branch_1, 224, [1, 3])
-            branch_1 = self.conv2d_bn(branch_1, 256, [3, 1])
-            branches = [branch_0, branch_1]
-        else:
-            raise ValueError('Unknown Inception-ResNet block type. '
-                             'Expects "block35", "block17" or "block8", '
-                             'but got: ' + str(block_type))
-
-        block_name = block_type + '_' + str(block_idx)
-        channel_axis = self.META().CHANNEL_AXIS
-        mixed = Concatenate(
-            axis=channel_axis, name=block_name + '_mixed')(branches)
-        up = self.conv2d_bn(mixed,
-                            tuple(x.shape.as_list())[channel_axis],
-                            1,
-                            activation=None,
-                            use_bias=True,
-                            name=block_name + '_conv')
-
-        x = Lambda(lambda inputs, the_scale: inputs[0] + inputs[1] * the_scale,
-                   output_shape=tuple(x.shape.as_list())[1:],
-                   arguments={'the_scale': scale},
-                   name=block_name)([x, up])
-        if activation is not None:
-            x = Activation(activation, name=block_name + '_ac')(x)
-        return x

@@ -1,11 +1,11 @@
-from mlib.boot.mutil import make2d, arr, concat, listkeys
+from mlib.boot.lang import listkeys
+from mlib.boot.stream import make2d, arr, concat
 MET_PHASE = 'init'
 FLAGS = None
 eval_counter = 0
 
 TEST_STEPS = None
 step_counter = 1
-
 
 EVAL_AND_REC_EVERY_EPOCH = False
 

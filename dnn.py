@@ -1,34 +1,37 @@
-from human_exps.mc_wait_pilot.mc_wait_pilot import MC_Wait_Pilot
-
-from human_exps.time_pilot.time_pilot import Time_Pilot
-from mlib.boot.mlog import err
-from mlib.boot.stream import arr, listmap, __
+from lib import makereport
+from mlib.boot.lang import isblank
+from mlib.input import boolinput, strinput
+from mlib.web import shadow
 from mlib.file import Folder
-from mlib.km import kmscript
 from mlib.proj.struct import Project
-from lib.dnn_lib import dnn
-from mlib.web.api import API
-from mlib.web.database import Database
-from mlib.boot.mutil import boolinput, strinput
-from sanity import sanity
+from mlib.boot.stream import arr, listmap, __
 
 class DNN(Project):
+
     MODES = [
-        'CLEAN',
         'JUSTRUN',
         'PUSH',
-        'GETANDMAKE',
-        'MAKEFIGS',
         'COMPILE_TEST_ALL',
         'MAKEREPORT'
     ]
     HUMAN_EXPS_FOLDER = Folder('human_exps')
     _human_exp_flags = listmap(__.name, HUMAN_EXPS_FOLDER.folders)
-    extra_flags = _human_exp_flags + MODES + ['sanity']
+    extra_flags = _human_exp_flags + MODES
     def run(self, cfg):
-        if len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'sanity':
-            sanity()
-        elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
+
+        # keep modular
+        assert not (cfg.REGEN_DATA and cfg.OVERWRITE_NORMS)  # btw, both imply killing worker before exp
+
+        from mlib.boot.mlog import err
+        from lib.dnn_lib import dnn
+        from mlib.web.api import API
+        from mlib.web.database import Database
+        from human_exps.mc_wait_pilot.mc_wait_pilot import MC_Wait_Pilot
+        from human_exps.time_pilot.time_pilot import Time_Pilot
+
+        shadow.SHOW_INDEX = False
+
+        if len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
             exp = {
                 'time_pilot'   : Time_Pilot,
                 'mc_wait_pilot': MC_Wait_Pilot,
@@ -53,8 +56,13 @@ class DNN(Project):
             cfg.MODE = ''.join(arr(cfg.FLAGS).filtered(
                 lambda s: s in self.MODES
             ))
-            self.init()
+            if cfg.offline:
+                API.offline_mode = True
+                Database.offline_mode = True
+                makereport.MAKEREPORT_ONLINE = False
+            from mlib.km import kmscript  # keep modular
             kmscript('activate run tool window')
+            if isblank(cfg.MODE): cfg.MODE = ''.join(self.MODES)
             dnn(cfg)
 
     instructions = '''Generate some images, train/test a model, run analyses, and generate plots. Tested on Mac, but not yet on linux/Windows.

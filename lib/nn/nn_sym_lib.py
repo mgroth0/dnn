@@ -1,5 +1,4 @@
-from mlib.boot.mutil import err
-
+from mlib.boot.mlog import err
 def reduced_label(label):
     if label.startswith('S') and len(label) in [2, 3, 4]:
         return 0

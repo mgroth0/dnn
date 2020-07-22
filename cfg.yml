@@ -5,6 +5,7 @@ profiles:
     eval_nperc: 10
     rsa_nperc: 10
     MUSCLE: local
+    offline: True
   darius: &darius
     proto_model: False
     #  needs to be somewhat consistent between fileops and train/test
@@ -13,18 +14,20 @@ profiles:
     eval_nperc: 500
     rsa_nperc: 10
     MUSCLE: local #  needs to be consistent but not scientifically relevant
-  dariusSmall:
+    offline: False
+  dariusSmall: &dariusSmall
     <<: *darius
     NTRAIN: [10]
+    offline: True
   default:
-      <<: *proto
+      <<: *dariusSmall
 
 configs:
   all: &all
 
   # theres an order and procedure to these
     REGEN_DATA: False
-    PIPELINE: TRAIN VAL REC
+    PIPELINE: SANITY TRAIN VAL REC
     NORM_TRAIN_IMS: True
     OVERWRITE_NORMS: False
 
@@ -81,6 +84,7 @@ configs:
     RUN_EXPS_IN_SERIAL: True
     SAVE_DATA: False
     GET_LOGS: False
+    MODE: JUSTRUN
   gen_images:
     <<: *file_op_cfg
     EPOCHS: 0
@@ -148,5 +152,18 @@ configs:
           -
             <<: *default_exp
             arch: ALEX
+  sanity_tests: &sanity_tests
+        <<: *run_one
+        PIPELINE: SANITY
+        EXPS:
+          -
+            <<: *default_exp
+            arch: GNET
+          -
+            <<: *default_exp
+            arch: INC
+#          -
+#            <<: *default_exp
+#            arch: INC_ORIG
   default:
-        <<: *run_ALEX
+        <<: *sanity_tests

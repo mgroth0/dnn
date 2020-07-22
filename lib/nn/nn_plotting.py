@@ -1,9 +1,9 @@
 from mlib.JsonSerializable import FigSet
 
-from lib.data_saving import savePlotAndTableData
+from lib.dnn_data_saving import save_dnn_data
 from lib.nn.nnstate import EVAL_AND_REC_EVERY_EPOCH
-from mlib.boot.mutil import safemean
 from mlib.fig.PlotData import PlotData
+from mlib.math import safemean
 
 def plot_metric(met, met_log, met_name):
     fs = FigSet(
@@ -56,7 +56,7 @@ def plot_metric(met, met_log, met_name):
         fs[1].scatter_shape = '*'
         fs[0].maxX = eval_x + 1
     else:
-        fs[0].maxX = max(x_train)+1
+        fs[0].maxX = max(x_train) + 1
     if 'matthew' in met:
         fs[0].minY = -1
     else:
@@ -70,5 +70,5 @@ def plot_metric(met, met_log, met_name):
 
     fs[0].item_colors = [0, 0, 1]
 
-    savePlotAndTableData(fs, met_name, tit)
+    save_dnn_data(fs, met_name, tit)
     return fs

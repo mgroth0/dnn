@@ -3,9 +3,11 @@ import copy
 import numpy as np
 
 from mlib.boot import log
-from mlib.boot.mutil import arr, itr, zeros, mod, numel, randperm, ismember, sort_human, inv_map, Progress
-from lib.data_saving import savePlotAndTableData
+from lib.dnn_data_saving import save_dnn_data
+from mlib.boot.lang import inv_map
+from mlib.boot.stream import mod, numel, randperm, ismember, zeros, sort_human, arr, itr
 from mlib.fig.TableData import RSAMatrix
+from mlib.term import Progress
 
 def calc_steps(N_IMAGES, TRAIN_TEST_SPLIT, BATCH_SIZE):
     N_TRAIN_IMAGES = int(N_IMAGES * TRAIN_TEST_SPLIT)
@@ -187,7 +189,7 @@ def RSA(nam, rep, y_true, ei, layer_name=None, layer_i=None):
     if nam == 'Inter':
         title = f'{title}(Layer{layer_i}:{layer_name})'
 
-    savePlotAndTableData(RSAMatrix(
+    save_dnn_data(RSAMatrix(
         data=special_confuse_mat,
         title=title,
         confuse_max=1,

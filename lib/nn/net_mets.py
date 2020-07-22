@@ -4,8 +4,9 @@ from lib.nn.nn_sym_lib import reduced_label
 import lib.nn.nnstate as nnstate
 from lib.nn.nnstate import update_met_log
 from mlib.boot import log
-from mlib.boot.mutil import err, inv_map, arr2d, inc, arr, maxindex
-from mlib.boot.stream import mparray
+from mlib.boot.lang import inv_map
+from mlib.boot.mlog import err
+from mlib.boot.stream import mparray, arr, arr2d, inc, maxindex
 from mlib.class_mets import binary_results, mcc_basic, error_rate_basic
 
 def METS_TO_USE(): return [accuracy, matthews_correlation_coefficient, mcc_multi, fill_cmat]
