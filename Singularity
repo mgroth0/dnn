@@ -21,6 +21,12 @@ From: ubuntu:20.04
     chmod +x ~/miniconda.sh
     ~/miniconda.sh -b
     ~/miniconda3/bin/conda create -y --name dnn python=3.8
-    cd ~
+    apt install git -y
     git clone https://github.com/mgroth0/dnn
+    git clone https://github.com/mgroth0/mlib
+    ~/miniconda3/bin/conda init
+    source .bashrc
+    conda activate dnn
+    #cd dnn
+    #conda install --file requirements.txt
     echo "done with post-build"
