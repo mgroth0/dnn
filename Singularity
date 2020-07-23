@@ -23,6 +23,7 @@ From: ubuntu:20.04
     apt full-upgrade -y
     apt autoremove
     apt install curl -y
+    apt install libgl1-mesa-glx -y #https://github.com/conda-forge/pygridgen-feedstock/issues/10
     cd /
     mkdir matt
     cd matt
