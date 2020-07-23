@@ -4,7 +4,10 @@ From: ubuntu:20.04
 %runscript
     echo "The runscript is the containers default runtime command!"
     # home is "/root" and this is the cwd
+    cd /matt/mlib
+    git pull
     cd /matt/dnn
+    git pull
     env
     # bash
     # CONDA_HOME=/matt/miniconda3
