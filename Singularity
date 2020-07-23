@@ -43,4 +43,8 @@ From: ubuntu:20.04
     /matt/miniconda3/bin/conda install -y -n dnn --file=requirements.txt
     /matt/miniconda3/bin/conda install -y -n dnn tensorflow-gpu=2.2.0
     apt install iputils-ping -y
+    /matt/miniconda3/bin/conda install gdown -y
+    cd ..
+    /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1wauVN6nG3tKv7VifIfRVBL0fj8XfefVa"
+    mv _resources/_weights dnn
     echo "done with post-build"
