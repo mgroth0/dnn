@@ -234,7 +234,10 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
     log('loading $ images...', len(images))
 
     num_classes = len(data_dir.files)
-    numTrainPerClass = round(TRAIN_TEST_SPLIT * (len(images) / num_classes))
+    if num_classes == 0:
+        numTrainPerClass = 0
+    else:
+        numTrainPerClass = round(TRAIN_TEST_SPLIT * (len(images) / num_classes))
 
     # RANDOMNESS HERE
     trainPerm = randperm(numTrainPerClass)
