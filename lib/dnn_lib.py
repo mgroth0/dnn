@@ -30,8 +30,9 @@ def dnn(
 
     if 'JUSTRUN' in mode and cfg.SAVE_DATA:
         TEMP_FIGS_FOLDER.mkdir().clear()
-        if len(listkeys(Project.STATE)) == 0:
+        if 'next_exp_id' not in Project.STATE:
             Project.STATE['next_exp_id'] = 1
+        if 'last_submitted_exp_group_name' not in Project.STATE:
             Project.STATE['last_submitted_exp_group_name'] = ''
         def check(a):
             Project.STATE["last_submitted_exp_group_name"] = a
