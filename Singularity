@@ -4,8 +4,14 @@ From: ubuntu:20.04
 %runscript
     echo "The runscript is the containers default runtime command!"
     # home is "/root" and this is the cwd
-    cd dnn
+    cd /matt/dnn
+    env
+    # bash
+    # CONDA_HOME=/matt/miniconda3
+
+    echo "CONDA_HOME in singularity runscript is:"$CONDA_HOME
     ./dnn
+    #exec bash
     exec echo "exec in the runscript replaces the current process!"
 
 %labels
@@ -17,16 +23,18 @@ From: ubuntu:20.04
     apt full-upgrade -y
     apt autoremove
     apt install curl -y
-    curl -o ~/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    chmod +x ~/miniconda.sh
-    ~/miniconda.sh -b
-    ~/miniconda3/bin/conda create -y --name dnn python=3.8
+    cd /
+    mkdir matt
+    cd matt
+    curl -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    chmod +x miniconda.sh
+    ./miniconda.sh -b -p miniconda3
     apt install git -y
     git clone https://github.com/mgroth0/dnn
     git clone https://github.com/mgroth0/mlib
-    ~/miniconda3/bin/conda init
-    # source .bashrc
-    conda activate dnn
-    #cd dnn
-    #conda install --file requirements.txt
+    /matt/miniconda3/bin/conda create -y --name dnn python=3.8
+    /matt/miniconda3/bin/conda config --add channels conda-forge
+    /matt/miniconda3/bin/conda config --add channels mgroth0
+    cd dnn
+    /matt/miniconda3/bin/conda install -y -n dnn --file=requirements.txt
     echo "done with post-build"

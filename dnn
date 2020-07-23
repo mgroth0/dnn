@@ -1,4 +1,8 @@
 #!/bin/sh
 export MPLBACKEND=Agg
 export "PYTHONPATH=../mlib"
-exec "$HOME/miniconda3/envs/dnn/bin/python" "boot.py" "$@"
+echo "CONDA_HOME in dnn is:"$CONDA_HOME
+if [[ -z "${CONDA_HOME}" ]]; then
+  CONDA_HOME="$HOME/miniconda3"
+fi
+exec "$CONDA_HOME/envs/dnn/bin/python" "boot.py" "$@"

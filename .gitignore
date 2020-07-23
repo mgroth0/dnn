@@ -3,6 +3,7 @@
 */**/*password*
 human_exps/
 *.simg*
+*.img*
 .vagrant/
 Vagrantfile
 backups/
