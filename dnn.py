@@ -1,5 +1,5 @@
 from lib import makereport
-from mlib.boot.lang import isblank
+from mlib.boot.lang import isblank, ismac
 from mlib.input import boolinput, strinput
 from mlib.web import shadow
 from mlib.file import Folder
@@ -65,7 +65,8 @@ class DNN(Project):
                 Database.offline_mode = True
                 makereport.MAKEREPORT_ONLINE = False
             from mlib.km import kmscript  # keep modular
-            kmscript('activate run tool window')
+            if ismac():
+                kmscript('activate run tool window')
             if isblank(cfg.MODE): cfg.MODE = ''.join(self.MODES)
             dnn(cfg)
 
