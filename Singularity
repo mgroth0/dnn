@@ -38,5 +38,6 @@ From: ubuntu:20.04
     /matt/miniconda3/bin/conda config --add channels mgroth0
     cd dnn
     /matt/miniconda3/bin/conda install -y -n dnn --file=requirements.txt
+    /matt/miniconda3/bin/conda install -y -n dnn tensorflow-gpu=2.2.0
     apt install iputils-ping -y
     echo "done with post-build"
