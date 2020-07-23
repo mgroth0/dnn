@@ -46,6 +46,7 @@ From: ubuntu:20.04
     /matt/miniconda3/bin/conda install gdown -y
     cd ..
     /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1wauVN6nG3tKv7VifIfRVBL0fj8XfefVa"
+    apt install unzip -y
     unzip _resources.zip
     mv _resources/_weights dnn
     echo "done with post-build"
