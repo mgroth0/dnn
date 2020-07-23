@@ -15,7 +15,10 @@ class DNN(Project):
         'MAKEREPORT'
     ]
     HUMAN_EXPS_FOLDER = Folder('human_exps')
-    _human_exp_flags = listmap(__.name, HUMAN_EXPS_FOLDER.folders)
+    if HUMAN_EXPS_FOLDER.exists:
+        _human_exp_flags = listmap(__.name, HUMAN_EXPS_FOLDER.folders)
+    else:
+        _human_exp_flags = []
     extra_flags = _human_exp_flags + MODES
     def run(self, cfg):
 
