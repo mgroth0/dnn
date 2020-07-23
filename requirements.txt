@@ -19,3 +19,4 @@ pyqt
 scikit-learn
 texttable
 wolframclient
+yapf
