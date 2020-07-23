@@ -1,7 +1,8 @@
+import os
 from os.path import expanduser
 
 from mlib.JsonSerializable import obj
-from mlib.boot.lang import listkeys
+from mlib.boot.lang import listkeys, ismac
 from mlib.job import Job
 from mlib.str import lengthen_str
 from mlib.term import log_invokation
@@ -73,7 +74,10 @@ class DNN_Job(Job):
     SUCCESS_STR = "NRC IS FINISHED"
     REMOTE_FOLDER = "~/mitili"
     REMOTE_SCRIPT = "src/main/python/exec/work.py"
-    LOCAL_PY = f'{expanduser("~")}/miniconda3/envs/dnn/bin/python'
+    if ismac():
+        LOCAL_PY = f'{expanduser("~")}/miniconda3/envs/dnn/bin/python'
+    else:
+        LOCAL_PY = f'{os.environ["CONDA_HOME"]}/envs/dnn/bin/python'
     LOCAL_SCRIPT = f'work.py'
 
     def __str__(self):
