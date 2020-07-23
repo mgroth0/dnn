@@ -29,12 +29,13 @@ class DNN(Project):
         from lib.dnn_lib import dnn
         from mlib.web.api import API
         from mlib.web.database import Database
-        from human_exps.mc_wait_pilot.mc_wait_pilot import MC_Wait_Pilot
-        from human_exps.time_pilot.time_pilot import Time_Pilot
+
 
         shadow.SHOW_INDEX = False
 
         if len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
+            from human_exps.mc_wait_pilot.mc_wait_pilot import MC_Wait_Pilot
+            from human_exps.time_pilot.time_pilot import Time_Pilot
             exp = {
                 'time_pilot'   : Time_Pilot,
                 'mc_wait_pilot': MC_Wait_Pilot,
