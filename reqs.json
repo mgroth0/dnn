@@ -1,5 +1,6 @@
 {
     "tops": [
+        "pydot",
         "yapf",
         "matplotlib",
         "scipy",
@@ -254,7 +255,6 @@
         "lz4-c",
         "matplotlib-base",
         "py-opencv",
-        "pydot",
         "pyjwt",
         "pynacl",
         "pytables",
