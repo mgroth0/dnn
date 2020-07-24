@@ -1,3 +1,5 @@
+pydot
+yapf
 matplotlib
 scipy
 aiohttp
@@ -19,4 +21,3 @@ pyqt
 scikit-learn
 texttable
 wolframclient
-yapf
