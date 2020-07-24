@@ -41,6 +41,7 @@ From: ubuntu:20.04
     /matt/miniconda3/bin/conda config --add channels mgroth0
     cd dnn
     /matt/miniconda3/bin/conda install -y -n dnn --file=requirements.txt
+    apt install graphviz -y # https://github.com/XifengGuo/CapsNet-Keras/issues/7
     /matt/miniconda3/bin/conda install -y -n dnn tensorflow-gpu=2.2.0
     apt install iputils-ping -y
     /matt/miniconda3/bin/conda install gdown -y
