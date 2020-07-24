@@ -88,19 +88,23 @@ class ModelWrapper(AbstractAttributes, ABC):
         log('writing summary')
         with open(arch_summary_file, 'w') as fh:
             self.net.summary(print_fn=lambda x: fh.write(x + '\n'))
+    @log_invokation()
     def plot_model(self):
         arch_summary_im = self.arch_summary_folder[f'{self.ARCH_LABEL}.png']
-        log('plotting model')
-        self.tf.keras.utils.plot_model(
-            self.net,
-            to_file=arch_summary_im.abspath,
-            show_shapes=True,
-            show_layer_names=True,
-            rankdir="TB",
-            expand_nested=True,
-            dpi=96,
-        )
-        log('finished plotting model')
+        try:
+            self.tf.keras.utils.plot_model(
+                self.net,
+                to_file=arch_summary_im.abspath,
+                show_shapes=True,
+                show_layer_names=True,
+                rankdir="TB",
+                expand_nested=True,
+                dpi=96,
+            )
+        except AssertionError as e:
+            # I think there are sometimes problems creating InceptionResNetV2s plot. This makes sense considering that it is huge. I think AssertionError is thrown when its too big but I'm not sure
+            arch_summary_im.deleteIfExists()
+            arch_summary_im.res_pre_ext('_sorry').resrepext('txt').write(f'{repr(e)}')
     @log_invokation()
     def _save(self, pretrained=False):
         model_save_file = f'_arch/{self.ARCH_LABEL}'
@@ -142,6 +146,3 @@ class ModelWrapper(AbstractAttributes, ABC):
             self.hw,
             is_pretrained=True
         )
-
-
-
