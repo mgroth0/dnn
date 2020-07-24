@@ -57,4 +57,8 @@ From: ubuntu:20.04
     unzip _ImageNetTesting.zip
     mv _ImageNetTesting dnn
 
+    /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1bTjuuTz_84yXfYWcORsUfCkc6IuwfI2k"
+        unzip _data.zip
+        mv _data dnn
+
     echo "done with post-build"
