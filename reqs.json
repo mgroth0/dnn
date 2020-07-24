@@ -1,5 +1,6 @@
 {
     "tops": [
+        "graphviz",
         "pydot",
         "yapf",
         "matplotlib",
@@ -25,7 +26,6 @@
         "wolframclient"
     ],
     "subs": [
-        "graphviz",
         "async",
         "attrs",
         "chardet",
