@@ -17,7 +17,6 @@ class ALEX(AssembledModel):
     CHANNEL_AXIS = _ALEX_CA
     # )
     def assemble_layers(self):
-
         self._next_dense_i = 1
         from tensorflow.keras.layers import (
             Dense,
@@ -61,9 +60,10 @@ class ALEX(AssembledModel):
         #     return d
 
         def crosschannelnormalization(alpha=1e-4, k=2, beta=0.75, n=5, **kwargs):
-            from tensorflow import pad, constant
+            # from tensorflow import pad, constant
             # used in the original Alexnet
             def f(X):
+                from tensorflow import pad, constant  # getting NameError: name 'pad' is not defined... what if I import here, does it help?
                 b = X.shape[0]
                 r = X.shape[self.ROW_AXIS]
                 c = X.shape[self.COL_AXIS]
