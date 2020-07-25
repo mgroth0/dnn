@@ -127,8 +127,11 @@ class SanityAnalysis(PostBuildAnalysis):
                     top5_score = 0
                     for i in range(len(y_pred)):
                         preds = maxindex(ppdata[i], num=5)
-                        if y_true[i] in preds:
-                            top5_score += 1
+                        try:
+                            if y_true[i] in preds:
+                                top5_score += 1
+                        except:
+                            breakpoint()
                     acc5 = top5_score / len(y_pred)
                     pp = {
                         'acts'  : ppdata,
