@@ -8,20 +8,25 @@ from mlib.file import is_file
 
 
 def preprocessors(hw): return {
-    'none'           : Preprocessor(
+    'none'                : Preprocessor(
         resize=hw
     ),
-    'divstd_demean'  : Preprocessor(
+    'divstd_demean'       : Preprocessor(
         resize=hw,
         divstd=True,
         demean=True
     ),
-    'unit_scale'     : Preprocessor(
+    'unit_scale'          : Preprocessor(
         resize=hw,
         unit_scaling=True
     ),
-    'demean_imagenet': Preprocessor(
+    'demean_imagenet'     : Preprocessor(
         resize=hw,
+        subtract_imagenet_means=True
+    ),
+    'demean_imagenet_crop': Preprocessor(  # recommended in convnets_keras for alexnet
+        resize=256,
+        crop=hw,
         subtract_imagenet_means=True
     )
 }

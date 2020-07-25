@@ -139,11 +139,12 @@ class SanityAnalysis(PostBuildAnalysis):
         return data
 
     ppdict = {
-        'none'           : '0',
-        'divstd_demean'  : '1',
-        'unit_scale'     : '2',
-        'demean_imagenet': '3',
-        'zerocenter'     : '4',
+        'none'                : '0',
+        'divstd_demean'       : '1',
+        'unit_scale'          : '2',
+        'demean_imagenet'     : '3',
+        'zerocenter'          : '4',
+        'demean_imagenet_crop': '5'
     }
     bedict = {
         'tf'   : 'T',

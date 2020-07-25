@@ -18,10 +18,6 @@ class ALEX(AssembledModel):
     # )
     def assemble_layers(self):
 
-        err('ALEX does a weird crop in its preprocessing ALSO alex needs to be tested with channel axis first on linux')
-        ALEX.preprocess_image(None, img_resize_height=256, img_resize_width=256, crop_size=(227, 227))
-        err(None)
-
         self._next_dense_i = 1
         from tensorflow.keras.layers import (
             Dense,
@@ -241,23 +237,3 @@ class ALEX(AssembledModel):
                             strides=4,
                             name='conv_1'
                         )(self.inputs))))))))))))))))
-
-    @staticmethod
-    def preprocess_image(img, img_resize_height=None, img_resize_width=None, crop_size=None):
-        err('use preprocessor')
-        # if img_size:
-        img = resampleim(img, img_resize_height, img_resize_width, nchan=3)
-        img = img.astype('float32')
-        # We normalize the colors (in RGB space) with the empirical means on the training set
-        img[:, :, 0] -= 123.68
-        img[:, :, 1] -= 116.779
-        img[:, :, 2] -= 103.939
-        # We permute the colors to get them in the BGR order
-        if crop_size:
-            if _ALEX_CA == 1:
-                img = img[:, (img_resize_height - crop_size[0]) // 2:(img_resize_height + crop_size[0]) // 2
-                , (img_resize_width - crop_size[1]) // 2:(img_resize_width + crop_size[1]) // 2]
-            else:
-                img = img[(img_resize_height - crop_size[0]) // 2:(img_resize_height + crop_size[0]) // 2
-                , (img_resize_width - crop_size[1]) // 2:(img_resize_width + crop_size[1]) // 2, :]
-        return img
