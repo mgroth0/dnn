@@ -159,6 +159,9 @@ configs:
         EXPS:
           -
             <<: *default_exp
+            arch: ALEX
+          -
+            <<: *default_exp
             arch: GNET
           -
             <<: *default_exp

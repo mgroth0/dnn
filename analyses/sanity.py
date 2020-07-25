@@ -151,6 +151,7 @@ class SanityAnalysis(PostBuildAnalysis):
         'ml2tf': '>'
     }
     adict = {
+        'ALEX': 'A',
         'GNET': 'G',
         'INC' : 'I',
     }
@@ -187,6 +188,7 @@ class SanityAnalysis(PostBuildAnalysis):
         sanity_report_figdata += [HTML_Pre(str(TextTableWrapper(
             data=[
                 ['Arch', 'lit'],
+                ['ALEX', f'?\n{int(0.847 * 100)}'],
                 ['GNET', f'?\n{int(0.99333 * 100)}'],
                 ['INC', f'80.4\n95.3']
             ],
@@ -194,6 +196,11 @@ class SanityAnalysis(PostBuildAnalysis):
             col_valign='m' * 2
         )))]
         sanity_report_figdata += [HTML_Pre('''
+            Krizhevsky, Alex, Ilya Sutskever, and Geoffrey E. Hinton. 
+            "Imagenet classification with deep convolutional neural networks." 
+            Advances in neural information processing systems. 2012.
+
+            
             Szegedy, Christian, et al. 
             "Going deeper with convolutions." 
             Proceedings of the IEEE conference on computer vision and pattern recognition. 2015.
