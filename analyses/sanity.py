@@ -56,11 +56,12 @@ class SanityAnalysis(PostBuildAnalysis):
                 'ml2tf': {}
             }
 
-            ml2tf_net = tf_net.from_ML_vers().build()
+            # ml2tf_net = tf_net.from_ML_vers().build()
 
             for pp_name, pp in listitems(preprocessors(tf_net.hw)):
-                r[f'tf'][pp_name], r['ml2tf'][pp_name] = chain_predict(
-                    [tf_net, ml2tf_net],
+                # , r['ml2tf'][pp_name] =
+                r[f'tf'][pp_name] = chain_predict(
+                    [tf_net],  # ,ml2tf_net
                     pp,
                     IN_files
                 )
@@ -161,7 +162,7 @@ class SanityAnalysis(PostBuildAnalysis):
     def acc_table(self, data):
         titles = {
             'tf'   : 'Tensorflow',
-            'ml2tf': 'MATLAB model imported into Tensorflow',
+            # 'ml2tf': 'MATLAB model imported into Tensorflow',
             'ml'   : 'MATLAB'
         }
         sanity_report_figdata = []
