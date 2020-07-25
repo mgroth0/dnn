@@ -75,9 +75,13 @@ class SanityAnalysis(PostBuildAnalysis):
 
     def during_compile(self, eg: DNN_ExperimentGroup):
         data = self.compile_eg(eg)
-        data = self.calc_accs(data)
-        data = self.same_count_cmat(data)
-        self.save(data)
+        accs = self.calc_accs(data)
+        data = self.same_count_cmat(accs)
+        div = self.acc_table(accs)
+        from mlib.proj.struct import Project
+        Project.DOCS_FOLDER.edition_local['results.html'].write(div.getCode(None, None))
+
+        # self.save(data)
 
 
 

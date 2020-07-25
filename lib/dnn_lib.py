@@ -71,6 +71,8 @@ def dnn(
     exp_group = new_eg or last_eg
     if 'COMPILE_TEST_ALL' in mode:
         analyze_exp_group(exp_group)
-        makefigs(exp_group.compile_folder, cfg.fig_backend, overwrite=True)
-    if 'MAKEREPORT' in mode:
-        makereport.makereport()
+
+        # the stuff below is only temporarily commented out
+        # makefigs(exp_group.compile_folder, cfg.fig_backend, overwrite=True)
+    # if 'MAKEREPORT' in mode:
+    #     makereport.makereport()
