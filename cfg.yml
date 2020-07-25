@@ -25,6 +25,8 @@ profiles:
 configs:
   all: &all
 
+    EXPERIMENT_NAME: null
+
   # theres an order and procedure to these
     REGEN_DATA: False
     PIPELINE: SANITY TRAIN VAL REC
@@ -154,6 +156,7 @@ configs:
             arch: ALEX
   sanity_tests: &sanity_tests
         <<: *run_one
+        EXPERIMENT_NAME: sanity
         PIPELINE: SANITY
 #        INTERACT: True # temp
         EXPS:

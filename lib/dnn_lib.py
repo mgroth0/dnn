@@ -38,12 +38,15 @@ def dnn(
             Project.STATE["last_submitted_exp_group_name"] = a
             figs_folder, message = get_figs_folder(a)
             return figs_folder is not None, figs_folder if figs_folder is not None else message
-        new_fig_folder = answer_request.answer_request(
-            Project.STATE["last_submitted_exp_group_name"],
-            "Experiment Name:",
-            check,
-            gui=cfg.GUI
-        )
+        if cfg.EXPERIMENT_NAME is None:
+            new_fig_folder = answer_request.answer_request(
+                Project.STATE["last_submitted_exp_group_name"],
+                "Experiment Name:",
+                check,
+                gui=cfg.GUI
+            )
+        else:
+            new_fig_folder = check(cfg.EXPERIMENT_NAME)[1]
         new_fig_folder = File(new_fig_folder)
         log(f'{new_fig_folder=}')
 
