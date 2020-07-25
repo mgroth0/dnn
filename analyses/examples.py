@@ -19,6 +19,7 @@ class ExampleInput(PerEpochAnalysis):
     def after_fit(self, i, net, nam):
         if i == 0: self._after_thing(net.train_data, nam)
     def during_compile(self, eg):
+        breakpoint()
         experiments = experiments_from_folder(eg.folder)
         random_exp = experiments[0]
         for phase in ['train', 'val']:
