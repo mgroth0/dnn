@@ -20,7 +20,13 @@ class LoadedModel(ModelWrapper):
     def build_net(self):
         import tensorflow as tf
         LRN, PoolHelper = gnet_layer_classes()
-        self.net = tf.keras.models.load_model(self.file, custom_objects={'PoolHelper': PoolHelper, 'LRN': LRN})
+        self.net = tf.keras.models.load_model(
+            self.file,
+            custom_objects={
+                'PoolHelper': PoolHelper,
+                'LRN'       : LRN
+            }
+        )
         if len(self.net.outputs) > 1:
             found = False
             for i, o in enum(self.net.outputs):

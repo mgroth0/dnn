@@ -1,5 +1,4 @@
 from arch.assembled_model import AssembledModel
-from lib.misc.imutil import resampleim
 from mlib.boot.mlog import err
 
 _ALEX_CA = 3
@@ -63,7 +62,13 @@ class ALEX(AssembledModel):
             # from tensorflow import pad, constant
             # used in the original Alexnet
             def f(X):
-                from tensorflow import pad, constant  # getting NameError: name 'pad' is not defined... what if I import here, does it help?
+                # err('')
+                from tensorflow import constant
+
+
+                # getting NameError: name 'pad' is not defined... what if I import here, does it help?
+                from tensorflow import pad as padddddd
+
                 b = X.shape[0]
                 r = X.shape[self.ROW_AXIS]
                 c = X.shape[self.COL_AXIS]
@@ -71,7 +76,7 @@ class ALEX(AssembledModel):
                 half = n // 2
                 square = K.square(X)
                 if self.CI == 0:
-                    extra_channels = pad(
+                    extra_channels = padddddd(
                         square,
                         paddings=constant(
                             [
@@ -83,7 +88,7 @@ class ALEX(AssembledModel):
                         )
                     )
                 elif self.CI == 1:
-                    extra_channels = pad(
+                    extra_channels = padddddd(
                         square,
                         paddings=constant(
                             [
@@ -95,7 +100,7 @@ class ALEX(AssembledModel):
                         )
                     )
                 elif self.CI == 2:
-                    extra_channels = pad(
+                    extra_channels = padddddd(
                         square,
                         paddings=constant(
                             [
@@ -122,7 +127,10 @@ class ALEX(AssembledModel):
                 scale = scale**beta
                 return X / scale
 
-            return Lambda(f, output_shape=lambda input_shape: input_shape, **kwargs)
+
+            lamb = Lambda(f, output_shape=lambda input_shape: input_shape, **kwargs)
+
+            return lamb
 
         def splittensor(axis=1, ratio_split=1, id_split=0, **kwargs):
             def f(X):
@@ -145,7 +153,11 @@ class ALEX(AssembledModel):
                 output_shape = list(input_shape)
                 output_shape[axis] = output_shape[axis] // ratio_split
                 return tuple(output_shape)
-            return Lambda(f, output_shape=lambda input_shape: g(input_shape), **kwargs)
+
+
+            lamb = Lambda(f, output_shape=lambda input_shape: g(input_shape), **kwargs)
+
+            return lamb
 
 
         def _conv(n_filters, k_len, *args, **kwargs):
