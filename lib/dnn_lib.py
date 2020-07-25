@@ -66,6 +66,7 @@ def dnn(
             temp_eg.save_md(cfg)
 
         if cfg.SAVE_DATA:
+            breakpoint()
             new_eg = muscle.pull_data(TEMP_FIGS_FOLDER, cfg, new_fig_folder)
 
     exp_group = new_eg or last_eg
