@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from typing import Optional
 from abc import abstractmethod, ABC
 import numpy as np
@@ -14,7 +16,12 @@ def chain_predict(nets, pp, inputs):
     for im in inputs:
         img = pp.preprocess(im)
         for vs, n in vs_n:
-            vs += n.predict(img)
+            if n.CHANNEL_AXIS == 1:
+                rimg = deepcopy(img)
+                rimg = np.swapaxes(rimg, 0, 2)
+                vs += n.predict(rimg)
+            else:
+                vs += n.predict(img)
     return tuple([vs.mat for vs, n in vs_n])
 
 class ModelWrapper(AbstractAttributes, ABC):
