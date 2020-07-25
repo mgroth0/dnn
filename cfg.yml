@@ -166,9 +166,9 @@ configs:
           -
             <<: *default_exp
             arch: GNET
-          -
-            <<: *default_exp
-            arch: INC
+#          -
+#            <<: *default_exp
+#            arch: INC
 #          -
 #            <<: *default_exp
 #            arch: INC_ORIG

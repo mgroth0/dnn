@@ -1,7 +1,7 @@
 from arch.assembled_model import AssembledModel
 from mlib.boot.mlog import err
 
-_ALEX_CA = 3
+_ALEX_CA = 1
 class ALEX(AssembledModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
