@@ -60,7 +60,7 @@ class SanityAnalysis(PostBuildAnalysis):
 
             for pp_name, pp in listitems(preprocessors(tf_net.hw)):
                 # , r['ml2tf'][pp_name] =
-                r[f'tf'][pp_name] = chain_predict(
+                r[f'tf'][pp_name], = chain_predict(
                     [tf_net],  # ,ml2tf_net
                     pp,
                     IN_files
@@ -127,11 +127,8 @@ class SanityAnalysis(PostBuildAnalysis):
                     top5_score = 0
                     for i in range(len(y_pred)):
                         preds = maxindex(ppdata[i], num=5)
-                        try:
-                            if y_true[i] in preds:
-                                top5_score += 1
-                        except:
-                            breakpoint()
+                        if y_true[i] in preds:
+                            top5_score += 1
                     acc5 = top5_score / len(y_pred)
                     pp = {
                         'acts'  : ppdata,
