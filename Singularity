@@ -13,7 +13,7 @@ From: ubuntu:20.04
     # CONDA_HOME=/matt/miniconda3
 
     echo "CONDA_HOME in singularity runscript is:"$CONDA_HOME
-    ./dnn
+    ./dnn "$@"
     #exec bash
     exec echo "exec in the runscript replaces the current process!"
 

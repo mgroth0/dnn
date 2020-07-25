@@ -21,12 +21,13 @@ class ExampleInput(PerEpochAnalysis):
     def during_compile(self, eg):
         breakpoint()
         experiments = experiments_from_folder(eg.folder)
-        random_exp = experiments[0]
-        for phase in ['train', 'val']:
-            for ex in random_exp.folder[f'{phase}'].safeglob('*.png'):
-                ex.copy_to(
-                    eg.compile_exp_res_folder[f'examples_{phase}/{ex.name_pre_ext}.png']
-                )
+        if len(experiments) > 0: # might be zero if only did sanity test
+            random_exp = experiments[0]
+            for phase in ['train', 'val']:
+                for ex in random_exp.folder[f'{phase}'].safeglob('*.png'):
+                    ex.copy_to(
+                        eg.compile_exp_res_folder[f'examples_{phase}/{ex.name_pre_ext}.png']
+                    )
     def get_report_figdata(self, exp_name, resources_root, database):
         all_examples = []
         for example_im in resources_root.glob('example*/*.png'):
