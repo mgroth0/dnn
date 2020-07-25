@@ -155,6 +155,7 @@ configs:
   sanity_tests: &sanity_tests
         <<: *run_one
         PIPELINE: SANITY
+        INTERACT: True # temp
         EXPS:
           -
             <<: *default_exp
