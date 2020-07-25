@@ -48,6 +48,7 @@ From: ubuntu:20.04
     /matt/miniconda3/bin/conda install gdown -y
 
     apt install unzip -y
+    apt install zip -y # used in pipeline
     cd ..
 
     /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1wauVN6nG3tKv7VifIfRVBL0fj8XfefVa"
