@@ -52,8 +52,8 @@ class SanityAnalysis(PostBuildAnalysis):
                                   File('image_net_map.p').load(), :
                                   ]
                 },
-                'tf'   : {},
-                'ml2tf': {}
+                'tf'   : {}
+                # 'ml2tf': {}
             }
 
             # ml2tf_net = tf_net.from_ML_vers().build()
