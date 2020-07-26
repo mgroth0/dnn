@@ -75,6 +75,7 @@ From: ubuntu:20.04
 
 
     # apt purge nvidia-*
+    apt install software-properties-common -y
     add-apt-repository ppa:graphics-drivers/ppa
     sudo apt install nvidia-435 -y
 
