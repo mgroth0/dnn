@@ -75,12 +75,20 @@ class SanityAnalysis(PostBuildAnalysis):
 
 
     def during_compile(self, eg: DNN_ExperimentGroup):
+        log('about to compile_eg')
         data = self.compile_eg(eg)
+        log('about to calc_accs')
         accs = self.calc_accs(data)
+        log('about to same_count_cmat')
         data = self.same_count_cmat(accs)
+        log('about to acc_table')
         div = self.acc_table(accs)
         from mlib.proj.struct import Project
-        Project.DOCS_FOLDER.edition_local['results.html'].write(div.getCode(None, None))
+        f = Project.DOCS_FOLDER.edition_local['results.html']
+        log(f'writing div to {f}')
+        f.write(div.getCode(None, None))
+        log(f'wrote div! ({f.abspath})')
+        log(f'PROOF: {f.read()}')
 
         # self.save(data)
 
@@ -161,9 +169,9 @@ class SanityAnalysis(PostBuildAnalysis):
     @cell(inputs=calc_accs)
     def acc_table(self, data):
         titles = {
-            'tf'   : 'Tensorflow',
+            'tf': 'Tensorflow',
             # 'ml2tf': 'MATLAB model imported into Tensorflow',
-            'ml'   : 'MATLAB'
+            'ml': 'MATLAB'
         }
         sanity_report_figdata = []
         for be_key in listkeys(titles):
