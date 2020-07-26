@@ -1,7 +1,10 @@
 def setupTensorFlow(FLAGS):
     import os
-    if FLAGS.gpus is not None:
-        os.environ["CUDA_VISIBLE_DEVICES"] = ','.join([c for c in FLAGS.gpus])
+
+    # This was central to how I managed to have multiple parallel jobs each with their own GPU. But I have to temporarily remove it to test if I can get gpus working in open mind at all
+    # if FLAGS.gpus is not None:
+    #     os.environ["CUDA_VISIBLE_DEVICES"] = ','.join([c for c in FLAGS.gpus])
+    #
     import tensorflow as tf
     tf.random.set_seed(22)
     tf.compat.v1.enable_eager_execution()
