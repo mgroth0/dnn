@@ -5,8 +5,10 @@ From: ubuntu:20.04
     echo "The runscript is the containers default runtime command!"
     # home is "/root" and this is the cwd
     cd /matt/mlib
+    git reset --hard #undo chmod so can pull
     git pull
     cd /matt/dnn
+    git reset --hard #undo chmod so can pull
     git pull
     env
     # bash
