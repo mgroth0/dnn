@@ -22,7 +22,7 @@ def chain_predict(nets, pp, inputs):
                 assert rimg.shape == (3, n.HEIGHT_WIDTH, n.HEIGHT_WIDTH)  # TEMP-DEBUG
                 vs += n.predict(rimg)
             else:
-                assert rimg.shape == (n.HEIGHT_WIDTH, n.HEIGHT_WIDTH, 3)  # TEMP-DEBUG
+                assert img.shape == (n.HEIGHT_WIDTH, n.HEIGHT_WIDTH, 3)  # TEMP-DEBUG
                 vs += n.predict(img)
     return tuple([vs.mat for vs, n in vs_n])
 
