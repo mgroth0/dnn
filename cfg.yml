@@ -159,6 +159,7 @@ configs:
         EXPERIMENT_NAME: sanity
         PIPELINE: SANITY
         INTERACT: True # temp
+        RUN_EXPS_IN_SERIAL: True
         EXPS:
           -
             <<: *default_exp
