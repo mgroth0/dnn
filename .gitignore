@@ -5,7 +5,6 @@ human_exps/
 *.simg*
 *.img*
 .vagrant/
-Vagrantfile
 backups/
 docs_local/
 makereport*
