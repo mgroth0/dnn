@@ -16,9 +16,12 @@ From: ubuntu:20.04
 
     cd /matt
 
-    cp _resources/_weights dnn
-    cp _ImageNetTesting dnn
-    cp _data dnn
+    echo copy1
+    cp -r _resources/_weights dnn
+    echo copy2
+    cp -r _ImageNetTesting dnn
+    echo copy3
+    cp -r _data dnn
 
     cd dnn
 
