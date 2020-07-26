@@ -68,4 +68,6 @@ From: ubuntu:20.04
 
     rm -rf __MACOSX # not sure where this comes from
 
+    chmod 777 /matt/dnn
+
     echo "done with post-build"
