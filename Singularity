@@ -69,5 +69,6 @@ From: ubuntu:20.04
     rm -rf __MACOSX # not sure where this comes from
 
     chmod -R 777 /matt/dnn
+    chmod -R 777 /matt/mlib #for pulling
 
     echo "done with post-build"
