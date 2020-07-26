@@ -88,7 +88,9 @@ class SanityAnalysis(PostBuildAnalysis):
         log(f'writing div to {f}')
         f.write(div.getCode(None, None))
         log(f'wrote div! ({f.abspath})')
-        log(f'PROOF: {f.read()}')
+        txt = f.read()
+        # txt = '\n'.join(txt.split('\n')[:])
+        log(f'PROOF: {f.read()[1:50]}') # not doing whole thing bc im getting a weight EOF error
 
         # self.save(data)
 
