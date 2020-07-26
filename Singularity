@@ -77,7 +77,7 @@ From: ubuntu:20.04
     # apt purge nvidia-*
     apt install software-properties-common -y
     add-apt-repository ppa:graphics-drivers/ppa
-    apt install nvidia-435 -y
+    apt install nvidia-430 -y #440 on open mind but I'm not sure if that is only available on centOS
 
 
     echo "done with post-build"
