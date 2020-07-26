@@ -26,6 +26,9 @@ def dnn(
         local=cfg.MUSCLE == 'local'
     )
 
+    if cfg.CLEAR_EG_DATA:
+        Project.DNN_FIGS_FIGS_FOLDER.clear()
+
     if 'JUSTRUN' in mode and cfg.SAVE_DATA:
         TEMP_FIGS_FOLDER.mkdir().clear()
         if 'next_exp_id' not in Project.STATE:

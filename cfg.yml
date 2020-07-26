@@ -25,6 +25,7 @@ profiles:
 configs:
   all: &all
 
+    CLEAR_EG_DATA: True
     EXPERIMENT_NAME: null
 
   # theres an order and procedure to these
