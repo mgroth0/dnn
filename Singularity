@@ -27,17 +27,6 @@ From: ubuntu:20.04
     apt update
     apt full-upgrade -y
     apt autoremove
-
-    # TEMP
-   # apt purge nvidia-*
-    apt install software-properties-common -y
-    add-apt-repository ppa:graphics-drivers/ppa
-    bash
-    apt install nvidia-driver-430 -y #440 on open mind but I'm not sure if that is only available on centOS
-
-
-
-
     apt install curl -y
     apt install libgl1-mesa-glx -y #https://github.com/conda-forge/pygridgen-feedstock/issues/10
     cd /
@@ -88,7 +77,7 @@ From: ubuntu:20.04
     # apt purge nvidia-*
     apt install software-properties-common -y
     add-apt-repository ppa:graphics-drivers/ppa
-    apt install nvidia-430 -y #440 on open mind but I'm not sure if that is only available on centOS
+    apt install nvidia-driver-440 -y #440 is the one used by OpenMind as I write this
 
 
     echo "done with post-build"
