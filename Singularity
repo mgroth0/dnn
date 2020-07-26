@@ -74,7 +74,7 @@ From: ubuntu:20.04
     chmod -R 777 /matt/mlib #for pulling
 
 
-    apt purge nvidia-*
+    # apt purge nvidia-*
     add-apt-repository ppa:graphics-drivers/ppa
     sudo apt install nvidia-435 -y
 
