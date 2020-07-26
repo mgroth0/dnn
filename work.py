@@ -30,7 +30,8 @@ from lib.nn_main import sym_net_main
 from mlib.gpu import mygpus
 FLAGS.mygpus = mygpus()
 FLAGS.cfg_cfg = json.loads(FLAGS.cfg)
-FLAGS.mygpufordata = FLAGS.mygpus[0] + 1 if not isempty(FLAGS.mygpus) else 1
+FLAGS.mygpufordata = 1 # because I am not managing GPUs on OpenMind in the same way
+# FLAGS.mygpufordata = FLAGS.mygpus[0] + 1 if not isempty(FLAGS.mygpus) else 1
 from lib import dnn_data_saving
 dnn_data_saving.root = FLAGS.cfg_cfg['root']
 from lib.nn import nnstate
