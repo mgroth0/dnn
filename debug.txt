@@ -1,0 +1,4 @@
+API mismatch: the client has the version 440.100, but
+NVRM: this kernel module has the version 440.82.  Please
+NVRM: make sure that this kernel module and all NVIDIA driver
+NVRM: components have the same version.

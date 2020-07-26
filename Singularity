@@ -4,12 +4,21 @@ From: ubuntu:20.04
 %runscript
     echo "The runscript is the containers default runtime command!"
     # home is "/root" and this is the cwd
-    cd /matt/mlib
-    git reset --hard #undo chmod so can pull
-    git pull
-    cd /matt/dnn
-    git reset --hard #undo chmod so can pull
-    git pull
+
+    # these are now bound and pulled from outside
+    #cd /matt/mlib
+    #git reset --hard #undo chmod so can pull
+    #git pull
+    #cd /matt/dnn
+    #git reset --hard #undo chmod so can pull
+    #git pull
+
+
+    cp _resources/_weights dnn
+    cp _ImageNetTesting dnn
+    cp _data dnn
+
+
     env
     # bash
     # CONDA_HOME=/matt/miniconda3
@@ -55,29 +64,30 @@ From: ubuntu:20.04
 
     /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1wauVN6nG3tKv7VifIfRVBL0fj8XfefVa"
     unzip _resources.zip
-    mv _resources/_weights dnn
     rm _resources.zip
 
     /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1SWxt9USdj1wB9sPUpV2M26ZEtO5eliyt"
     unzip _ImageNetTesting.zip
-    mv _ImageNetTesting dnn
     rm _ImageNetTesting.zip
 
     /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1bTjuuTz_84yXfYWcORsUfCkc6IuwfI2k"
     unzip _data.zip
-    mv _data dnn
     rm _data.zip
 
     rm -rf __MACOSX # not sure where this comes from
 
-    chmod -R 777 /matt/dnn
-    chmod -R 777 /matt/mlib #for pulling
+    # binding these instead so I can use --nv
+    # chmod -R 777 /matt/dnn
+    # chmod -R 777 /matt/mlib #for pulling
+    rm -rf /matt/dnn
+    rm -rf /matt/mlib
 
 
+    # using --nv instead
     # apt purge nvidia-*
-    apt install software-properties-common -y
-    add-apt-repository ppa:graphics-drivers/ppa
-    apt install nvidia-driver-440 -y #440 is the one used by OpenMind as I write this
+    #apt install software-properties-common -y
+    #add-apt-repository ppa:graphics-drivers/ppa
+    #apt install nvidia-driver-440 -y #440 is the one used by OpenMind as I write this (polestar uses 430.50)
 
 
     echo "done with post-build"
