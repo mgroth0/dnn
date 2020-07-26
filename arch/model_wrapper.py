@@ -19,10 +19,10 @@ def chain_predict(nets, pp, inputs):
             if n.CHANNEL_AXIS == 1:
                 rimg = deepcopy(img)
                 rimg = np.swapaxes(rimg, 0, 2)
-                assert rimg.shape == (3, n.HW, n.HW)  # TEMP-DEBUG
+                assert rimg.shape == (3, n.HEIGHT_WIDTH, n.HEIGHT_WIDTH)  # TEMP-DEBUG
                 vs += n.predict(rimg)
             else:
-                assert rimg.shape == (n.HW, n.HW, 3)  # TEMP-DEBUG
+                assert rimg.shape == (n.HEIGHT_WIDTH, n.HEIGHT_WIDTH, 3)  # TEMP-DEBUG
                 vs += n.predict(img)
     return tuple([vs.mat for vs, n in vs_n])
 
