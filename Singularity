@@ -14,10 +14,13 @@ From: ubuntu:20.04
     #git pull
 
 
+    cd /matt
+
     cp _resources/_weights dnn
     cp _ImageNetTesting dnn
     cp _data dnn
 
+    cd dnn
 
     env
     # bash
