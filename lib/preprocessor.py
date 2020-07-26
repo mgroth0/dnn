@@ -25,7 +25,7 @@ def preprocessors(hw): return {
         subtract_imagenet_means=True
     ),
     'demean_imagenet_crop': Preprocessor(  # recommended in convnets_keras for alexnet
-        resize=256,
+        resize=hw + 29,  # so it becomes recommended 256 for alexnet but also works for other networks
         crop=hw,
         subtract_imagenet_means=True
     )
