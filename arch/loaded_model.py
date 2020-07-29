@@ -1,6 +1,8 @@
 from arch.GNET import gnet_layer_classes
 from arch.model_wrapper import ModelWrapper
 from mlib.boot.lang import enum
+from mlib.boot.mlog import err
+from mlib.file import File
 
 class LoadedModel(ModelWrapper):
     # STATIC = ModelWrapper.STATIC_ATTS(
@@ -11,7 +13,7 @@ class LoadedModel(ModelWrapper):
     def __init__(self, label, file, hw, *args, is_pretrained, **kwargs):
         super().__init__(*args, **kwargs)
         self.ARCH_LABEL = label
-        self.file = file
+        self.file = File(file)
         self.IS_PRETRAINED = is_pretrained
         self.HEIGHT_WIDTH = hw
 
@@ -20,13 +22,16 @@ class LoadedModel(ModelWrapper):
     def build_net(self):
         import tensorflow as tf
         LRN, PoolHelper = gnet_layer_classes()
-        self.net = tf.keras.models.load_model(
-            self.file,
-            custom_objects={
-                'PoolHelper': PoolHelper,
-                'LRN'       : LRN
-            }
-        )
+        if self.file.ext == '.h5':
+            self.net = tf.keras.models.load_model(
+                self.file.abspath,
+                custom_objects={
+                    'PoolHelper': PoolHelper,
+                    'LRN'       : LRN
+                }
+            )
+        else:
+            err('')
         if len(self.net.outputs) > 1:
             found = False
             for i, o in enum(self.net.outputs):

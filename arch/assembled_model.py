@@ -63,7 +63,8 @@ class AssembledModel(ModelWrapper, ABC):
         log('Training... (ims=$,steps=$)', len(self.train_data), steps)
         net_mets.cmat = zeros(
             len(listkeys(nnstate.CURRENT_PRED_MAP)),
-            len(listkeys(nnstate.CURRENT_TRUE_MAP)))
+            len(listkeys(nnstate.CURRENT_TRUE_MAP))
+        )
         rrr = self.net.fit(
             # x,y,
             ds,
