@@ -154,7 +154,7 @@ class ModelWrapper(AbstractAttributes, ABC):
         from arch.loaded_model import LoadedModel
         return LoadedModel(
             self.label.replace('_ORIG', ''),
-            f'_data/darius_pretrained/{self.label.replace("_ORIG", "")}_pretrained.h5',
+            f'_data/darius_pretrained/{self.label.replace("_ORIG", "")}_pretrained.onnx',
             self.hw,
             is_pretrained=True
         )

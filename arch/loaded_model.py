@@ -30,6 +30,9 @@ class LoadedModel(ModelWrapper):
                     'LRN'       : LRN
                 }
             )
+        elif self.file.ext == 'onnx':
+            pass
+        #     onnx-tf convert -i /path/to/input.onnx -o /path/to/output.pb
         else:
             err('')
         if len(self.net.outputs) > 1:
