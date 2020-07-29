@@ -180,7 +180,7 @@ dependencies:
 
   - openh264=2.1.1=hd174df1_0
 
-  - openssl=1.1.1g=h0b31af3_0
+  - openssl=1.1.1g=h0b31af3_1
 
   - packaging=20.4=pyh9f0ad1d_0
 
@@ -275,6 +275,8 @@ dependencies:
   - typing_extensions=3.7.4.2=py_0
 
   - urllib3=1.25.9=py_0
+
+  - websockets=8.1=py38h64e0658_1
 
   - wolframclient=1.1.4=py38h39e3cac_0
 

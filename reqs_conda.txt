@@ -81,7 +81,7 @@ olefile=0.46=py_0
 onnx=1.7.0=py38h8126d8c_2
 opencv=4.3.0=py38_1
 openh264=2.1.1=hd174df1_0
-openssl=1.1.1g=h0b31af3_0
+openssl=1.1.1g=h0b31af3_1
 packaging=20.4=pyh9f0ad1d_0
 pandas=1.0.4=py38h5fc983b_0
 pcre=8.44=h4a8c4bd_0
@@ -129,6 +129,7 @@ tqdm=4.46.1=pyh9f0ad1d_0
 typing-extensions=3.7.4.2=0
 typing_extensions=3.7.4.2=py_0
 urllib3=1.25.9=py_0
+websockets=8.1=py38h64e0658_1
 wolframclient=1.1.4=py38h39e3cac_0
 x264=1!152.20180806=h1de35cc_0
 xz=5.2.5=h0b31af3_0
