@@ -1,5 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass
+from enum import Enum
 
 import json
 import numpy as np
@@ -18,6 +19,13 @@ from mlib.boot.stream import listitems, arr, listmap, __, concat, make3d, zeros,
 from mlib.fig.text_table_wrap import TextTableWrapper
 from mlib.file import File, Folder
 from mlib.web.html import H3, HTML_Pre, Div, Table, TableRow, DataCell
+class SanitySet(Enum):
+    Set100 = Enum.auto()
+    Set50000 = Enum.auto()
+
+SANITY_SET = SanitySet.Set50000
+
+
 class SanityAnalysis(PostBuildAnalysis):
     SHOW_SHADOW = True
 
@@ -55,16 +63,31 @@ class SanityAnalysis(PostBuildAnalysis):
 
             for pp_name, pp in listitems(preprocessors(tf_net.hw)):
                 # , r['ml2tf'][pp_name] =
+                if SANITY_SET != SanitySet.Set100:
+                    IN_files = []
+                    root = Folder('/xboix/data/ImageNet/raw-data/validation')
+                    for subroot in root:
+                        for imgfile in subroot:
+                            IN_files += [imgfile]
                 r[f'tf'][pp_name], = chain_predict(
                     [tf_net],  # ,ml2tf_net
                     pp,
                     IN_files
                 )
+                # else:
+                #     y_pred = V_Stacker()
+                #     root = Folder('/xboix/data/ImageNet/raw-data/validation')
+                #     for subroot in root:
+                #         for imgfile in subroot:
+                #             y_pred += tf_net.net.predict(dset, verbose=1)
+                #     r[f'tf'][pp_name] = y_pred
+                #     if tf_net.OUTPUT_IDX is not None:
+                #         r[f'tf'][pp_name] = r[f'tf'][pp_name][tf_net.OUTPUT_IDX]
 
             for pp_name in ['none', 'divstd_demean', 'unit_scale', 'demean_imagenet', 'DIIL']:
                 r['ml'][pp_name] = Folder('_data/sanity')[tf_net.label][
-                                       f'ImageNetActivations_Darius_{pp_name}.mat'
-                                   ].load()['scoreList']
+                    f'ImageNetActivations_Darius_{pp_name}.mat'
+                ].load()['scoreList']
 
                 # this was for before when darius was using the old order of activations
                 # [
@@ -131,7 +154,12 @@ class SanityAnalysis(PostBuildAnalysis):
     @shadow(ftype=ShadowFigType.PREVIEW)
     @cell(inputs=compile_eg)
     def calc_accs(self, data):
-        y_true = [int(n.split('_')[0]) for n in data['files']]
+        if SANITY_SET == SanitySet.Set100:
+            y_true = [int(n.split('_')[0]) for n in data['files']]
+        else:
+            y_true = []
+            for i in range(1000):
+                y_true.extend([i] * 50)
         data['y_true'] = y_true
         for bekey, bedata in listitems(data):
             if bekey in ['files', 'dest', 'y_true']: continue
@@ -202,7 +230,7 @@ class SanityAnalysis(PostBuildAnalysis):
             )))]
             if be_key == 'ml2tf':
                 sanity_report_figdata += ['* Darius has uploaded new models that have not yet been tested']
-        sanity_report_figdata += [H3('ImageNet Resuts from Literature')]
+        sanity_report_figdata += [H3('ImageNet Results from Literature')]
         sanity_report_figdata += [HTML_Pre(str(TextTableWrapper(
             data=[
                 ['Arch', 'lit'],
