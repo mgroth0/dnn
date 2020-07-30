@@ -18,7 +18,10 @@ def chain_predict(nets, pp, inputs):
         for vs, n in vs_n:
             if n.CHANNEL_AXIS == 1:
                 rimg = deepcopy(img)
-                rimg = np.swapaxes(rimg, 0, 2)
+                try:
+                    rimg = np.swapaxes(rimg, 0, 2)
+                except:
+                    breakpoint()
                 vs += n.predict(rimg)
             else:
                 vs += n.predict(img)
