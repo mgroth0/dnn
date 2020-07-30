@@ -64,9 +64,12 @@ class SanityAnalysis(PostBuildAnalysis):
             for pp_name in ['none', 'divstd_demean', 'unit_scale', 'demean_imagenet', 'DIIL']:
                 r['ml'][pp_name] = Folder('_data/sanity')[tf_net.label][
                                        f'ImageNetActivations_Darius_{pp_name}.mat'
-                                   ].load()['scoreList'][
-                                   File('image_net_map.p').load(), :
-                                   ]
+                                   ].load()['scoreList']
+
+                # this was for before when darius was using the old order of activations
+                # [
+                #                    File('image_net_map.p').load(), :
+                #                    ]
 
             save_dnn_data(
                 data=r,
