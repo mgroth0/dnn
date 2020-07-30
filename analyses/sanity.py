@@ -1,6 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, auto
 
 import json
 import numpy as np
@@ -20,8 +20,8 @@ from mlib.fig.text_table_wrap import TextTableWrapper
 from mlib.file import File, Folder
 from mlib.web.html import H3, HTML_Pre, Div, Table, TableRow, DataCell
 class SanitySet(Enum):
-    Set100 = Enum.auto()
-    Set50000 = Enum.auto()
+    Set100 = auto()
+    Set50000 = auto()
 
 SANITY_SET = SanitySet.Set50000
 
