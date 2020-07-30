@@ -64,6 +64,7 @@ class ModelWrapper(AbstractAttributes, ABC):
     @abstractmethod
     def build_net(self): pass
 
+    @log_invokation
     def build(self):
         self.build_net()
         assert isinstance(self.net, self.tf.keras.Model)
@@ -122,7 +123,7 @@ class ModelWrapper(AbstractAttributes, ABC):
             self.net.save(f'{model_save_file}.h5')
             log('saved model')
         except TypeError:
-            warn(f'cloud not save model due to tf bug')
+            warn(f'could not save model due to tf bug')
             File(model_save_file).deleteIfExists()
             File(f'{model_save_file}.h5').deleteIfExists()
 
