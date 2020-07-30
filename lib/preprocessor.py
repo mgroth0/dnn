@@ -52,7 +52,10 @@ class Preprocessor:
         assert self.channel_axis == 3
         assert self.nchan == 3
 
-        if len(im.shape) == 3:
+        if len(im.shape) == 2:
+            im = np.stack((im, im, im), axis=2)
+            return self._preprocess_im(im)
+        elif len(im.shape) == 3:
             return self._preprocess_im(im)
         elif len(im.shape) == 4:
             return arr([self._preprocess_im(i) for i in im])
