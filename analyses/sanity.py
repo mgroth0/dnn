@@ -46,12 +46,7 @@ class SanityAnalysis(PostBuildAnalysis):
 
             r = {
                 'files': IN_files.map(__.name),
-                'ml'   : {
-                    'zerocenter': Folder('_data/sanity')[tf_net.label]['ImageNetActivations_Darius.mat'].load()[
-                                      'scoreList'][
-                                  File('image_net_map.p').load(), :
-                                  ]
-                },
+                'ml'   : {},
                 'tf'   : {}
                 # 'ml2tf': {}
             }
@@ -65,6 +60,13 @@ class SanityAnalysis(PostBuildAnalysis):
                     pp,
                     IN_files
                 )
+
+            for pp_name in ['none', 'divstd_demean', 'unit_scale', 'demean_imagenet', 'DIIL']:
+                r['ml'][pp_name] = Folder('_data/sanity')[tf_net.label][
+                                       f'ImageNetActivations_Darius_{pp_name}.mat'
+                                   ].load()['scoreList'][
+                                   File('image_net_map.p').load(), :
+                                   ]
 
             save_dnn_data(
                 data=r,
@@ -90,7 +92,7 @@ class SanityAnalysis(PostBuildAnalysis):
         log(f'wrote div! ({f.abspath})')
         txt = f.read()
         # txt = '\n'.join(txt.split('\n')[:])
-        log(f'PROOF: {f.read()[1:50]}') # not doing whole thing bc im getting a weight EOF error
+        log(f'PROOF: {f.read()[1:50]}')  # not doing whole thing bc im getting a weight EOF error
 
         # self.save(data)
 
@@ -155,7 +157,8 @@ class SanityAnalysis(PostBuildAnalysis):
         'unit_scale'          : '2',
         'demean_imagenet'     : '3',
         'zerocenter'          : '4',
-        'demean_imagenet_crop': '5'
+        'demean_imagenet_crop': '5',
+        'DIIL'                : '6'
     }
     bedict = {
         'tf'   : 'T',
