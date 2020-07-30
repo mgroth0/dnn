@@ -64,12 +64,13 @@ class SanityAnalysis(PostBuildAnalysis):
             for pp_name, pp in listitems(preprocessors(tf_net.hw)):
                 # , r['ml2tf'][pp_name] =
                 if SANITY_SET != SanitySet.Set100:
-                    IN_files = []
-                    root = Folder('/xboix/data/ImageNet/raw-data/validation')
-                    for subroot in root:
-                        # if subroot.isdir:
-                        for imgfile in Folder(subroot):
-                            IN_files += [imgfile]
+                    def input_files():
+                        root = Folder('/xboix/data/ImageNet/raw-data/validation')
+                        for subroot in root:
+                            # if subroot.isdir:
+                            for imgfile in Folder(subroot):
+                                yield imgfile
+                    IN_files = input_files()
                 r[f'tf'][pp_name], = chain_predict(
                     [tf_net],  # ,ml2tf_net
                     pp,
