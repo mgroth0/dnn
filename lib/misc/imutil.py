@@ -40,7 +40,10 @@ def resampleim(im, heigh, width, nchan=1):
     # data= np.array(data)
 
     # log('resampleim3.5',silent=True)
-    imA.shape = (heigh, width, nchan)
+    try:
+        imA.shape = (heigh, width, nchan)
+    except:
+        breakpoint()
     # log('resampleim3.6',silent=True)
     # np.reshape(data,(heigh,width,1))
     return imA
