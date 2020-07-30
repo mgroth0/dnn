@@ -67,8 +67,9 @@ class SanityAnalysis(PostBuildAnalysis):
                     IN_files = []
                     root = Folder('/xboix/data/ImageNet/raw-data/validation')
                     for subroot in root:
-                        for imgfile in subroot:
-                            IN_files += [imgfile]
+                        if subroot.isdir:
+                            for imgfile in subroot:
+                                IN_files += [imgfile]
                 r[f'tf'][pp_name], = chain_predict(
                     [tf_net],  # ,ml2tf_net
                     pp,
