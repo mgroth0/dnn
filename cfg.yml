@@ -159,6 +159,7 @@ configs:
         <<: *run_one
         EXPERIMENT_NAME: sanity
         PIPELINE: SANITY
+        INTERACT: true
         EXPS:
           -
             <<: *default_exp
