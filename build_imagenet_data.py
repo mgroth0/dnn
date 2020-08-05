@@ -87,6 +87,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from dataclasses import dataclass
+
 from datetime import datetime
 import os
 import random
@@ -97,6 +99,20 @@ import numpy as np
 import six
 import tensorflow as tf
 
+@dataclass
+class Opt:
+    output_directory: str = '/om5/user/mjgroth/data/ImageNet/output'
+    num_threads: int = 16
+    half_split: bool = False
+    init_half_split: int = None
+    labels_file: str = '/om5/user/xboix/data/ImageNet/imagenet_lsvrc_2015_synsets.txt'
+    train_shards: int = 1024
+    validation_shards: int = 1024
+    imagenet_metadata_file: str = '/om5/user/xboix/data/ImageNet/imagenet_metadata.txt'
+    bounding_box_file: str = '/om5/user/xboix/data/ImageNet/raw-data/imagenet_2012_bounding_boxes.csv'
+    train_directory: str = '/om5/user/xboix/data/ImageNet/raw-data/train'
+    train_shards: int = 1024
+    validation_directory: str = '/om5/user/xboix/data/ImageNet/raw-data/validation'
 
 
 
@@ -702,3 +718,5 @@ def run(opt):
     _process_dataset(opt, 'validation', opt.validation_directory,
                      opt.validation_shards, synset_to_human, image_to_bboxes)
 
+if __name__ == '__main__':
+    run(Opt())
