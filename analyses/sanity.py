@@ -5,8 +5,9 @@ from enum import Enum, auto
 import json
 import numpy as np
 import scipy
-
+import tensorflow as tf
 from arch.model_wrapper import ModelWrapper, chain_predict
+from build_imagenet_data import ImageCoder
 from lib.dnn_analyses import PostBuildAnalysis
 from lib.dnn_data_saving import save_dnn_data
 from lib.dnn_proj_struct import DNN_ExperimentGroup, experiments_from_folder
@@ -15,7 +16,7 @@ from lib.preprocessor import preprocessors
 from mlib.analyses import cell, CellInput, shadow, ShadowFigType
 from mlib.boot import log
 from mlib.boot.lang import enum, isstr, listkeys, isint
-from mlib.boot.stream import listitems, arr, listmap, __, concat, make3d, zeros, maxindex, ints, isnan, nans
+from mlib.boot.stream import listitems, arr, listmap, __, concat, make3d, zeros, maxindex, ints, isnan, nans, V_Stacker
 from mlib.fig.text_table_wrap import TextTableWrapper
 from mlib.file import File, Folder
 from mlib.web.html import H3, HTML_Pre, Div, Table, TableRow, DataCell
@@ -65,11 +66,44 @@ class SanityAnalysis(PostBuildAnalysis):
                 # , r['ml2tf'][pp_name] =
                 if SANITY_SET != SanitySet.Set100:
                     def input_files():
-                        root = Folder('/xboix/data/ImageNet/raw-data/validation')
-                        for subroot in root:
+
+                        root = Folder('/matt/data/ImageNet/output')
+                        filenames = root.glob('validation*').tolist()
+                        ds = tf.data.TFRecordDataset(filenames)
+
+                        # root = Folder('/xboix/data/ImageNet/raw-data/validation')
+                        # for subroot in root:
                             # if subroot.isdir:
-                            for imgfile in Folder(subroot):
-                                yield imgfile
+                            # for imgfile in Folder(subroot):
+                            #     yield imgfile
+
+                        image_feature_description = {
+                            'image/height'           : tf.io.FixedLenFeature([], tf.int64),
+                            'image/width'            : tf.io.FixedLenFeature([], tf.int64),
+                            'image/colorspace'       : tf.io.FixedLenFeature([], tf.string),
+                            'image/channels'         : tf.io.FixedLenFeature([], tf.int64),
+                            'image/class/label'      : tf.io.FixedLenFeature([], tf.int64),
+                            'image/class/synset'     : tf.io.FixedLenFeature([], tf.string),
+                            'image/class/text'       : tf.io.FixedLenFeature([], tf.string),
+                            'image/object/bbox/xmin' : tf.io.FixedLenFeature([], tf.float32),
+                            'image/object/bbox/xmax' : tf.io.FixedLenFeature([], tf.float32),
+                            'image/object/bbox/ymin' : tf.io.FixedLenFeature([], tf.float32),
+                            'image/object/bbox/ymax' : tf.io.FixedLenFeature([], tf.float32),
+                            'image/object/bbox/label': tf.io.FixedLenFeature([], tf.int64),
+                            'image/format'           : tf.io.FixedLenFeature([], tf.string),
+                            'image/filename'         : tf.io.FixedLenFeature([], tf.string),
+                            'image/encoded'          : tf.io.FixedLenFeature([], tf.string),
+                        }
+
+                        for raw_record in ds:
+                            # if subroot.isdir:
+                            # for imgfile in Folder(subroot):]
+                            # parsed = tf.io.parse_single_example(example_proto, feature_description)
+                            # example = tf.train.Example()
+                            example = tf.io.parse_single_example(raw_record, image_feature_description)
+                            # example.ParseFromString(raw_record.numpy())
+                            yield tf.image.decode_jpeg(example['image/encoded'],channels=3)
+                            # yield example['image/encoded']
                     IN_files = input_files()
                 r[f'tf'][pp_name], = chain_predict(
                     [tf_net],  # ,ml2tf_net
@@ -78,8 +112,11 @@ class SanityAnalysis(PostBuildAnalysis):
                 )
                 # else:
                 #     y_pred = V_Stacker()
-                #     root = Folder('/xboix/data/ImageNet/raw-data/validation')
-                #     for subroot in root:
+                #     # root = Folder('/xboix/data/ImageNet/raw-data/validation')
+                #     root = Folder('/matt/data/ImageNet/output')
+                #     filenames = root.glob('validation*').tolist()
+                #     ds = tf.data.TFRecordDataset(filenames)
+                # #     for subroot in root:
                 #         for imgfile in subroot:
                 #             y_pred += tf_net.net.predict(dset, verbose=1)
                 #     r[f'tf'][pp_name] = y_pred

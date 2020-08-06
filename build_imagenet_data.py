@@ -1,3 +1,5 @@
+# started 11:05
+
 #!/usr/bin/python
 # Copyright 2016 Google Inc. All Rights Reserved.
 #
@@ -41,7 +43,7 @@ a sharded data set consisting of 1024 and 128 TFRecord files, respectively.
 
 and
 
-  validation_directory/validatio n-00000-of-00128
+  validation_directory/validation-00000-of-00128
   validation_directory/validation-00001-of-00128
   ...
   validation_directory/validation-00127-of-00128
@@ -98,7 +100,6 @@ import six
 import tensorflow as tf
 tf.compat.v1.disable_eager_execution()  # so tf.placeholder works
 
-# started 8:28 pm
 
 # @dataclass
 class Opt:
@@ -187,6 +188,7 @@ def _convert_to_example(filename, image_buffer, label, synset, human, bbox,
         'image/format'           : _bytes_feature(image_format),
         'image/filename'         : _bytes_feature(os.path.basename(filename)),
         'image/encoded'          : _bytes_feature(image_buffer)}))
+
     return example
 
 
