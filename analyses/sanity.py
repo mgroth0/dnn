@@ -66,16 +66,15 @@ class SanityAnalysis(PostBuildAnalysis):
                 # , r['ml2tf'][pp_name] =
                 if SANITY_SET != SanitySet.Set100:
                     def input_files():
-
                         root = Folder('/matt/data/ImageNet/output')
                         filenames = root.glob('validation*').map(lambda f: f.abspath).tolist()
                         ds = tf.data.TFRecordDataset(filenames)
 
                         # root = Folder('/xboix/data/ImageNet/raw-data/validation')
                         # for subroot in root:
-                            # if subroot.isdir:
-                            # for imgfile in Folder(subroot):
-                            #     yield imgfile
+                        # if subroot.isdir:
+                        # for imgfile in Folder(subroot):
+                        #     yield imgfile
 
                         image_feature_description = {
                             'image/height'           : tf.io.FixedLenFeature([], tf.int64),
@@ -103,7 +102,7 @@ class SanityAnalysis(PostBuildAnalysis):
                             # example = tf.train.Example()
                             example = tf.io.parse_single_example(raw_record, image_feature_description)
                             # example.ParseFromString(raw_record.numpy())
-                            yield tf.image.decode_jpeg(example['image/encoded'],channels=3)
+                            yield tf.image.decode_jpeg(example['image/encoded'], channels=3)
                             # yield example['image/encoded']
                     IN_files = input_files()
                 r[f'tf'][pp_name], = chain_predict(
