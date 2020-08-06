@@ -68,7 +68,7 @@ class SanityAnalysis(PostBuildAnalysis):
                     def input_files():
 
                         root = Folder('/matt/data/ImageNet/output')
-                        filenames = root.glob('validation*').tolist()
+                        filenames = root.glob('validation*').map(lambda f: f.abspath).tolist()
                         ds = tf.data.TFRecordDataset(filenames)
 
                         # root = Folder('/xboix/data/ImageNet/raw-data/validation')
