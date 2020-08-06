@@ -95,6 +95,7 @@ class SanityAnalysis(PostBuildAnalysis):
                             'image/encoded'          : tf.io.FixedLenFeature([], tf.string),
                         }
 
+                        breakpoint()
                         for raw_record in ds:
                             # if subroot.isdir:
                             # for imgfile in Folder(subroot):]
