@@ -87,7 +87,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-
 from datetime import datetime
 import os
 import random
@@ -97,6 +96,9 @@ import threading
 import numpy as np
 import six
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()  # so tf.placeholder works
+
+# started 8:28 pm
 
 # @dataclass
 class Opt:
