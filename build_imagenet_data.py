@@ -99,7 +99,7 @@ import numpy as np
 import six
 import tensorflow as tf
 
-@dataclass
+# @dataclass
 class Opt:
     output_directory: str = '/om5/user/mjgroth/data/ImageNet/output'
     num_threads: int = 16
@@ -111,7 +111,7 @@ class Opt:
     imagenet_metadata_file: str = '/om5/user/xboix/data/ImageNet/imagenet_metadata.txt'
     bounding_box_file: str = '/om5/user/xboix/data/ImageNet/raw-data/imagenet_2012_bounding_boxes.csv'
     train_directory: str = '/om5/user/xboix/data/ImageNet/raw-data/train'
-    train_shards: int = 1024
+    # train_shards: int = 1024
     validation_directory: str = '/om5/user/xboix/data/ImageNet/raw-data/validation'
 
 
