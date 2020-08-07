@@ -30,9 +30,9 @@ def simple_predict(net,pp,inputs,*,length):
                         rimg = np.swapaxes(rimg, 0, 2)
                     except:
                         breakpoint()
-                    yield rimg,
+                    yield np.expand_dims(rimg, axis=3),
                 else:
-                    yield img,
+                    yield np.expand_dims(img, axis=3),
     return net.predict(Gen())
 
 def chain_predict(nets, pp, inputs):
