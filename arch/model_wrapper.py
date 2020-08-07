@@ -214,9 +214,9 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
                 # breakpoint()
 
 
-    strategy = tf.distribute.MirroredStrategy()
-    with strategy.scope():
-        return net.predict(Gen(), verbose=0)  # use_multiprocessing=False, workers=16
+    # strategy = tf.distribute.MirroredStrategy()
+    # with strategy.scope():
+    return net.predict(Gen(), verbose=0)  # use_multiprocessing=False, workers=16
 
 def chain_predict(nets, pp, inputs):
     vs_n = [(V_Stacker(), n) for n in nets]
