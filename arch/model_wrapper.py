@@ -173,7 +173,7 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
                 else:
                     # prog.tick()
                     r = np.expand_dims(img, axis=0),
-                if i % 100 == 0:
+                if i % 100 == 0 or i > 49000:
                     log(f'finished {i} out of {len(self)}')
                     # STATUS_FILE.write(dict(
                     #     finished=i,
