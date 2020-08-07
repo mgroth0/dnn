@@ -12,7 +12,7 @@ from mlib.boot.stream import V_Stacker
 from mlib.file import Folder, File
 from mlib.term import log_invokation
 import tensorflow as tf
-def simple_predict(net,pp,inputs):
+def simple_predict(net,pp,inputs,*,length):
     # vs_n = [(V_Stacker(), n) for n in nets]
     class Gen(tf.keras.utils.Sequence):
         def __init__(self):
@@ -20,7 +20,7 @@ def simple_predict(net,pp,inputs):
         def __getitem__(self, index):
             return next(self.g)
         def __len__(self):
-            return len(inputs)
+            return length
         def gen(self):
             for im in inputs:
                 img = pp.preprocess(im)

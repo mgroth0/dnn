@@ -65,27 +65,27 @@ class SanityAnalysis(PostBuildAnalysis):
             for pp_name, pp in listitems(preprocessors(tf_net.hw)):
                 # , r['ml2tf'][pp_name] =
                 if SANITY_SET != SanitySet.Set100:
+                    root = Folder('/matt/data/ImageNet/output')
+                    filenames = root.glob('validation*').map(lambda f: f.abspath).tolist()
                     def input_files():
-                        root = Folder('/matt/data/ImageNet/output')
-                        filenames = root.glob('validation*').map(lambda f: f.abspath).tolist()
                         ds = tf.data.TFRecordDataset(filenames)
 
                         image_feature_description = {
-                            'image/height'           : tf.io.FixedLenFeature([], tf.int64),
-                            'image/width'            : tf.io.FixedLenFeature([], tf.int64),
-                            'image/colorspace'       : tf.io.FixedLenFeature([], tf.string),
-                            'image/channels'         : tf.io.FixedLenFeature([], tf.int64),
-                            'image/class/label'      : tf.io.FixedLenFeature([], tf.int64),
-                            'image/class/synset'     : tf.io.FixedLenFeature([], tf.string),
-                            'image/class/text'       : tf.io.FixedLenFeature([], tf.string),
+                            'image/height'      : tf.io.FixedLenFeature([], tf.int64),
+                            'image/width'       : tf.io.FixedLenFeature([], tf.int64),
+                            'image/colorspace'  : tf.io.FixedLenFeature([], tf.string),
+                            'image/channels'    : tf.io.FixedLenFeature([], tf.int64),
+                            'image/class/label' : tf.io.FixedLenFeature([], tf.int64),
+                            'image/class/synset': tf.io.FixedLenFeature([], tf.string),
+                            'image/class/text'  : tf.io.FixedLenFeature([], tf.string),
                             # 'image/object/bbox/xmin' : tf.io.FixedLenFeature([], tf.float32),
                             # 'image/object/bbox/xmax' : tf.io.FixedLenFeature([], tf.float32),
                             # 'image/object/bbox/ymin' : tf.io.FixedLenFeature([], tf.float32),
                             # 'image/object/bbox/ymax' : tf.io.FixedLenFeature([], tf.float32),
                             # 'image/object/bbox/label': tf.io.FixedLenFeature([], tf.int64),
-                            'image/format'           : tf.io.FixedLenFeature([], tf.string),
-                            'image/filename'         : tf.io.FixedLenFeature([], tf.string),
-                            'image/encoded'          : tf.io.FixedLenFeature([], tf.string),
+                            'image/format'      : tf.io.FixedLenFeature([], tf.string),
+                            'image/filename'    : tf.io.FixedLenFeature([], tf.string),
+                            'image/encoded'     : tf.io.FixedLenFeature([], tf.string),
                         }
                         for raw_record in ds:
                             example = tf.io.parse_single_example(raw_record, image_feature_description)
@@ -94,7 +94,8 @@ class SanityAnalysis(PostBuildAnalysis):
                 r[f'tf'][pp_name], = simple_predict(
                     tf_net,  # ,ml2tf_net
                     pp,
-                    IN_files
+                    IN_files,
+                    length=50000
                 )
                 # else:
                 #     y_pred = V_Stacker()
