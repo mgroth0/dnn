@@ -168,7 +168,7 @@ class ModelWrapper(AbstractAttributes, ABC):
 
 
     def predict(self, inputs) -> np.array:
-        if not isinstance(inputs, types.GeneratorType):
+        if not isinstance(inputs, types.GeneratorType) and not isinstance(inputs,tf.keras.utils.Sequence):
             if len(inputs.shape) == 3:
                 inputs = np.expand_dims(inputs, axis=0)
         y_pred = self.net.predict(
