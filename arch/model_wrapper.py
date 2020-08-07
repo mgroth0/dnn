@@ -181,6 +181,8 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
             t.tic()
             t.toc(1)
             for i, im in enum(inputs):
+                if i == 0:
+                    log('generating first input...')
                 t.toc(2)
                 img = pp.preprocess(im)
                 t.toc(3)
