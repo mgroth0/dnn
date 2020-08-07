@@ -30,10 +30,8 @@ def simple_predict(net,pp,inputs,*,length):
                         rimg = np.swapaxes(rimg, 0, 2)
                     except:
                         breakpoint()
-                    log('yeilding')
                     yield np.expand_dims(rimg, axis=0),
                 else:
-                    log('yeilding')
                     yield np.expand_dims(img, axis=0),
     return net.predict(Gen())
 
