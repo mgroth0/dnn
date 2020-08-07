@@ -192,7 +192,7 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
                 yield r
                 log('simple_predict_10')
                 breakpoint()
-    return net.predict(Gen(), verbose=0)
+    return net.predict(Gen(), verbose=2)
 
 def chain_predict(nets, pp, inputs):
     vs_n = [(V_Stacker(), n) for n in nets]
