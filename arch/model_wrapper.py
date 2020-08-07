@@ -161,26 +161,37 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
             # with Progress(len(self)) as prog:
             # STATUS_FILE = File('status.json')
             # log(f'{len(inputs)=}')
+            log('simple_predict_1')
             for i, im in enum(inputs):
+                log('simple_predict_2')
                 img = pp.preprocess(im)
+                log('simple_predict_3')
                 if net.CHANNEL_AXIS == 1:
                     rimg = deepcopy(img)
+                    log('simple_predict_4')
                     try:
                         rimg = np.swapaxes(rimg, 0, 2)
+                        log('simple_predict_5')
                     except:
                         breakpoint()
                     # prog.tick()
                     r = np.expand_dims(rimg, axis=0),
+                    log('simple_predict_6')
                 else:
                     # prog.tick()
                     r = np.expand_dims(img, axis=0),
+                    log('simple_predict_7')
                 if i % 100 == 0 or i > 49000:
                     log(f'finished {i} out of {len(self)}')
+                    log('simple_predict_8')
                     # STATUS_FILE.write(dict(
                     #     finished=i,
                     #     total=len(self)
                     # ))
+                log('simple_predict_9')
                 yield r
+                log('simple_predict_10')
+                breakpoint()
     return net.predict(Gen(), verbose=0)
 
 def chain_predict(nets, pp, inputs):
