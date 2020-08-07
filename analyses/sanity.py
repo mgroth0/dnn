@@ -7,7 +7,7 @@ import numpy as np
 import scipy
 import tensorflow as tf
 
-from arch.model_wrapper import ModelWrapper, chain_predict
+from arch.model_wrapper import ModelWrapper, chain_predict, simple_predict
 from lib.dnn_analyses import PostBuildAnalysis
 from lib.dnn_data_saving import save_dnn_data
 from lib.dnn_proj_struct import DNN_ExperimentGroup, experiments_from_folder
@@ -70,12 +70,6 @@ class SanityAnalysis(PostBuildAnalysis):
                         filenames = root.glob('validation*').map(lambda f: f.abspath).tolist()
                         ds = tf.data.TFRecordDataset(filenames)
 
-                        # root = Folder('/xboix/data/ImageNet/raw-data/validation')
-                        # for subroot in root:
-                        # if subroot.isdir:
-                        # for imgfile in Folder(subroot):
-                        #     yield imgfile
-
                         image_feature_description = {
                             'image/height'           : tf.io.FixedLenFeature([], tf.int64),
                             'image/width'            : tf.io.FixedLenFeature([], tf.int64),
@@ -93,20 +87,12 @@ class SanityAnalysis(PostBuildAnalysis):
                             'image/filename'         : tf.io.FixedLenFeature([], tf.string),
                             'image/encoded'          : tf.io.FixedLenFeature([], tf.string),
                         }
-
-                        # breakpoint()
                         for raw_record in ds:
-                            # if subroot.isdir:
-                            # for imgfile in Folder(subroot):]
-                            # parsed = tf.io.parse_single_example(example_proto, feature_description)
-                            # example = tf.train.Example()
                             example = tf.io.parse_single_example(raw_record, image_feature_description)
-                            # example.ParseFromString(raw_record.numpy())
                             yield tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                            # yield example['image/encoded']
                     IN_files = input_files()
-                r[f'tf'][pp_name], = chain_predict(
-                    [tf_net],  # ,ml2tf_net
+                r[f'tf'][pp_name], = simple_predict(
+                    tf_net,  # ,ml2tf_net
                     pp,
                     IN_files
                 )

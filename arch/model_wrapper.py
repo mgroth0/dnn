@@ -1,4 +1,5 @@
 from copy import deepcopy
+import types
 
 from typing import Optional
 from abc import abstractmethod, ABC
@@ -11,8 +12,29 @@ from mlib.boot.stream import V_Stacker
 from mlib.file import Folder, File
 from mlib.term import log_invokation
 
+def simple_predict(net,pp,inputs):
+    # vs_n = [(V_Stacker(), n) for n in nets]
+    def gen():
+        for im in inputs:
+            img = pp.preprocess(im)
+            # for vs, n in vs_n:
+            if net.CHANNEL_AXIS == 1:
+                rimg = deepcopy(img)
+                try:
+                    rimg = np.swapaxes(rimg, 0, 2)
+                except:
+                    breakpoint()
+                yield rimg
+                # vs += net.predict(rimg)
+            else:
+                yield img
+                # vs += net.predict(img)
+    # return tuple([vs.mat for vs, n in vs_n])
+    return net.predict(gen())
+
 def chain_predict(nets, pp, inputs):
     vs_n = [(V_Stacker(), n) for n in nets]
+    # def gen():
     for im in inputs:
         img = pp.preprocess(im)
         for vs, n in vs_n:
@@ -22,10 +44,13 @@ def chain_predict(nets, pp, inputs):
                     rimg = np.swapaxes(rimg, 0, 2)
                 except:
                     breakpoint()
+                yield rimg
                 vs += n.predict(rimg)
             else:
+                yield img
                 vs += n.predict(img)
     return tuple([vs.mat for vs, n in vs_n])
+    # return
 
 class ModelWrapper(AbstractAttributes, ABC):
     IMAGE_NET_FOLD = Folder('_ImageNetTesting')
@@ -140,8 +165,9 @@ class ModelWrapper(AbstractAttributes, ABC):
 
 
     def predict(self, inputs) -> np.array:
-        if len(inputs.shape) == 3:
-            inputs = np.expand_dims(inputs, axis=0)
+        if not isinstance(inputs, types.GeneratorType):
+            if len(inputs.shape) == 3:
+                inputs = np.expand_dims(inputs, axis=0)
         y_pred = self.net.predict(
             inputs, verbose=1,
         )
