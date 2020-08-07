@@ -24,10 +24,10 @@ def simple_predict(net,pp,inputs):
                     rimg = np.swapaxes(rimg, 0, 2)
                 except:
                     breakpoint()
-                yield rimg
+                yield rimg,
                 # vs += net.predict(rimg)
             else:
-                yield img
+                yield img,
                 # vs += net.predict(img)
     # return tuple([vs.mat for vs, n in vs_n])
     return net.predict(gen())
