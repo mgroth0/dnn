@@ -160,7 +160,7 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
         def gen(self):
             # with Progress(len(self)) as prog:
             # STATUS_FILE = File('status.json')
-            log(f'{len(inputs)=}')
+            # log(f'{len(inputs)=}')
             for i, im in enum(inputs):
                 img = pp.preprocess(im)
                 if net.CHANNEL_AXIS == 1:
