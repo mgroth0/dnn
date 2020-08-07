@@ -130,12 +130,12 @@ class ModelWrapper(AbstractAttributes, ABC):
     def label(self): return self.ARCH_LABEL
 
 
-    def predict(self, inputs, verbose=1) -> np.array:
+    def predict(self, inputs, verbose=1, **kwargs) -> np.array:
         if not isinstance(inputs, types.GeneratorType) and not isinstance(inputs, tf.keras.utils.Sequence):
             if len(inputs.shape) == 3:
                 inputs = np.expand_dims(inputs, axis=0)
         y_pred = self.net.predict(
-            inputs, verbose=verbose,
+            inputs, verbose=verbose, **kwargs
         )
         if self.OUTPUT_IDX is not None:
             y_pred = y_pred[self.OUTPUT_IDX]
@@ -158,11 +158,13 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
         def __init__(self, name):
             self._tic = None
             self.name = name
+            self.disabled = False
         def tic(self):
-            self._tic = time.monotonic_ns()
+            if not self.disabled: self._tic = time.monotonic_ns()
         def toc(self, n):
-            t = time.monotonic_ns() - self._tic
-            log(f'{self.name}\t{n}\t{t}')
+            if not self.disabled:
+                t = time.monotonic_ns() - self._tic
+                log(f'{self.name}\t{n}\t{t}')
     class Gen(tf.keras.utils.Sequence):
         def __init__(self):
             self.g = self.gen()
@@ -175,6 +177,7 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
             # STATUS_FILE = File('status.json')
             # log(f'{len(inputs)=}')
             t = Timer('simple_predict')
+            t.disabled = True
             t.tic()
             t.toc(1)
             for i, im in enum(inputs):
@@ -206,8 +209,8 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
                 t.toc(9)
                 yield r
                 t.toc(10)
-                breakpoint()
-    return net.predict(Gen(), verbose=2)
+                # breakpoint()
+    return net.predict(Gen(), verbose=0, use_multiprocessing=True, workers=16)
 
 def chain_predict(nets, pp, inputs):
     vs_n = [(V_Stacker(), n) for n in nets]
