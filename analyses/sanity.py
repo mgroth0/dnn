@@ -91,7 +91,7 @@ class SanityAnalysis(PostBuildAnalysis):
                             example = tf.io.parse_single_example(raw_record, image_feature_description)
                             yield tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
                     IN_files = input_files()
-                r[f'tf'][pp_name], = simple_predict(
+                r[f'tf'][pp_name] = simple_predict(
                     tf_net,  # ,ml2tf_net
                     pp,
                     IN_files,
