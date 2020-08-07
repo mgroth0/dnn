@@ -11,26 +11,29 @@ from mlib.boot.mlog import err, log, warn
 from mlib.boot.stream import V_Stacker
 from mlib.file import Folder, File
 from mlib.term import log_invokation
-
+import tensorflow as tf
 def simple_predict(net,pp,inputs):
     # vs_n = [(V_Stacker(), n) for n in nets]
-    def gen():
-        for im in inputs:
-            img = pp.preprocess(im)
-            # for vs, n in vs_n:
-            if net.CHANNEL_AXIS == 1:
-                rimg = deepcopy(img)
-                try:
-                    rimg = np.swapaxes(rimg, 0, 2)
-                except:
-                    breakpoint()
-                yield rimg,
-                # vs += net.predict(rimg)
-            else:
-                yield img,
-                # vs += net.predict(img)
-    # return tuple([vs.mat for vs, n in vs_n])
-    return net.predict(gen())
+    class Gen(tf.keras.utils.Sequence):
+        def __init__(self):
+            self.g = self.gen()
+        def __getitem__(self, index):
+            return next(self.g)
+        def __len__(self):
+            return len(inputs)
+        def gen(self):
+            for im in inputs:
+                img = pp.preprocess(im)
+                if net.CHANNEL_AXIS == 1:
+                    rimg = deepcopy(img)
+                    try:
+                        rimg = np.swapaxes(rimg, 0, 2)
+                    except:
+                        breakpoint()
+                    yield rimg,
+                else:
+                    yield img,
+    return net.predict(Gen())
 
 def chain_predict(nets, pp, inputs):
     vs_n = [(V_Stacker(), n) for n in nets]
