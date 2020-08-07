@@ -213,7 +213,7 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
                 t.toc(10)
                 # breakpoint()
 
-    tf.debugging.set_log_device_placement(True)
+
     strategy = tf.distribute.MirroredStrategy()
     with strategy.scope():
         return net.predict(Gen(), verbose=0)  # use_multiprocessing=False, workers=16

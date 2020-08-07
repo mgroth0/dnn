@@ -11,6 +11,7 @@ def setupTensorFlow(FLAGS):
     # by default all gpu mem is used. this option just makes it allocate less in the beginning and more as needed. Not sure why I would need this
     # gpus = tf.config.experimental.list_physical_devices('GPU')
     # for gpu in gpus: tf.config.experimental.set_memory_growth(gpu, True)
+    tf.debugging.set_log_device_placement(True)
     return tf
 
 def runWithMultiProcess(main_nn_fun):
