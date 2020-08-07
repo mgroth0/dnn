@@ -7,6 +7,7 @@ import numpy as np
 
 from lib.nn.gen_preproc_ims import PreDataset
 from mlib.abstract_attributes import AbstractAttributes, Abstract
+from mlib.boot.lang import enum
 from mlib.boot.mlog import err, log, warn
 from mlib.boot.stream import V_Stacker
 from mlib.file import Folder, File
@@ -125,8 +126,8 @@ class ModelWrapper(AbstractAttributes, ABC):
     def label(self): return self.ARCH_LABEL
 
 
-    def predict(self, inputs,verbose=1) -> np.array:
-        if not isinstance(inputs, types.GeneratorType) and not isinstance(inputs,tf.keras.utils.Sequence):
+    def predict(self, inputs, verbose=1) -> np.array:
+        if not isinstance(inputs, types.GeneratorType) and not isinstance(inputs, tf.keras.utils.Sequence):
             if len(inputs.shape) == 3:
                 inputs = np.expand_dims(inputs, axis=0)
         y_pred = self.net.predict(
@@ -147,7 +148,7 @@ class ModelWrapper(AbstractAttributes, ABC):
 
 
 
-def simple_predict(net: ModelWrapper,pp,inputs,*,length):
+def simple_predict(net: ModelWrapper, pp, inputs, *, length):
     # vs_n = [(V_Stacker(), n) for n in nets]
     class Gen(tf.keras.utils.Sequence):
         def __init__(self):
@@ -157,21 +158,29 @@ def simple_predict(net: ModelWrapper,pp,inputs,*,length):
         def __len__(self):
             return length
         def gen(self):
-            with Progress(len(self)) as prog:
-                for im in inputs:
-                    img = pp.preprocess(im)
-                    if net.CHANNEL_AXIS == 1:
-                        rimg = deepcopy(img)
-                        try:
-                            rimg = np.swapaxes(rimg, 0, 2)
-                        except:
-                            breakpoint()
-                        prog.tick()
-                        yield np.expand_dims(rimg, axis=0),
-                    else:
-                        prog.tick()
-                        yield np.expand_dims(img, axis=0),
-    return net.predict(Gen(),verbose=0)
+            # with Progress(len(self)) as prog:
+            # STATUS_FILE = File('status.json')
+            for i, im in enum(inputs):
+                img = pp.preprocess(im)
+                if net.CHANNEL_AXIS == 1:
+                    rimg = deepcopy(img)
+                    try:
+                        rimg = np.swapaxes(rimg, 0, 2)
+                    except:
+                        breakpoint()
+                    # prog.tick()
+                    r = np.expand_dims(rimg, axis=0),
+                else:
+                    # prog.tick()
+                    r = np.expand_dims(img, axis=0),
+                if i % 100 == 0:
+                    log(f'finished {i} out of {len(self)}')
+                    # STATUS_FILE.write(dict(
+                    #     finished=i,
+                    #     total=len(self)
+                    # ))
+                yield r
+    return net.predict(Gen(), verbose=0)
 
 def chain_predict(nets, pp, inputs):
     vs_n = [(V_Stacker(), n) for n in nets]
