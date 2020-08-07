@@ -6,8 +6,8 @@ import json
 import numpy as np
 import scipy
 import tensorflow as tf
+
 from arch.model_wrapper import ModelWrapper, chain_predict
-from build_imagenet_data import ImageCoder
 from lib.dnn_analyses import PostBuildAnalysis
 from lib.dnn_data_saving import save_dnn_data
 from lib.dnn_proj_struct import DNN_ExperimentGroup, experiments_from_folder
@@ -16,7 +16,7 @@ from lib.preprocessor import preprocessors
 from mlib.analyses import cell, CellInput, shadow, ShadowFigType
 from mlib.boot import log
 from mlib.boot.lang import enum, isstr, listkeys, isint
-from mlib.boot.stream import listitems, arr, listmap, __, concat, make3d, zeros, maxindex, ints, isnan, nans, V_Stacker
+from mlib.boot.stream import listitems, arr, listmap, __, concat, make3d, zeros, maxindex, ints, isnan, nans
 from mlib.fig.text_table_wrap import TextTableWrapper
 from mlib.file import File, Folder
 from mlib.web.html import H3, HTML_Pre, Div, Table, TableRow, DataCell
@@ -94,7 +94,7 @@ class SanityAnalysis(PostBuildAnalysis):
                             'image/encoded'          : tf.io.FixedLenFeature([], tf.string),
                         }
 
-                        breakpoint()
+                        # breakpoint()
                         for raw_record in ds:
                             # if subroot.isdir:
                             # for imgfile in Folder(subroot):]
