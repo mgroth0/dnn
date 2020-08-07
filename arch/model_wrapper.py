@@ -10,50 +10,8 @@ from mlib.abstract_attributes import AbstractAttributes, Abstract
 from mlib.boot.mlog import err, log, warn
 from mlib.boot.stream import V_Stacker
 from mlib.file import Folder, File
-from mlib.term import log_invokation
+from mlib.term import log_invokation, Progress
 import tensorflow as tf
-def simple_predict(net,pp,inputs,*,length):
-    # vs_n = [(V_Stacker(), n) for n in nets]
-    class Gen(tf.keras.utils.Sequence):
-        def __init__(self):
-            self.g = self.gen()
-        def __getitem__(self, index):
-            return next(self.g)
-        def __len__(self):
-            return length
-        def gen(self):
-            for im in inputs:
-                img = pp.preprocess(im)
-                if net.CHANNEL_AXIS == 1:
-                    rimg = deepcopy(img)
-                    try:
-                        rimg = np.swapaxes(rimg, 0, 2)
-                    except:
-                        breakpoint()
-                    yield np.expand_dims(rimg, axis=0),
-                else:
-                    yield np.expand_dims(img, axis=0),
-    return net.predict(Gen())
-
-def chain_predict(nets, pp, inputs):
-    vs_n = [(V_Stacker(), n) for n in nets]
-    # def gen():
-    for im in inputs:
-        img = pp.preprocess(im)
-        for vs, n in vs_n:
-            if n.CHANNEL_AXIS == 1:
-                rimg = deepcopy(img)
-                try:
-                    rimg = np.swapaxes(rimg, 0, 2)
-                except:
-                    breakpoint()
-                yield rimg
-                vs += n.predict(rimg)
-            else:
-                yield img
-                vs += n.predict(img)
-    return tuple([vs.mat for vs, n in vs_n])
-    # return
 
 class ModelWrapper(AbstractAttributes, ABC):
     IMAGE_NET_FOLD = Folder('_ImageNetTesting')
@@ -167,12 +125,12 @@ class ModelWrapper(AbstractAttributes, ABC):
     def label(self): return self.ARCH_LABEL
 
 
-    def predict(self, inputs) -> np.array:
+    def predict(self, inputs,verbose=1) -> np.array:
         if not isinstance(inputs, types.GeneratorType) and not isinstance(inputs,tf.keras.utils.Sequence):
             if len(inputs.shape) == 3:
                 inputs = np.expand_dims(inputs, axis=0)
         y_pred = self.net.predict(
-            inputs, verbose=1,
+            inputs, verbose=verbose,
         )
         if self.OUTPUT_IDX is not None:
             y_pred = y_pred[self.OUTPUT_IDX]
@@ -186,3 +144,51 @@ class ModelWrapper(AbstractAttributes, ABC):
             self.hw,
             is_pretrained=True
         )
+
+
+
+def simple_predict(net: ModelWrapper,pp,inputs,*,length):
+    # vs_n = [(V_Stacker(), n) for n in nets]
+    class Gen(tf.keras.utils.Sequence):
+        def __init__(self):
+            self.g = self.gen()
+        def __getitem__(self, index):
+            return next(self.g)
+        def __len__(self):
+            return length
+        def gen(self):
+            with Progress(len(self)) as prog:
+                for im in inputs:
+                    img = pp.preprocess(im)
+                    if net.CHANNEL_AXIS == 1:
+                        rimg = deepcopy(img)
+                        try:
+                            rimg = np.swapaxes(rimg, 0, 2)
+                        except:
+                            breakpoint()
+                        prog.tick()
+                        yield np.expand_dims(rimg, axis=0),
+                    else:
+                        prog.tick()
+                        yield np.expand_dims(img, axis=0),
+    return net.predict(Gen(),verbose=0)
+
+def chain_predict(nets, pp, inputs):
+    vs_n = [(V_Stacker(), n) for n in nets]
+    # def gen():
+    for im in inputs:
+        img = pp.preprocess(im)
+        for vs, n in vs_n:
+            if n.CHANNEL_AXIS == 1:
+                rimg = deepcopy(img)
+                try:
+                    rimg = np.swapaxes(rimg, 0, 2)
+                except:
+                    breakpoint()
+                yield rimg
+                vs += n.predict(rimg)
+            else:
+                yield img
+                vs += n.predict(img)
+    return tuple([vs.mat for vs, n in vs_n])
+    # return
