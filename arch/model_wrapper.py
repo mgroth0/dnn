@@ -1,4 +1,8 @@
 from copy import deepcopy
+from timeit import Timer
+
+import time
+
 import types
 
 from typing import Optional
@@ -150,6 +154,15 @@ class ModelWrapper(AbstractAttributes, ABC):
 
 def simple_predict(net: ModelWrapper, pp, inputs, *, length):
     # vs_n = [(V_Stacker(), n) for n in nets]
+    class Timer:
+        def __init__(self, name):
+            self._tic = None
+            self.name = name
+        def tic(self):
+            self._tic = time.monotonic_ns()
+        def toc(self, n):
+            t = time.monotonic_ns() - self._tic
+            log(f'{self.name}\t{n}\t{t}')
     class Gen(tf.keras.utils.Sequence):
         def __init__(self):
             self.g = self.gen()
@@ -161,36 +174,38 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
             # with Progress(len(self)) as prog:
             # STATUS_FILE = File('status.json')
             # log(f'{len(inputs)=}')
-            log('simple_predict_1')
+            t = Timer('simple_predict')
+            t.tic()
+            t.toc(1)
             for i, im in enum(inputs):
-                log('simple_predict_2')
+                t.toc(2)
                 img = pp.preprocess(im)
-                log('simple_predict_3')
+                t.toc(3)
                 if net.CHANNEL_AXIS == 1:
                     rimg = deepcopy(img)
-                    log('simple_predict_4')
+                    t.toc(4)
                     try:
                         rimg = np.swapaxes(rimg, 0, 2)
-                        log('simple_predict_5')
+                        t.toc(5)
                     except:
                         breakpoint()
                     # prog.tick()
                     r = np.expand_dims(rimg, axis=0),
-                    log('simple_predict_6')
+                    t.toc(6)
                 else:
                     # prog.tick()
                     r = np.expand_dims(img, axis=0),
-                    log('simple_predict_7')
+                    t.toc(7)
                 if i % 100 == 0 or i > 49000:
                     log(f'finished {i} out of {len(self)}')
-                    log('simple_predict_8')
+                    t.toc(8)
                     # STATUS_FILE.write(dict(
                     #     finished=i,
                     #     total=len(self)
                     # ))
-                log('simple_predict_9')
+                t.toc(9)
                 yield r
-                log('simple_predict_10')
+                t.toc(10)
                 breakpoint()
     return net.predict(Gen(), verbose=2)
 
