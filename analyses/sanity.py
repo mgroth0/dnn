@@ -94,8 +94,18 @@ class SanityAnalysis(PostBuildAnalysis):
                         }
                         for raw_record in ds:
                             example = tf.io.parse_single_example(raw_record, image_feature_description)
+                            yield example
+                    y_true = []
+                    ifs_for_labels = input_files()
+                    for i in range(SANITY_SET.num):
+                        y_true.append(next(ifs_for_labels)['image/class/label'])
+                    r[f'tf']['y_true'] = y_true
+                    def input_file_raws():
+                        gen = input_files()
+                        for example in gen:
                             yield tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                    IN_files = input_files()
+                    IN_files = input_file_raws()
+
                 # ALL = 49999
                 # TEST = 10
                 r[f'tf'][pp_name] = simple_predict(
@@ -191,13 +201,14 @@ class SanityAnalysis(PostBuildAnalysis):
     def calc_accs(self, data):
         y_true = [int(n.split('_')[0]) for n in data['files']]
         data['ml']['y_true'] = y_true
-        data['tf']['y_true'] = y_true
-        if SANITY_SET != SanitySet.Set100:
-            y_true = []
-            for i in range(1000):
-                y_true.extend([i] * 50)
-            y_true = y_true[0:SANITY_SET.num]
+        if SANITY_SET == SanitySet.Set100:
             data['tf']['y_true'] = y_true
+        # else:
+        #     y_true = []
+        #     for i in range(1000):
+        #         y_true.extend([i] * 50)
+        #     y_true = y_true[0:SANITY_SET.num]
+        #     data['tf']['y_true'] = y_true
         for bekey, bedata in listitems(data):
             if bekey in ['files', 'dest']: continue  # , 'y_true'
             for akey, arch_data in listitems(bedata):
