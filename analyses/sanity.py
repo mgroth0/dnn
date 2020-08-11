@@ -251,9 +251,10 @@ class SanityAnalysis(PostBuildAnalysis):
         sanity_report_figdata = []
         for be_key in listkeys(titles):
             be_data = data[be_key]
-            if be_key in ['files', 'dest', 'y_true']: continue
+            if be_key in ['files', 'dest']: continue  # , 'y_true'
             arch_rows = []
             for akey, adata in listitems(be_data):
+                if akey in ['y_true']: continue  # , 'y_true'
                 top_row = ['Arch']
                 ar = [akey]
                 for ppkey, ppdata in listitems(adata):
