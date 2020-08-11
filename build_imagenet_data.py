@@ -87,6 +87,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import json
+
 from datetime import datetime
 import os
 import random
@@ -468,18 +470,25 @@ def _find_image_files(opt, data_dir, synsets_file, *, labels_file, sample):
     print('Determining list of input files and labels from %s.' % data_dir)
     sys.stdout.flush()
 
+    imagenet_class_index = json.loads(''.join(tf.io.gfile.GFile('imagenet_class_index.json', 'r').readlines()))
+    class_index = {imagenet_class_index[k][0]:imagenet_class_index[k][1] for k in list(imagenet_class_index.keys())}
+
     challenge_synsets = [l.strip() for l in
                          tf.io.gfile.GFile(synsets_file, 'r').readlines()]
 
     synset_map = [l.strip().split('\t') for l in tf.io.gfile.GFile(opt.imagenet_metadata_file, 'r').readlines()]
     synset_map = {n: s for n, s in synset_map}
 
-    challenge_syn_map = {n: synset_map[n] for n in challenge_synsets}
+    # challenge_syn_map = {n: synset_map[n] for n in challenge_synsets}
+    challenge_syn_map = {n: class_index[n] for n in challenge_synsets}
 
     labels = [l.strip() for l in
               tf.io.gfile.GFile(labels_file, 'r').readlines()]
     labels_map = [l.split(",") for l in labels]
     labels_map = {pair[1].replace('"', '').strip(): int(pair[0].strip()) for pair in labels_map}
+
+
+
 
     labels = []
     filenames = []
