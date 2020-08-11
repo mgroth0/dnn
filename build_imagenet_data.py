@@ -1,6 +1,6 @@
 # started 11:05
 
-#!/usr/bin/python
+# !/usr/bin/python
 # Copyright 2016 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -107,7 +107,8 @@ class Opt:
     num_threads: int = 16
     half_split: bool = False
     init_half_split: int = None
-    labels_file: str = '/om5/user/xboix/data/ImageNet/imagenet_lsvrc_2015_synsets.txt'
+    synsets_file: str = '/om5/user/xboix/data/ImageNet/imagenet_lsvrc_2015_synsets.txt'  # Matt changed how this works
+    labels_file: str = 'ILSVRC2012.csv'  # Matt changed how this works
     train_shards: int = 1024
     validation_shards: int = 1024
     imagenet_metadata_file: str = '/om5/user/xboix/data/ImageNet/imagenet_metadata.txt'
@@ -115,6 +116,7 @@ class Opt:
     train_directory: str = '/om5/user/xboix/data/ImageNet/raw-data/train'
     # train_shards: int = 1024
     validation_directory: str = '/om5/user/xboix/data/ImageNet/raw-data/validation'
+
 
 
 
@@ -431,7 +433,7 @@ def _process_image_files(opt, name, filenames, synsets, labels, humans,
     sys.stdout.flush()
 
 
-def _find_image_files(opt, data_dir, labels_file, sample):
+def _find_image_files(opt, data_dir, synsets_file, *, labels_file, sample):
     """Build a list of all images files and labels in the data set.
 
     Args:
@@ -445,7 +447,7 @@ def _find_image_files(opt, data_dir, labels_file, sample):
 
         where 'n01440764' is the unique synset label associated with these images.
 
-      labels_file: string, path to the labels file.
+      synsets_file: string, path to the labels file.
 
         The list of valid labels are held in this file. Assumes that the file
         contains entries as such:
@@ -469,33 +471,45 @@ def _find_image_files(opt, data_dir, labels_file, sample):
     sys.stdout.flush()
 
     challenge_synsets = [l.strip() for l in
-                         tf.io.gfile.GFile(labels_file, 'r').readlines()]
+                         tf.io.gfile.GFile(synsets_file, 'r').readlines()]
+
+    synset_map = [l.strip().split('\t') for l in tf.io.gfile.GFile(opt.imagenet_metadata_file, 'r').readlines()]
+    synset_map = {n: s for n, s in synset_map}
+
+    challenge_syn_map = {n: synset_map[n] for n in challenge_synsets}
+
+    labels = [l.strip() for l in
+              tf.io.gfile.GFile(labels_file, 'r').readlines()]
+    labels_map = [l.split(",") for l in labels]
+    labels_map = {sym.replace('"', '').strip(): int(label.strip()) for label, sym in labels_map}
 
     labels = []
     filenames = []
     synsets = []
 
     # Leave label index 0 empty as a background class.
-    label_index = 1
+    # label_index = 1
 
     # Construct the list of JPEG files and labels. TODO could limit the files here, but don't have bbox info
-    for synset in challenge_synsets:
+    for i, synset in enumerate(challenge_synsets):
         jpeg_file_path = '%s/%s/*.JPEG' % (data_dir, synset)
         matching_files = tf.io.gfile.glob(jpeg_file_path)
 
         if opt.half_split and sample == True:
             matching_files = matching_files[opt.init_half_split::2]
 
+        label_index = labels_map[synset]
+
         labels.extend([label_index] * len(matching_files))
         synsets.extend([synset] * len(matching_files))
         filenames.extend(matching_files)
 
-        if not label_index % 100:
+        if not i + 1 % 100:
             print('Finished finding files in %d of %d classes.' % (
                 label_index, len(challenge_synsets)))
             sys.stdout.flush()
 
-        label_index += 1
+        # label_index += 1
 
     # Shuffle the ordering of all image files in order to guarantee
     # random ordering of the images with respect to label in the
@@ -580,7 +594,8 @@ def _process_dataset(opt, name, directory, num_shards,
         bounding boxes. This list contains 0+ bounding boxes.
     """
 
-    filenames, synsets, labels = _find_image_files(opt, directory, opt.labels_file, name == 'train')
+    filenames, synsets, labels = _find_image_files(opt, directory, opt.synsets_file, labels_file=opt.labels_file,
+                                                   sample=name == 'train')
     humans = _find_human_readable_labels(synsets, synset_to_human)
     bboxes = _find_image_bounding_boxes(filenames, image_to_bboxes)
 
