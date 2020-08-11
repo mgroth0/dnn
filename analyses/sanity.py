@@ -22,9 +22,14 @@ from mlib.file import File, Folder
 from mlib.web.html import H3, HTML_Pre, Div, Table, TableRow, DataCell
 class SanitySet(Enum):
     Set100 = auto()
-    Set50000 = auto()
+    # Set50000 = auto()
+@dataclass
+class RealImageNetSet:
+    num: int
+    def __post_init__(self):
+        assert 49999 >= self.num > 1
 
-SANITY_SET = SanitySet.Set50000
+SANITY_SET = RealImageNetSet(200)  # 49999
 
 
 class SanityAnalysis(PostBuildAnalysis):
@@ -91,11 +96,13 @@ class SanityAnalysis(PostBuildAnalysis):
                             example = tf.io.parse_single_example(raw_record, image_feature_description)
                             yield tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
                     IN_files = input_files()
+                # ALL = 49999
+                # TEST = 10
                 r[f'tf'][pp_name] = simple_predict(
                     tf_net,  # ,ml2tf_net
                     pp,
                     IN_files,
-                    length=49999,
+                    length=SANITY_SET.num,
                     # length=50000
                 )
                 # else:
@@ -187,6 +194,7 @@ class SanityAnalysis(PostBuildAnalysis):
             y_true = []
             for i in range(1000):
                 y_true.extend([i] * 50)
+            y_true = y_true[0:SANITY_SET.num]
         data['y_true'] = y_true
         for bekey, bedata in listitems(data):
             if bekey in ['files', 'dest', 'y_true']: continue
