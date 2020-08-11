@@ -218,6 +218,7 @@ class SanityAnalysis(PostBuildAnalysis):
             for akey, arch_data in listitems(bedata):
                 if akey in ['y_true']: continue  # , 'y_true'
                 for ppkey, ppdata in listitems(arch_data):
+                    if ppkey in ['y_true']: continue
                     y_true = bedata['y_true']
                     y_pred = [maxindex(ppdata[i]) for i in range(len(ppdata))]
                     acc = 1 - error_rate_core(y_true, y_pred)
