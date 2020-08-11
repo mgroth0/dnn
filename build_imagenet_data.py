@@ -100,6 +100,7 @@ import six
 import tensorflow as tf
 tf.compat.v1.disable_eager_execution()  # so tf.placeholder works
 
+OVERWRITE = False  # if false, skip files already written. useful when kicked off slurm
 
 # @dataclass
 class Opt:
@@ -341,8 +342,26 @@ def _process_image_files_batch(opt, coder, thread_index, ranges, name, filenames
                                num_shards_per_batch + 1).astype(int)
     num_files_in_thread = ranges[thread_index][1] - ranges[thread_index][0]
 
+    exist_map = {}
+
+    for i, s in enumerate(range(num_shards_per_batch)):
+        shard = thread_index * num_shards_per_batch + s
+        output_filename = '%s-%.5d-of-%.5d' % (name, shard, num_shards)
+        output_file = os.path.join(opt.output_directory, output_filename)
+        if OVERWRITE:
+            exist_map[i] = False
+        else:
+            exist_map[i] = os.path.exists(output_file)
+
+    start_at = 0
+    for k, v in list(exist_map.items()):
+        if v:
+            start_at = k
+
+    print('starting at ' + str(start_at))
+
     counter = 0
-    for s in range(num_shards_per_batch):
+    for ii, s in enumerate(range(num_shards_per_batch)):
         # Generate a sharded version of the file name, e.g. 'train-00002-of-00010'
         shard = thread_index * num_shards_per_batch + s
         output_filename = '%s-%.5d-of-%.5d' % (name, shard, num_shards)
@@ -351,32 +370,36 @@ def _process_image_files_batch(opt, coder, thread_index, ranges, name, filenames
 
         shard_counter = 0
         files_in_shard = np.arange(shard_ranges[s], shard_ranges[s + 1], dtype=int)
-        for i in files_in_shard:
-            filename = filenames[i]
-            label = labels[i]
-            synset = synsets[i]
-            human = humans[i]
-            bbox = bboxes[i]
+        if ii >= start_at:
+            for i in files_in_shard:
+                filename = filenames[i]
+                label = labels[i]
+                synset = synsets[i]
+                human = humans[i]
+                bbox = bboxes[i]
 
-            image_buffer, height, width = _process_image(filename, coder)
+                image_buffer, height, width = _process_image(filename, coder)
 
-            example = _convert_to_example(filename, image_buffer, label,
-                                          synset, human, bbox,
-                                          height, width)
-            writer.write(example.SerializeToString())
-            shard_counter += 1
-            counter += 1
+                example = _convert_to_example(filename, image_buffer, label,
+                                              synset, human, bbox,
+                                              height, width)
+                writer.write(example.SerializeToString())
+                shard_counter += 1
+                counter += 1
 
-            if not counter % 1000:
-                print('%s [thread %d]: Processed %d of %d images in thread batch.' %
-                      (datetime.now(), thread_index, counter, num_files_in_thread))
-                sys.stdout.flush()
+                if not counter % 1000:
+                    print('%s [thread %d]: Processed %d of %d images in thread batch.' %
+                          (datetime.now(), thread_index, counter, num_files_in_thread))
+                    sys.stdout.flush()
 
-        writer.close()
-        print('%s [thread %d]: Wrote %d images to %s' %
-              (datetime.now(), thread_index, shard_counter, output_file))
-        sys.stdout.flush()
-        shard_counter = 0
+            writer.close()
+            print('%s [thread %d]: Wrote %d images to %s' %
+                  (datetime.now(), thread_index, shard_counter, output_file))
+            sys.stdout.flush()
+            shard_counter = 0
+        else:
+            counter += len(files_in_shard)
+            writer.close()
     print('%s [thread %d]: Wrote %d images to %d shards.' %
           (datetime.now(), thread_index, counter, num_files_in_thread))
     sys.stdout.flush()
