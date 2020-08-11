@@ -98,7 +98,7 @@ class SanityAnalysis(PostBuildAnalysis):
                     y_true = []
                     ifs_for_labels = input_files()
                     for i in range(SANITY_SET.num):
-                        y_true.append(next(ifs_for_labels)['image/class/label'])
+                        y_true.append(next(ifs_for_labels)['image/class/label'].numpy())
                     r[f'tf']['y_true'] = y_true
                     def input_file_raws():
                         gen = input_files()
@@ -202,7 +202,7 @@ class SanityAnalysis(PostBuildAnalysis):
     @shadow(ftype=ShadowFigType.PREVIEW)
     @cell(inputs=compile_eg)
     def calc_accs(self, data):
-        breakpoint()
+        # breakpoint()
         y_true = [int(n.split('_')[0]) for n in data['files']]
         data['ml']['y_true'] = y_true
         if SANITY_SET == SanitySet.Set100:
