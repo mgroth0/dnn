@@ -498,7 +498,11 @@ def _find_image_files(opt, data_dir, synsets_file, *, labels_file, sample):
 
 
         synset_string = challenge_syn_map[synset]
-        label_index = labels_map[synset_string]
+        try:
+            label_index = labels_map[synset_string]
+        except:
+            print('maybe could not find ' + synset_string)
+            breakpoint()
 
         labels.extend([label_index] * len(matching_files))
         synsets.extend([synset] * len(matching_files))
