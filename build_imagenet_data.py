@@ -496,13 +496,13 @@ def _find_image_files(opt, data_dir, synsets_file, *, labels_file, sample):
         if opt.half_split and sample == True:
             matching_files = matching_files[opt.init_half_split::2]
 
-
         synset_string = challenge_syn_map[synset]
         try:
             label_index = labels_map[synset_string]
         except:
             print('maybe could not find ' + synset_string)
-            breakpoint()
+            import pdb
+            pdb.set_trace()
 
         labels.extend([label_index] * len(matching_files))
         synsets.extend([synset] * len(matching_files))
