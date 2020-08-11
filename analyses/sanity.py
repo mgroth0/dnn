@@ -141,8 +141,9 @@ class SanityAnalysis(PostBuildAnalysis):
         data = self.compile_eg(eg)
         log('about to calc_accs')
         accs = self.calc_accs(data)
-        log('about to same_count_cmat')
-        data = self.same_count_cmat(accs)
+        if SANITY_SET != SanitySet.Set100:
+            log('about to same_count_cmat')
+            data = self.same_count_cmat(accs)
         log('about to acc_table')
         div = self.acc_table(accs)
         from mlib.proj.struct import Project
@@ -188,18 +189,21 @@ class SanityAnalysis(PostBuildAnalysis):
     @shadow(ftype=ShadowFigType.PREVIEW)
     @cell(inputs=compile_eg)
     def calc_accs(self, data):
-        if SANITY_SET == SanitySet.Set100:
-            y_true = [int(n.split('_')[0]) for n in data['files']]
-        else:
+        y_true = [int(n.split('_')[0]) for n in data['files']]
+        data['ml']['y_true'] = y_true
+        data['tf']['y_true'] = y_true
+        if SANITY_SET != SanitySet.Set100:
             y_true = []
             for i in range(1000):
                 y_true.extend([i] * 50)
             y_true = y_true[0:SANITY_SET.num]
-        data['y_true'] = y_true
+            data['tf']['y_true'] = y_true
         for bekey, bedata in listitems(data):
-            if bekey in ['files', 'dest', 'y_true']: continue
+            if bekey in ['files', 'dest']: continue #, 'y_true'
             for akey, arch_data in listitems(bedata):
+                if bekey in ['y_true']: continue #, 'y_true'
                 for ppkey, ppdata in listitems(arch_data):
+                    y_true = bedata['y_true']
                     y_pred = [maxindex(ppdata[i]) for i in range(len(ppdata))]
                     acc = 1 - error_rate_core(y_true, y_pred)
                     top5_score = 0
@@ -240,9 +244,9 @@ class SanityAnalysis(PostBuildAnalysis):
     @cell(inputs=calc_accs)
     def acc_table(self, data):
         titles = {
-            'tf': 'Tensorflow',
+            'tf': f'Tensorflow ({100 if SANITY_SET==SanitySet.Set100 else SANITY_SET.num})',
             # 'ml2tf': 'MATLAB model imported into Tensorflow',
-            'ml': 'MATLAB'
+            'ml': 'MATLAB (100)'
         }
         sanity_report_figdata = []
         for be_key in listkeys(titles):
