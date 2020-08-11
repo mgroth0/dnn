@@ -103,7 +103,8 @@ tf.compat.v1.disable_eager_execution()  # so tf.placeholder works
 
 # @dataclass
 class Opt:
-    output_directory: str = '/om5/user/mjgroth/data/ImageNet/output'
+    # output_directory: str = '/om5/user/mjgroth/data/ImageNet/output'
+    output_directory: str = '/om5/user/mjgroth/data/ImageNet/output_tf'  # different labels (https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a#gistcomment-2575723)
     num_threads: int = 16
     half_split: bool = False
     init_half_split: int = None
