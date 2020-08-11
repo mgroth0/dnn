@@ -274,6 +274,7 @@ class SanityAnalysis(PostBuildAnalysis):
                 top_row = ['Arch']
                 ar = [akey]
                 for ppkey, ppdata in listitems(adata):
+                    if ppkey in ['y_true']: continue
                     top_row += [ppkey]
                     ar += [str(int(ppdata['acc'] * 100)) + '\n' + str(int(ppdata['acc5'] * 100))]
                 arch_rows += [ar]
