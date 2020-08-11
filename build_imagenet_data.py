@@ -1,5 +1,3 @@
-# started 11:05
-
 # !/usr/bin/python
 # Copyright 2016 Google Inc. All Rights Reserved.
 #
@@ -481,7 +479,7 @@ def _find_image_files(opt, data_dir, synsets_file, *, labels_file, sample):
     labels = [l.strip() for l in
               tf.io.gfile.GFile(labels_file, 'r').readlines()]
     labels_map = [l.split(",") for l in labels]
-    labels_map = {sym.replace('"', '').strip(): int(label.strip()) for label, sym in labels_map}
+    labels_map = {pair[1].replace('"', '').strip(): int(pair[0].strip()) for pair in labels_map}
 
     labels = []
     filenames = []
