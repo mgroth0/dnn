@@ -202,7 +202,7 @@ class SanityAnalysis(PostBuildAnalysis):
     @shadow(ftype=ShadowFigType.PREVIEW)
     @cell(inputs=compile_eg)
     def calc_accs(self, data):
-        # breakpoint()
+        breakpoint()
         y_true = [int(n.split('_')[0]) for n in data['files']]
         data['ml']['y_true'] = y_true
         if SANITY_SET == SanitySet.Set100:
