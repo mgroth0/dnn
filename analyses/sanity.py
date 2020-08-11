@@ -141,7 +141,7 @@ class SanityAnalysis(PostBuildAnalysis):
         data = self.compile_eg(eg)
         log('about to calc_accs')
         accs = self.calc_accs(data)
-        if SANITY_SET != SanitySet.Set100:
+        if SANITY_SET == SanitySet.Set100:
             log('about to same_count_cmat')
             data = self.same_count_cmat(accs)
         log('about to acc_table')
