@@ -199,9 +199,9 @@ class SanityAnalysis(PostBuildAnalysis):
             y_true = y_true[0:SANITY_SET.num]
             data['tf']['y_true'] = y_true
         for bekey, bedata in listitems(data):
-            if bekey in ['files', 'dest']: continue #, 'y_true'
+            if bekey in ['files', 'dest']: continue  # , 'y_true'
             for akey, arch_data in listitems(bedata):
-                if bekey in ['y_true']: continue #, 'y_true'
+                if akey in ['y_true']: continue  # , 'y_true'
                 for ppkey, ppdata in listitems(arch_data):
                     y_true = bedata['y_true']
                     y_pred = [maxindex(ppdata[i]) for i in range(len(ppdata))]
@@ -244,7 +244,7 @@ class SanityAnalysis(PostBuildAnalysis):
     @cell(inputs=calc_accs)
     def acc_table(self, data):
         titles = {
-            'tf': f'Tensorflow ({100 if SANITY_SET==SanitySet.Set100 else SANITY_SET.num})',
+            'tf': f'Tensorflow ({100 if SANITY_SET == SanitySet.Set100 else SANITY_SET.num})',
             # 'ml2tf': 'MATLAB model imported into Tensorflow',
             'ml': 'MATLAB (100)'
         }
