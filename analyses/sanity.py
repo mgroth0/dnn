@@ -191,6 +191,9 @@ class SanityAnalysis(PostBuildAnalysis):
 
             for backendkey, bedata in listitems(mat):
                 data[backendkey][exp.arch] = bedata
+                if 'y_true' in bedata:
+                    data[backendkey]['y_true'] = bedata['y_true']
+                    
 
             finished_archs += [exp.arch]
         data['files'] = data['files'][exp.arch]
