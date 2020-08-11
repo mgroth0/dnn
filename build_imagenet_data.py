@@ -471,7 +471,8 @@ def _find_image_files(opt, data_dir, synsets_file, *, labels_file, sample):
     sys.stdout.flush()
 
     imagenet_class_index = json.loads(''.join(tf.io.gfile.GFile('imagenet_class_index.json', 'r').readlines()))
-    class_index = {imagenet_class_index[k][0]:imagenet_class_index[k][1] for k in list(imagenet_class_index.keys())}
+    class_index = {imagenet_class_index[k][0]: imagenet_class_index[k][1].replace('_', ' ') for k in
+                   list(imagenet_class_index.keys())}
 
     challenge_synsets = [l.strip() for l in
                          tf.io.gfile.GFile(synsets_file, 'r').readlines()]
@@ -486,9 +487,6 @@ def _find_image_files(opt, data_dir, synsets_file, *, labels_file, sample):
               tf.io.gfile.GFile(labels_file, 'r').readlines()]
     labels_map = [l.split(",") for l in labels]
     labels_map = {pair[1].replace('"', '').strip(): int(pair[0].strip()) for pair in labels_map}
-
-
-
 
     labels = []
     filenames = []
