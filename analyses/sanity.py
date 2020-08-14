@@ -117,7 +117,9 @@ class SanityAnalysis(PostBuildAnalysis):
                         else:
                             log('got it!')
                             rr = imap[index]
-                            del imap[index]
+                            for k in list(imap.keys()):
+                                if k < index:
+                                    del imap[k]
                             return rr
                         # for raw_record in ds:
                         #     example = tf.io.parse_single_example(raw_record, image_feature_description)
