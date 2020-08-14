@@ -168,58 +168,83 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
                 log(f'{self.name}\t{n}\t{t}')
     class Gen(tf.keras.utils.Sequence):
         def __init__(self):
-            self.g = self.gen()
+            # self.g = self.gen()
             self.counter = 0
             self.cache = {}
         def __getitem__(self, index):
-            log(f'trying to get index {index}')
-            log(f'current indices range from {safemin(list(self.cache.keys()))} to {safemax(list(self.cache.keys()))}')
-            if index in self.cache:
-                r = self.cache[index]
-                del self.cache[index]
-                return r
+            im = inputs(index)
+            # t.toc(2)
+            img = pp.preprocess(im)
+            # t.toc(3)
+            if net.CHANNEL_AXIS == 1:
+                rimg = deepcopy(img)
+                # t.toc(4)
+                rimg = np.swapaxes(rimg, 0, 2)
+                # t.toc(5)
+                # prog.tick()
+                r = np.expand_dims(rimg, axis=0),
+                # t.toc(6)
             else:
-                self.cache[self.counter] = next(self.g)
-                self.counter += 1
-                return self[index]
+                # prog.tick()
+                r = np.expand_dims(img, axis=0),
+                # t.toc(7)
+            # if i % 100 == 0 or i > 49000:
+            #     log(f'finished {i} out of {len(self)}')
+            # t.toc(8)
+            # STATUS_FILE.write(dict(
+            #     finished=i,
+            #     total=len(self)
+            # ))
+            # t.toc(9)
+            return r
+            # log(f'trying to get index {index}')
+            # log(f'current indices range from {safemin(list(self.cache.keys()))} to {safemax(list(self.cache.keys()))}')
+            # if index in self.cache:
+            #     r = self.cache[index]
+            #     del self.cache[index]
+            #     return r
+            # else:
+            #     self.cache[self.counter] = next(self.g)
+            #     self.counter += 1
+            #     return self[index]
         def __len__(self):
             return length
-        def gen(self):
-            # with Progress(len(self)) as prog:
-            # STATUS_FILE = File('status.json')
-            # log(f'{len(inputs)=}')
-            t = Timer('simple_predict')
-            t.disabled = True
-            t.tic()
-            t.toc(1)
-            for i, im in enum(inputs):
-                if i == 0:
-                    log('generating first input...')
-                t.toc(2)
-                img = pp.preprocess(im)
-                t.toc(3)
-                if net.CHANNEL_AXIS == 1:
-                    rimg = deepcopy(img)
-                    t.toc(4)
-                    rimg = np.swapaxes(rimg, 0, 2)
-                    t.toc(5)
-                    # prog.tick()
-                    r = np.expand_dims(rimg, axis=0),
-                    t.toc(6)
-                else:
-                    # prog.tick()
-                    r = np.expand_dims(img, axis=0),
-                    t.toc(7)
-                if i % 100 == 0 or i > 49000:
-                    log(f'finished {i} out of {len(self)}')
-                    t.toc(8)
-                    # STATUS_FILE.write(dict(
-                    #     finished=i,
-                    #     total=len(self)
-                    # ))
-                t.toc(9)
-                yield r
-                t.toc(10)
+        # def gen(self):
+        #     # with Progress(len(self)) as prog:
+        #     # STATUS_FILE = File('status.json')
+        #     # log(f'{len(inputs)=}')
+        #     t = Timer('simple_predict')
+        #     t.disabled = True
+        #     t.tic()
+        #     t.toc(1)
+        #     for i, im in enum(inputs):
+        #         if i == 0:
+        #             log('generating first input...')
+        #         t.toc(2)
+        #         img = pp.preprocess(im)
+        #         t.toc(3)
+        #         if net.CHANNEL_AXIS == 1:
+        #             rimg = deepcopy(img)
+        #             t.toc(4)
+        #             rimg = np.swapaxes(rimg, 0, 2)
+        #             t.toc(5)
+        #             # prog.tick()
+        #             r = np.expand_dims(rimg, axis=0),
+        #             t.toc(6)
+        #         else:
+        #             # prog.tick()
+        #             r = np.expand_dims(img, axis=0),
+        #             t.toc(7)
+        #         if i % 100 == 0 or i > 49000:
+        #             log(f'finished {i} out of {len(self)}')
+        #             t.toc(8)
+        #             # STATUS_FILE.write(dict(
+        #             #     finished=i,
+        #             #     total=len(self)
+        #             # ))
+        #         t.toc(9)
+        #         yield r
+        #         t.toc(10)
 
 
     # strategy = tf.distribute.MirroredStrategy()

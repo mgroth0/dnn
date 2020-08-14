@@ -73,8 +73,9 @@ class SanityAnalysis(PostBuildAnalysis):
                     root = Folder('/matt/data/ImageNet/output')
                     # root = Folder('/matt/data/ImageNet/output_tf')
                     filenames = root.glob('validation*').map(lambda f: f.abspath).tolist()
-                    def input_files():
-                        ds = tf.data.TFRecordDataset(filenames)
+                    r[f'tf']['y_true'] = [None] * SANITY_SET.num
+                    def get_input(index):
+                        ds = tf.data.TFRecordDataset(filenames[index])
 
                         image_feature_description = {
                             'image/height'      : tf.io.FixedLenFeature([], tf.int64),
@@ -95,17 +96,20 @@ class SanityAnalysis(PostBuildAnalysis):
                         }
                         for raw_record in ds:
                             example = tf.io.parse_single_example(raw_record, image_feature_description)
-                            yield example
-                    y_true = []
-                    ifs_for_labels = input_files()
-                    for i in range(SANITY_SET.num):
-                        y_true.append(next(ifs_for_labels)['image/class/label'].numpy())
-                    r[f'tf']['y_true'] = y_true
-                    def input_file_raws():
-                        gen = input_files()
-                        for example in gen:
-                            yield tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                    IN_files = input_file_raws()
+                            r[f'tf']['y_true'][index] = example['image/class/label'].numpy()
+                            return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+                            # yield example
+                    # y_true = []
+                    # ifs_for_labels = input_files()
+                    # for i in range(SANITY_SET.num):
+                    #     y_true.append(next(ifs_for_labels)['image/class/label'].numpy())
+                    # r[f'tf']['y_true'] = y_true
+                    # def input_file_raws():
+                    #     gen = input_files()
+                    #     for example in gen:
+                    #         yield tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+                    # IN_files = input_file_raws()
+                    IN_files = get_input
 
                 # ALL = 49999
                 # TEST = 10
