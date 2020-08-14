@@ -495,8 +495,10 @@ def _find_image_files(opt, data_dir, synsets_file, *, labels_file, sample):
     sys.stdout.flush()
 
     imagenet_class_index = json.loads(''.join(tf.io.gfile.GFile('imagenet_class_index.json', 'r').readlines()))
-    class_index = {imagenet_class_index[k][0]: imagenet_class_index[k][1].replace('_', ' ') for k in
-                   list(imagenet_class_index.keys())}
+    class_index = {imagenet_class_index[k][0]: {
+        'text': imagenet_class_index[k][1].replace('_', ' '),
+        'i'   : int(k)
+    } for k in list(imagenet_class_index.keys())}
 
     challenge_synsets = [l.strip() for l in
                          tf.io.gfile.GFile(synsets_file, 'r').readlines()]
@@ -505,7 +507,7 @@ def _find_image_files(opt, data_dir, synsets_file, *, labels_file, sample):
     synset_map = {n: s for n, s in synset_map}
 
     # challenge_syn_map = {n: synset_map[n] for n in challenge_synsets}
-    challenge_syn_map = {n: class_index[n] for n in challenge_synsets}
+    challenge_syn_map = {n: {'text': class_index[n]['text'], 'i': class_index[n]['i']} for n in challenge_synsets}
 
     labels = [l.strip() for l in
               tf.io.gfile.GFile(labels_file, 'r').readlines()]
@@ -527,13 +529,14 @@ def _find_image_files(opt, data_dir, synsets_file, *, labels_file, sample):
         if opt.half_split and sample == True:
             matching_files = matching_files[opt.init_half_split::2]
 
-        synset_string = challenge_syn_map[synset]
-        try:
-            label_index = labels_map[synset_string]
-        except:
-            print('maybe could not find ' + synset_string)
-            import pdb
-            pdb.set_trace()
+        synset_string = challenge_syn_map[synset]['text']
+        # try:
+        # label_index = labels_map[synset_string]
+        label_index = challenge_syn_map[synset]['i']
+        # except:
+        #     print('maybe could not find ' + synset_string)
+        #     import pdb
+        #     pdb.set_trace()
 
         labels.extend([label_index] * len(matching_files))
         synsets.extend([synset] * len(matching_files))
