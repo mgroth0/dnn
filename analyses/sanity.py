@@ -212,7 +212,7 @@ class SanityAnalysis(PostBuildAnalysis):
         if SANITY_SET == SanitySet.Set100:
             data['tf']['y_true'] = y_true
         else:
-            data['tf']['y_true'] = data['tf']['y_true'] - 1
+            data['tf']['y_true'] = (arr(data['tf']['y_true']) - 1).tolist()
         # else:
         #     y_true = []
         #     for i in range(1000):
