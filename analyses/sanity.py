@@ -101,10 +101,10 @@ class SanityAnalysis(PostBuildAnalysis):
                             example = tf.io.parse_single_example(raw_record, image_feature_description)
                             r[f'tf']['y_true'][i] = example['image/class/label'].numpy()
                             # return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                            r = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+                            rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
                             # current_i = current_i + 1
-                            imap[i] = r
-                            yield r
+                            imap[i] = rrr
+                            yield rrr
                     igen = input_gen()
 
                     def get_input(index):
@@ -114,9 +114,9 @@ class SanityAnalysis(PostBuildAnalysis):
                             next(igen)
                             get_input(index)
                         else:
-                            r = imap[index]
+                            rr = imap[index]
                             del imap[index]
-                            return r
+                            return rr
                         # for raw_record in ds:
                         #     example = tf.io.parse_single_example(raw_record, image_feature_description)
                         #     r[f'tf']['y_true'][index] = example['image/class/label'].numpy()
