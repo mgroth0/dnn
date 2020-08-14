@@ -15,6 +15,7 @@ from mlib.boot.lang import enum
 from mlib.boot.mlog import err, log, warn
 from mlib.boot.stream import V_Stacker
 from mlib.file import Folder, File
+from mlib.math import safemin, safemax
 from mlib.term import log_invokation, Progress
 import tensorflow as tf
 
@@ -172,7 +173,7 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
             self.cache = {}
         def __getitem__(self, index):
             log(f'trying to get index {index}')
-            log(f'current indices range from {min(list(self.cache.keys()))} to {max(list(self.cache.keys()))}')
+            log(f'current indices range from {safemin(list(self.cache.keys()))} to {safemax(list(self.cache.keys()))}')
             if index in self.cache:
                 r = self.cache[index]
                 del self.cache[index]
