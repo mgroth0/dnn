@@ -168,8 +168,17 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
     class Gen(tf.keras.utils.Sequence):
         def __init__(self):
             self.g = self.gen()
+            self.counter = 0
+            self.cache = {}
         def __getitem__(self, index):
-            return next(self.g)
+            if index in self.cache:
+                r = self.cache[index]
+                del self.cache[index]
+                return r
+            else:
+                self.cache[self.counter] = next(self.g)
+                self.counter += 1
+                return self[index]
         def __len__(self):
             return length
         def gen(self):
