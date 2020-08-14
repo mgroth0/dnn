@@ -111,9 +111,11 @@ class SanityAnalysis(PostBuildAnalysis):
                         log(f'trying to get index {index}')
                         log(f'current indices range from {safemin(list(imap.keys()))} to {safemax(list(imap.keys()))}')
                         if index not in imap:
+                            log('coud not get it')
                             next(igen)
                             return get_input(index)
                         else:
+                            log('got it!')
                             rr = imap[index]
                             del imap[index]
                             return rr
