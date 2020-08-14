@@ -1,23 +1,18 @@
 from copy import deepcopy
-from timeit import Timer
 
 import time
-
 import types
-
 from typing import Optional
 from abc import abstractmethod, ABC
 import numpy as np
+import tensorflow as tf
 
 from lib.nn.gen_preproc_ims import PreDataset
 from mlib.abstract_attributes import AbstractAttributes, Abstract
-from mlib.boot.lang import enum
 from mlib.boot.mlog import err, log, warn
 from mlib.boot.stream import V_Stacker
 from mlib.file import Folder, File
-from mlib.math import safemin, safemax
-from mlib.term import log_invokation, Progress
-import tensorflow as tf
+from mlib.term import log_invokation
 
 class ModelWrapper(AbstractAttributes, ABC):
     IMAGE_NET_FOLD = Folder('_ImageNetTesting')

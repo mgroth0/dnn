@@ -19,6 +19,7 @@ from mlib.boot.lang import enum, isstr, listkeys, isint
 from mlib.boot.stream import listitems, arr, listmap, __, concat, make3d, zeros, maxindex, ints, isnan, nans
 from mlib.fig.text_table_wrap import TextTableWrapper
 from mlib.file import File, Folder
+from mlib.math import safemin, safemax
 from mlib.web.html import H3, HTML_Pre, Div, Table, TableRow, DataCell
 class SanitySet(Enum):
     Set100 = auto()
@@ -74,31 +75,53 @@ class SanityAnalysis(PostBuildAnalysis):
                     # root = Folder('/matt/data/ImageNet/output_tf')
                     filenames = root.glob('validation*').map(lambda f: f.abspath).tolist()
                     r[f'tf']['y_true'] = [None] * SANITY_SET.num
-                    def get_input(index):
-                        ds = tf.data.TFRecordDataset(filenames[index])
+                    ds = tf.data.TFRecordDataset(filenames)
 
-                        image_feature_description = {
-                            'image/height'      : tf.io.FixedLenFeature([], tf.int64),
-                            'image/width'       : tf.io.FixedLenFeature([], tf.int64),
-                            'image/colorspace'  : tf.io.FixedLenFeature([], tf.string),
-                            'image/channels'    : tf.io.FixedLenFeature([], tf.int64),
-                            'image/class/label' : tf.io.FixedLenFeature([], tf.int64),
-                            'image/class/synset': tf.io.FixedLenFeature([], tf.string),
-                            'image/class/text'  : tf.io.FixedLenFeature([], tf.string),
-                            # 'image/object/bbox/xmin' : tf.io.FixedLenFeature([], tf.float32),
-                            # 'image/object/bbox/xmax' : tf.io.FixedLenFeature([], tf.float32),
-                            # 'image/object/bbox/ymin' : tf.io.FixedLenFeature([], tf.float32),
-                            # 'image/object/bbox/ymax' : tf.io.FixedLenFeature([], tf.float32),
-                            # 'image/object/bbox/label': tf.io.FixedLenFeature([], tf.int64),
-                            'image/format'      : tf.io.FixedLenFeature([], tf.string),
-                            'image/filename'    : tf.io.FixedLenFeature([], tf.string),
-                            'image/encoded'     : tf.io.FixedLenFeature([], tf.string),
-                        }
-                        for raw_record in ds:
+                    image_feature_description = {
+                        'image/height'      : tf.io.FixedLenFeature([], tf.int64),
+                        'image/width'       : tf.io.FixedLenFeature([], tf.int64),
+                        'image/colorspace'  : tf.io.FixedLenFeature([], tf.string),
+                        'image/channels'    : tf.io.FixedLenFeature([], tf.int64),
+                        'image/class/label' : tf.io.FixedLenFeature([], tf.int64),
+                        'image/class/synset': tf.io.FixedLenFeature([], tf.string),
+                        'image/class/text'  : tf.io.FixedLenFeature([], tf.string),
+                        # 'image/object/bbox/xmin' : tf.io.FixedLenFeature([], tf.float32),
+                        # 'image/object/bbox/xmax' : tf.io.FixedLenFeature([], tf.float32),
+                        # 'image/object/bbox/ymin' : tf.io.FixedLenFeature([], tf.float32),
+                        # 'image/object/bbox/ymax' : tf.io.FixedLenFeature([], tf.float32),
+                        # 'image/object/bbox/label': tf.io.FixedLenFeature([], tf.int64),
+                        'image/format'      : tf.io.FixedLenFeature([], tf.string),
+                        'image/filename'    : tf.io.FixedLenFeature([], tf.string),
+                        'image/encoded'     : tf.io.FixedLenFeature([], tf.string),
+                    }
+                    imap = {}
+                    # current_i = -1
+                    def input_gen():
+                        for i, raw_record in enum(ds):
                             example = tf.io.parse_single_example(raw_record, image_feature_description)
-                            r[f'tf']['y_true'][index] = example['image/class/label'].numpy()
-                            return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                            # yield example
+                            r[f'tf']['y_true'][i] = example['image/class/label'].numpy()
+                            # return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+                            r = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+                            # current_i = current_i + 1
+                            imap[i] = r
+                            yield r
+                    igen = input_gen()
+
+                    def get_input(index):
+                        log(f'trying to get index {index}')
+                        log(f'current indices range from {safemin(list(imap.keys()))} to {safemax(list(imap.keys()))}')
+                        if index not in imap:
+                            next(igen)
+                            get_input(index)
+                        else:
+                            r = imap[index]
+                            del imap[index]
+                            return r
+                        # for raw_record in ds:
+                        #     example = tf.io.parse_single_example(raw_record, image_feature_description)
+                        #     r[f'tf']['y_true'][index] = example['image/class/label'].numpy()
+                        #     return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+                        # yield example
                     # y_true = []
                     # ifs_for_labels = input_files()
                     # for i in range(SANITY_SET.num):
