@@ -22,7 +22,6 @@ def resampleim(im, heigh, width, nchan=1):
     # interpolation=cv2.INTER_CUBIC
     # interpolation=cv2.INTER_NEAREST
     # log('resampleimA',silent=True)
-    # breakpoint()
     imA = cv2.resize(im, dsize=(width, heigh), interpolation=cv2.INTER_LINEAR)
     # log('resampleimB',silent=True)
     # imB = cv2.resize(im, dsize=(width, heigh), interpolation=cv2.INTER_NEAREST)
@@ -41,10 +40,7 @@ def resampleim(im, heigh, width, nchan=1):
     # data= np.array(data)
 
     # log('resampleim3.5',silent=True)
-    try:
-        imA.shape = (heigh, width, nchan)
-    except:
-        breakpoint()
+    imA.shape = (heigh, width, nchan)
     # log('resampleim3.6',silent=True)
     # np.reshape(data,(heigh,width,1))
     return imA

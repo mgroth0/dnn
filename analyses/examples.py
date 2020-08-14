@@ -19,7 +19,6 @@ class ExampleInput(PerEpochAnalysis):
     def after_fit(self, i, net, nam):
         if i == 0: self._after_thing(net.train_data, nam)
     def during_compile(self, eg):
-        # breakpoint()
         experiments = experiments_from_folder(eg.folder)
         # if len(experiments) > 0: # might be zero if only did sanity test
         random_exp = experiments[0]

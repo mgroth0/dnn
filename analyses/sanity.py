@@ -71,6 +71,7 @@ class SanityAnalysis(PostBuildAnalysis):
                 # , r['ml2tf'][pp_name] =
                 if SANITY_SET != SanitySet.Set100:
                     root = Folder('/matt/data/ImageNet/output')
+                    root = Folder('/matt/data/ImageNet/output_tf')
                     filenames = root.glob('validation*').map(lambda f: f.abspath).tolist()
                     def input_files():
                         ds = tf.data.TFRecordDataset(filenames)
@@ -202,7 +203,7 @@ class SanityAnalysis(PostBuildAnalysis):
     @shadow(ftype=ShadowFigType.PREVIEW)
     @cell(inputs=compile_eg)
     def calc_accs(self, data):
-        breakpoint()
+        # breakpoint()
         y_true = [int(n.split('_')[0]) for n in data['files']]
         data['ml']['y_true'] = y_true
         if SANITY_SET == SanitySet.Set100:

@@ -189,11 +189,8 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
                 if net.CHANNEL_AXIS == 1:
                     rimg = deepcopy(img)
                     t.toc(4)
-                    try:
-                        rimg = np.swapaxes(rimg, 0, 2)
-                        t.toc(5)
-                    except:
-                        breakpoint()
+                    rimg = np.swapaxes(rimg, 0, 2)
+                    t.toc(5)
                     # prog.tick()
                     r = np.expand_dims(rimg, axis=0),
                     t.toc(6)
@@ -211,7 +208,6 @@ def simple_predict(net: ModelWrapper, pp, inputs, *, length):
                 t.toc(9)
                 yield r
                 t.toc(10)
-                # breakpoint()
 
 
     # strategy = tf.distribute.MirroredStrategy()
@@ -226,10 +222,7 @@ def chain_predict(nets, pp, inputs):
         for vs, n in vs_n:
             if n.CHANNEL_AXIS == 1:
                 rimg = deepcopy(img)
-                try:
-                    rimg = np.swapaxes(rimg, 0, 2)
-                except:
-                    breakpoint()
+                rimg = np.swapaxes(rimg, 0, 2)
                 yield rimg
                 vs += n.predict(rimg)
             else:
