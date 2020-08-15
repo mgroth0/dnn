@@ -30,7 +30,7 @@ class RealImageNetSet:
     def __post_init__(self):
         assert 49999 >= self.num > 1
 
-SANITY_SET = RealImageNetSet(5000)  # 200 # 49999
+SANITY_SET = RealImageNetSet(1000)  # 200 # 49999
 
 
 class SanityAnalysis(PostBuildAnalysis):
