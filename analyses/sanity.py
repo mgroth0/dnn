@@ -7,7 +7,7 @@ import numpy as np
 import scipy
 import tensorflow as tf
 
-from arch.model_wrapper import ModelWrapper, chain_predict, simple_predict
+from arch.model_wrapper import ModelWrapper, simple_predict
 from lib.dnn_analyses import PostBuildAnalysis
 from lib.dnn_data_saving import save_dnn_data
 from lib.dnn_proj_struct import DNN_ExperimentGroup, experiments_from_folder
@@ -19,7 +19,6 @@ from mlib.boot.lang import enum, isstr, listkeys, isint
 from mlib.boot.stream import listitems, arr, listmap, __, concat, make3d, zeros, maxindex, ints, isnan, nans
 from mlib.fig.text_table_wrap import TextTableWrapper
 from mlib.file import File, Folder
-from mlib.math import safemin, safemax
 from mlib.web.html import H3, HTML_Pre, Div, Table, TableRow, DataCell
 class SanitySet(Enum):
     Set100 = auto()

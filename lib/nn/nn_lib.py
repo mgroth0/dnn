@@ -161,7 +161,7 @@ def RSA(nam, rep, y_true, ei, layer_name=None, layer_i=None):
 
     # class_names =list(test_classes.keys())
     # sorted_acts = sort(acts_trues,key=lambda t: t[1])
-    # matching darius' alphabatized order
+    # matching darius' alphabetized order
     class_names = alpha_keys
     sorted_acts = sort_human(acts_trues, keyparam=lambda t: inv_map(TEST_CLASS_MAP)[t[1]])
 

@@ -174,4 +174,4 @@ configs:
 #            <<: *default_exp
 #            arch: INC_ORIG
   default:
-        <<: *sanity_tests
+        <<: *run_one
