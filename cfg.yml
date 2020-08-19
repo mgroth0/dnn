@@ -175,3 +175,4 @@ configs:
 #            arch: INC_ORIG
   default:
         <<: *run_one
+        EXPERIMENT_NAME: test
