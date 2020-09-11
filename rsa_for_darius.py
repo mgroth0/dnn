@@ -15,7 +15,8 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 # TRANSPOSE = True
 
 # on openmind 10 took ~400 sec
-N_PER_CLASS = 100
+# N_PER_CLASS = 100
+N_PER_CLASS = 15
 
 LAYERS = {
     "AlexNet"  : 'fc7',
