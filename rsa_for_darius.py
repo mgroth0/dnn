@@ -126,7 +126,7 @@ def main():
                 only_one = {1: True}
                 def shorten(a):
                     if only_one[1]:
-                        log(f'shortening {len(a)} to {alexnet_act_len}')
+                        log(f'shortening {len(a)} to {len(arch_rand_perm)} to {alexnet_act_len}')
                         only_one[1] = False
                     return a[arch_rand_perm][0:alexnet_act_len]
 
