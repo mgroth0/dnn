@@ -22,6 +22,9 @@ class DNN(Project):
     extra_flags = _human_exp_flags + MODES
     def run(self, cfg):
 
+        print('here1, bye')
+        return None
+
         # keep modular
         assert not (cfg.REGEN_DATA and cfg.OVERWRITE_NORMS)  # btw, both imply killing worker before exp
 
