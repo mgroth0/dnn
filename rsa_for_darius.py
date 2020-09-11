@@ -1,7 +1,7 @@
 import numpy as np
 
 from lib.nn.nn_lib import RSA, rsa_corr
-from mlib.boot.lang import listkeys, enum
+from mlib.boot.lang import listkeys, enum, islinux
 from mlib.boot.stream import concat
 from mlib.fig.PlotData import PlotData
 from mlib.fig.makefigslib import MPLFigsBackend
@@ -47,7 +47,10 @@ CLASSES = [
 
 
 def main():
-    imgActivations = Folder('_data/imgActivationsForRSA')
+    if islinux():
+        imgActivations = Folder('/om5/user/mjgroth/data/imgActivationsForRSA')
+    else:
+        imgActivations = Folder('_data/imgActivationsForRSA')
     activations = {}
     for net_folder in imgActivations.folders:
         modelname = net_folder.name
