@@ -7,7 +7,7 @@ from lib.dnn_data_saving import save_dnn_data
 from mlib.boot.lang import inv_map
 from mlib.boot.stream import mod, numel, randperm, ismember, zeros, sort_human, arr, itr
 from mlib.fig.TableData import RSAMatrix
-from mlib.term import Progress
+from mlib.term import Progress, log_invokation
 
 def calc_steps(N_IMAGES, TRAIN_TEST_SPLIT, BATCH_SIZE):
     N_TRAIN_IMAGES = int(N_IMAGES * TRAIN_TEST_SPLIT)
@@ -146,33 +146,58 @@ def symm(im, arg):
 #
 #     return lgraph
 
-def RSA(nam, rep, y_true, ei, layer_name=None, layer_i=None):
-    log('running RSA...')
+def rsa_norm(a, b):
+    return np.linalg.norm(a - b)
+
+def rsa_corr(a,b):
+    return np.corrcoef(a,b)[0][1]
+
+@log_invokation
+def RSA(
+        nam,
+        rep,
+        y_true,
+        ei,
+        layer_name=None,
+        layer_i=None,
+        sort=True,
+        classnames=None,
+        return_result=False,
+        block_len=10,
+        fun=rsa_norm
+):
     special_confuse_mat = zeros(len(rep), len(rep))
     classes = []
 
-    inter_activations = rep.tolist()
-    from lib.nn import nnstate
-    TEST_CLASS_MAP = nnstate.CURRENT_TRUE_MAP
+    inter_activations = rep
+    class_names = classnames
+    if sort:
+        inter_activations = inter_activations.tolist()
+        assert classnames is None
+        from lib.nn import nnstate
+        TEST_CLASS_MAP = nnstate.CURRENT_TRUE_MAP
 
-    alpha_keys = sort_human(list(TEST_CLASS_MAP.keys()))
+        alpha_keys = sort_human(list(TEST_CLASS_MAP.keys()))
 
-    acts_trues = [(inter_activations[i], y_true[i]) for i in itr(y_true)]
+        acts_trues = [(inter_activations[i], y_true[i]) for i in itr(y_true)]
 
-    # class_names =list(test_classes.keys())
-    # sorted_acts = sort(acts_trues,key=lambda t: t[1])
-    # matching darius' alphabetized order
-    class_names = alpha_keys
-    sorted_acts = sort_human(acts_trues, keyparam=lambda t: inv_map(TEST_CLASS_MAP)[t[1]])
+        # class_names =list(test_classes.keys())
+        # sorted_acts = sort(acts_trues,key=lambda t: t[1])
+        # matching darius' alphabetized order
+        class_names = alpha_keys
+        sorted_acts = sort_human(acts_trues, keyparam=lambda t: inv_map(TEST_CLASS_MAP)[t[1]])
 
-    sorted_acts = arr([a[0] for a in sorted_acts])
+        sorted_acts = arr([a[0] for a in sorted_acts])
+    else:
+        sorted_acts = inter_activations
 
     log('getting norms...')
     with Progress(len(sorted_acts)) as prog:
         for i in itr(sorted_acts):
-            classes.append(list(TEST_CLASS_MAP.keys())[y_true[i]])
+            if classnames is None:
+                classes.append(list(TEST_CLASS_MAP.keys())[y_true[i]])
             for j in itr(sorted_acts):
-                norm = np.linalg.norm(sorted_acts[i, :] - sorted_acts[j, :])
+                norm = fun(sorted_acts[i, :], sorted_acts[j, :])
                 special_confuse_mat[i, j] = norm
             prog.tick()
     log('finished getting norms!')
@@ -185,16 +210,27 @@ def RSA(nam, rep, y_true, ei, layer_name=None, layer_i=None):
     special_confuse_mat = np.vectorize(fix)(special_confuse_mat)
 
     tit = f'L2-{nam}'
-    title = f'{tit} ({nnstate.FLAGS.arch}{nnstate.FLAGS.ntrain}E{ei + 1})'
-    if nam == 'Inter':
-        title = f'{title}(Layer{layer_i}:{layer_name})'
+    if not return_result:
+        title = f'{tit} ({nnstate.FLAGS.arch}{nnstate.FLAGS.ntrain}E{ei + 1})'
+        if nam == 'Inter':
+            title = f'{title}(Layer{layer_i}:{layer_name})'
 
-    save_dnn_data(RSAMatrix(
-        data=special_confuse_mat,
-        title=title,
-        confuse_max=1,
-        confuse_target=mx,
-        block_len=10,
-        row_headers=class_names,
-        col_headers=class_names,
-    ), tit, f'CM{ei + 1}')
+        save_dnn_data(RSAMatrix(
+            data=special_confuse_mat,
+            title=title,
+            confuse_max=1,
+            confuse_target=mx,
+            block_len=block_len,
+            row_headers=class_names,
+            col_headers=class_names,
+        ), tit, f'CM{ei + 1}', 'mfig')
+    else:
+        return RSAMatrix(
+            data=special_confuse_mat,
+            title=nam,
+            confuse_max=1,
+            confuse_target=mx,
+            block_len=block_len,
+            row_headers=class_names,
+            col_headers=class_names,
+        )

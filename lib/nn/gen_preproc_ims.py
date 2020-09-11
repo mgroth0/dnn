@@ -87,12 +87,9 @@ def gen_images(*, folder, class_pairs, ims_per_class):
             for w in range(bar_start, bar_end):
                 im_data[:, w] = 0.5
 
-            band_group_i = band_group_i + 1
-            if band_group_i == band_group_size:
-                band_group = band_group + 1
-                band_group_i = 0
-
             im_data = make255(im_data)
+
+
 
             if iseven(i):
                 im_data = nn_lib.symm(im_data, 1)
@@ -104,10 +101,19 @@ def gen_images(*, folder, class_pairs, ims_per_class):
 
             im_data = np.expand_dims(im_data, 2)
 
+
+
             # i think Darius' data was single channeled
             # im_data = np.concatenate((im_data, im_data, im_data), axis=2)
 
-            im_file = File(f'{File(folder).abspath}/{label}/sym{i}.png')
+            # im_file = File(f'{File(folder).abspath}/{label}/sym{i}.png')
+            im_file = File(f'{File(folder).abspath}/{label}/{label}_{band_group_i}.png')
+
+            band_group_i = band_group_i + 1
+            if band_group_i == band_group_size:
+                band_group = band_group + 1
+                band_group_i = 0
+
             im_file.save(im_data, silent=True)
             prog.tick()
 

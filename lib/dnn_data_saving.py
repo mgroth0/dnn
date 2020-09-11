@@ -17,7 +17,7 @@ def saveTestValResults(ARCH, nam, ds, ei):
         confuse_max=len(ds),
         confuse_target=len(ds) / nnstate.num_pred_classes(),
         headers_included=True
-    ), f'{nam}', f'CM{ei + 1}')
+    ), f'{nam}', f'CM{ei + 1}','mfig')
 
 root = None
 def EXP_FOLDER():
