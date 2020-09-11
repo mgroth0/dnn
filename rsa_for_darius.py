@@ -4,7 +4,7 @@ from lib.misc import imutil
 from lib.nn.nn_lib import RSA, rsa_corr
 from mlib.boot import log
 from mlib.boot.lang import listkeys, enum, islinux
-from mlib.boot.stream import concat
+from mlib.boot.stream import concat, listmap, randperm
 from mlib.fig.PlotData import PlotData
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.file import Folder, mkdir, File
@@ -32,7 +32,9 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 # N_PER_CLASS = 10 #90 sec request, 324 total
 
 # N_PER_CLASS = 80 #161 request, 1409 total
-N_PER_CLASS = 100
+N_PER_CLASS = 100  # 110 request, 2035 total
+# alexnet is taking 1 or 2 seconds for 100 images , but gnet ~50 secs and IRN ~110 secs
+# after randperm and shorten each act to alexnet len
 
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
@@ -91,7 +93,13 @@ def main():
 
     result_folder = mkdir('_figs/rsa')
 
+    alexnet_act_len = None
+
     for arch in NETS:
+        log(f'in arch: {arch}')
+
+        arch_rand_perm = None
+
         for size in T_SIZES:
             # if arch != 'SQN': continue
             net = arch + '_' + str(size)
@@ -102,7 +110,22 @@ def main():
 
             for c in CLASSES:
                 acts = activations[net][c].load()['imageActivations']
+                log(f'total images per class: {len(acts)}')
+                log(f'total acts per image: {len(acts[0])}')
+                if alexnet_act_len is None:
+                    alexnet_act_len = len(acts[0])
+
+                if arch_rand_perm is None:
+                    arch_rand_perm = randperm(range(len(acts[0])))
+
                 acts = acts[0:N_PER_CLASS]
+
+                def shorten(a):
+                    return a[arch_rand_perm][0:alexnet_act_len]
+
+                log('shortening')
+                acts = listmap(shorten, acts)
+                log('shortened!')
 
                 if acts_for_rsa is None:
                     acts_for_rsa = acts
