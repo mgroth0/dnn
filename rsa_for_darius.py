@@ -75,7 +75,8 @@ def main():
         for size in T_SIZES:
             # if arch != 'SQN': continue
             net = arch + '_' + str(size)
-            block_len = N_PER_CLASS
+            # block_len = N_PER_CLASS
+            block_len = 10
 
             acts_for_rsa = None
 
