@@ -152,7 +152,8 @@ def main():
             fd.make = True
             file = result_folder[net + "_dis.mfig"]
             file.save(fd)
-            backend = WolfMakeFigsBackend
+            # backend = WolfMakeFigsBackend
+            backend = MPLFigsBackend
             fd = file.loado()
             fd.file = file
             fd.imgFile = file.resrepext('png')
