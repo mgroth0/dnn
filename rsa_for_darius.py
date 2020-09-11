@@ -15,17 +15,23 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 # TRANSPOSE = True
 
 # on openmind 10 took ~400 sec
+# N_PER_CLASS = 10
 # N_PER_CLASS = 100
 # N_PER_CLASS = 15 # took 524 sec
 
-N_PER_CLASS = 20  # took 687, with multiprocess took 363 (and again, 362)! (56 CPUS)
+# N_PER_CLASS = 20  # took 687, with multiprocess took 363 (and again, 362)! (56 CPUS)
 # 100: 376, 347(2 sec slurm wait)
 # 5(actually 80(twice?? must be wrong, since i put 5 and i think node has only 56??)!???): 578(4 sec slurm wait)
 # 150(actually 56(twice)!???): 367(1 sec slurm wait)
 # NONE(56)
 
-N_PER_CLASS = 40
+# always requesting 60 (getting 56/80) from now on
 
+# N_PER_CLASS = 40 #65 sec slurm request, said I have 80 cpus... took 533 total (468 after slurm)
+
+N_PER_CLASS = 10
+
+# N_PER_CLASS = 80
 
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
