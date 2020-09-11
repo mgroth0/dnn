@@ -22,6 +22,7 @@ N_PER_CLASS = 20  # took 687, with multiprocess took 363 (and again, 362)! (56 C
 # 100: 376, 347(2 sec slurm wait)
 # 5(actually 80!???): 578(4 sec slurm wait)
 # 150(actually 56(twice)!???): 367(1 sec slurm wait)
+# NONE(56)
 
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
