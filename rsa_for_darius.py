@@ -34,18 +34,21 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 # N_PER_CLASS = 80 #161 request, 1409 total
 N_PER_CLASS = 100  # 110 request, 2035 total
 # alexnet is taking 1 or 2 seconds for 100 images , but gnet ~50 secs and IRN ~110 secs
-# after randperm and shorten each act to alexnet len
+# 100, after randperm and shorten each act to alexnet len: 142 request, 492 total,
+
+# total images per class: 500 always
+
 
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
 
 LAYERS = {
-    "AlexNet"  : 'fc7',
-    "GoogleNet": 'inception_5b-output',
-    "IRN"      : 'conv_7b_ac',
-    "SQN"      : 'relu_conv10',
-    "IV3"      : 'mixed10',
-    "RN18"     : 'res5b-relu'
+    "AlexNet"  : 'fc7',  # 4096
+    "GoogleNet": 'inception_5b-output',  # 50176
+    "IRN"      : 'conv_7b_ac',  # 98304
+    "SQN"      : 'relu_conv10',  # 784
+    "IV3"      : 'mixed10',  # 131072
+    "RN18"     : 'res5b-relu'  # 25088
 }
 NETS = listkeys(LAYERS)
 T_SIZES = [
@@ -120,7 +123,11 @@ def main():
 
                 acts = acts[0:N_PER_CLASS]
 
+                only_one = {1: True}
                 def shorten(a):
+                    if only_one[1]:
+                        log(f'shortening {len(a)} to {alexnet_act_len}')
+                        only_one[1] = False
                     return a[arch_rand_perm][0:alexnet_act_len]
 
                 log('shortening')
