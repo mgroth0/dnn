@@ -102,7 +102,7 @@ def main():
             activations[modelname][classname] = activations_mat
 
     result_folder = mkdir('_figs/rsa')
-
+    result_folder.clear()
     sqn_act_len = None
 
     scores = {}
