@@ -17,7 +17,11 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 # on openmind 10 took ~400 sec
 # N_PER_CLASS = 100
 # N_PER_CLASS = 15 # took 524 sec
-N_PER_CLASS = 20 #took 687
+N_PER_CLASS = 20  # took 687, with multiprocess took 363!
+
+import multiprocessing
+print(f'NUM CPUS: {multiprocessing.cpu_count()}')
+
 
 LAYERS = {
     "AlexNet"  : 'fc7',
