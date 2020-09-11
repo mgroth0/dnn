@@ -29,9 +29,9 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 
 # N_PER_CLASS = 40 #65 sec slurm request, said I have 80 cpus... took 533 total (468 after slurm)
 
-N_PER_CLASS = 10
+# N_PER_CLASS = 10 #90 sec request, 324 total
 
-# N_PER_CLASS = 80
+N_PER_CLASS = 80
 
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
