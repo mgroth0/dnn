@@ -2,6 +2,7 @@ import numpy as np
 
 from lib.misc import imutil
 from lib.nn.nn_lib import RSA, rsa_corr
+from mlib.boot import log
 from mlib.boot.lang import listkeys, enum, islinux
 from mlib.boot.stream import concat
 from mlib.fig.PlotData import PlotData
@@ -103,8 +104,9 @@ def main():
                 return_result=True
             )
 
-            fd.data = imutil.resampleim(fd.data, len(CLASSES) * 10, len(CLASSES) * 10, nchan=1)
-
+            log('resampling1')
+            fd.data = imutil.resampleim(np.array(fd.data), len(CLASSES) * 10, len(CLASSES) * 10, nchan=1).tolist()
+            log('resampled2')
 
             norm_rsa_mat = fd.data / np.max(fd.data)
 
