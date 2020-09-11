@@ -25,6 +25,7 @@ class DNN(Project):
         print('here1, doing Darius-RSA')
         import rsa_for_darius
         rsa_for_darius.main()
+        print('here2, finished Darius-RSA')
         return None
 
         # keep modular
