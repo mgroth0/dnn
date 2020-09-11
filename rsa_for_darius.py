@@ -37,8 +37,8 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 # 100, after randperm and shorten each act to SQN len: 113 request, 464 total,
 # total images per class: 500 always
 # everything below uses shortening
-N_PER_CLASS = 200
-
+# N_PER_CLASS = 200 #request 112, total 602
+N_PER_CLASS = 500  # (max) #
 
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
