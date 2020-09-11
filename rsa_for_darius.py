@@ -48,7 +48,7 @@ CLASSES = [
 
 def main():
     if islinux():
-        imgActivations = Folder('/om5/user/mjgroth/data/imgActivationsForRSA')
+        imgActivations = Folder('/matt/data/imgActivationsForRSA')
     else:
         imgActivations = Folder('_data/imgActivationsForRSA')
     activations = {}
