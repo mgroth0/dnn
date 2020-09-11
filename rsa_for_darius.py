@@ -105,7 +105,8 @@ def main():
             )
 
             log('resampling1')
-            fd.data = imutil.resampleim(np.array(fd.data), len(CLASSES) * 10, len(CLASSES) * 10, nchan=1)[:,:,1].tolist()
+            fd.data = imutil.resampleim(np.array(fd.data), len(CLASSES) * 10, len(CLASSES) * 10, nchan=1)[:, :,
+                      0].tolist()
             log('resampled2')
 
             norm_rsa_mat = fd.data / np.max(fd.data)
