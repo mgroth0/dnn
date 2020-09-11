@@ -6,8 +6,8 @@ import numpy as np
 from mlib import parallel
 from mlib.boot import log
 from lib.dnn_data_saving import save_dnn_data
-from mlib.boot.lang import inv_map, enum
-from mlib.boot.stream import mod, numel, randperm, ismember, zeros, sort_human, arr, itr
+from mlib.boot.lang import inv_map, enum, islinux
+from mlib.boot.stream import mod, numel, randperm, ismember, zeros, sort_human, arr, itr, listmap
 from mlib.fig.TableData import RSAMatrix
 from mlib.term import Progress, log_invokation
 
@@ -214,7 +214,10 @@ def RSA(
 
     t1 = log('Starting CPU Pool Test')
     with Pool() as p:
-        r = p.map(fun_wrap, itr(sorted_acts))
+        if islinux():
+            r = p.map(fun_wrap, itr(sorted_acts))
+        else:
+            r = listmap(fun_wrap, itr(sorted_acts))
     t2 = log('\tFinished CPU Pool Test')
     log(f'\t\ttotal time: {t2 - t1}s')
 
