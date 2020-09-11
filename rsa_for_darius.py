@@ -38,7 +38,11 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 # total images per class: 500 always
 # everything below uses shortening
 # N_PER_CLASS = 200 #request 112, total 602
-N_PER_CLASS = 500  # (max) #
+
+# N_PER_CLASS = 500  # (max) # NO LONGER IN SLURM BC REQUEST WONT GO THROUGH, SO CPUS MIGHT SHARED WITH OTHER PROCESSES. NUM CPUS: 56, request intstant, 1915 total
+
+# test
+N_PER_CLASS = 10
 
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
