@@ -52,7 +52,10 @@ def main():
     else:
         imgActivations = Folder('_data/imgActivationsForRSA')
     activations = {}
-    for net_folder in imgActivations.folders:
+    for net_folder in imgActivations.files:
+        if not net_folder.isdir:
+            continue
+        net_folder = Folder(net_folder)
         modelname = net_folder.name
         if modelname not in activations:
             activations[modelname] = {}
