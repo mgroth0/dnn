@@ -154,6 +154,9 @@ def rsa_norm(a, b):
 def rsa_corr(a, b):
     return np.corrcoef(a, b)[0][1]
 
+FUN_FOR_PICKLE = None
+FUN_WRAP_FOR_PICKLE = None
+
 @log_invokation
 def RSA(
         nam,
@@ -196,17 +199,22 @@ def RSA(
     log('getting norms...')
 
 
+    FUN_FOR_PICKLE = fun
+
     def fun_wrap(i):
         results = []
         for j in itr(sorted_acts):
-            norm = fun(sorted_acts[i, :], sorted_acts[j, :])
+            norm = FUN_FOR_PICKLE(sorted_acts[i, :], sorted_acts[j, :])
             results.append((i, j, norm))
             # special_confuse_mat[i, j] = norm
         return results
 
+
+
+    FUN_WRAP_FOR_PICKLE = fun_wrap
     t1 = log('Starting CPU Pool Test')
     with Pool() as p:
-        r = p.map(fun_wrap, itr(sorted_acts))
+        r = p.map(FUN_WRAP_FOR_PICKLE, itr(sorted_acts))
     t2 = log('\tFinished CPU Pool Test')
     log(f'\t\ttotal time: {t2 - t1}s')
 
