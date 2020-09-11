@@ -32,11 +32,12 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 # N_PER_CLASS = 10 #90 sec request, 324 total
 
 # N_PER_CLASS = 80 #161 request, 1409 total
-N_PER_CLASS = 100  # 110 request, 2035 total
+# N_PER_CLASS = 100  # 110 request, 2035 total
 # alexnet is taking 1 or 2 seconds for 100 images , but gnet ~50 secs and IRN ~110 secs
-# 100, after randperm and shorten each act to alexnet len: 142 request, 492 total,
-
+# 100, after randperm and shorten each act to SQN len: 113 request, 464 total,
 # total images per class: 500 always
+# everything below uses shortening
+N_PER_CLASS = 200
 
 
 import multiprocessing
