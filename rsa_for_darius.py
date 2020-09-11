@@ -243,7 +243,7 @@ def main():
         for sizekey, score in listitems(arch):
             score_list.append(score)
             size_list.append(size)
-            c_list.append(c_map[arch])
+            c_list.append(c_map[akey])
     fd = PlotData(
         y=score_list,
         # xticklabels
