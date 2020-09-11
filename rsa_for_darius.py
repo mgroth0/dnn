@@ -1,19 +1,21 @@
 import numpy as np
 
+from lib.misc import imutil
 from lib.nn.nn_lib import RSA, rsa_corr
 from mlib.boot.lang import listkeys, enum, islinux
 from mlib.boot.stream import concat
 from mlib.fig.PlotData import PlotData
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.file import Folder, mkdir, File
-from mlib.wolf.wolf_figs import WolfMakeFigsBackend
 
 SANITY = True
 SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 
 # TRANSPOSE = True
 
-N_PER_CLASS = 10
+# on openmind 10 took ~400 sec
+N_PER_CLASS = 100
+
 LAYERS = {
     "AlexNet"  : 'fc7',
     "GoogleNet": 'inception_5b-output',
@@ -100,6 +102,10 @@ def main():
                 sort=False,
                 return_result=True
             )
+
+            fd.data = imutil.resampleim(fd.data, len(CLASSES) * 10, len(CLASSES) * 10, nchan=1)
+
+
             norm_rsa_mat = fd.data / np.max(fd.data)
 
             fd.make = True
