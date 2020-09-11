@@ -17,10 +17,11 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 # on openmind 10 took ~400 sec
 # N_PER_CLASS = 100
 # N_PER_CLASS = 15 # took 524 sec
+
 N_PER_CLASS = 20  # took 687, with multiprocess took 363 (and again, 362)! (56 CPUS)
 # 100: 376, 347(2 sec slurm wait)
 # 5(actually 80!???): 578(4 sec slurm wait)
-
+# 150(actually 56!???): 367(1 sec slurm wait)
 
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
