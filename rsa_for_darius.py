@@ -43,10 +43,11 @@ import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
 
 LAYERS = {
+    "SQN"      : 'relu_conv10',  # 784
+
     "AlexNet"  : 'fc7',  # 4096
     "GoogleNet": 'inception_5b-output',  # 50176
     "IRN"      : 'conv_7b_ac',  # 98304
-    "SQN"      : 'relu_conv10',  # 784
     "IV3"      : 'mixed10',  # 131072
     "RN18"     : 'res5b-relu'  # 25088
 }
@@ -96,7 +97,7 @@ def main():
 
     result_folder = mkdir('_figs/rsa')
 
-    alexnet_act_len = None
+    sqn_act_len = None
 
     for arch in NETS:
         log(f'in arch: {arch}')
@@ -115,8 +116,8 @@ def main():
                 acts = activations[net][c].load()['imageActivations']
                 log(f'total images per class: {len(acts)}')
                 log(f'total acts per image: {len(acts[0])}')
-                if alexnet_act_len is None:
-                    alexnet_act_len = len(acts[0])
+                if sqn_act_len is None:
+                    sqn_act_len = len(acts[0])
 
                 if arch_rand_perm is None:
                     arch_rand_perm = randperm(range(len(acts[0])))
@@ -126,9 +127,9 @@ def main():
                 only_one = {1: True}
                 def shorten(a):
                     if only_one[1]:
-                        log(f'shortening {len(a)} to {len(arch_rand_perm)} to {alexnet_act_len}')
+                        log(f'shortening {len(a)} to {len(arch_rand_perm)} to {sqn_act_len}')
                         only_one[1] = False
-                    return a[arch_rand_perm][0:alexnet_act_len]
+                    return a[arch_rand_perm][0:sqn_act_len]
 
                 log('shortening')
                 acts = listmap(shorten, acts)
