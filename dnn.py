@@ -22,7 +22,9 @@ class DNN(Project):
     extra_flags = _human_exp_flags + MODES
     def run(self, cfg):
 
-        print('here1, bye')
+        print('here1, doing Darius-RSA')
+        import rsa_for_darius
+        rsa_for_darius.main()
         return None
 
         # keep modular
