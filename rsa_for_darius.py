@@ -4,7 +4,7 @@ from lib.misc import imutil
 from lib.nn.nn_lib import RSA, rsa_corr
 from mlib.boot import log
 from mlib.boot.lang import listkeys, enum, islinux
-from mlib.boot.stream import concat, listmap, randperm
+from mlib.boot.stream import concat, listmap, randperm, listitems
 from mlib.fig.PlotData import PlotData
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.file import Folder, mkdir, File
@@ -86,6 +86,7 @@ def main():
     else:
         imgActivations = Folder('_data/imgActivationsForRSA')
     activations = {}
+
     for net_folder in imgActivations.files:
         if not net_folder.isdir:
             continue
@@ -104,8 +105,10 @@ def main():
 
     sqn_act_len = None
 
+    scores = {}
     for arch in NETS:
         log(f'in arch: {arch}')
+        scores[arch] = {}
 
         arch_rand_perm = None
 
@@ -196,7 +199,7 @@ def main():
                         dissimilarity_S += avg_dis
                     else:
                         dissimilarity_across += avg_dis
-
+            scores[arch][size] = dissimilarity_across
             fd = PlotData(
                 y=[dissimilarity_NS, dissimilarity_S, dissimilarity_across],
                 # xticklabels
@@ -224,6 +227,47 @@ def main():
             fd.file = file
             fd.imgFile = file.resrepext('png')
             backend.makeAllPlots([fd], overwrite=True)
+
+    score_list = []
+    size_list = []
+    c_list = []
+    c_map = {
+        "SQN"      : 'r',  # 784
+        "AlexNet"  : 'b',  # 4096
+        "GoogleNet": 'g',  # 50176
+        "IRN"      : 'y',  # 98304
+        "IV3"      : 'p',  # 131072
+        "RN18"     : 'm'  # 25088
+    }
+    for akey, arch in listitems(scores):
+        for sizekey, score in listitems(arch):
+            score_list.append(score)
+            size_list.append(size)
+            c_list.append(c_map[arch])
+    fd = PlotData(
+        y=score_list,
+        # xticklabels
+        x=size_list,
+        item_type='scatter',
+        # item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
+        item_color=c_list,
+        ylim=[0, 20],
+        title=f'Dissimilarities',
+        # err=[0, 0, 0],
+        xlabel='Training Sizes',
+        ylabel='Dissimilarity Score',
+        # x=[1, 2, 3],
+        bar_sideways_labels=False
+    )
+    fd.make = True
+    file = result_folder[net + "_scatter.mfig"]
+    file.save(fd)
+    # backend = WolfMakeFigsBackend
+    backend = MPLFigsBackend
+    fd = file.loado()
+    fd.file = file
+    fd.imgFile = file.resrepext('png')
+    backend.makeAllPlots([fd], overwrite=True)
 
 
 def main2():
