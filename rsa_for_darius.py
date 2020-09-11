@@ -232,12 +232,12 @@ def main():
     size_list = []
     c_list = []
     c_map = {
-        "SQN"      : 'r',  # 784
-        "AlexNet"  : 'b',  # 4096
-        "GoogleNet": 'g',  # 50176
-        "IRN"      : 'y',  # 98304
-        "IV3"      : 'p',  # 131072
-        "RN18"     : 'm'  # 25088
+        "SQN"      : [1,0,0],  # 784
+        "AlexNet"  : [0,0,1],  # 4096
+        "GoogleNet": [0,1,0],  # 50176
+        "IRN"      : [1,1,0],  # 98304
+        "IV3"      : [1,0,1],  # 131072
+        "RN18"     : [0,1,1]  # 25088
     }
     for akey, arch in listitems(scores):
         for sizekey, score in listitems(arch):
@@ -260,7 +260,7 @@ def main():
         bar_sideways_labels=False
     )
     fd.make = True
-    file = result_folder[net + "_scatter.mfig"]
+    file = result_folder["scatter.mfig"]
     file.save(fd)
     # backend = WolfMakeFigsBackend
     backend = MPLFigsBackend
