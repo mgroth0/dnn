@@ -232,12 +232,12 @@ def main():
     size_list = []
     c_list = []
     c_map = {
-        "SQN"      : [1,0,0],  # 784
-        "AlexNet"  : [0,0,1],  # 4096
-        "GoogleNet": [0,1,0],  # 50176
-        "IRN"      : [1,1,0],  # 98304
-        "IV3"      : [1,0,1],  # 131072
-        "RN18"     : [0,1,1]  # 25088
+        "SQN"      : [1, 0, 0],  # 784
+        "AlexNet"  : [0, 0, 1],  # 4096
+        "GoogleNet": [0, 1, 0],  # 50176
+        "IRN"      : [1, 1, 0],  # 98304
+        "IV3"      : [1, 0, 1],  # 131072
+        "RN18"     : [0, 1, 1]  # 25088
     }
     for akey, arch in listitems(scores):
         for sizekey, score in listitems(arch):
