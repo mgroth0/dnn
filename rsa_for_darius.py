@@ -9,7 +9,7 @@ from mlib.fig.PlotData import PlotData
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.file import Folder, mkdir, File
 
-SANITY = True
+SANITY = False
 SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 
 # TRANSPOSE = True
@@ -170,6 +170,9 @@ def main():
             log('resampled2')
 
             norm_rsa_mat = fd.data / np.max(fd.data)
+
+            # need to do this again after downsampling
+            fd.confuse_target = np.max(fd.data)
 
             fd.make = True
             file = result_folder[net + ".mfig"]
@@ -343,5 +346,5 @@ if __name__ == '__main__':
     if SANITY:
         sanity()
     else:
-        # main()
-        main2()
+        main()
+        # main2()
