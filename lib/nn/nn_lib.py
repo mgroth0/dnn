@@ -1,10 +1,12 @@
 import copy
+from multiprocessing import Pool
 
 import numpy as np
 
+from mlib import parallel
 from mlib.boot import log
 from lib.dnn_data_saving import save_dnn_data
-from mlib.boot.lang import inv_map
+from mlib.boot.lang import inv_map, enum
 from mlib.boot.stream import mod, numel, randperm, ismember, zeros, sort_human, arr, itr
 from mlib.fig.TableData import RSAMatrix
 from mlib.term import Progress, log_invokation
@@ -149,8 +151,8 @@ def symm(im, arg):
 def rsa_norm(a, b):
     return np.linalg.norm(a - b)
 
-def rsa_corr(a,b):
-    return np.corrcoef(a,b)[0][1]
+def rsa_corr(a, b):
+    return np.corrcoef(a, b)[0][1]
 
 @log_invokation
 def RSA(
@@ -192,15 +194,35 @@ def RSA(
         sorted_acts = inter_activations
 
     log('getting norms...')
-    with Progress(len(sorted_acts)) as prog:
-        for i in itr(sorted_acts):
-            if classnames is None:
-                classes.append(list(TEST_CLASS_MAP.keys())[y_true[i]])
-            for j in itr(sorted_acts):
-                norm = fun(sorted_acts[i, :], sorted_acts[j, :])
-                special_confuse_mat[i, j] = norm
-            prog.tick()
+
+
+    def fun_wrap(i):
+        results = []
+        for j in itr(sorted_acts):
+            norm = fun(sorted_acts[i, :], sorted_acts[j, :])
+            results.append((i, j, norm))
+            # special_confuse_mat[i, j] = norm
+        return results
+
+    t1 = log('Starting CPU Pool Test')
+    with Pool() as p:
+        r = p.map(fun_wrap, itr(sorted_acts))
+    t2 = log('\tFinished CPU Pool Test')
+    log(f'\t\ttotal time: {t2 - t1}s')
+
+    # with Progress(len(sorted_acts)) as prog:
+    #     for i in itr(sorted_acts):
+    #         if classnames is None:
+    #             classes.append(list(TEST_CLASS_MAP.keys())[y_true[i]])
+    #         for j in itr(sorted_acts):
+    #             norm = fun(sorted_acts[i, :], sorted_acts[j, :])
+    #             special_confuse_mat[i, j] = norm
+    #         prog.tick()
     log('finished getting norms!')
+    for results in r:
+        for rr in results:
+            special_confuse_mat[rr[0], rr[1]] = rr[2]
+    log('finished placing norms')
 
     mx = np.max(special_confuse_mat)
 
