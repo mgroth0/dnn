@@ -31,7 +31,8 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 
 # N_PER_CLASS = 10 #90 sec request, 324 total
 
-N_PER_CLASS = 80
+# N_PER_CLASS = 80 #161 request, 1409 total
+N_PER_CLASS = 100
 
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
