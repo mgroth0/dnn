@@ -25,6 +25,7 @@ class DNN(Project):
         print('here1, doing Darius-RSA')
         import rsa_for_darius
         rsa_for_darius.main()
+        rsa_for_darius.test_line()
         print('here2, finished Darius-RSA')
         return None
 
