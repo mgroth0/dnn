@@ -1,3 +1,4 @@
+from matplotlib.lines import Line2D
 import numpy as np
 
 from lib.misc import imutil
@@ -245,7 +246,7 @@ def main():
     for akey, arch in listitems(scores):
         for sizekey, score in listitems(arch):
             score_list.append(score)
-            size_list.append(size)
+            size_list.append(sizekey)
             c_list.append(c_map[akey])
     fd = PlotData(
         y=score_list,
@@ -260,7 +261,11 @@ def main():
         xlabel='Training Sizes',
         ylabel='Dissimilarity Score',
         # x=[1, 2, 3],
-        bar_sideways_labels=False
+        bar_sideways_labels=False,
+        legend=listmap(
+            lambda akey, arch: Line2D([0], [0], color=c_map[akey], lw=4, label=akey),
+            listitems(scores)
+        )
     )
     fd.make = True
     file = result_folder["scatter.mfig"]
