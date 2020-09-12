@@ -3,6 +3,7 @@ import numpy as np
 
 from lib.misc import imutil
 from lib.nn.nn_lib import RSA, rsa_corr
+from mlib.JsonSerializable import FigSet
 from mlib.boot import log
 from mlib.boot.lang import listkeys, enum, islinux
 from mlib.boot.stream import concat, listmap, randperm, listitems
@@ -232,9 +233,7 @@ def main():
             fd.imgFile = file.resrepext('png')
             backend.makeAllPlots([fd], overwrite=True)
 
-    score_list = []
-    size_list = []
-    c_list = []
+
     c_map = {
         "SQN"      : [1, 0, 0],  # 784
         "AlexNet"  : [0, 0, 1],  # 4096
@@ -243,41 +242,47 @@ def main():
         "IV3"      : [1, 0, 1],  # 131072
         "RN18"     : [0, 1, 1]  # 25088
     }
+    fs = FigSet()
     for akey, arch in listitems(scores):
+        score_list = []
+        size_list = []
+        c_list = []
         for sizekey, score in listitems(arch):
             score_list.append(score)
             size_list.append(sizekey)
             c_list.append(c_map[akey])
-    fd = PlotData(
-        y=score_list,
-        # xticklabels
-        x=size_list,
-        # item_type='scatter',
-        item_type='line',
-        # item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
-        item_color=c_list,
-        ylim=[0, 20],
-        title=f'Dissimilarities',
-        # err=[0, 0, 0],
-        xlabel='Training Sizes',
-        ylabel='Dissimilarity Score',
-        # x=[1, 2, 3],
-        bar_sideways_labels=False,
-    )
-    fd.make = True
+        fd = PlotData(
+            y=score_list,
+            # xticklabels
+            x=size_list,
+            # item_type='scatter',
+            item_type='line',
+            # item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
+            item_color=c_map[akey],#,c_list,
+            ylim=[0, 20],
+            title=f'Dissimilarities',
+            # err=[0, 0, 0],
+            xlabel='Training Sizes',
+            ylabel='Dissimilarity Score',
+            # x=[1, 2, 3],
+            bar_sideways_labels=False,
+        )
+        fd.make = True
+        fs.viss.append(fd)
+    fs.make = True
     file = result_folder["scatter.mfig"]
-    file.save(fd)
+    file.save(fs)
     # backend = WolfMakeFigsBackend
     backend = MPLFigsBackend
-    fd = file.loado()
-    fd.file = file
-    fd.imgFile = file.resrepext('png')
-    fd.legend=listmap(
+    fs = file.loado()
+    fs.file = file
+    fs.imgFile = file.resrepext('png')
+    fs.viss[0].legend=listmap(
         #akey, arch
         lambda item: Line2D([0], [0], color=c_map[item[0]], lw=4, label=item[0]),
         listitems(scores)
     )
-    backend.makeAllPlots([fd], overwrite=True)
+    backend.makeAllPlots([fs], overwrite=True)
 
 
 def main2():
