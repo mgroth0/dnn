@@ -263,7 +263,8 @@ def main():
         # x=[1, 2, 3],
         bar_sideways_labels=False,
         legend=listmap(
-            lambda akey, arch: Line2D([0], [0], color=c_map[akey], lw=4, label=akey),
+            #akey, arch
+            lambda item: Line2D([0], [0], color=c_map[item[0]], lw=4, label=item[0]),
             listitems(scores)
         )
     )
