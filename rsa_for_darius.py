@@ -262,11 +262,6 @@ def main():
         ylabel='Dissimilarity Score',
         # x=[1, 2, 3],
         bar_sideways_labels=False,
-        legend=listmap(
-            #akey, arch
-            lambda item: Line2D([0], [0], color=c_map[item[0]], lw=4, label=item[0]),
-            listitems(scores)
-        )
     )
     fd.make = True
     file = result_folder["scatter.mfig"]
@@ -276,6 +271,11 @@ def main():
     fd = file.loado()
     fd.file = file
     fd.imgFile = file.resrepext('png')
+    fd.legend=listmap(
+        #akey, arch
+        lambda item: Line2D([0], [0], color=c_map[item[0]], lw=4, label=item[0]),
+        listitems(scores)
+    )
     backend.makeAllPlots([fd], overwrite=True)
 
 
