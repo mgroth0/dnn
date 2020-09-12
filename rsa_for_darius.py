@@ -252,7 +252,8 @@ def main():
         y=score_list,
         # xticklabels
         x=size_list,
-        item_type='scatter',
+        # item_type='scatter',
+        item_type='line',
         # item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
         item_color=c_list,
         ylim=[0, 20],
