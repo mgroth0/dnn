@@ -41,10 +41,10 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 # everything below uses shortening
 # N_PER_CLASS = 200 #request 112, total 602
 
-# N_PER_CLASS = 500  # (max) # NO LONGER IN SLURM BC REQUEST WONT GO THROUGH, SO CPUS MIGHT SHARED WITH OTHER PROCESSES. NUM CPUS: 56, request intstant, 1915 total
+N_PER_CLASS = 500  # (max) # NO LONGER IN SLURM BC REQUEST WONT GO THROUGH, SO CPUS MIGHT SHARED WITH OTHER PROCESSES. NUM CPUS: 56, request intstant, 1915 total
 
 # test
-N_PER_CLASS = 10
+# N_PER_CLASS = 10
 
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
@@ -233,7 +233,6 @@ def main():
             fd.imgFile = file.resrepext('png')
             backend.makeAllPlots([fd], overwrite=True)
 
-
     c_map = {
         "SQN"      : [1, 0, 0],  # 784
         "AlexNet"  : [0, 0, 1],  # 4096
@@ -243,46 +242,15 @@ def main():
         "RN18"     : [0, 1, 1]  # 25088
     }
     fs = FigSet()
-    for akey, arch in listitems(scores):
-        score_list = []
-        size_list = []
-        c_list = []
-        for sizekey, score in listitems(arch):
-            score_list.append(score)
-            size_list.append(sizekey)
-            c_list.append(c_map[akey])
-        fd = PlotData(
-            y=score_list,
-            # xticklabels
-            x=size_list,
-            # item_type='scatter',
-            item_type='line',
-            # item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
-            item_color=c_map[akey],#,c_list,
-            ylim=[0, 20],
-            title=f'Dissimilarities',
-            # err=[0, 0, 0],
-            xlabel='Training Sizes',
-            ylabel='Dissimilarity Score',
-            # x=[1, 2, 3],
-            bar_sideways_labels=False,
-        )
-        fd.make = True
-        fs.viss.append(fd)
-    fs.make = True
-    file = result_folder["scatter.mfig"]
-    file.save(fs)
-    # backend = WolfMakeFigsBackend
-    backend = MPLFigsBackend
-    fs = file.loado()
-    fs.file = file
-    fs.imgFile = file.resrepext('png')
-    fs.viss[0].legend=listmap(
-        #akey, arch
-        lambda item: Line2D([0], [0], color=c_map[item[0]], lw=4, label=item[0]),
-        listitems(scores)
-    )
-    backend.makeAllPlots([fs], overwrite=True)
+
+    debugData = {
+        'scores'       : scores,
+        'c_map'        : c_map,
+        'result_folder': result_folder
+    }
+    File('temp.p').save(debugData)
+    breakpoint()
+
 
 
 def main2():
@@ -313,6 +281,7 @@ def main2():
 
 
     )
+
     fd.make = True
     result_folder = mkdir('_figs/rsa')
     file = result_folder["line.mfig"]
@@ -354,9 +323,71 @@ def sanity():
     fd.imgFile = file.resrepext('png')
     backend.makeAllPlots([fd], overwrite=True)
 
+
+def test_line():
+    fs = FigSet()
+    debugData = File('temp.p').load()
+    scores = debugData['scores']
+    c_map = debugData['c_map']
+    result_folder = debugData['result_folder']
+
+    for akey, arch in listitems(scores):
+        score_list = []
+        size_list = []
+        c_list = []
+        for sizekey, score in listitems(arch):
+            score_list.append(score)
+            size_list.append(sizekey)
+            c_list.append(c_map[akey])
+        fd = PlotData(
+            y=score_list,
+            # xticklabels
+            x=size_list,
+            # item_type='scatter',
+            item_type='line',
+            # item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
+            item_color=c_map[akey],  # ,c_list,
+            ylim=[0, 20],
+            # title=akey,
+            # err=[0, 0, 0],
+            xlabel='Training Sizes',
+            ylabel=akey,#'Dissimilarity Score',
+            # x=[1, 2, 3],
+            bar_sideways_labels=False,
+        )
+        fd.make = True
+        fs.viss.append(fd)
+    fs.viss.append(PlotData(
+        y=[],
+        x=[],
+        item_type='scatter',
+        item_color=[],  # ,c_list,
+        title='Dissimilarities',
+        xlabel='Training Sizes',
+        ylabel='Dissimilarity Score',
+        bar_sideways_labels=False,
+    ))
+    fs.viss[-1].make = True
+    fs.make = True
+    file = result_folder["scatter.mfig"]
+    file.save(fs)
+    # backend = WolfMakeFigsBackend
+    backend = MPLFigsBackend
+    fs = file.loado()
+    fs.file = file
+    fs.imgFile = file.resrepext('png')
+    # fs.viss[0].legend = listmap(
+    #     # akey, arch
+    #     lambda item: Line2D([0], [0], color=c_map[item[0]], lw=4, label=item[0]),
+    #     listitems(scores)
+    # )
+    backend.makeAllPlots([fs], overwrite=True)
+
+
 if __name__ == '__main__':
     if SANITY:
         sanity()
     else:
         main()
         # main2()
+        test_line()
