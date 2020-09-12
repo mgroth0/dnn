@@ -249,7 +249,7 @@ def main():
         'result_folder': result_folder
     }
     File('temp.p').save(debugData)
-    breakpoint()
+    # breakpoint()
 
 
 
