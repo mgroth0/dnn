@@ -23,7 +23,7 @@ class OnlineHumanExperiment(ABC):
         self.FIG_FOLDER = Folder(self.EXP_FOLDER['figs'])
         self.changelist = self.EXP_FOLDER['changelist.yml']
         self.VERSIONS = self.changelist
-        self.THIS_VERSION = listitems(self.VERSIONS)[-1]
+        self.THIS_VERSION = listitems(self.VERSIONS.load())[-1]
         self.ROOT = self.EXP_FOLDER['build/site']
 
     def setup_databases_and_apis(self):

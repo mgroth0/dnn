@@ -22,12 +22,12 @@ class DNN(Project):
     extra_flags = _human_exp_flags + MODES
     def run(self, cfg):
 
-        print('here1, doing Darius-RSA')
-        import rsa_for_darius
-        rsa_for_darius.main()
-        rsa_for_darius.test_line()
-        print('here2, finished Darius-RSA')
-        return None
+        # print('here1, doing Darius-RSA')
+        # import rsa_for_darius
+        # rsa_for_darius.main()
+        # rsa_for_darius.test_line()
+        # print('here2, finished Darius-RSA')
+        # return None
 
         # keep modular
         assert not (cfg.REGEN_DATA and cfg.OVERWRITE_NORMS)  # btw, both imply killing worker before exp
@@ -43,9 +43,11 @@ class DNN(Project):
         if len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
             from human_exps.mc_wait_pilot.mc_wait_pilot import MC_Wait_Pilot
             from human_exps.time_pilot.time_pilot import Time_Pilot
+            from human_exps.contour_pilot.contour_pilot import Contour_Pilot
             exp = {
                 'time_pilot'   : Time_Pilot,
                 'mc_wait_pilot': MC_Wait_Pilot,
+                'contour_pilot': Contour_Pilot,
             }[cfg.FLAGS[0]](_DEV=boolinput('dev'))
             command = strinput(f'what to do with {cfg.FLAGS[0]}', ['build', 'analyze'])
             if command == 'build':

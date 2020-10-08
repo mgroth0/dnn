@@ -2,3 +2,38 @@ body {
  background: black;
  color: white;
 }
+.tabpane {
+ display: flex;
+ flex-direction: row;
+ justify-content: space-around;
+}
+.tab {
+ border: 1px solid #350000;
+ width: 20%;
+ box-sizing: border-box;
+}
+.tabcontent_container {
+ width: 70%;
+}
+.tab button {
+ display: block;
+ padding: 22px 16px;
+ width: 100%;
+ border: none;
+ outline: none;
+ text-align: left;
+ cursor: pointer;
+ transition: 0.3s;
+ box-sizing: border-box;
+}
+.tab button:hover {
+ background-color: #0b2547;
+ box-sizing: border-box;
+}
+.tab button.active {
+ background-color: #113970;
+ box-sizing: border-box;
+}
+.tabcontent {
+ position: absolute;
+}

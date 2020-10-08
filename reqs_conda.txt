@@ -79,6 +79,7 @@ nss=3.47=hc0980d9_0
 numexpr=2.7.1=py38h5fc983b_1
 olefile=0.46=py_0
 onnx=1.7.0=py38h8126d8c_2
+onnx-tf=1.6.0=dev_0
 opencv=4.3.0=py38_1
 openh264=2.1.1=hd174df1_0
 openssl=1.1.1g=h0b31af3_1

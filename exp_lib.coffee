@@ -152,9 +152,12 @@ class Login extends Instruction
         super()
 
 
+left_control = LEFT_ARROW
+right_control = RIGHT_ARROW
+
 class BinaryChoice_Base extends Step
     constructor     : (@im, @t, @left_choice, @right_choice) ->
-        super(false, [LEFT_ARROW, RIGHT_ARROW])
+        super(false, [left_control, right_control])
         @choice = null
         @fix_path = true
         @presentation_time_unixms = null
@@ -173,7 +176,7 @@ class BinaryChoice_Base extends Step
     display_stimulus: -> throw 'abstract'
     onkey           : (e) ->
         @reaction_time_ms = new Date().getTime() - @presentation_time_unixms
-        @choice = (if (e.keyCode == LEFT_ARROW.keyCode) then @left_choice else @right_choice)
+        @choice = (if (e.keyCode == left_control.keyCode) then @left_choice else @right_choice)
     data            : ->
         merge({@im, @t, @choice, @reaction_time_ms}, super())
     finish          : ->
