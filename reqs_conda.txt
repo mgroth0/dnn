@@ -17,6 +17,7 @@ conda=4.8.3=py38h32f6830_2
 conda-package-handling=1.6.0=py38h64e0658_2
 cryptography=2.9.2=py38hb761dab_0
 cycler=0.10.0=py_2
+dateparser=0.7.6=pyh9f0ad1d_0
 dbus=1.13.6=h2f22bb5_0
 expat=2.2.9=h4a8c4bd_2
 ffmpeg=4.2.3=hd0c0d6a_0
@@ -82,7 +83,7 @@ onnx=1.7.0=py38h8126d8c_2
 onnx-tf=1.6.0=dev_0
 opencv=4.3.0=py38_1
 openh264=2.1.1=hd174df1_0
-openssl=1.1.1g=h0b31af3_1
+openssl=1.1.1h=haf1e3a3_0
 packaging=20.4=pyh9f0ad1d_0
 pandas=1.0.4=py38h5fc983b_0
 pcre=8.44=h4a8c4bd_0
@@ -114,6 +115,7 @@ pyyaml=5.3.1=py38h64e0658_0
 pyzmq=19.0.1=py38h1fcdcd6_0
 qt=5.12.5=h514805e_3
 readline=8.0=hcfe32e1_0
+regex=2020.7.14=py38h4d0b108_0
 ruamel_yaml=0.15.80=py38h64e0658_1001
 scikit-learn=0.23.1=py38hb7f0800_0
 scipy=1.4.1=py38h38b60c6_3
@@ -129,6 +131,7 @@ tornado=6.0.4=py38h64e0658_1
 tqdm=4.46.1=pyh9f0ad1d_0
 typing-extensions=3.7.4.2=0
 typing_extensions=3.7.4.2=py_0
+tzlocal=2.1=pyh9f0ad1d_0
 urllib3=1.25.9=py_0
 websockets=8.1=py38h64e0658_1
 wolframclient=1.1.4=py38h39e3cac_0

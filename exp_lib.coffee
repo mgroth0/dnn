@@ -154,6 +154,7 @@ class Login extends Instruction
 
 left_control = LEFT_ARROW
 right_control = RIGHT_ARROW
+choice_text_center = '<-?->'
 
 class BinaryChoice_Base extends Step
     constructor     : (@im, @t, @left_choice, @right_choice) ->
@@ -168,7 +169,7 @@ class BinaryChoice_Base extends Step
         id.top.style["justify-content"] = "center" # so the text and img is centered
         id['text-container'].disappear() # so the img is centered
         #        id.text.innerHTML = center_str("#{@left_choice} <-?-> #{@right_choice}",'?')
-        id.text.innerHTML = center_str("#{@left_choice} <-?-> #{@right_choice}", '?')
+        id.text.innerHTML = center_str("#{@left_choice} #{choice_text_center} #{@right_choice}", '?')
         id['im-container'].appear()
         id.cross.appear()
         id.im.src = if @fix_path then path_join(RESOURCES_ROOT_REL, @im) else @im
