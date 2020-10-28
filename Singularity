@@ -76,6 +76,11 @@ From: ubuntu:20.04
     unzip _ImageNetTesting.zip
     rm _ImageNetTesting.zip
 
+    /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1HSjjIHeze-bWCycmQrSbeDDpvhmhGqhv"
+    unzip _images.zip
+    rm _images.zip
+
+
     /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1PQ3gop_fmV_Sp_GBAAeS3Gr1_ITkbo5G"
     unzip _data.zip
     rm _data.zip
