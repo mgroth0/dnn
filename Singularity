@@ -54,6 +54,7 @@ From: ubuntu:20.04
     apt install git -y
     git clone https://github.com/mgroth0/dnn
     git clone https://github.com/mgroth0/mlib
+    /matt/miniconda3/bin/conda update -n base -c defaults conda
     /matt/miniconda3/bin/conda create -y --name dnn python=3.8
     /matt/miniconda3/bin/conda config --add channels conda-forge
     /matt/miniconda3/bin/conda config --add channels mgroth0
