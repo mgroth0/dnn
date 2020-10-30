@@ -59,7 +59,16 @@ From: ubuntu:20.04
     /matt/miniconda3/bin/conda config --add channels conda-forge
     /matt/miniconda3/bin/conda config --add channels mgroth0
     cd dnn
-    /matt/miniconda3/bin/conda install -y -n dnn --file=requirements.txt
+
+    # I think trying to do it all at once is causing problems
+    # /matt/miniconda3/bin/conda install -y -n dnn --file=requirements.txt
+    while read p; do
+      echo "installing conda package: $p"
+      /matt/miniconda3/bin/conda install -y -n dnn $p
+      echo "installed conda package: $p"
+    done <requirements.txt
+
+
     apt install graphviz -y # https://github.com/XifengGuo/CapsNet-Keras/issues/7
     /matt/miniconda3/bin/conda install -y -n dnn tensorflow-gpu=2.2.0
     apt install iputils-ping -y
