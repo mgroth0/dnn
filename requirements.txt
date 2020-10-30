@@ -23,5 +23,4 @@ scikit-learn
 texttable
 wolframclient
 websockets
-onnx-tf
 dateparser

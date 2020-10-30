@@ -25,7 +25,6 @@
         "texttable",
         "wolframclient",
         "websockets",
-        "onnx-tf",
         "dateparser"
     ],
     "subs": [
