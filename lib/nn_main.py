@@ -149,7 +149,7 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
             net.train()
             log(f'finished another fit epoch!({i + 1}/{nepochs})')
 
-            [a.after_fit(i, net, nam) for a in ANALYSES()]
+            [a.after_fit(i, net, nam) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
 
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':eval'
         if nnstate.EVAL_AND_REC_EVERY_EPOCH or i == nepochs - 1:
