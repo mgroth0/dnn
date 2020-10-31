@@ -166,7 +166,7 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
                 nam = 'val'
                 saveTestValResults(net.ARCH_LABEL, nam, net.val_data, i)
 
-                [a.after_val(i, net, nam) for a in ANALYSES()]
+                [a.after_val(i, net, nam) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
 
             nnstate.MET_PHASE = None
             nam = 'test'
