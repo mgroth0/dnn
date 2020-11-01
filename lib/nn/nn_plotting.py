@@ -70,5 +70,5 @@ def plot_metric(met, met_log, met_name):
 
     fs[0].item_colors = [0, 0, 1]
 
-    save_dnn_data(fs, met_name, tit)
+    save_dnn_data(fs, met_name, tit, ext='mfig')
     return fs
