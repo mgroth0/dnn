@@ -189,6 +189,38 @@ class BinaryChoice_Base extends Step
         id.top.style["justify-content"] = null
         super()
 
+class MultiChoice_Base extends Step
+    constructor     : (@im, @t, @choice1, @choice2,@choice3) ->
+        super(false, [control1, control2,control3])
+        @choice = null
+        @fix_path = true
+        @presentation_time_unixms = null
+        @reaction_time_ms = null
+    run             : ->
+        super()
+        RESOURCES_ROOT_REL = id.RESOURCES_ROOT_REL.innerHTML
+        id.top.style["justify-content"] = "center" # so the text and img is centered
+        id['text-container'].disappear() # so the img is centered
+        #        id.text.innerHTML = center_str("#{@left_choice} <-?-> #{@right_choice}",'?')
+        id.text.innerHTML = "(#{control1.str})#{@choice1}, (#{control2.str})#{@choice2}, (#{control3.str})#{@choice3}"
+        id['im-container'].appear()
+        id.cross.appear()
+        id.im.src = if @fix_path then path_join(RESOURCES_ROOT_REL, @im) else @im
+        @display_stimulus()
+    display_stimulus: -> throw 'abstract'
+    onkey           : (e) ->
+        @reaction_time_ms = new Date().getTime() - @presentation_time_unixms
+        @choice = (if (e.keyCode == control1.keyCode) then @choice1 else (if (e.keyCode == control2.keyCode) then @choice2 else @choice3))
+    data            : ->
+        merge({@im, @t, @choice, @reaction_time_ms}, super())
+    finish          : ->
+        id.im.disappear()
+        id['im-container'].disappear()
+        id['text-container'].disappear()
+        #        id['text-container'].style.height = null
+        #        id.text.style.height = null
+        id.top.style["justify-content"] = null
+        super()
 
 
 class BinaryChoice_Flash extends BinaryChoice_Base
@@ -227,6 +259,26 @@ class BinaryChoice_Wait extends BinaryChoice_Base
             @readyForKey = true
         , 1000)
 
+class MultiChoice_Wait extends MultiChoice_Base
+    display_stimulus: ->
+        setTimeout(=>
+            id.cross.disappear()
+            #            setTimeout(=>
+            #                id.im.disappear()
+            #                id.text.innerHTML = "#{@left_choice}<- ->#{@right_choice}"
+            #                id['text-container'].style.height = '100%'
+            #                id.text.style.height = '100%'
+            #                id['text-container'].appear()
+            #                @readyForKey = true
+            #            , @t)
+            #            id.top.style['justify-content'] = 'center' # so the text is above img
+            id['text-container'].style.height = '10%' # so the text is above img
+            id.text.style.height = '10%' # so the text is above img
+            id['text-container'].appear()
+            id.im.appear()
+            @presentation_time_unixms = new Date().getTime()
+            @readyForKey = true
+        , 1000)
 
 class Thank_You extends Instruction
     constructor: (text) ->

@@ -526,7 +526,7 @@ dependencies:
 
     - pyobjc-framework-quicklookthumbnailing==6.2.2
 
-    - pyobjc-framework-safariservices==6.2.2
+    - pyobjc-framework-safariservices==6.2.2
 
     - pyobjc-framework-scenekit==6.2.2
 

@@ -270,7 +270,8 @@
         "regex",
         "tzlocal",
         "tzlocal",
-        "regex"
+        "regex",
+        "onnx-tf"
     ],
     "cache": {
         "aiohttp=3.6.2=py38h0b31af3_0": "Loading channels: ...working... done\naiohttp 3.6.2 py38h0b31af3_0\n----------------------------\nfile name   : aiohttp-3.6.2-py38h0b31af3_0.tar.bz2\nname        : aiohttp\nversion     : 3.6.2\nbuild       : py38h0b31af3_0\nbuild number: 0\nsize        : 593 KB\nlicense     : Apache 2.0\nsubdir      : osx-64\nurl         : https://conda.anaconda.org/conda-forge/osx-64/aiohttp-3.6.2-py38h0b31af3_0.tar.bz2\nmd5         : 9a4465a78925ae39adffc0c1fb31ad17\ntimestamp   : 2019-11-28 23:19:32 UTC\nconstraints : \n  - python_abi * *_cp38\ndependencies: \n  - async-timeout >=3.0,<4.0\n  - attrs >=17.3.0\n  - chardet >=2.0,<4.0\n  - multidict >=4.5,<5.0\n  - python >=3.8,<3.9.0a0\n  - yarl >=1.0,<2.0\n\n\n",
