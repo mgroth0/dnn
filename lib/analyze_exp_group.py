@@ -10,6 +10,7 @@ from mlib.boot.lang import enum
 from mlib.boot.stream import listmap, __, arr2d, itr, flatmax
 from mlib.fig.PlotData import CONTRAST_COLORS
 from mlib.fig.TableData import ConfusionMatrix
+from mlib.str import StringExtension
 from mlib.term import log_invokation
 
 
@@ -115,7 +116,7 @@ def analyze_exp_group(
 
         for res in [mcc for mcc in results_to_compile if mcc.dims == 1 and mcc.data_exists]:
             eg.compile_exp_res_folder[
-                res.suffix[1:].r({
+                StringExtension(res.suffix[1:]).r({
                     "test/": "",
                     "."    : f"_{ntrain}."
                 })
