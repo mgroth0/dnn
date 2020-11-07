@@ -176,4 +176,4 @@ configs:
   default:
         <<: *run_one
         EXPERIMENT_NAME: test
-        REGEN_DATA: true
+#        REGEN_DATA: true
