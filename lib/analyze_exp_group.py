@@ -32,7 +32,7 @@ def analyze_exp_group(
     experiments = experiments_from_folder(eg.folder)
     random_exp = experiments[0]
 
-    TrainTable = FinalResult(2, 'test/Matthews_Correlation_Coefficient_fs.json',
+    TrainTable = FinalResult(2, 'test/Matthews_Correlation_Coefficient.mfig',
                              data_exists=random_exp.folder[f'test'].exists,
                              is_table=True, rows=ARCH_LABELS, cols=NTRAINS)
 
@@ -50,7 +50,7 @@ def analyze_exp_group(
             'test',
             None,
             dims=1,
-            suf='Matthews_Correlation_Coefficient_fs.json'
+            suf='Matthews_Correlation_Coefficient.mfig'
         )
         for ai, arch in enum(ARCH_LABELS):
             results_to_compile = [
@@ -111,7 +111,7 @@ def analyze_exp_group(
                             side_header_label='Architecture',
                             top_header_label='#Train Images'
                         )]
-                        eg.compile_exp_res_folder[f'Final_Train_MCC_fs.json'] = res.j
+                        eg.compile_exp_res_folder[f'Final_Train_MCC.mfig'] = res.j
 
         for res in [mcc for mcc in results_to_compile if mcc.dims == 1 and mcc.data_exists]:
             eg.compile_exp_res_folder[
