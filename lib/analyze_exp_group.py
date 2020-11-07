@@ -62,7 +62,7 @@ def analyze_exp_group(
             ]
             results_to_compile = [r for r in results_to_compile if r is not None]
             for exp in experiments.filtered(
-                    lambda e: e.arch == arch and e.ntrain == str(ntrain),
+                    lambda e: e.arch == arch and e.ntrain == ntrain,
             ):
                 for res in results_to_compile:
                     res.append(res.exp_data(exp), (ai, ni, 0), is_GNET=arch == 'GNET')
