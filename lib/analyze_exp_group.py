@@ -5,6 +5,7 @@ import numpy as np
 from lib.cta_lib import FinalResult, AverageResult
 from lib.dnn_proj_struct import experiments_from_folder, DNN_ExperimentGroup
 from mlib.analyses import ANALYSES, AnalysisMode
+from mlib.boot import log
 from mlib.boot.lang import enum
 from mlib.boot.stream import listmap, __, arr2d, itr, flatmax
 from mlib.fig.PlotData import CONTRAST_COLORS
@@ -66,9 +67,10 @@ def analyze_exp_group(
                 for res in results_to_compile:
                     res.append(res.exp_data(exp), (ai, ni, 0), is_GNET=arch == 'GNET')
             log('about to breakpoint')
-            breakpoint()
             for res in results_to_compile:
                 if not res.data_exists: continue
+                if res.j is None:
+                    breakpoint()
                 for vis in res.j.viss: vis.make = True
                 if res.dims == 1:
                     LINE_INDEX = -1
