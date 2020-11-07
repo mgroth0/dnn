@@ -66,11 +66,14 @@ def analyze_exp_group(
             ):
                 for res in results_to_compile:
                     res.append(res.exp_data(exp), (ai, ni, 0), is_GNET=arch == 'GNET')
-            log('about to breakpoint')
+
             for res in results_to_compile:
                 if not res.data_exists: continue
                 if res.j is None:
+                    log('about to breakpoint')
                     breakpoint()
+                else:
+                    log('res.j is not none, so no breakpoint')
                 for vis in res.j.viss: vis.make = True
                 if res.dims == 1:
                     LINE_INDEX = -1
