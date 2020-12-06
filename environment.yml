@@ -34,7 +34,7 @@ dependencies:
 
   - bzip2=1.0.8=h0b31af3_2
 
-  - ca-certificates=2020.6.20=hecda079_0
+  - ca-certificates=2020.11.8=h033912b_0
 
   - cairo=1.16.0=hec6a9b0_1003
 
@@ -288,6 +288,8 @@ dependencies:
 
   - x264=1!152.20180806=h1de35cc_0
 
+  - xerox=0.4.1=py38h32f6830_2
+
   - xz=5.2.5=h0b31af3_0
 
   - yaml=0.2.5=h0b31af3_0
@@ -526,7 +528,7 @@ dependencies:
 
     - pyobjc-framework-quicklookthumbnailing==6.2.2
 
-    - pyobjc-framework-safariservices==6.2.2
+    - pyobjc-framework-safariservices==6.2.2
 
     - pyobjc-framework-scenekit==6.2.2
 
