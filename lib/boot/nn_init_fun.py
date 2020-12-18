@@ -1,3 +1,4 @@
+from mlib.err import pub_print_warn
 def setupTensorFlow(FLAGS):
     import os
 
@@ -36,6 +37,7 @@ def runWithMultiProcess(main_nn_fun):
 
 def NRC_IS_FINISHED():
     # when imported, loggy upgrades this function to use log
+    pub_print_warn()
     print('NRC IS FINISHED')
 
 
