@@ -27,7 +27,7 @@ ARCH_MAP = {
 }
 
 def salience_net_main(FLAGS):
-    pass
+    log('salience was here!')
 
 @log_invokation()
 def sym_net_main(FLAGS):

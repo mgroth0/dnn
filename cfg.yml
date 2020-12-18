@@ -6,6 +6,7 @@ profiles:
     rsa_nperc: 10
     MUSCLE: local
     offline: True
+    salience: False
   darius: &darius
     proto_model: False
     #  needs to be somewhat consistent between fileops and train/test
@@ -15,10 +16,13 @@ profiles:
     rsa_nperc: 10
     MUSCLE: local #  needs to be consistent but not scientifically relevant
     offline: False
+    salience: False
   dariusSmall: &dariusSmall
     <<: *darius
     NTRAIN: [10]
     offline: True
+  salienceProject: &darius
+    salience: True
   default:
       <<: *dariusSmall
 

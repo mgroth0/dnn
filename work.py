@@ -26,7 +26,7 @@ setup_logging(verbose=FLAGS.verbose)
 if FLAGS.tic is not None: setTic(FLAGS.tic * 1000)
 from mlib.proj.struct import Project
 Project.prep_log_file('dnn/NRC', new=True)
-from lib.nn_main import sym_net_main
+from lib.nn_main import sym_net_main, salience_net_main
 from mlib.gpu import mygpus
 FLAGS.mygpus = mygpus()
 FLAGS.cfg_cfg = json.loads(FLAGS.cfg)
@@ -37,6 +37,8 @@ dnn_data_saving.root = FLAGS.cfg_cfg['root']
 from lib.nn import nnstate
 nnstate.FLAGS = FLAGS
 nnstate.reset_global_met_log()
+if FLAGS.salience:
+    salience_net_main(FLAGS)
 if float(1) == float(2):
     result_folder = nn_init_fun.runWithMultiProcess(sym_net_main)
 else:
