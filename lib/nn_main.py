@@ -26,6 +26,9 @@ ARCH_MAP = {
     'SCRATCH' : SCRATCH
 }
 
+def salience_net_main(FLAGS):
+    pass
+
 @log_invokation()
 def sym_net_main(FLAGS):
     _IMAGES_FOLDER = pwdf()['_images'].mkdirs(mker=True)
