@@ -21,10 +21,10 @@ profiles:
     <<: *darius
     NTRAIN: [10]
     offline: True
-  salienceProject: &darius
+  salienceProject: &dariusSmall
     salience: True
   default:
-      <<: *dariusSmall
+      <<: *salienceProject
 
 configs:
   all: &all
