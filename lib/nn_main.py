@@ -72,7 +72,7 @@ def nnet_main(FLAGS):
             # def input_gen():
             log('looping imagenet')
 
-            _IMAGES_FOLDER['Training']['barn_spider'].mkdirs()
+            _IMAGES_FOLDER['Training/10']['barn_spider'].mkdirs()
             _IMAGES_FOLDER['Testing']['barn_spider'].mkdirs()
 
             # classes = [
@@ -115,12 +115,12 @@ def nnet_main(FLAGS):
                 classname = utf_decode(example['image/class/text'].numpy())
                 for cn in classes:
                     if cn in classname and class_count[cn] < 20:
-                        log(f'saving {cn} {class_count[cn]}')
+                        log(f'saving {cn} {class_count[cn] + 1}')
                         rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
                         if class_count[cn] >= 10:
                             _IMAGES_FOLDER['Testing'][cn][f'{i}.png'].save(rrr)
                         else:
-                            _IMAGES_FOLDER['Training'][cn][f'{i}.png'].save(rrr)
+                            _IMAGES_FOLDER['Training/10'][cn][f'{i}.png'].save(rrr)
                         class_count[cn] += 1
                         break
                 break_all = True
