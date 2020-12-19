@@ -82,7 +82,7 @@ def nnet_main(FLAGS):
 
                 if i % 100 == 0:
                     log(f'on image {i}')
-                if utf_decode(example['image/class/text'].numpy()) == 'barn spider':
+                if 'barn spider' in utf_decode(example['image/class/text'].numpy()):
                     log(f'saving barn spider {i}')
                     rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
                     _IMAGES_FOLDER['train']['barn spider'][f'{i}.png'].save(rrr)
