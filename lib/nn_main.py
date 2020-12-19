@@ -117,7 +117,7 @@ def nnet_main(FLAGS):
                     log(f'on image {i}')
                 classname = utf_decode(example['image/class/text'].numpy())
                 for cn in classes:
-                    if cn in classname and (class_count[cn] < 10 if cn in not_trained else 20):
+                    if (cn in classname) and (class_count[cn] < (10 if cn in not_trained else 20)):
                         log(f'saving {cn} {class_count[cn] + 1}')
                         rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
                         if class_count[cn] >= 10:
