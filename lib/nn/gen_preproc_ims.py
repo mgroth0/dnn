@@ -134,6 +134,7 @@ def getReal(
         USING_STD_DIR
 ):
     real, HW = image_HW
+    breakpoint()
     if GRAY_SCALE:
         real.data = Image.open(real.file.abspath)
     else:
@@ -179,7 +180,7 @@ def getReal(
 
 
     real.data = resampleim(real.data, HW, HW)
-    breakpoint()
+
     if GRAY_SCALE:
         shape1 = real.data.shape[0]
         shape2 = real.data.shape[1]
