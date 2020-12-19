@@ -66,9 +66,11 @@ class DNN(Project):
             else:
                 err(f'unknown command: {command}')
         else:
+            breakpoint()
             cfg.MODE = ''.join(arr(cfg.FLAGS).filtered(
                 lambda s: s in self.MODES
             ))
+            breakpoint()
             if cfg.offline:
                 API.offline_mode = True
                 Database.offline_mode = True
@@ -76,6 +78,7 @@ class DNN(Project):
             from mlib.km import kmscript  # keep modular
             if ismac():
                 kmscript('activate run tool window')
+            breakpoint()
             if isblank(cfg.MODE): cfg.MODE = ''.join(self.MODES)
             dnn(cfg)
 
