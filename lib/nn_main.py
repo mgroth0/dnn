@@ -40,6 +40,7 @@ def nnet_main(FLAGS):
         log('in gen!')
         _IMAGES_FOLDER.clearIfExists()
         HUMAN_IMAGE_FOLDER.clearIfExists()
+        gen_cfg = FLAGS.cfg_cfg['gen_cfg']
 
         if FLAGS.salience:
             log('in gen salience!')
@@ -71,7 +72,8 @@ def nnet_main(FLAGS):
             # def input_gen():
             log('looping imagenet')
 
-            _IMAGES_FOLDER['train']['barn_spider'].mkdirs()
+            _IMAGES_FOLDER['Training']['barn_spider'].mkdirs()
+            _IMAGES_FOLDER['Testing']['barn_spider'].mkdirs()
 
             # classes = [
             #     'barn spider',
@@ -112,15 +114,18 @@ def nnet_main(FLAGS):
                     log(f'on image {i}')
                 classname = utf_decode(example['image/class/text'].numpy())
                 for cn in classes:
-                    if cn in classname and class_count[cn] < 10:
+                    if cn in classname and class_count[cn] < 20:
                         log(f'saving {cn} {class_count[cn]}')
                         rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                        _IMAGES_FOLDER['train'][cn][f'{i}.png'].save(rrr)
+                        if class_count[cn] >= 10:
+                            _IMAGES_FOLDER['Testing'][cn][f'{i}.png'].save(rrr)
+                        else:
+                            _IMAGES_FOLDER['Training'][cn][f'{i}.png'].save(rrr)
                         class_count[cn] += 1
                         break
                 break_all = True
                 for cc in class_count.values():
-                    if cc != 10:
+                    if cc != 20:
                         break_all = False
                 if break_all:
                     break
@@ -208,7 +213,7 @@ def nnet_main(FLAGS):
                 SymAsymClassPair(6, False),
                 SymAsymClassPair(8, False)
             ]
-            gen_cfg = FLAGS.cfg_cfg['gen_cfg']
+
             gen_images(
                 folder=HUMAN_IMAGE_FOLDER['TimePilot'],
                 class_pairs=human_class_pairs,
