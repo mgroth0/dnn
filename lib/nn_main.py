@@ -75,19 +75,18 @@ def nnet_main(FLAGS):
 
             _IMAGES_FOLDER['train']['barn_spider'].mkdirs()
 
-            tot = len(ds)
             for i, raw_record in enum(ds):
                 example = tf.io.parse_single_example(raw_record, image_feature_description)
                 # r[f'tf']['y_true'][i] = example['image/class/label'].numpy()
                 # return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
 
                 if i % 100 == 0:
-                    log(f'on image {i}/{tot}')
-                
+                    log(f'on image {i}')
+
                 if utf_decode(example['image/class/text']) == 'barn spider':
                     log(f'saving barn spider {i}')
                     rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                    _IMAGES_FOLDER['train']['barn_spider'][f'{i}.png'].save(rrr)
+                    _IMAGES_FOLDER['train']['barn spider'][f'{i}.png'].save(rrr)
 
                 # current_i = current_i + 1
                 # imap[i] = rrr
