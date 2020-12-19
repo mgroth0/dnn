@@ -79,6 +79,7 @@ def nnet_main(FLAGS):
                 # r[f'tf']['y_true'][i] = example['image/class/label'].numpy()
                 # return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
 
+                log(example['image/class/text'])
                 if example['image/class/text'] == 'barn_spider':
                     log(f'saving barn spider {i}')
                     rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
