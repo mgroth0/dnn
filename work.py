@@ -27,11 +27,11 @@ setup_logging(verbose=FLAGS.verbose)
 if FLAGS.tic is not None: setTic(FLAGS.tic * 1000)
 from mlib.proj.struct import Project
 Project.prep_log_file('dnn/NRC', new=True)
-from lib.nn_main import nnet_main, salience_net_main
+from lib.nn_main import nnet_main
 from mlib.gpu import mygpus
 FLAGS.mygpus = mygpus()
 FLAGS.cfg_cfg = json.loads(FLAGS.cfg)
-FLAGS.mygpufordata = 1 # because I am not managing GPUs on OpenMind in the same way
+FLAGS.mygpufordata = 1  # because I am not managing GPUs on OpenMind in the same way
 # FLAGS.mygpufordata = FLAGS.mygpus[0] + 1 if not isempty(FLAGS.mygpus) else 1
 from lib import dnn_data_saving
 dnn_data_saving.root = FLAGS.cfg_cfg['root']
