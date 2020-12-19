@@ -25,6 +25,7 @@ profiles:
     <<: *dariusSmall
     salience: True
   default:
+#      <<: *dariusSmall
       <<: *salienceProject
 
 configs:
@@ -188,5 +189,7 @@ configs:
     EXPERIMENT_NAME: salience_1
     REGEN_DATA: true
     PIPELINE: SANITY TRAIN VAL # REC
+    MODE: JUSTRUN
   default:
+#  <<: *final_sym
     <<: *salience_1
