@@ -26,11 +26,14 @@ ARCH_MAP = {
     'SCRATCH' : SCRATCH
 }
 
-def salience_net_main(FLAGS):
-    log('salience was here!')
+
 
 @log_invokation()
-def sym_net_main(FLAGS):
+def nnet_main(FLAGS):
+
+    if FLAGS.salience:
+        log('salience was here!')
+
     _IMAGES_FOLDER = pwdf()['_images'].mkdirs(mker=True)
     HUMAN_IMAGE_FOLDER = pwdf()['_images_human'].mkdirs(mker=True)
 

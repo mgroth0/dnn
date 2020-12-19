@@ -136,7 +136,6 @@ def getReal(
         std_d,
         USING_STD_DIR
 ):
-    warn('use preprocessor')
     real, HW = image_HW
     if GRAY_SCALE:
         real.data = Image.open(real.file.abspath)
@@ -344,6 +343,7 @@ class PreDataset:
             # twentyLabel = []
             twentyPairs = []
             i = 0
+            warn('NEED TO MERGE getReal and PREPROCESSOR CODE. USE PREPROCESSOR.')
             with Progress(len(self.imds)) as prog:
                 for imd in self.imds:
                     i += 1
