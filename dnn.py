@@ -7,7 +7,6 @@ from mlib.proj.struct import Project
 from mlib.boot.stream import arr, listmap, __
 
 class DNN(Project):
-
     MODES = [
         'JUSTRUN',
         'PUSH',
@@ -21,7 +20,6 @@ class DNN(Project):
         _human_exp_flags = []
     extra_flags = _human_exp_flags + MODES
     def run(self, cfg):
-
         # print('here1, doing Darius-RSA')
         # import rsa_for_darius
         # rsa_for_darius.main()
@@ -66,11 +64,10 @@ class DNN(Project):
             else:
                 err(f'unknown command: {command}')
         else:
-            breakpoint()
-            cfg.MODE = ''.join(arr(cfg.FLAGS).filtered(
+            flag_mode = ''.join(arr(cfg.FLAGS).filtered(
                 lambda s: s in self.MODES
             ))
-            breakpoint()
+            if not isblank(flag_mode): cfg.MODE = flag_mode
             if cfg.offline:
                 API.offline_mode = True
                 Database.offline_mode = True
@@ -78,8 +75,7 @@ class DNN(Project):
             from mlib.km import kmscript  # keep modular
             if ismac():
                 kmscript('activate run tool window')
-            breakpoint()
-            if isblank(cfg.MODE): cfg.MODE = ''.join(self.MODES)
+            if isblank(cfg.MODE): cfg.MODE = ''.join(self.MODES)  # unnecessary?
             dnn(cfg)
 
     instructions = '''Generate some images, train/test a model, run analyses, and generate plots. Tested on Mac, but not yet on linux/Windows.
