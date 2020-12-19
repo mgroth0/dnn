@@ -16,6 +16,7 @@ from mlib.boot.lang import listkeys, enum
 from mlib.boot.stream import ints
 from mlib.file import TempFolder, Folder
 from mlib.proj.struct import pwdf
+from mlib.str import utf_decode
 from mlib.term import log_invokation
 
 ARCH_MAP = {
@@ -74,13 +75,16 @@ def nnet_main(FLAGS):
 
             _IMAGES_FOLDER['train']['barn_spider'].mkdirs()
 
+            tot = len(ds)
             for i, raw_record in enum(ds):
                 example = tf.io.parse_single_example(raw_record, image_feature_description)
                 # r[f'tf']['y_true'][i] = example['image/class/label'].numpy()
                 # return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
 
-                log(example['image/class/text'])
-                if example['image/class/text'] == 'barn_spider':
+                if i % 100 == 0:
+                    log(f'on image {i}/{tot}')
+                
+                if utf_decode(example['image/class/text']) == 'barn spider':
                     log(f'saving barn spider {i}')
                     rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
                     _IMAGES_FOLDER['train']['barn_spider'][f'{i}.png'].save(rrr)
