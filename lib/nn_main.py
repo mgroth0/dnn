@@ -86,12 +86,18 @@ def nnet_main(FLAGS):
 
         log('doing thing with _temp_ims')
         with TempFolder('_temp_ims') as temp:
+            log('temp_ims_1')
             if temp.exists and temp.isdir:
                 temp.clear()
+            log('temp_ims_2')
             temp.mkdirs()
+            log('temp_ims_3')
             [_IMAGES_FOLDER.copy_to(temp[f'gpu{i + 1}']) for i in range(gen_cfg['num_gpus'])]
+            log('temp_ims_4')
             _IMAGES_FOLDER.clear()
+            log('temp_ims_5')
             [temp[f'gpu{i + 1}'].moveinto(_IMAGES_FOLDER) for i in range(gen_cfg['num_gpus'])]
+            log('temp_ims_6')
         log('finished thing with _temp_ims')
         nn_init_fun.NRC_IS_FINISHED()  # must be invoked this way since value of function changes
 
