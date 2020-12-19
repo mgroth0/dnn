@@ -44,8 +44,8 @@ def nnet_main(FLAGS):
 
         if FLAGS.salience:
             log('in gen salience!')
-            root = Folder('/matt/data/ImageNet/output')
-            filenames = root.glob('train*').tolist() #validation
+            root = Folder('/matt/data/ImageNet/output_tf')
+            filenames = root.glob('train*').map(lambda x: x.abspath).tolist() #validation
             ds = tf.data.TFRecordDataset(filenames)
         #     for subroot in root:
         #         for imgfile in subroot:
