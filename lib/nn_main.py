@@ -12,9 +12,9 @@ from lib.dnn_data_saving import saveTestValResults, EXP_FOLDER
 from lib.boot import nn_init_fun
 from mlib.analyses import ANALYSES, AnalysisMode
 from mlib.boot import log
-from mlib.boot.lang import listkeys
+from mlib.boot.lang import listkeys, enum
 from mlib.boot.stream import ints
-from mlib.file import TempFolder
+from mlib.file import TempFolder, Folder
 from mlib.proj.struct import pwdf
 from mlib.term import log_invokation
 
@@ -27,7 +27,7 @@ ARCH_MAP = {
 }
 
 
-
+import tensorflow as tf
 @log_invokation()
 def nnet_main(FLAGS):
 
@@ -40,51 +40,159 @@ def nnet_main(FLAGS):
     if FLAGS.gen:
         _IMAGES_FOLDER.clearIfExists()
         HUMAN_IMAGE_FOLDER.clearIfExists()
-        test_class_pairs = [
-            pair for pair in chain(*[
-                (
-                    SymAsymClassPair(n, False),
-                    SymAsymClassPair(n, True)
-                ) for n in ints(np.linspace(0, 10, 6))
-            ])
-        ]
-        class_pairs = [
-            SymAsymClassPair(0, False),
-            SymAsymClassPair(4, False)
-        ]
-        human_class_pairs = [
-            SymAsymClassPair(0, False),
-            SymAsymClassPair(2, False),
-            SymAsymClassPair(4, False),
-            SymAsymClassPair(6, False),
-            SymAsymClassPair(8, False)
-        ]
-        gen_cfg = FLAGS.cfg_cfg['gen_cfg']
-        gen_images(
-            folder=HUMAN_IMAGE_FOLDER['TimePilot'],
-            class_pairs=human_class_pairs,
-            ims_per_class=10
-        )
-        gen_images(
-            folder=_IMAGES_FOLDER['RSA'],
-            class_pairs=test_class_pairs,
-            ims_per_class=10,
-            # ims_per_class=1
-        )
-        gen_images(
-            folder=_IMAGES_FOLDER['Testing'],
-            class_pairs=test_class_pairs,
-            ims_per_class=10,
-            # ims_per_class=500,
-            # ims_per_class=1
-        )
-        # for n in (25, 50, 100, 150, 200, 1000):
-        for n in (10,):
+
+        if FLAGS.salience:
+            root = Folder('/matt/data/ImageNet/output_tf')
+            filenames = root.glob('train*').tolist() #validation
+            ds = tf.data.TFRecordDataset(filenames)
+        #     for subroot in root:
+        #         for imgfile in subroot:
+
+            image_feature_description = {
+                'image/height'      : tf.io.FixedLenFeature([], tf.int64),
+                'image/width'       : tf.io.FixedLenFeature([], tf.int64),
+                'image/colorspace'  : tf.io.FixedLenFeature([], tf.string),
+                'image/channels'    : tf.io.FixedLenFeature([], tf.int64),
+                'image/class/label' : tf.io.FixedLenFeature([], tf.int64),
+                'image/class/synset': tf.io.FixedLenFeature([], tf.string),
+                'image/class/text'  : tf.io.FixedLenFeature([], tf.string),
+                # 'image/object/bbox/xmin' : tf.io.FixedLenFeature([], tf.float32),
+                # 'image/object/bbox/xmax' : tf.io.FixedLenFeature([], tf.float32),
+                # 'image/object/bbox/ymin' : tf.io.FixedLenFeature([], tf.float32),
+                # 'image/object/bbox/ymax' : tf.io.FixedLenFeature([], tf.float32),
+                # 'image/object/bbox/label': tf.io.FixedLenFeature([], tf.int64),
+                'image/format'      : tf.io.FixedLenFeature([], tf.string),
+                'image/filename'    : tf.io.FixedLenFeature([], tf.string),
+                'image/encoded'     : tf.io.FixedLenFeature([], tf.string),
+            }
+            # imap = {}
+            # current_i = -1
+            # def input_gen():
+            log('looping imagenet')
+
+            _IMAGES_FOLDER['train']['barn_spider'].mkdirs()
+
+            for i, raw_record in enum(ds):
+                example = tf.io.parse_single_example(raw_record, image_feature_description)
+                # r[f'tf']['y_true'][i] = example['image/class/label'].numpy()
+                # return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+
+                if example['image/class/text'] == 'barn_spider':
+                    log(f'saving barn spider {i}')
+                    rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+                    _IMAGES_FOLDER['train']['barn_spider'][f'{i}.png'].save(rrr)
+
+                # current_i = current_i + 1
+                # imap[i] = rrr
+                # yield rrr
+            # igen = input_gen()
+
+            # def get_input(index):
+            #     # log(f'trying to get index {index}')
+            #     # log(f'current indices range from {safemin(list(imap.keys()))} to {safemax(list(imap.keys()))}')
+            #     if index not in imap:
+            #         # log('coud not get it')
+            #         next(igen)
+            #         return get_input(index)
+            #     else:
+            #         # log('got it!')
+            #         rr = imap[index]
+            #         for k in list(imap.keys()):
+            #             if k < index:
+            #                 del imap[k]
+            #         return rr
+            #     # for raw_record in ds:
+            #     #     example = tf.io.parse_single_example(raw_record, image_feature_description)
+            #     #     r[f'tf']['y_true'][index] = example['image/class/label'].numpy()
+            #     #     return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+            #     # yield example
+            # # y_true = []
+            # # ifs_for_labels = input_files()
+            # # for i in range(SANITY_SET.num):
+            # #     y_true.append(next(ifs_for_labels)['image/class/label'].numpy())
+            # # r[f'tf']['y_true'] = y_true
+            # # def input_file_raws():
+            # #     gen = input_files()
+            # #     for example in gen:
+            # #         yield tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+            # # IN_files = input_file_raws()
+            # IN_files = get_input
+
+
+            # test_class_pairs = [
+            #     pair for pair in chain(*[
+            #         (
+            #             SymAsymClassPair(n, False),
+            #             SymAsymClassPair(n, True)
+            #         ) for n in ints(np.linspace(0, 10, 6))
+            #     ])
+            # ]
+            # class_pairs = [
+            #     SymAsymClassPair(0, False),
+            #     SymAsymClassPair(4, False)
+            # ]
+            # human_class_pairs = [
+            #     SymAsymClassPair(0, False),
+            #     SymAsymClassPair(2, False),
+            #     SymAsymClassPair(4, False),
+            #     SymAsymClassPair(6, False),
+            #     SymAsymClassPair(8, False)
+            # ]
+            # gen_cfg = FLAGS.cfg_cfg['gen_cfg']
+            # gen_images(
+            #     folder=HUMAN_IMAGE_FOLDER['TimePilot'],
+            #     class_pairs=human_class_pairs,
+            #     ims_per_class=10
+            # )
+
+        else:
+
+
+            test_class_pairs = [
+                pair for pair in chain(*[
+                    (
+                        SymAsymClassPair(n, False),
+                        SymAsymClassPair(n, True)
+                    ) for n in ints(np.linspace(0, 10, 6))
+                ])
+            ]
+            class_pairs = [
+                SymAsymClassPair(0, False),
+                SymAsymClassPair(4, False)
+            ]
+            human_class_pairs = [
+                SymAsymClassPair(0, False),
+                SymAsymClassPair(2, False),
+                SymAsymClassPair(4, False),
+                SymAsymClassPair(6, False),
+                SymAsymClassPair(8, False)
+            ]
+            gen_cfg = FLAGS.cfg_cfg['gen_cfg']
             gen_images(
-                folder=_IMAGES_FOLDER['Training'][n],
-                class_pairs=class_pairs,
-                ims_per_class=n
+                folder=HUMAN_IMAGE_FOLDER['TimePilot'],
+                class_pairs=human_class_pairs,
+                ims_per_class=10
             )
+            gen_images(
+                folder=_IMAGES_FOLDER['RSA'],
+                class_pairs=test_class_pairs,
+                ims_per_class=10,
+                # ims_per_class=1
+            )
+            gen_images(
+                folder=_IMAGES_FOLDER['Testing'],
+                class_pairs=test_class_pairs,
+                ims_per_class=10,
+                # ims_per_class=500,
+                # ims_per_class=1
+            )
+            # for n in (25, 50, 100, 150, 200, 1000):
+            for n in (10,):
+                gen_images(
+                    folder=_IMAGES_FOLDER['Training'][n],
+                    class_pairs=class_pairs,
+                    ims_per_class=n
+                )
 
         log('doing thing with _temp_ims')
         with TempFolder('_temp_ims') as temp:
