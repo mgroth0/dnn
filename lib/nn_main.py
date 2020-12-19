@@ -85,6 +85,7 @@ def nnet_main(FLAGS):
             )
 
         with TempFolder('_temp_ims') as temp:
+            temp.clear()
             temp.mkdirs()
             [_IMAGES_FOLDER.copy_to(temp[f'gpu{i + 1}']) for i in range(gen_cfg['num_gpus'])]
             _IMAGES_FOLDER.clear()
