@@ -189,4 +189,4 @@ configs:
     REGEN_DATA: true
     PIPELINE: SANITY TRAIN VAL # REC
   default:
-        <<: *salience_1
+    <<: *salience_1
