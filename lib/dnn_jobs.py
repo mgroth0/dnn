@@ -45,7 +45,7 @@ def build_job(
             'verbose'     : cfg.VERBOSE,
             'normtrainims': False if experiment is None else cfg.NORM_TRAIN_IMS,
 
-            'salience': False if experiment is None else cfg.salience,
+            'salience':  cfg.salience,
 
             'deletenorms' : cfg.OVERWRITE_NORMS if experiment is None else False,
             'gen'         : cfg.REGEN_DATA if experiment is None else False  # implies kill
