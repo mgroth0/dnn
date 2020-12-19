@@ -27,11 +27,9 @@ ARCH_MAP = {
     'SCRATCH' : SCRATCH
 }
 
-
 import tensorflow as tf
 @log_invokation()
 def nnet_main(FLAGS):
-
     if FLAGS.salience:
         log('salience was here!')
 
@@ -46,10 +44,10 @@ def nnet_main(FLAGS):
         if FLAGS.salience:
             log('in gen salience!')
             root = Folder('/matt/data/ImageNet/output_tf')
-            filenames = root.glob('train*').map(lambda x: x.abspath).tolist() #validation
+            filenames = root.glob('train*').map(lambda x: x.abspath).tolist()  # validation
             ds = tf.data.TFRecordDataset(filenames)
-        #     for subroot in root:
-        #         for imgfile in subroot:
+            #     for subroot in root:
+            #         for imgfile in subroot:
 
             image_feature_description = {
                 'image/height'      : tf.io.FixedLenFeature([], tf.int64),
@@ -75,6 +73,36 @@ def nnet_main(FLAGS):
 
             _IMAGES_FOLDER['train']['barn_spider'].mkdirs()
 
+            # classes = [
+            #     'barn spider',
+            #     'garden spider',
+            #     'black widow',
+            #     'wolf spider',
+            #     'black and gold garden spider',
+            #
+            #     'emmet' ,#ant
+            #     'grasshopper',
+            #     'cricket',
+            #     'stick insect',
+            #     'cockroach'
+            # ]
+
+
+            classes = [
+                'Egyptian cat',
+                'Siamese cat',
+                'Persian cat',
+                'tiger cat',
+                'tabby cat',
+
+                'Afghan hound' ,#ant
+                'basset hound',
+                'beagle',
+                'bloodhound',
+                'bluetick'
+            ]
+            class_count = {cn: 0 for cn in classes}
+
             for i, raw_record in enum(ds):
                 example = tf.io.parse_single_example(raw_record, image_feature_description)
                 # r[f'tf']['y_true'][i] = example['image/class/label'].numpy()
@@ -82,10 +110,20 @@ def nnet_main(FLAGS):
 
                 if i % 100 == 0:
                     log(f'on image {i}')
-                if 'barn spider' in utf_decode(example['image/class/text'].numpy()):
-                    log(f'saving barn spider {i}')
-                    rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                    _IMAGES_FOLDER['train']['barn spider'][f'{i}.png'].save(rrr)
+                classname = utf_decode(example['image/class/text'].numpy())
+                for cn in classes:
+                    if cn in classname and class_count[cn] < 10:
+                        log(f'saving {cn} {class_count[cn]}')
+                        rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+                        _IMAGES_FOLDER['train'][cn][f'{i}.png'].save(rrr)
+                        class_count[cn] += 1
+                        break
+                break_all = True
+                for cc in class_count.values():
+                    if cc != 10:
+                        break_all = False
+                if break_all:
+                    break
 
                 # current_i = current_i + 1
                 # imap[i] = rrr
@@ -151,8 +189,6 @@ def nnet_main(FLAGS):
             # )
 
         else:
-
-
             test_class_pairs = [
                 pair for pair in chain(*[
                     (
@@ -250,7 +286,6 @@ def nnet_main(FLAGS):
         )
     net.build()
     [a.after_build(FLAGS, net) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
-
 
     net.train_data = datasetTrain.prep(net.HEIGHT_WIDTH)
     net.val_data = datasetVal.prep(net.HEIGHT_WIDTH)
