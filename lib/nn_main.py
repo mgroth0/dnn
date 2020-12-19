@@ -13,7 +13,7 @@ from lib.boot import nn_init_fun
 from mlib.analyses import ANALYSES, AnalysisMode
 from mlib.boot import log
 from mlib.boot.lang import listkeys, enum
-from mlib.boot.stream import ints
+from mlib.boot.stream import ints, listitems
 from mlib.file import TempFolder, Folder
 from mlib.proj.struct import pwdf
 from mlib.str import utf_decode
@@ -89,20 +89,23 @@ def nnet_main(FLAGS):
             #     'cockroach'
             # ]
 
+            cats = ['Egyptian cat',
+                    'Siamese cat',
+                    'Persian cat',
+                    'tiger cat',
+                    'tabby cat']
+            dogs = [
 
-            classes = [
-                'Egyptian cat',
-                'Siamese cat',
-                'Persian cat',
-                'tiger cat',
-                'tabby cat',
 
-                'Afghan hound' ,#ant
+                'Afghan hound',
                 'basset hound',
                 'beagle',
                 'bloodhound',
                 'bluetick'
             ]
+            classes = cats + dogs
+            not_trained = ['tabby cat', 'bluetick']
+
             class_count = {cn: 0 for cn in classes}
 
             for i, raw_record in enum(ds):
@@ -114,18 +117,18 @@ def nnet_main(FLAGS):
                     log(f'on image {i}')
                 classname = utf_decode(example['image/class/text'].numpy())
                 for cn in classes:
-                    if cn in classname and class_count[cn] < 20:
+                    if cn in classname and (class_count[cn] < 10 if cn in not_trained else 20):
                         log(f'saving {cn} {class_count[cn] + 1}')
                         rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
                         if class_count[cn] >= 10:
                             _IMAGES_FOLDER['Testing'][cn][f'{i}.png'].save(rrr)
                         else:
-                            _IMAGES_FOLDER['Training/10'][cn][f'{i}.png'].save(rrr)
+                            _IMAGES_FOLDER['Training/10']['dog' if cn in dogs else 'cat'][f'{i}.png'].save(rrr)
                         class_count[cn] += 1
                         break
                 break_all = True
-                for cc in class_count.values():
-                    if cc != 20:
+                for cn, cc in listitems(class_count):
+                    if (cn in not_trained and cc != 10) or (cn not in not_trained and cc != 20):
                         break_all = False
                 if break_all:
                     break
@@ -292,9 +295,9 @@ def nnet_main(FLAGS):
     net.build()
     [a.after_build(FLAGS, net) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
 
-    net.train_data = datasetTrain.prep(net.HEIGHT_WIDTH)
-    net.val_data = datasetVal.prep(net.HEIGHT_WIDTH)
-    net.test_data = datasetTest.prep(net.HEIGHT_WIDTH)
+    net.train_data = datasetTrain.prep(net.HEIGHT_WIDTH, net.PP)
+    net.val_data = datasetVal.prep(net.HEIGHT_WIDTH, net.PP)
+    net.test_data = datasetTest.prep(net.HEIGHT_WIDTH, net.PP)
 
     return trainTestRecord(net, '', FLAGS.epochs)
 

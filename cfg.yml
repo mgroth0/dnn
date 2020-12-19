@@ -191,6 +191,10 @@ configs:
 #    PIPELINE: SANITY TRAIN # VAL # REC
     PIPELINE: TRAIN # VAL # REC
     MODE: JUSTRUN
+    EXPS:
+      -
+        <<: *default_exp
+        arch: INC
   default:
 #  <<: *final_sym
     <<: *salience_1

@@ -10,6 +10,7 @@ import numpy as np
 from lib.nn import nn_lib
 from lib.misc.imutil import make1, make255, resampleim
 import lib.nn.nnstate as nnstate
+from lib.preprocessor import preprocessors
 from mlib.boot import log
 from mlib.boot.mlog import warn, err
 from mlib.boot.stream import arr, randperm, concat, listitems
@@ -89,8 +90,6 @@ def gen_images(*, folder, class_pairs, ims_per_class):
 
             im_data = make255(im_data)
 
-
-
             if iseven(i):
                 im_data = nn_lib.symm(im_data, 1)
                 y.append(classes[s_classname])
@@ -100,8 +99,6 @@ def gen_images(*, folder, class_pairs, ims_per_class):
                 label = ns_classname
 
             im_data = np.expand_dims(im_data, 2)
-
-
 
             # i think Darius' data was single channeled
             # im_data = np.concatenate((im_data, im_data, im_data), axis=2)
@@ -331,7 +328,7 @@ class PreDataset:
                         break
 
         return examples
-    def prep(self, HW):
+    def prep(self, HW,pp_type):
         # RANDOMNESS HERE
         random.shuffle(self.imds)
 
@@ -348,11 +345,22 @@ class PreDataset:
                 for imd in self.imds:
                     i += 1
                     if i <= nnstate.FLAGS.batchsize:
-                        twentyPairs += [getReal((imd, HW),
-                                                self.class_label_map,
-                                                self.normalize_single_ims,
-                                                self.std_d,
-                                                self.USING_STD_DIR)]
+
+                        if nnstate.FLAGS.salience:
+                            the_new = preprocessors(HW)[pp_type]
+                        else:
+                            the_new = getReal((imd, HW),
+                                              self.class_label_map,
+                                              self.normalize_single_ims,
+                                              self.std_d,
+                                              self.USING_STD_DIR)
+
+
+                        twentyPairs += [
+                            the_new
+
+
+                        ]
                         # twentyData.append(imd.data)
                         # twentyLabel.append(imd.label)
                     if i == nnstate.FLAGS.batchsize:

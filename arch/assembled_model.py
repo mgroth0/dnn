@@ -22,6 +22,7 @@ class AssembledModel(ModelWrapper, ABC):
     WEIGHTS = Abstract(Optional[str])
     FLIPPED_CONV_WEIGHTS = False
     OUTPUT_IDX = None
+    PP = Abstract(str)
     # IS_PRETRAINED: bool = field(init=False)
 
     @classmethod

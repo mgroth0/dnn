@@ -10,6 +10,7 @@ class INC(AssembledModel):
     ARCH_LABEL = 'INC'
     HEIGHT_WIDTH = INC_HW
     WEIGHTS = 'inception_resnet_v2_weights_tf_dim_ordering_tf_kernels.h5'
+    PP = 'unit_scale'
     # )
     def assemble_layers(self):
         from tensorflow.keras.layers import (
