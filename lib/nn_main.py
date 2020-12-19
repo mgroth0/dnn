@@ -38,10 +38,12 @@ def nnet_main(FLAGS):
     HUMAN_IMAGE_FOLDER = pwdf()['_images_human'].mkdirs(mker=True)
 
     if FLAGS.gen:
+        log('in gen!')
         _IMAGES_FOLDER.clearIfExists()
         HUMAN_IMAGE_FOLDER.clearIfExists()
 
         if FLAGS.salience:
+            log('in gen salience!')
             root = Folder('/matt/data/ImageNet/output_tf')
             filenames = root.glob('train*').tolist() #validation
             ds = tf.data.TFRecordDataset(filenames)
