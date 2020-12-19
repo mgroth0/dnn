@@ -15,6 +15,7 @@ def dnn(
         cfg
 ):
     mode = cfg.MODE
+    log(f'MODE IS {mode}')
     Project.DNN_FIGS_FIGS_FOLDER.mkdirs()
 
     TEMP_FIGS_FOLDER = Folder(cfg.root)
@@ -73,7 +74,9 @@ def dnn(
             new_eg = muscle.pull_data(TEMP_FIGS_FOLDER, cfg, new_fig_folder)
 
     exp_group = new_eg or last_eg
+    log(f'MODE IS {mode}')
     if 'COMPILE_TEST_ALL' in mode:
+        log('in CTA!')
         analyze_exp_group(exp_group)
 
         # the stuff below is only temporarily commented out
