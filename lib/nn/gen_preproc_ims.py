@@ -134,7 +134,6 @@ def getReal(
         USING_STD_DIR
 ):
     real, HW = image_HW
-    breakpoint()
     if GRAY_SCALE:
         real.data = Image.open(real.file.abspath)
     else:
@@ -349,14 +348,16 @@ class PreDataset:
                     i += 1
                     if i <= nnstate.FLAGS.batchsize:
 
-                        # if nnstate.FLAGS.salience:
-                        #     the_new = preprocessors(HW)[pp_type]
-                        # else:
-                        the_new = getReal((imd, HW),
-                                          self.class_label_map,
-                                          self.normalize_single_ims,
-                                          self.std_d,
-                                          self.USING_STD_DIR)
+                        if nnstate.FLAGS.salience:
+                            the_new = imd
+                            the_new.data = preprocessors(HW)[pp_type].preprocess(File(imd.file))
+                            the_new.label = self.class_label_map[imd.clazz]
+                        else:
+                            the_new = getReal((imd, HW),
+                                              self.class_label_map,
+                                              self.normalize_single_ims,
+                                              self.std_d,
+                                              self.USING_STD_DIR)
 
 
                         twentyPairs += [
