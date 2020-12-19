@@ -14,7 +14,7 @@ class ALEX(AssembledModel):
     ARCH_LABEL = 'ALEX'
     HEIGHT_WIDTH = 227
     CHANNEL_AXIS = _ALEX_CA
-    # PP = ''
+    PP = 'demean_imagenet_crop'
     # )
     def assemble_layers(self):
         self._next_dense_i = 1

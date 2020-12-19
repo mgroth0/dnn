@@ -177,7 +177,9 @@ def getReal(
             for chan in range(3):
                 real.data[:, :, chan] = real.data[:, :, chan] - np.mean(real.data[:, :, chan])
 
+
     real.data = resampleim(real.data, HW, HW)
+    breakpoint()
     if GRAY_SCALE:
         shape1 = real.data.shape[0]
         shape2 = real.data.shape[1]
@@ -346,14 +348,14 @@ class PreDataset:
                     i += 1
                     if i <= nnstate.FLAGS.batchsize:
 
-                        if nnstate.FLAGS.salience:
-                            the_new = preprocessors(HW)[pp_type]
-                        else:
-                            the_new = getReal((imd, HW),
-                                              self.class_label_map,
-                                              self.normalize_single_ims,
-                                              self.std_d,
-                                              self.USING_STD_DIR)
+                        # if nnstate.FLAGS.salience:
+                        #     the_new = preprocessors(HW)[pp_type]
+                        # else:
+                        the_new = getReal((imd, HW),
+                                          self.class_label_map,
+                                          self.normalize_single_ims,
+                                          self.std_d,
+                                          self.USING_STD_DIR)
 
 
                         twentyPairs += [
