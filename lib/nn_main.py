@@ -38,6 +38,8 @@ def nnet_main(FLAGS):
     HUMAN_IMAGE_FOLDER = pwdf()['_images_human'].mkdirs(mker=True)
 
     if FLAGS.gen:
+        _IMAGES_FOLDER.clearIfExists()
+        HUMAN_IMAGE_FOLDER.clearIfExists()
         test_class_pairs = [
             pair for pair in chain(*[
                 (
