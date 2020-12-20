@@ -72,8 +72,8 @@ def nnet_main(FLAGS):
             # def input_gen():
             log('looping imagenet')
 
-            _IMAGES_FOLDER['Training/10']['barn_spider'].mkdirs()
-            _IMAGES_FOLDER['Testing']['barn_spider'].mkdirs()
+            _IMAGES_FOLDER['Training/10'].mkdirs()
+            _IMAGES_FOLDER['Testing'].mkdirs()
 
             # classes = [
             #     'barn spider',

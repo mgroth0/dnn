@@ -187,7 +187,7 @@ configs:
   salience_1: &salience_1
     <<: *final_sym
     EXPERIMENT_NAME: salience_1
-#    REGEN_DATA: true
+    REGEN_DATA: true
 #    PIPELINE: SANITY TRAIN # VAL # REC
     PIPELINE: TRAIN # VAL # REC
     MODE: JUSTRUN
