@@ -1,7 +1,7 @@
 print('nn_main.py: top')
 from itertools import chain
 import numpy as np
-
+print('nn_main.py: about to do arch imports')
 from arch import ALEX, GNET, INC, SCRATCH, AssembledModel
 from arch.INC_ORIG import INC_ORIG
 from arch.PROTO import PROTO
