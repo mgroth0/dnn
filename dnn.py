@@ -1,6 +1,7 @@
 print('top of dnn.py')
 from lib import makereport
 from mlib.boot import log
+print('dnn.py: quarter through imports')
 from mlib.boot.lang import isblank, ismac
 from mlib.input import boolinput, strinput
 print('dnn.py: half through imports')
