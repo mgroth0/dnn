@@ -131,6 +131,7 @@ def nnet_main(FLAGS):
                     if (cn in classname) and (class_count[cn] < (10 if cn in not_trained else 20)):
                         log(f'saving {cn} {class_count[cn] + 1}')
                         rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+                        breakpoint()
                         if class_count[cn] < 10:
                             _IMAGES_FOLDER['Testing'][cn][f'{i}.png'].save(rrr)
                         else:
