@@ -14,7 +14,7 @@ import lib.nn.nnstate as nnstate
 from lib.preprocessor import preprocessors
 from mlib.boot import log
 from mlib.boot.mlog import warn, err
-from mlib.boot.stream import arr, randperm, concat, listitems
+from mlib.boot.stream import arr, randperm, concat, listitems, unique
 from mlib.err import assert_int
 import mlib.file
 from mlib.file import File
@@ -235,6 +235,10 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
                 err('all files in data_dir folders should be images')
 
     CLASS_NAMES = np.array([item.name for item in data_dir.glob('*') if mlib.file.filename != "LICENSE.txt"])
+    if nnstate.use_reduced_map:
+        CLASS_NAMES = unique(nnstate.reduced_map.values())
+        # if the_name in nnstate.reduced_map:
+        #     the_name = nnstate.reduced_map[the_name]
 
     images = []
     for image in data_dir.glob('*/*.png'):
