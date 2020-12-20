@@ -1,16 +1,18 @@
+print('nn_main.py: top')
 from itertools import chain
 import numpy as np
 
 from arch import ALEX, GNET, INC, SCRATCH, AssembledModel
 from arch.INC_ORIG import INC_ORIG
 from arch.PROTO import PROTO
-
+print('nn_main.py: finished arch imports')
 from lib.nn.nnstate import reset_global_met_log
 from lib.nn import nn_plotting, nnstate
 from lib.nn.gen_preproc_ims import NN_Data_Dir, load_and_preprocess_ims, SymAsymClassPair, gen_images
 from lib.dnn_data_saving import saveTestValResults, EXP_FOLDER
 from lib.boot import nn_init_fun
 from mlib.analyses import ANALYSES, AnalysisMode
+print('nn_main.py: halfway through imports')
 from mlib.boot import log
 from mlib.boot.lang import listkeys, enum
 from mlib.boot.stream import ints, listitems
@@ -18,6 +20,7 @@ from mlib.file import TempFolder, Folder
 from mlib.proj.struct import pwdf
 from mlib.str import utf_decode
 from mlib.term import log_invokation
+print('nn_main.py: done with imports')
 
 ARCH_MAP = {
     'ALEX'    : ALEX,
