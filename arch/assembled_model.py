@@ -7,6 +7,7 @@ from arch.model_wrapper import ModelWrapper
 import lib.nn.net_mets as net_mets
 import lib.nn.nnstate as nnstate
 from lib.nn.nn_lib import RSA
+print('assembled_model.py: half through imports')
 from mlib.abstract_attributes import Abstract
 from mlib.boot import log
 from mlib.boot.lang import listkeys, cn

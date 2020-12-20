@@ -1,3 +1,4 @@
+print('gen_preproc_ims.py: top')
 import glob
 import random
 
@@ -20,6 +21,7 @@ from mlib.file import File
 from mlib.math import iseven
 from mlib.shell import shell
 from mlib.term import log_invokation, Progress
+print('gen_preproc_ims.py: finished imports')
 LINUX_HOME = '/home/matt/'
 
 class NN_Data_Dir(File):

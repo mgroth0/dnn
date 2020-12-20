@@ -1,3 +1,4 @@
+print('model_wrapper.py: top')
 from copy import deepcopy
 
 import time
@@ -13,6 +14,7 @@ from mlib.boot.mlog import err, log, warn
 from mlib.boot.stream import V_Stacker
 from mlib.file import Folder, File
 from mlib.term import log_invokation
+print('model_wrapper.py: finished imports')
 
 _SAVE_MODEL = False
 _PLOT_MODEL = False
