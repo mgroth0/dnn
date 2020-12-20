@@ -6,7 +6,9 @@ import types
 from typing import Optional
 from abc import abstractmethod, ABC
 import numpy as np
+print('model_wrapper.py: importing tf')
 import tensorflow as tf
+print('model_wrapper.py: finished importing tf')
 
 from lib.nn.gen_preproc_ims import PreDataset
 from mlib.abstract_attributes import AbstractAttributes, Abstract
