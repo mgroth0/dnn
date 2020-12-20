@@ -222,7 +222,8 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
         else:
             the_name = f.name
             if nnstate.use_reduced_map:
-                the_name = nnstate.reduced_map[the_name]
+                if the_name in nnstate.reduced_map:
+                    the_name = nnstate.reduced_map[the_name]
             if the_name not in classnames:
                 classnames.append(the_name)
                 labels.append(next_label)
