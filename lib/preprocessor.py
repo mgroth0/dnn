@@ -8,6 +8,9 @@ import numpy as np
 from mlib.file import is_file
 
 
+SAVE_PREPROCESSED = True
+
+
 def preprocessors(hw): return {
     'none'                : Preprocessor(
         resize=hw
@@ -47,7 +50,9 @@ class Preprocessor:
 
     def preprocess(self, im):
         log('starting preprocess')
+        file = None
         if is_file(im):
+            file = im
             im = im.load()
 
         assert self.data_format == 'channels_last'
@@ -57,23 +62,28 @@ class Preprocessor:
         log('starting preprocess ops')
         if len(im.shape) == 2:
             im = np.stack((im, im, im), axis=2)
-            return self._preprocess_im(im)
+            return self._preprocess_im(im, file)
         elif len(im.shape) == 3:
-            return self._preprocess_im(im)
+            return self._preprocess_im(im, file)
         elif len(im.shape) == 4:
-            return arr([self._preprocess_im(i) for i in im])
+            return arr([self._preprocess_im(i, file) for i in im])
 
 
 
-    def _preprocess_im(self, img):
+    def _preprocess_im(self, img, file):
         import tensorflow as tf  # keep modular
 
-        if self.resize is not None:
+        needs_resize = (img.shape[0] != self.resize) and (img.shape[1] != self.resize)
+
+        if needs_resize and self.resize is not None:
             img = resampleim(
-                img, self.resize,
+                img,
+                self.resize,
                 self.resize,
                 nchan=self.nchan
             )
+            if file is not None:
+                file.save(img)
         if self.crop:
             if self.channel_axis == 1:
                 img = img[:, (self.resize - self.crop) // 2:(self.resize + self.crop) // 2
