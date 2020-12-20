@@ -120,7 +120,7 @@ def nnet_main(FLAGS):
                     if (cn in classname) and (class_count[cn] < (10 if cn in not_trained else 20)):
                         log(f'saving {cn} {class_count[cn] + 1}')
                         rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                        if class_count[cn] >= 10:
+                        if class_count[cn] < 10:
                             _IMAGES_FOLDER['Testing'][cn][f'{i}.png'].save(rrr)
                         else:
                             _IMAGES_FOLDER['Training/10']['dog' if cn in dogs else 'cat'][f'{i}.png'].save(rrr)
@@ -314,7 +314,7 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':fit'
         if 'TRAIN' in nnstate.FLAGS.pipeline:
             net_mets.total_steps = len(net.train_data)
-            breakpoint()
+            # breakpoint()
             net_mets.batch_count = 0
             if isinstance(net, GNET):
                 net_mets.batch_sub_count = 1
