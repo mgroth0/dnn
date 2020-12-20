@@ -240,6 +240,8 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
         # if the_name in nnstate.reduced_map:
         #     the_name = nnstate.reduced_map[the_name]
 
+    log(f'CLASS_NAMES:{CLASS_NAMES}')
+
     images = []
     for image in data_dir.glob('*/*.png'):
         images.append(image)
