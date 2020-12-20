@@ -314,6 +314,7 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':fit'
         if 'TRAIN' in nnstate.FLAGS.pipeline:
             net_mets.total_steps = len(net.train_data)
+            breakpoint()
             net_mets.batch_count = 0
             if isinstance(net, GNET):
                 net_mets.batch_sub_count = 1
