@@ -1,5 +1,6 @@
 print('top of dnn.py')
 from lib import makereport
+print('dnn.py: about to import log')
 from mlib.boot import log
 print('dnn.py: quarter through imports')
 from mlib.boot.lang import isblank, ismac
