@@ -1,6 +1,7 @@
 from lib.dnn_analyses import PerEpochAnalysis
 from lib.dnn_data_saving import save_dnn_data
 from lib.dnn_proj_struct import experiments_from_folder
+from lib.misc.imutil import resampleim
 from mlib.boot import log
 from mlib.boot.lang import enum
 class ExampleInput(PerEpochAnalysis):
@@ -10,7 +11,12 @@ class ExampleInput(PerEpochAnalysis):
         log('saving examples')
         exs = datagen.examples()
         for idx, ex in enum(exs):
-            save_dnn_data(ex[1], nam, ex[0], 'png')
+            save_dnn_data(
+                resampleim(ex[1], 100, 100, 3),
+                nam,
+                ex[0],
+                'png'
+            )
         log('finished saving examples')
 
 
