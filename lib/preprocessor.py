@@ -62,7 +62,7 @@ class Preprocessor:
             return self._preprocess_im(im)
         elif len(im.shape) == 4:
             return arr([self._preprocess_im(i) for i in im])
-        log('finished preprocess')
+
 
 
     def _preprocess_im(self, img):
