@@ -1,3 +1,4 @@
+print('assembled_model.py: top')
 from typing import Optional
 import numpy as np
 from abc import abstractmethod, ABC
@@ -13,6 +14,7 @@ from mlib.boot.mlog import warn, err
 from mlib.boot.stream import zeros, arr, itr
 from mlib.file import File, Folder
 from mlib.term import log_invokation
+print('assembled_model.py: finished imports')
 
 
 
