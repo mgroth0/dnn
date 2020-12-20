@@ -236,7 +236,7 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
 
     CLASS_NAMES = np.array([item.name for item in data_dir.glob('*') if mlib.file.filename != "LICENSE.txt"])
     if nnstate.use_reduced_map:
-        CLASS_NAMES = unique(nnstate.reduced_map.values())
+        CLASS_NAMES = unique(list(nnstate.reduced_map.values()))
         # if the_name in nnstate.reduced_map:
         #     the_name = nnstate.reduced_map[the_name]
 
