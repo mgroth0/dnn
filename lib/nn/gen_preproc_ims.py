@@ -263,7 +263,11 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
     for im in images:
         real = SimpleNamespace()
         real.file = im
-        real.clazz = real.file.parentName
+        the_name = real.file.parentName
+        if nnstate.use_reduced_map:
+            if the_name in nnstate.reduced_map:
+                the_name = nnstate.reduced_map[the_name]
+        real.clazz = the_name
         imagesR += [real]
 
     reals = dict()
