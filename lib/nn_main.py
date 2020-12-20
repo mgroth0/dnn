@@ -1,3 +1,4 @@
+from mlib.boot.mlog import err
 print('nn_main.py: top')
 from itertools import chain
 import numpy as np
@@ -38,6 +39,28 @@ def nnet_main(FLAGS):
 
     _IMAGES_FOLDER = pwdf()['_images'].mkdirs(mker=True)
     HUMAN_IMAGE_FOLDER = pwdf()['_images_human'].mkdirs(mker=True)
+
+    cats = ['Egyptian cat',
+            'Siamese cat',
+            'Persian cat',
+            'tiger cat',
+            'tabby cat']
+    dogs = [
+
+
+        'Afghan hound',
+        'basset hound',
+        'beagle',
+        'bloodhound',
+        'bluetick'
+    ]
+    classes = cats + dogs
+    not_trained = ['tabby cat', 'bluetick']
+    for d in dogs:
+        nnstate.reduced_map[d] = 'dog'
+    for c in cats:
+        nnstate.reduced_map[c] = 'cat'
+
 
     if FLAGS.gen:
         log('in gen!')
@@ -92,22 +115,7 @@ def nnet_main(FLAGS):
             #     'cockroach'
             # ]
 
-            cats = ['Egyptian cat',
-                    'Siamese cat',
-                    'Persian cat',
-                    'tiger cat',
-                    'tabby cat']
-            dogs = [
 
-
-                'Afghan hound',
-                'basset hound',
-                'beagle',
-                'bloodhound',
-                'bluetick'
-            ]
-            classes = cats + dogs
-            not_trained = ['tabby cat', 'bluetick']
 
             class_count = {cn: 0 for cn in classes}
 
@@ -275,6 +283,10 @@ def nnet_main(FLAGS):
         GPU_RSA_FOLDER.delete_norm_dir()
         nn_init_fun.NRC_IS_FINISHED()  # must be invoked this way since value of function changes
 
+    if FLAGS.normtrainims:
+        err('im doing this?')
+
+    nnstate.use_reduced_map = len(GPU_TRAIN_FOLDER.files) != len(GPU_TEST_FOLDER.files)
     datasetTrain, _ = load_and_preprocess_ims(
         TRAIN_TEST_SPLIT=1,
         data_dir=GPU_TRAIN_FOLDER,
@@ -316,7 +328,7 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
         nam = 'train'
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':fit'
         if 'TRAIN' in nnstate.FLAGS.pipeline:
-            net_mets.total_steps = net.train_data.num_steps #len(net.train_data)
+            net_mets.total_steps = net.train_data.num_steps  # len(net.train_data)
             # breakpoint()
             net_mets.batch_count = 0
             if isinstance(net, GNET):
@@ -332,7 +344,7 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':eval'
         if nnstate.EVAL_AND_REC_EVERY_EPOCH or i == nepochs - 1:
             if 'VAL' in nnstate.FLAGS.pipeline:
-                net_mets.total_steps = net.val_data.num_steps #len(net.val_data)
+                net_mets.total_steps = net.val_data.num_steps  # len(net.val_data)
                 net_mets.batch_count = 0
                 if isinstance(net, GNET):
                     net_mets.batch_sub_count = 1
@@ -349,7 +361,7 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
             nnstate.MET_PHASE = None
             nam = 'test'
             if 'REC' in nnstate.FLAGS.pipeline:
-                net_mets.total_steps = net.test_data.num_steps #len(net.test_data)
+                net_mets.total_steps = net.test_data.num_steps  # len(net.test_data)
                 net_mets.batch_count = 0
                 if isinstance(net, GNET):
                     net_mets.batch_sub_count = 1

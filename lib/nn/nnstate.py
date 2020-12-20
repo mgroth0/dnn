@@ -10,6 +10,9 @@ step_counter = 1
 EVAL_AND_REC_EVERY_EPOCH = False
 
 
+reduced_map = {}
+use_reduced_map = None
+
 def met_phase(inc=False):
     if MET_PHASE is None: return None
     global eval_counter, TEST_STEPS, step_counter

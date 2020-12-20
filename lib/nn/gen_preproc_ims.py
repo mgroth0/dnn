@@ -220,10 +220,14 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
             log('problem with $', f)
             err('all files in data_dir should be folders')
         else:
-            classnames.append(f.name)
-            labels.append(next_label)
-            class_label_map[f.name] = next_label
-            next_label = next_label + 1
+            the_name = f.name
+            if nnstate.use_reduced_map:
+                the_name = nnstate.reduced_map[the_name]
+            if the_name not in classnames:
+                classnames.append(the_name)
+                labels.append(next_label)
+                class_label_map[the_name] = next_label
+                next_label = next_label + 1
         for ff in f.files:
             if not ff.ext == 'png':
                 log('problem with $', ff)
