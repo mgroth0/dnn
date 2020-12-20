@@ -1,15 +1,18 @@
+print('makereport.py: top')
 from lib.dnn_proj_struct import experiment_groups
 from mlib.analyses import ANALYSES, AnalysisMode
 from mlib.boot.lang import listkeys
 from mlib.boot.stream import listmap, flat1, __
 from mlib.file import MD_FILE, pwdf
 from mlib.proj.struct import Project
+print('makereport.py: half through imports')
 from mlib.term import log_invokation
 from mlib.web.database import Database
 from mlib.web.makereport_lib import FigureTable, DNN_REPORT_CSS
 from mlib.web.simple_admin_api import SimpleAdminAPI
 from mlib.web.html import Hyperlink, Br, HTMLPage
 from mlib.web.webpage import write_index_webpage
+print('makereport.py: finished imports')
 
 MAKEREPORT_ONLINE = True
 INCLUDE_RSA_SLIDE = False
