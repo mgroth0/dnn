@@ -189,7 +189,8 @@ configs:
     EXPERIMENT_NAME: salience_1
     REGEN_DATA: False
 #    PIPELINE: SANITY TRAIN # VAL # REC
-    PIPELINE: TRAIN # VAL # REC
+#    PIPELINE: TRAIN # VAL # REC
+    PIPELINE: TRAIN VAL # REC
     MODE: JUSTRUN
     EXPS:
       -
