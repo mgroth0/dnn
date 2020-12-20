@@ -14,6 +14,8 @@ from mlib.boot.stream import zeros, arr, itr
 from mlib.file import File, Folder
 from mlib.term import log_invokation
 
+
+
 class AssembledModel(ModelWrapper, ABC):
     # @dataclass
     # class STATIC_ATTS(ModelWrapper.STATIC_ATTS):

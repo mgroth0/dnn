@@ -14,6 +14,9 @@ from mlib.boot.stream import V_Stacker
 from mlib.file import Folder, File
 from mlib.term import log_invokation
 
+_SAVE_MODEL = False
+_PLOT_MODEL = False
+
 class ModelWrapper(AbstractAttributes, ABC):
     IMAGE_NET_FOLD = Folder('_ImageNetTesting')
 
@@ -59,8 +62,10 @@ class ModelWrapper(AbstractAttributes, ABC):
         self.build_net()
         assert isinstance(self.net, self.tf.keras.Model)
         self.write_arch_summary()
-        self.plot_model()
-        self._save(pretrained=self.pretrained)
+        if _PLOT_MODEL:
+            self.plot_model()
+        if _SAVE_MODEL:
+            self._save(pretrained=self.pretrained)
         self.net.run_eagerly = True
         return self
 
