@@ -12,7 +12,7 @@ class ExampleInput(PerEpochAnalysis):
         exs = datagen.examples()
         for idx, ex in enum(exs):
             save_dnn_data(
-                resampleim(ex[1], 100, 100, 3),
+                resampleim(ex[1], 100, 100, 3),  # it was taking up to 3 seconds before with large images
                 nam,
                 ex[0],
                 'png'

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from lib.misc.imutil import resampleim
+from mlib.boot import log
 from mlib.boot.stream import arr
 import numpy as np
 
@@ -45,6 +46,7 @@ class Preprocessor:
     data_format: str = 'channels_last'
 
     def preprocess(self, im):
+        log('starting preprocess')
         if is_file(im):
             im = im.load()
 
@@ -52,6 +54,7 @@ class Preprocessor:
         assert self.channel_axis == 3
         assert self.nchan == 3
 
+        log('starting preprocess ops')
         if len(im.shape) == 2:
             im = np.stack((im, im, im), axis=2)
             return self._preprocess_im(im)
@@ -59,6 +62,7 @@ class Preprocessor:
             return self._preprocess_im(im)
         elif len(im.shape) == 4:
             return arr([self._preprocess_im(i) for i in im])
+        log('finished preprocess')
 
 
     def _preprocess_im(self, img):
