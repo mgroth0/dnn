@@ -359,7 +359,11 @@ class PreDataset:
             # twentyLabel = []
             twentyPairs = []
             i = 0
+
+            # did this?
             warn('NEED TO MERGE getReal and PREPROCESSOR CODE. USE PREPROCESSOR.')
+
+
             with Progress(len(self.imds)) as prog:
                 for imd in self.imds:
                     i += 1

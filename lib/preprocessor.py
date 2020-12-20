@@ -75,6 +75,7 @@ class Preprocessor:
 
         needs_resize = (img.shape[0] != self.resize) and (img.shape[1] != self.resize)
 
+        breakpoint()
         if needs_resize and self.resize is not None:
             img = resampleim(
                 img,
