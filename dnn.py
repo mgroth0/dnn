@@ -1,3 +1,4 @@
+print('top of dnn.py')
 from lib import makereport
 from mlib.boot import log
 from mlib.boot.lang import isblank, ismac
