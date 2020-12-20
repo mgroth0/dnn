@@ -1,4 +1,5 @@
 from lib import makereport
+from mlib.boot import log
 from mlib.boot.lang import isblank, ismac
 from mlib.input import boolinput, strinput
 from mlib.web import shadow
@@ -6,6 +7,7 @@ from mlib.file import Folder
 from mlib.proj.struct import Project
 from mlib.boot.stream import arr, listmap, __
 
+log('defining DNN Project')
 class DNN(Project):
     MODES = [
         'JUSTRUN',
