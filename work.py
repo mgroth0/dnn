@@ -37,6 +37,9 @@ from lib import dnn_data_saving
 dnn_data_saving.root = FLAGS.cfg_cfg['root']
 from lib.nn import nnstate
 nnstate.FLAGS = FLAGS
+import lib.nn.net_mets as net_mets
+if FLAGS.salience:
+    net_mets._mets_to_use.remove(net_mets.mcc_multi)
 nnstate.reset_global_met_log()
 if float(1) == float(2):
     result_folder = nn_init_fun.runWithMultiProcess(nnet_main)

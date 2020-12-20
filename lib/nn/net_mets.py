@@ -9,7 +9,7 @@ from mlib.boot.mlog import err
 from mlib.boot.stream import mparray, arr, arr2d, inc, maxindex
 from mlib.class_mets import binary_results, mcc_basic, error_rate_basic
 
-def METS_TO_USE(): return [accuracy, matthews_correlation_coefficient, mcc_multi, fill_cmat]
+def METS_TO_USE(): return _mets_to_use
 
 
 
@@ -199,3 +199,5 @@ _DEFAULT_RESULT = -3
 _EMPTY_TENSOR = -2
 _DO_NOT_USE = -4
 _NON_BINARY = -5
+
+_mets_to_use = [accuracy, matthews_correlation_coefficient, mcc_multi, fill_cmat]
