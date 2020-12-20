@@ -1,7 +1,9 @@
 print('makereport.py: top')
 from lib.dnn_proj_struct import experiment_groups
+print('makereport.py: one import done')
 from mlib.analyses import ANALYSES, AnalysisMode
 from mlib.boot.lang import listkeys
+print('makereport.py: quarter through imports')
 from mlib.boot.stream import listmap, flat1, __
 from mlib.file import MD_FILE, pwdf
 from mlib.proj.struct import Project
