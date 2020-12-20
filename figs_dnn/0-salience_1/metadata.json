@@ -1,0 +1,15 @@
+{
+    "archs": [
+        {
+            "label": "ALEX",
+            "description": "(pre-trained on ImageNet)"
+        }
+    ],
+    "nrepeats": 1,
+    "nepochs": 1,
+    "batchsize": 10,
+    "ntrainims": [
+        10
+    ],
+    "normalized": false
+}
