@@ -84,7 +84,7 @@ class Preprocessor:
                 nchan=self.nchan
             )
             if file is not None:
-                # breakpoint()
+                breakpoint()
                 file.save(img)
         if self.crop:
             if self.channel_axis == 1:
