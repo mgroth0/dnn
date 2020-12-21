@@ -48,8 +48,6 @@ def nnet_main(FLAGS):
             'tiger cat',
             'tabby cat']
     dogs = [
-
-
         'Afghan hound',
         'basset hound',
         'beagle',
