@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from lib.misc.imutil import resampleim
+from lib.misc.imutil import resampleim, make255
 from mlib.boot import log
 from mlib.boot.stream import arr
 import numpy as np
@@ -84,8 +84,8 @@ class Preprocessor:
                 nchan=self.nchan
             )
             if file is not None:
-                breakpoint()
-                file.save(img)
+                # breakpoint()
+                file.save(make255(img))
         if self.crop:
             if self.channel_axis == 1:
                 img = img[:, (self.resize - self.crop) // 2:(self.resize + self.crop) // 2

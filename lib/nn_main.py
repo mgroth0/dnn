@@ -31,7 +31,7 @@ ARCH_MAP = {
     'SCRATCH' : SCRATCH
 }
 
-breakpoint()
+# breakpoint()
 
 import tensorflow as tf
 @log_invokation()
