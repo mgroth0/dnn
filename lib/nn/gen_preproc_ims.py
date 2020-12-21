@@ -370,8 +370,9 @@ class PreDataset:
                         if nnstate.FLAGS.salience:
                             the_new = imd
                             the_new.data = preprocessors(HW)[pp_type].preprocess(File(imd.file))
-                            breakpoint()
-                            if str(type(the_new.data)) != "<class 'numpy.ndarray'>" or str(the_new.data.dtype != np.float32):  # debug
+                            if (str(type(the_new.data)) != "<class 'numpy.ndarray'>") or (
+                                    str(the_new.data.dtype) != "float32") or str(
+                                    the_new.data.shape) != '(299, 299, 3)':  # debug
                                 breakpoint()
                             log('finished preprocess')
                             the_new.label = self.class_label_map[imd.clazz]
