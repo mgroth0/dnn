@@ -75,7 +75,7 @@ class Preprocessor:
 
         needs_resize = (img.shape[0] != self.resize) and (img.shape[1] != self.resize)
 
-        breakpoint()
+        # breakpoint()
         if needs_resize and self.resize is not None:
             img = resampleim(
                 img,
@@ -84,7 +84,7 @@ class Preprocessor:
                 nchan=self.nchan
             )
             if file is not None:
-                breakpoint()
+                # breakpoint()
                 file.save(img)
         if self.crop:
             if self.channel_axis == 1:
