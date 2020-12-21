@@ -61,7 +61,6 @@ def nnet_main(FLAGS):
     for c in cats:
         nnstate.reduced_map[c] = 'cat'
 
-
     if FLAGS.gen:
         log('in gen!')
         _IMAGES_FOLDER.clearIfExists()
@@ -307,7 +306,7 @@ def nnet_main(FLAGS):
         net = ARCH_MAP[FLAGS.arch](
             max_num_classes=len(listkeys(datasetTest.class_label_map))
         )
-    net.build()
+    net.build(FLAGS)
     [a.after_build(FLAGS, net) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
 
     net.train_data = datasetTrain.prep(net.HEIGHT_WIDTH, net.PP)

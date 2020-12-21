@@ -7,6 +7,7 @@ profiles:
     MUSCLE: local
     offline: True
     salience: False
+    TRANSFER_LEARNING: True
   darius: &darius
     proto_model: False
     #  needs to be somewhat consistent between fileops and train/test
@@ -193,6 +194,7 @@ configs:
 
 #    REGEN_DATA: True
     EPOCHS: 10
+    TRANSFER_LEARNING: False
 
 
 

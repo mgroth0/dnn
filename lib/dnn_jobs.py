@@ -46,6 +46,7 @@ def build_job(
             'normtrainims': False if experiment is None else cfg.NORM_TRAIN_IMS,
 
             'salience':  cfg.salience,
+            'TRANSFER_LEARNING':  cfg.TRANSFER_LEARNING,
 
             'deletenorms' : cfg.OVERWRITE_NORMS if experiment is None else False,
             'gen'         : cfg.REGEN_DATA if experiment is None else False  # implies kill

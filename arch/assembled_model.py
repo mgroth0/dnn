@@ -43,7 +43,7 @@ class AssembledModel(ModelWrapper, ABC):
 
 
     @log_invokation(with_class=True)
-    def build_net(self):
+    def build_net(self,FLAGS):
         dims = [self.HEIGHT_WIDTH, self.HEIGHT_WIDTH, self.HEIGHT_WIDTH]
         dims[self.CI] = 3
         from tensorflow.python.keras import Input
@@ -53,10 +53,12 @@ class AssembledModel(ModelWrapper, ABC):
             outputs=self.assemble_layers(),
             name=self.FULL_NAME.replace(' ', '_')
         )
-        if self.WEIGHTS is not None:  # transfer learning
+        if self.WEIGHTS is not None and FLAGS.TRANSFER_LEARNING:  # transfer learning
             self._load_weights()
             self.write_weight_reports()
             if self.FLIPPED_CONV_WEIGHTS: self._flip_conv_weights()
+        elif (self.WEIGHTS is not None) and (not FLAGS.TRANSFER_LEARNING):
+            log('not loading weights because TRANSFER_LEARNING is disabled')
         self._compile(net_mets.METS_TO_USE())
 
     VERBOSE_MODE = 2  # 0=silent,1=progress bar,2=one line per epoch

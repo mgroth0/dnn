@@ -309,7 +309,7 @@ class INC(AssembledModel):
 
         # original class threw error if this 1000 was changed... but I wonder...
         return Dense(
-            2, #1000
+            1000,
             activation='softmax',
             name='predictions'
         )(GlobalAveragePooling2D(

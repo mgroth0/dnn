@@ -62,8 +62,8 @@ class ModelWrapper(AbstractAttributes, ABC):
     def build_net(self): pass
 
     @log_invokation
-    def build(self):
-        self.build_net()
+    def build(self,FLAGS):
+        self.build_net(FLAGS)
         assert isinstance(self.net, self.tf.keras.Model)
         self.write_arch_summary()
         if _PLOT_MODEL:
