@@ -1,3 +1,4 @@
+from mlib.boot.lang import islist
 print('gen_preproc_ims.py: top')
 import glob
 import random
@@ -179,7 +180,6 @@ def getReal(
             for chan in range(3):
                 real.data[:, :, chan] = real.data[:, :, chan] - np.mean(real.data[:, :, chan])
 
-
     real.data = resampleim(real.data, HW, HW)
 
     if GRAY_SCALE:
@@ -347,7 +347,7 @@ class PreDataset:
                         break
 
         return examples
-    def prep(self, HW,pp_type):
+    def prep(self, HW, pp_type):
         # RANDOMNESS HERE
         random.shuffle(self.imds)
 
@@ -363,15 +363,15 @@ class PreDataset:
             # did this?
             warn('NEED TO MERGE getReal and PREPROCESSOR CODE. USE PREPROCESSOR.')
 
-
             with Progress(len(self.imds)) as prog:
                 for imd in self.imds:
                     i += 1
                     if i <= nnstate.FLAGS.batchsize:
-
                         if nnstate.FLAGS.salience:
                             the_new = imd
                             the_new.data = preprocessors(HW)[pp_type].preprocess(File(imd.file))
+                            if islist(the_new.data):  # debug
+                                breakpoint()
                             log('finished preprocess')
                             the_new.label = self.class_label_map[imd.clazz]
                         else:
@@ -380,7 +380,6 @@ class PreDataset:
                                               self.normalize_single_ims,
                                               self.std_d,
                                               self.USING_STD_DIR)
-
 
                         twentyPairs += [
                             the_new
