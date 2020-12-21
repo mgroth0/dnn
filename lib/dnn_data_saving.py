@@ -6,6 +6,7 @@ from mlib.file import pwdf
 def saveTestValResults(ARCH, nam, ds, ei):
     from lib.nn import net_mets
     from lib.nn import nnstate
+    breakpoint()
     save_dnn_data(ConfusionMatrix(
         data=add_headers_to_mat(
             net_mets.cmat,
