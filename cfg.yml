@@ -27,7 +27,7 @@ profiles:
     salience: True
 
 #    NTRAIN: [10]
-    NTRAIN: [100]
+    NTRAIN: [90]
 
 
   default:
@@ -198,7 +198,7 @@ configs:
 
 
 
-    REGEN_DATA: True
+    REGEN_DATA: False
     REGEN_NTRAIN: 90 #100 doesnt work bc not all classes have 200(val). see nn_main.py
     EPOCHS: 10
     TRANSFER_LEARNING: False
