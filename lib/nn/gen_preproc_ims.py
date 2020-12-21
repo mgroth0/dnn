@@ -370,10 +370,11 @@ class PreDataset:
                         if nnstate.FLAGS.salience:
                             the_new = imd
                             the_new.data = preprocessors(HW)[pp_type].preprocess(File(imd.file))
-                            if (str(type(the_new.data)) != "<class 'numpy.ndarray'>") or (
-                                    str(the_new.data.dtype) != "float32") or str(
-                                    the_new.data.shape) != '(299, 299, 3)':  # debug
-                                breakpoint()
+                            # I think I fixed this. problem was preprocess resize was not resizing if one of the dimensions was right but not the other. Used an 'and' when I should have used an 'or'.
+                            # if (str(type(the_new.data)) != "<class 'numpy.ndarray'>") or (
+                            #         str(the_new.data.dtype) != "float32") or str(
+                            #         the_new.data.shape) != '(299, 299, 3)':  # debug
+                            #     breakpoint()
                             log('finished preprocess')
                             the_new.label = self.class_label_map[imd.clazz]
                         else:

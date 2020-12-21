@@ -77,7 +77,7 @@ class Preprocessor:
     def _preprocess_im(self, img, file):
         import tensorflow as tf  # keep modular
 
-        needs_resize = (img.shape[0] != self.resize) and (img.shape[1] != self.resize)
+        needs_resize = (img.shape[0] != self.resize) or (img.shape[1] != self.resize)
 
         # breakpoint()
         if needs_resize and self.resize is not None:

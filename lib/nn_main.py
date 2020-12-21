@@ -42,6 +42,7 @@ def nnet_main(FLAGS):
     _IMAGES_FOLDER = pwdf()['_images'].mkdirs(mker=True)
     HUMAN_IMAGE_FOLDER = pwdf()['_images_human'].mkdirs(mker=True)
 
+    #  these numbers might be lower now that I'm excluding images that aren't squares
     cats = ['Egyptian cat',  # >=200
             'Siamese cat',  # 196
             'Persian cat',  # >=200
@@ -122,6 +123,8 @@ def nnet_main(FLAGS):
                 example = tf.io.parse_single_example(raw_record, image_feature_description)
                 # r[f'tf']['y_true'][i] = example['image/class/label'].numpy()
                 # return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
+                if example['image/height'] != example['image/width']:
+                    continue
 
                 if i % 100 == 0:
                     log(f'on image {i}')
