@@ -188,7 +188,16 @@ configs:
     <<: *final_sym
     NORM_TRAIN_IMS: False
     EXPERIMENT_NAME: salience_1
+
+
+
 #    REGEN_DATA: True
+    EPOCHS: 10
+
+
+
+
+
 #    PIPELINE: SANITY TRAIN # VAL # REC
 #    PIPELINE: TRAIN # VAL # REC
     PIPELINE: TRAIN VAL # REC
