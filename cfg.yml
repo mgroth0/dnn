@@ -188,7 +188,7 @@ configs:
     <<: *final_sym
     NORM_TRAIN_IMS: False
     EXPERIMENT_NAME: salience_1
-#    REGEN_DATA: True
+    REGEN_DATA: True
 #    PIPELINE: SANITY TRAIN # VAL # REC
 #    PIPELINE: TRAIN # VAL # REC
     PIPELINE: TRAIN VAL # REC
@@ -196,8 +196,8 @@ configs:
     EXPS:
       -
         <<: *default_exp
-#        arch: INC
-        arch: ALEX
+        arch: INC
+#        arch: ALEX
   default:
 #  <<: *final_sym
     <<: *salience_1
