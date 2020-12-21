@@ -97,7 +97,7 @@ def nnet_main(FLAGS):
             # def input_gen():
             log('looping imagenet')
 
-            _IMAGES_FOLDER[f'Training/{FLAGS.ntrain}'].mkdirs()
+            _IMAGES_FOLDER[f'Training/{FLAGS.REGEN_NTRAIN}'].mkdirs()
             _IMAGES_FOLDER['Testing'].mkdirs()
 
             # classes = [
@@ -118,7 +118,6 @@ def nnet_main(FLAGS):
 
             class_count = {cn: 0 for cn in classes}
 
-            breakpoint()
             for i, raw_record in enum(ds):
                 example = tf.io.parse_single_example(raw_record, image_feature_description)
                 # r[f'tf']['y_true'][i] = example['image/class/label'].numpy()
@@ -128,22 +127,21 @@ def nnet_main(FLAGS):
                     log(f'on image {i}')
                 classname = utf_decode(example['image/class/text'].numpy())
                 for cn in classes:
-                    if (cn in classname) and (class_count[cn] < (FLAGS.ntrain if cn in not_trained else (FLAGS.ntrain*2))):
+                    if (cn in classname) and (class_count[cn] < (FLAGS.REGEN_NTRAIN if cn in not_trained else (FLAGS.REGEN_NTRAIN*2))):
                         log(f'saving {cn} {class_count[cn] + 1}')
                         rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
                         if class_count[cn] < FLAGS.ntrain:
                             _IMAGES_FOLDER['Testing'][cn][f'{i}.png'].save(rrr)
                         else:
-                            _IMAGES_FOLDER[f'Training/{FLAGS.ntrain}']['dog' if cn in dogs else 'cat'][f'{i}.png'].save(rrr)
+                            _IMAGES_FOLDER[f'Training/{FLAGS.REGEN_NTRAIN}']['dog' if cn in dogs else 'cat'][f'{i}.png'].save(rrr)
                         class_count[cn] += 1
                         break
                 break_all = True
                 for cn, cc in listitems(class_count):
-                    if (cn in not_trained and cc != FLAGS.ntrain) or (cn not in not_trained and cc != (FLAGS.ntrain*2)):
+                    if (cn in not_trained and cc != FLAGS.REGEN_NTRAIN) or (cn not in not_trained and cc != (FLAGS.REGEN_NTRAIN*2)):
                         break_all = False
                 if break_all:
                     break
-            breakpoint()
 
                 # current_i = current_i + 1
                 # imap[i] = rrr

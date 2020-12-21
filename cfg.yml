@@ -42,6 +42,7 @@ configs:
 
   # theres an order and procedure to these
     REGEN_DATA: False
+    REGEN_NTRAIN: 0
     PIPELINE: SANITY TRAIN VAL REC
     NORM_TRAIN_IMS: True
     OVERWRITE_NORMS: False
@@ -198,6 +199,7 @@ configs:
 
 
     REGEN_DATA: True
+    REGEN_NTRAIN: 100
     EPOCHS: 10
     TRANSFER_LEARNING: False
 

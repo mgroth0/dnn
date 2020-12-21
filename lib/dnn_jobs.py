@@ -47,6 +47,7 @@ def build_job(
 
             'salience':  cfg.salience,
             'TRANSFER_LEARNING':  cfg.TRANSFER_LEARNING,
+            'REGEN_NTRAIN': cfg.REGEN_NTRAIN
 
             'deletenorms' : cfg.OVERWRITE_NORMS if experiment is None else False,
             'gen'         : cfg.REGEN_DATA if experiment is None else False  # implies kill
