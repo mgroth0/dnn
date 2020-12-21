@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from lib.misc.imutil import resampleim, make255
 from mlib.boot import log
+from mlib.boot.mlog import err
 from mlib.boot.stream import arr
 import numpy as np
 
@@ -66,7 +67,10 @@ class Preprocessor:
         elif len(im.shape) == 3:
             return self._preprocess_im(im, file)
         elif len(im.shape) == 4:
+            err('maybe this is the problem?')
             return arr([self._preprocess_im(i, file) for i in im])
+        else:
+            err('or this?')
 
 
 
