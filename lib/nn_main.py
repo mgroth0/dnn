@@ -135,7 +135,7 @@ def nnet_main(FLAGS):
                             class_count[cn] < (FLAGS.REGEN_NTRAIN if cn in not_trained else (FLAGS.REGEN_NTRAIN * 2))):
                         log(f'saving {cn} {class_count[cn] + 1}')
                         rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                        if class_count[cn] < FLAGS.ntrain:
+                        if class_count[cn] < FLAGS.REGEN_NTRAIN:
                             _IMAGES_FOLDER['Testing'][cn][f'{i}.png'].save(rrr)
                         else:
                             _IMAGES_FOLDER[f'Training/{FLAGS.REGEN_NTRAIN}']['dog' if cn in dogs else 'cat'][
