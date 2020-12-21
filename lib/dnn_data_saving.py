@@ -6,19 +6,18 @@ from mlib.file import pwdf
 def saveTestValResults(ARCH, nam, ds, ei):
     from lib.nn import net_mets
     from lib.nn import nnstate
-    breakpoint()
     save_dnn_data(ConfusionMatrix(
         data=add_headers_to_mat(
             net_mets.cmat,
-            listkeys(nnstate.CURRENT_PRED_MAP),
-            listkeys(nnstate.CURRENT_TRUE_MAP),
+            sorted(listkeys(nnstate.CURRENT_PRED_MAP), key=lambda x: nnstate.CURRENT_PRED_MAP[x]),
+            sorted(listkeys(nnstate.CURRENT_TRUE_MAP), key=lambda x: nnstate.CURRENT_TRUE_MAP[x]),
             alphabetize=True
         ).T,
         title=f'{ARCH} E{ei + 1}',
         confuse_max=len(ds),
         confuse_target=len(ds) / nnstate.num_pred_classes(),
         headers_included=True
-    ), f'{nam}', f'CM{ei + 1}','mfig')
+    ), f'{nam}', f'CM{ei + 1}', 'mfig')
 
 root = None
 def EXP_FOLDER():
