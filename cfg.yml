@@ -25,6 +25,11 @@ profiles:
   salienceProject: &salienceProject
     <<: *dariusSmall
     salience: True
+
+#    NTRAIN: [10]
+    NTRAIN: [100]
+
+
   default:
 #      <<: *dariusSmall
       <<: *salienceProject
@@ -192,7 +197,7 @@ configs:
 
 
 
-#    REGEN_DATA: True
+    REGEN_DATA: True
     EPOCHS: 10
     TRANSFER_LEARNING: False
 
