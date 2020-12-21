@@ -276,6 +276,7 @@ def nnet_main(FLAGS):
     GPU_TEST_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'Testing'])
     GPU_RSA_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'RSA'])
 
+    breakpoint()
     if FLAGS.deletenorms:
         GPU_TRAIN_FOLDER.delete_norm_dir()
         GPU_TEST_FOLDER.delete_norm_dir()
