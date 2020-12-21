@@ -118,6 +118,7 @@ def nnet_main(FLAGS):
 
             class_count = {cn: 0 for cn in classes}
 
+            breakpoint()
             for i, raw_record in enum(ds):
                 example = tf.io.parse_single_example(raw_record, image_feature_description)
                 # r[f'tf']['y_true'][i] = example['image/class/label'].numpy()
@@ -142,6 +143,7 @@ def nnet_main(FLAGS):
                         break_all = False
                 if break_all:
                     break
+            breakpoint()
 
                 # current_i = current_i + 1
                 # imap[i] = rrr
@@ -276,7 +278,7 @@ def nnet_main(FLAGS):
     GPU_TEST_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'Testing'])
     GPU_RSA_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'RSA'])
 
-    breakpoint()
+
     if FLAGS.deletenorms:
         GPU_TRAIN_FOLDER.delete_norm_dir()
         GPU_TEST_FOLDER.delete_norm_dir()
