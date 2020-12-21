@@ -31,6 +31,8 @@ ARCH_MAP = {
     'SCRATCH' : SCRATCH
 }
 
+breakpoint()
+
 import tensorflow as tf
 @log_invokation()
 def nnet_main(FLAGS):
