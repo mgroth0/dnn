@@ -42,17 +42,17 @@ def nnet_main(FLAGS):
     _IMAGES_FOLDER = pwdf()['_images'].mkdirs(mker=True)
     HUMAN_IMAGE_FOLDER = pwdf()['_images_human'].mkdirs(mker=True)
 
-    cats = ['Egyptian cat',
-            'Siamese cat',
-            'Persian cat',
-            'tiger cat',
-            'tabby cat']
+    cats = ['Egyptian cat',  # >=200
+            'Siamese cat',  # 196
+            'Persian cat',  # >=200
+            'tiger cat',  # 182
+            'tabby cat']  # >=100
     dogs = [
-        'Afghan hound',
-        'basset hound',
-        'beagle',
-        'bloodhound',
-        'bluetick'
+        'Afghan hound',  # >=200
+        'basset hound',  # >=200
+        'beagle',  # 198
+        'bloodhound',  # 199
+        'bluetick'  # >=100
     ]
     classes = cats + dogs
     not_trained = ['tabby cat', 'bluetick']
@@ -127,18 +127,21 @@ def nnet_main(FLAGS):
                     log(f'on image {i}')
                 classname = utf_decode(example['image/class/text'].numpy())
                 for cn in classes:
-                    if (cn in classname) and (class_count[cn] < (FLAGS.REGEN_NTRAIN if cn in not_trained else (FLAGS.REGEN_NTRAIN*2))):
+                    if (cn in classname) and (
+                            class_count[cn] < (FLAGS.REGEN_NTRAIN if cn in not_trained else (FLAGS.REGEN_NTRAIN * 2))):
                         log(f'saving {cn} {class_count[cn] + 1}')
                         rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
                         if class_count[cn] < FLAGS.ntrain:
                             _IMAGES_FOLDER['Testing'][cn][f'{i}.png'].save(rrr)
                         else:
-                            _IMAGES_FOLDER[f'Training/{FLAGS.REGEN_NTRAIN}']['dog' if cn in dogs else 'cat'][f'{i}.png'].save(rrr)
+                            _IMAGES_FOLDER[f'Training/{FLAGS.REGEN_NTRAIN}']['dog' if cn in dogs else 'cat'][
+                                f'{i}.png'].save(rrr)
                         class_count[cn] += 1
                         break
                 break_all = True
                 for cn, cc in listitems(class_count):
-                    if (cn in not_trained and cc != FLAGS.REGEN_NTRAIN) or (cn not in not_trained and cc != (FLAGS.REGEN_NTRAIN*2)):
+                    if (cn in not_trained and cc != FLAGS.REGEN_NTRAIN) or (
+                            cn not in not_trained and cc != (FLAGS.REGEN_NTRAIN * 2)):
                         break_all = False
                 if break_all:
                     break
@@ -275,7 +278,6 @@ def nnet_main(FLAGS):
     GPU_TRAIN_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'Training/{FLAGS.ntrain}'])
     GPU_TEST_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'Testing'])
     GPU_RSA_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'RSA'])
-
 
     if FLAGS.deletenorms:
         GPU_TRAIN_FOLDER.delete_norm_dir()
