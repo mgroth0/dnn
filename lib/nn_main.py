@@ -346,6 +346,10 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
             net.train()
             log(f'finished another fit epoch!({i + 1}/{nepochs})')
 
+            # not sure why I didn't have this line in sym code any more
+            saveTestValResults(net.ARCH_LABEL, nam, net.train_data, i)
+            
+
             [a.after_fit(i, net, nam) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
 
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':eval'
