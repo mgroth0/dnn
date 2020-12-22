@@ -1,6 +1,7 @@
 from mlib.boot.lang import listkeys
 from mlib.boot.stream import make2d, arr, concat
 MET_PHASE = 'init'
+PIPELINE_PHASE = None
 FLAGS = None
 eval_counter = 0
 

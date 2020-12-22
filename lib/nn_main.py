@@ -334,6 +334,7 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
         nam = 'train'
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':fit'
         if 'TRAIN' in nnstate.FLAGS.pipeline:
+            nnstate.PIPELINE_PHASE = 'TRAIN'
             net_mets.total_steps = net.train_data.num_steps  # len(net.train_data)
             # breakpoint()
             net_mets.batch_count = 0
@@ -350,6 +351,7 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':eval'
         if nnstate.EVAL_AND_REC_EVERY_EPOCH or i == nepochs - 1:
             if 'VAL' in nnstate.FLAGS.pipeline:
+                nnstate.PIPELINE_PHASE = 'VAL'
                 net_mets.total_steps = net.val_data.num_steps  # len(net.val_data)
                 net_mets.batch_count = 0
                 if isinstance(net, GNET):
@@ -367,6 +369,7 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
             nnstate.MET_PHASE = None
             nam = 'test'
             if 'REC' in nnstate.FLAGS.pipeline:
+                nnstate.PIPELINE_PHASE = 'REC'
                 net_mets.total_steps = net.test_data.num_steps  # len(net.test_data)
                 net_mets.batch_count = 0
                 if isinstance(net, GNET):
