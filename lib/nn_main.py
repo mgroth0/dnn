@@ -333,6 +333,8 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
     for i in range(nepochs):
         nam = 'train'
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':fit'
+        log(f'moving_mean(pre-train):{net.net.moving_mean}')
+        log(f'moving_var(pre-train):{net.net.moving_var}')
         if 'TRAIN' in nnstate.FLAGS.pipeline:
             nnstate.PIPELINE_PHASE = 'TRAIN'
             net_mets.total_steps = net.train_data.num_steps  # len(net.train_data)
@@ -348,10 +350,13 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
 
             # not sure why I didn't have this line in sym code any more
             saveTestValResults(net.ARCH_LABEL, nam, net.train_data, i)
-            
+
 
             [a.after_fit(i, net, nam) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
 
+        log(f'moving_mean(post-train):{net.net.moving_mean}')
+        log(f'moving_var(post-train):{net.net.moving_var}')
+        breakpoint()
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':eval'
         if nnstate.EVAL_AND_REC_EVERY_EPOCH or i == nepochs - 1:
             if 'VAL' in nnstate.FLAGS.pipeline:
