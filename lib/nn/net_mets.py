@@ -144,7 +144,7 @@ total_steps = None
 batch_sub_count = None
 def fill_cmat(y_true, y_pred):
     [inc(cmat, (pred, tru)) for tru, pred in zip(*prep_ys(y_true, y_pred))]
-    if nnstate.PIPELINE_PHASE == 'VAL':
+    if (nnstate.PIPELINE_PHASE == 'VAL') or nnstate.MET_PHASE == 'epoch' + str(10) + ':eval':
         breakpoint()
     global batch_count, total_steps, batch_sub_count
     if batch_sub_count is not None:
