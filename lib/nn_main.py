@@ -333,8 +333,8 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
     for i in range(nepochs):
         nam = 'train'
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':fit'
-        log(f'moving_mean(pre-train):{net.net.moving_mean}')
-        log(f'moving_var(pre-train):{net.net.moving_var}')
+        # log(f'moving_mean(pre-train):{net.net.moving_mean}')
+        # log(f'moving_var(pre-train):{net.net.moving_var}')
         if 'TRAIN' in nnstate.FLAGS.pipeline:
             nnstate.PIPELINE_PHASE = 'TRAIN'
             net_mets.total_steps = net.train_data.num_steps  # len(net.train_data)

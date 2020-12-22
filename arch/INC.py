@@ -58,7 +58,13 @@ class INC(AssembledModel):
                 bn_name = None if name is None else name + '_bn'
                 x = BatchNormalization(axis=self.CHANNEL_AXIS,
                                        scale=False,
-                                       name=bn_name)(x)
+                                       name=bn_name,
+
+                                       # DEBUG
+                                       trainable=True
+
+
+                                       )(x)
             if activation is not None:
                 ac_name = None if name is None else name + '_ac'
                 x = Activation(activation, name=ac_name)(x)
