@@ -20,7 +20,8 @@ FLAGS = margparse(
     proto_model=int,
     salience=int,
     TRANSFER_LEARNING=int,
-    REGEN_NTRAIN=int
+    REGEN_NTRAIN=int,
+    PRED_SIZE=int
 )
 from lib.boot import nn_init_fun
 tf = nn_init_fun.setupTensorFlow(FLAGS)

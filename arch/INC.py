@@ -308,8 +308,9 @@ class INC(AssembledModel):
         )
 
         # original class threw error if this 1000 was changed... but I wonder...
+        import lib.nn.nnstate as nnstate
         return Dense(
-            1000,
+            nnstate.FLAGS.PRED_SIZE,
             activation='softmax',
             name='predictions'
         )(GlobalAveragePooling2D(
