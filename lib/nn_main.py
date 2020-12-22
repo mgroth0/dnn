@@ -354,9 +354,9 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
 
             [a.after_fit(i, net, nam) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
 
-        log(f'moving_mean(post-train):{net.net.moving_mean}')
-        log(f'moving_var(post-train):{net.net.moving_var}')
-        breakpoint()
+        # log(f'moving_mean(post-train):{net.net.moving_mean}')
+        # log(f'moving_var(post-train):{net.net.moving_var}')
+        # breakpoint()
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':eval'
         if nnstate.EVAL_AND_REC_EVERY_EPOCH or i == nepochs - 1:
             if 'VAL' in nnstate.FLAGS.pipeline:

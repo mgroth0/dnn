@@ -61,7 +61,7 @@ class INC(AssembledModel):
                                        name=bn_name,
 
                                        # DEBUG
-                                       trainable=True
+                                       # trainable=True
 
 
                                        )(x)

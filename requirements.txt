@@ -25,3 +25,4 @@ wolframclient
 websockets
 dateparser
 xerox
+tensorflow-datasets
