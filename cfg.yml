@@ -216,8 +216,8 @@ configs:
     EXPS:
       -
         <<: *default_exp
-        arch: INC
-#        arch: ALEX
+#        arch: INC
+        arch: ALEX
   default:
 #  <<: *final_sym
     <<: *salience_1
