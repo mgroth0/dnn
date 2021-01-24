@@ -61,6 +61,11 @@ From: ubuntu:20.04
     /matt/miniconda3/bin/conda config --add channels mgroth0
     cd dnn
 
+    # https://dev.to/setevoy/docker-configure-tzdata-and-timezone-during-build-20bk
+    export TZ=America/New_York
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
     # I think trying to do it all at once is causing problems
     # /matt/miniconda3/bin/conda install -y -n dnn --file=requirements.txt
     while read p; do
