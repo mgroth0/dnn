@@ -163,6 +163,7 @@ class INC(AssembledModel):
 
 
 
+
         # Stem block: 35 x 35 x 192
         x = MaxPooling2D(3, strides=2)(
             conv2d_bn(

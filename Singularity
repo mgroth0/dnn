@@ -72,6 +72,10 @@ From: ubuntu:20.04
 
     apt install graphviz -y # https://github.com/XifengGuo/CapsNet-Keras/issues/7
     /matt/miniconda3/bin/conda install -y -n dnn tensorflow-gpu=2.2.0
+
+    # NOTE: Python 3.9 users will need to add '-c=conda-forge' for installation
+    /matt/miniconda3/bin/conda install -y -n dnn pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch
+
     apt install iputils-ping -y
     /matt/miniconda3/bin/conda install gdown -y
 
