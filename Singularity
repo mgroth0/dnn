@@ -79,9 +79,9 @@ From: ubuntu:20.04
     /matt/miniconda3/bin/conda install -y -n dnn tensorflow-gpu=2.2.0
 
     # NOTE: Python 3.9 users will need to add '-c=conda-forge' for installation
-    /matt/miniconda3/bin/conda install -y -n dnn pytorch  -c pytorch
-    /matt/miniconda3/bin/conda install -y -n dnn torchvision -c pytorch
-    /matt/miniconda3/bin/conda install -y -n dnn torchaudio -c pytorch
+    #/matt/miniconda3/bin/conda install -y -n dnn pytorch  -c pytorch
+    #/matt/miniconda3/bin/conda install -y -n dnn torchvision -c pytorch
+    #/matt/miniconda3/bin/conda install -y -n dnn torchaudio -c pytorch
 
     # takes forever to install, and its a confusing package. try without it?
     # /matt/miniconda3/bin/conda install -y -n dnn cudatoolkit=11.0 -c pytorch
