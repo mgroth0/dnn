@@ -54,4 +54,32 @@ apt update
     ./miniconda.sh -b -p miniconda3
     rm miniconda.sh
 
+
+
+
+
+
+
+
+
+
+apt install git -y
+    git clone https://github.com/mgroth0/dnn
+    git clone https://github.com/mgroth0/mlib
+    /matt/miniconda3/bin/conda update -n base -c defaults conda
+    /matt/miniconda3/bin/conda create -y --name dnn python=3.8
+    /matt/miniconda3/bin/conda config --add channels conda-forge
+    /matt/miniconda3/bin/conda config --add channels mgroth0
+    cd dnn
+
+    # https://dev.to/setevoy/docker-configure-tzdata-and-timezone-during-build-20bk
+    export TZ=America/New_York
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
+
+
+
+
+
     echo "done with post-build"
