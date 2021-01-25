@@ -40,5 +40,18 @@ From: ubuntu:20.04
 
 %post
     echo "The post section is where you can install, and configure your container."
-   
+apt update
+
+    apt full-upgrade -y
+    apt autoremove
+    apt install curl -y
+    apt install libgl1-mesa-glx -y #https://github.com/conda-forge/pygridgen-feedstock/issues/10
+    cd /
+    mkdir matt
+    cd matt
+    curl -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    chmod +x miniconda.sh
+    ./miniconda.sh -b -p miniconda3
+    rm miniconda.sh
+
     echo "done with post-build"
