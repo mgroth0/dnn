@@ -78,6 +78,16 @@ apt install git -y
 
 
 
+    # I think trying to do it all at once is causing problems
+    # /matt/miniconda3/bin/conda install -y -n dnn --file=requirements.txt
+    while read p; do
+      echo "installing conda package: $p"
+      /matt/miniconda3/bin/conda install -y -n dnn $p
+      echo "installed conda package: $p"
+    done <requirements.txt
+
+
+
 
 
 
