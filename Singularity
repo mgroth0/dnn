@@ -85,27 +85,30 @@ apt install git -y
     /matt/miniconda3/bin/conda install -y -n dnn matplotlib
     /matt/miniconda3/bin/conda install -y -n dnn scipy
     /matt/miniconda3/bin/conda install -y -n dnn aiohttp
-    #/matt/miniconda3/bin/conda install -y -n dnn bs4
-    #/matt/miniconda3/bin/conda install -y -n dnn colorama
-    #/matt/miniconda3/bin/conda install -y -n dnn gitpython
-    #/matt/miniconda3/bin/conda install -y -n dnn htmlmin
-    #/matt/miniconda3/bin/conda install -y -n dnn imageio
-    #/matt/miniconda3/bin/conda install -y -n dnn lesscpy
-    #/matt/miniconda3/bin/conda install -y -n dnn onnx
-    #/matt/miniconda3/bin/conda install -y -n dnn opencv
-    #/matt/miniconda3/bin/conda install -y -n dnn packaging
-    #/matt/miniconda3/bin/conda install -y -n dnn pandas
-    #/matt/miniconda3/bin/conda install -y -n dnn pexpect
-    #/matt/miniconda3/bin/conda install -y -n dnn pybtex
-    #/matt/miniconda3/bin/conda install -y -n dnn pycallgraph
-    #/matt/miniconda3/bin/conda install -y -n dnn pygments
-    #/matt/miniconda3/bin/conda install -y -n dnn pyqt
-    #/matt/miniconda3/bin/conda install -y -n dnn scikit-learn
-    #/matt/miniconda3/bin/conda install -y -n dnn texttable
-    #/matt/miniconda3/bin/conda install -y -n dnn wolframclient
-    #/matt/miniconda3/bin/conda install -y -n dnn websockets
-    #/matt/miniconda3/bin/conda install -y -n dnn dateparser
-    #/matt/miniconda3/bin/conda install -y -n dnn xerox
+
+
+
+    /matt/miniconda3/bin/conda install -y -n dnn bs4
+    /matt/miniconda3/bin/conda install -y -n dnn colorama
+    /matt/miniconda3/bin/conda install -y -n dnn gitpython
+    /matt/miniconda3/bin/conda install -y -n dnn htmlmin
+    /matt/miniconda3/bin/conda install -y -n dnn imageio
+    /matt/miniconda3/bin/conda install -y -n dnn lesscpy
+    /matt/miniconda3/bin/conda install -y -n dnn onnx
+    /matt/miniconda3/bin/conda install -y -n dnn opencv
+    /matt/miniconda3/bin/conda install -y -n dnn packaging
+    /matt/miniconda3/bin/conda install -y -n dnn pandas
+    /matt/miniconda3/bin/conda install -y -n dnn pexpect
+    /matt/miniconda3/bin/conda install -y -n dnn pybtex
+    /matt/miniconda3/bin/conda install -y -n dnn pycallgraph
+    /matt/miniconda3/bin/conda install -y -n dnn pygments
+    /matt/miniconda3/bin/conda install -y -n dnn pyqt
+    /matt/miniconda3/bin/conda install -y -n dnn scikit-learn
+    /matt/miniconda3/bin/conda install -y -n dnn texttable
+    /matt/miniconda3/bin/conda install -y -n dnn wolframclient
+    /matt/miniconda3/bin/conda install -y -n dnn websockets
+    /matt/miniconda3/bin/conda install -y -n dnn dateparser
+    /matt/miniconda3/bin/conda install -y -n dnn xerox
     #/matt/miniconda3/bin/conda install -y -n dnn tensorflow-datasets
 
 
