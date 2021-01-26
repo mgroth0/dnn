@@ -80,11 +80,11 @@ apt install git -y
 
 
     /matt/miniconda3/bin/conda install -y -n dnn graphviz
-    #/matt/miniconda3/bin/conda install -y -n dnn pydot
-    #/matt/miniconda3/bin/conda install -y -n dnn yapf
-    #/matt/miniconda3/bin/conda install -y -n dnn matplotlib
-    #/matt/miniconda3/bin/conda install -y -n dnn scipy
-    #/matt/miniconda3/bin/conda install -y -n dnn aiohttp
+    /matt/miniconda3/bin/conda install -y -n dnn pydot
+    /matt/miniconda3/bin/conda install -y -n dnn yapf
+    /matt/miniconda3/bin/conda install -y -n dnn matplotlib
+    /matt/miniconda3/bin/conda install -y -n dnn scipy
+    /matt/miniconda3/bin/conda install -y -n dnn aiohttp
     #/matt/miniconda3/bin/conda install -y -n dnn bs4
     #/matt/miniconda3/bin/conda install -y -n dnn colorama
     #/matt/miniconda3/bin/conda install -y -n dnn gitpython
