@@ -92,11 +92,11 @@ apt install git -y
     /matt/miniconda3/bin/conda install -y -n dnn colorama
     /matt/miniconda3/bin/conda install -y -n dnn gitpython
     /matt/miniconda3/bin/conda install -y -n dnn htmlmin
-    /matt/miniconda3/bin/conda install -y -n dnn imageio
-    /matt/miniconda3/bin/conda install -y -n dnn lesscpy
-    /matt/miniconda3/bin/conda install -y -n dnn onnx
-    /matt/miniconda3/bin/conda install -y -n dnn opencv
-    /matt/miniconda3/bin/conda install -y -n dnn packaging
+    #/matt/miniconda3/bin/conda install -y -n dnn imageio
+    #/matt/miniconda3/bin/conda install -y -n dnn lesscpy
+    #/matt/miniconda3/bin/conda install -y -n dnn onnx
+    #/matt/miniconda3/bin/conda install -y -n dnn opencv
+    #/matt/miniconda3/bin/conda install -y -n dnn packaging
     #/matt/miniconda3/bin/conda install -y -n dnn pandas
     #/matt/miniconda3/bin/conda install -y -n dnn pexpect
     #/matt/miniconda3/bin/conda install -y -n dnn pybtex
