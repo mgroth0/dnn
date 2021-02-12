@@ -104,7 +104,7 @@ def main():
         log(f'net_folder:{net_folder}: getting activations')
         print('b4 files')
         from mlib.boot import stream
-        stream.enable_debug = True
+        # stream.enable_debug = True
         the_files = net_folder.files
         print('after files')
         for activations_mat in the_files.filtered(
