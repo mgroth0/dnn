@@ -83,6 +83,7 @@ CLASSES = [
 
 
 def main():
+    log('running rsa_for_darius')
     if islinux():
         imgActivations = Folder('/matt/data/imgActivationsForRSA')
     else:
