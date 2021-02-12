@@ -102,7 +102,10 @@ def main():
         # breakpoint()
         net_folder.delete_icon_file_if_exists()
         log(f'net_folder:{net_folder}: getting activations')
-        for activations_mat in net_folder.files.filtered(
+        print('b4 files')
+        the_files = net_folder.files
+        print('after files')
+        for activations_mat in the_files.filtered(
                 lambda x: x.ext == 'mat'
         ):
             log(f'net_folder:{net_folder}: {activations_mat.name_pre_ext}')
