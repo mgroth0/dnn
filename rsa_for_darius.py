@@ -90,7 +90,6 @@ def main():
         imgActivations = Folder('_data/imgActivationsForRSA')
     activations = {}
 
-    breakpoint()
     for net_folder in imgActivations.files:
         log(f'net_folder:{net_folder}')
         if not net_folder.isdir:
