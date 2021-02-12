@@ -1,3 +1,4 @@
+import rsa_for_darius
 print('top of dnn.py')
 from lib import makereport
 print('dnn.py: about to import log')
@@ -28,10 +29,10 @@ class DNN(Project):
     def run(self, cfg):
         # print('here1, doing Darius-RSA')
         # import rsa_for_darius
-        # rsa_for_darius.main()
+        rsa_for_darius.main()
         # rsa_for_darius.test_line()
         # print('here2, finished Darius-RSA')
-        # return None
+        return None
 
         # keep modular
         assert not (cfg.REGEN_DATA and cfg.OVERWRITE_NORMS)  # btw, both imply killing worker before exp

@@ -1,0 +1,4 @@
+#!/bin/sh
+export MPLBACKEND=Agg
+export "PYTHONPATH=../mlib"
+python salience_filter.py

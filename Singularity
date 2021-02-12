@@ -40,8 +40,7 @@ From: ubuntu:20.04
 
 %post
     echo "The post section is where you can install, and configure your container."
-apt update
-
+    apt update
     apt full-upgrade -y
     apt autoremove
     apt install curl -y
@@ -53,17 +52,7 @@ apt update
     chmod +x miniconda.sh
     ./miniconda.sh -b -p miniconda3
     rm miniconda.sh
-
-
-
-
-
-
-
-
-
-
-apt install git -y
+    apt install git -y
     git clone https://github.com/mgroth0/dnn
     git clone https://github.com/mgroth0/mlib
     /matt/miniconda3/bin/conda update -n base -c defaults conda
@@ -77,51 +66,71 @@ apt install git -y
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 
+    # I think trying to do it all at once is causing problems
+    # /matt/miniconda3/bin/conda install -y -n dnn --file=requirements.txt
+    while read p; do
+      echo "installing conda package: $p"
+      /matt/miniconda3/bin/conda install -y -n dnn $p
+      echo "installed conda package: $p"
+    done <requirements.txt
 
 
-    /matt/miniconda3/bin/conda install -y -n dnn graphviz
-    /matt/miniconda3/bin/conda install -y -n dnn pydot
-    /matt/miniconda3/bin/conda install -y -n dnn yapf
-    /matt/miniconda3/bin/conda install -y -n dnn matplotlib
-    /matt/miniconda3/bin/conda install -y -n dnn scipy
-    /matt/miniconda3/bin/conda install -y -n dnn aiohttp
+    apt install graphviz -y # https://github.com/XifengGuo/CapsNet-Keras/issues/7
+    /matt/miniconda3/bin/conda install -y -n dnn tensorflow-gpu=2.2.0
+
+    # NOTE: Python 3.9 users will need to add '-c=conda-forge' for installation
+    /matt/miniconda3/bin/conda install -y -n dnn pytorch  -c pytorch
+    /matt/miniconda3/bin/conda install -y -n dnn torchvision -c pytorch
+    /matt/miniconda3/bin/conda install -y -n dnn torchaudio -c pytorch
+
+    # takes forever to install, and its a confusing package. try without it?
+    # /matt/miniconda3/bin/conda install -y -n dnn cudatoolkit=11.0 -c pytorch
+
+    apt install iputils-ping -y
+    /matt/miniconda3/bin/conda install gdown -y
+
+    apt install unzip -y
+    apt install zip -y # used in pipeline
+    cd ..
+
+    /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1wauVN6nG3tKv7VifIfRVBL0fj8XfefVa"
+    unzip _resources.zip
+    rm _resources.zip
+
+    /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1SWxt9USdj1wB9sPUpV2M26ZEtO5eliyt"
+    unzip _ImageNetTesting.zip
+    rm _ImageNetTesting.zip
+
+    # going to try to generate new images at runtime, like I used to
+    #/matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1HSjjIHeze-bWCycmQrSbeDDpvhmhGqhv"
+    #unzip _images.zip
+    #rm _images.zip
 
 
+    /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1PQ3gop_fmV_Sp_GBAAeS3Gr1_ITkbo5G"
+    unzip _data.zip
+    rm _data.zip
 
-    /matt/miniconda3/bin/conda install -y -n dnn bs4
-    /matt/miniconda3/bin/conda install -y -n dnn colorama
-    /matt/miniconda3/bin/conda install -y -n dnn gitpython
-    /matt/miniconda3/bin/conda install -y -n dnn htmlmin
-    /matt/miniconda3/bin/conda install -y -n dnn imageio
-    /matt/miniconda3/bin/conda install -y -n dnn lesscpy
-    /matt/miniconda3/bin/conda install -y -n dnn onnx
+    rm -rf __MACOSX # not sure where this comes from
 
-
-
-    /matt/miniconda3/bin/conda install -y -n dnn opencv
-    #/matt/miniconda3/bin/conda install -y -n dnn packaging
+    # binding these instead so I can use --nv
+    # chmod -R 777 /matt/dnn
+    # chmod -R 777 /matt/mlib #for pulling
+    rm -rf /matt/dnn
+    rm -rf /matt/mlib
 
 
+    # using --nv instead
+    # apt purge nvidia-*
+    #apt install software-properties-common -y
+    #add-apt-repository ppa:graphics-drivers/ppa
+    #apt install nvidia-driver-440 -y #440 is the one used by OpenMind as I write this (polestar uses 430.50)
 
 
-
-
-    #/matt/miniconda3/bin/conda install -y -n dnn pandas
-    #/matt/miniconda3/bin/conda install -y -n dnn pexpect
-    #/matt/miniconda3/bin/conda install -y -n dnn pybtex
-    #/matt/miniconda3/bin/conda install -y -n dnn pycallgraph
-    #/matt/miniconda3/bin/conda install -y -n dnn pygments
-    #/matt/miniconda3/bin/conda install -y -n dnn pyqt
-    #/matt/miniconda3/bin/conda install -y -n dnn scikit-learn
-    #/matt/miniconda3/bin/conda install -y -n dnn texttable
-    #/matt/miniconda3/bin/conda install -y -n dnn wolframclient
-    #/matt/miniconda3/bin/conda install -y -n dnn websockets
-    #/matt/miniconda3/bin/conda install -y -n dnn dateparser
-    #/matt/miniconda3/bin/conda install -y -n dnn xerox
-    #/matt/miniconda3/bin/conda install -y -n dnn tensorflow-datasets
-
-
-
+    cd /matt
+    git clone https://github.com/onnx/onnx-tensorflow
+    cd onnx-tensorflow
+    /matt/miniconda3/envs/dnn/bin/pip install -e .
 
 
 
