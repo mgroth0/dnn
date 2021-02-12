@@ -98,6 +98,7 @@ def main():
             activations[modelname] = {}
         arch, ntrain = modelname.split('_')
         # breakpoint()
+        net_folder.delete_icon_file_if_exists()
         for activations_mat in net_folder.files.filtered(
                 lambda x: x.ext == 'mat'
         ):
