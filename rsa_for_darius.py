@@ -91,6 +91,7 @@ def main():
     activations = {}
 
     for net_folder in imgActivations.files:
+        log(f'net_folder:{net_folder}')
         if not net_folder.isdir:
             continue
         net_folder = Folder(net_folder)
@@ -105,6 +106,8 @@ def main():
         ):
             classname = activations_mat.name_pre_ext
             activations[modelname][classname] = activations_mat
+
+    log(f'finished net_folder loop')
 
     result_folder = mkdir('_figs/rsa')
     result_folder.clear()
