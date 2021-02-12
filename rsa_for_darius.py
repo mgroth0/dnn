@@ -97,7 +97,7 @@ def main():
         if modelname not in activations:
             activations[modelname] = {}
         arch, ntrain = modelname.split('_')
-        breakpoint()
+        # breakpoint()
         for activations_mat in net_folder.files.filtered(
                 lambda x: x.ext == 'mat'
         ):
