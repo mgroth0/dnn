@@ -101,9 +101,11 @@ def main():
         arch, ntrain = modelname.split('_')
         # breakpoint()
         net_folder.delete_icon_file_if_exists()
+        log(f'net_folder:{net_folder}: getting activations')
         for activations_mat in net_folder.files.filtered(
                 lambda x: x.ext == 'mat'
         ):
+            log(f'net_folder:{net_folder}: {activations_mat.name_pre_ext}')
             classname = activations_mat.name_pre_ext
             activations[modelname][classname] = activations_mat
 
