@@ -1,4 +1,3 @@
-from matplotlib.lines import Line2D
 import numpy as np
 
 from lib.misc import imutil
@@ -11,10 +10,8 @@ from mlib.fig.PlotData import PlotData
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.file import Folder, mkdir, File
 
-SANITY = False
+SANITY = True
 SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
-
-# TRANSPOSE = True
 
 # on openmind 10 took ~400 sec
 # N_PER_CLASS = 10
@@ -103,7 +100,6 @@ def main():
         net_folder.delete_icon_file_if_exists()
         log(f'net_folder:{net_folder}: getting activations')
         print('b4 files')
-        from mlib.boot import stream
         # stream.enable_debug = True
         the_files = net_folder.files
         print('after files')
@@ -128,9 +124,7 @@ def main():
         arch_rand_perm = None
 
         for size in T_SIZES:
-            # if arch != 'SQN': continue
             net = arch + '_' + str(size)
-            # block_len = N_PER_CLASS
             block_len = 10
 
             acts_for_rsa = None
@@ -220,7 +214,6 @@ def main():
             scores[arch][size] = dissimilarity_across
             fd = PlotData(
                 y=[dissimilarity_NS, dissimilarity_S, dissimilarity_across],
-                # xticklabels
                 x=[
                     'dissimilarity_NS',
                     'dissimilarity_S',
@@ -233,13 +226,11 @@ def main():
                 err=[0, 0, 0],
                 xlabel='Class Comparison Groups',
                 ylabel='Dissimilarity Score',
-                # x=[1, 2, 3],
                 bar_sideways_labels=False
             )
             fd.make = True
             file = result_folder[net + "_dis.mfig"]
             file.save(fd)
-            # backend = WolfMakeFigsBackend
             backend = MPLFigsBackend
             fd = file.loado()
             fd.file = file
@@ -262,7 +253,6 @@ def main():
         'result_folder': result_folder
     }
     File('temp.p').save(debugData)
-    # breakpoint()
 
 
 
@@ -276,30 +266,20 @@ def main2():
         data.append(line)
     fd = PlotData(
         y=data,
-        # xticklabels
         x=T_SIZES,
         item_type='line',
         item_color=[[1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 1, 0], [1, 0, 1], [0, 1, 1]],
         ylim=[0, 25],
 
         title=f'S-NS Dissimilarities Across Training Sizes',
-        # err=[0, 0, 0],
         xlabel='Training Size',
         ylabel='Dissimilarity Score Between S and NS',
-        # x=[1, 2, 3],
-        # bar_sideways_labels=False,
-
-
-        # callouts=NETS
-
-
     )
 
     fd.make = True
     result_folder = mkdir('_figs/rsa')
     file = result_folder["line.mfig"]
     file.save(fd)
-    # backend = WolfMakeFigsBackend
     backend = MPLFigsBackend
     fd = file.loado()
     fd.file = file
@@ -354,7 +334,6 @@ def test_line():
             c_list.append(c_map[akey])
         fd = PlotData(
             y=score_list,
-            # xticklabels
             x=size_list,
             # item_type='scatter',
             item_type='line',
@@ -384,7 +363,6 @@ def test_line():
     fs.make = True
     file = result_folder["scatter.mfig"]
     file.save(fs)
-    # backend = WolfMakeFigsBackend
     backend = MPLFigsBackend
     fs = file.loado()
     fs.file = file
