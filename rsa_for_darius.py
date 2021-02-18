@@ -10,7 +10,7 @@ from mlib.fig.PlotData import PlotData
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.file import Folder, mkdir, File
 
-SANITY = True
+SANITY = False
 SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 
 # on openmind 10 took ~400 sec
