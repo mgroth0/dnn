@@ -1,5 +1,4 @@
 import json
-
 import tensorflow as tf
 
 from mlib.boot import log
@@ -20,10 +19,11 @@ def count():
     for k, v in listitems(data['validation']):
         real_data[k]['validation'] = v
 
-    real_data = json.dumps(real_data,indent=2)
+    real_data = json.dumps(real_data, indent=2)
     log(f'data sample: {real_data[:20]}')
 
-    File('imagenet_count.json').write(real_data)
+    Folder('_data').mkdir()
+    File('_data/imagenet_count.json').write(real_data)
 
 def count_split(spl):
     data = {}
