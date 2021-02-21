@@ -8,6 +8,7 @@ from mlib.boot.stream import listitems
 from mlib.file import File, Folder
 from mlib.str import utf_decode
 def count():
+    log('count here 1')
     data = {
         'train'     : count_split("train"),
         'validation': count_split("validation"),
