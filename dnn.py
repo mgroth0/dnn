@@ -27,13 +27,42 @@ class DNN(Project):
         _human_exp_flags = []
     extra_flags = _human_exp_flags + MODES
     def run(self, cfg):
+
+
+
+        import count_imagenet_data
+        count_imagenet_data.count()
+
+
+
+        return None
+
+
+
         # print('here1, doing Darius-RSA')
         # import rsa_for_darius
-
-        rsa_for_darius.main()
-        # rsa_for_darius.test_line()
+        # rsa_for_darius.main()
+        rsa_for_darius.debug_process_post('AC')
+        rsa_for_darius.test_line('AC')
+        rsa_for_darius.debug_process_post('S')
+        rsa_for_darius.test_line('S')
+        rsa_for_darius.debug_process_post('NS')
+        rsa_for_darius.test_line('NS')
         # print('here2, finished Darius-RSA')
+
+
         return None
+
+
+
+
+
+
+
+
+
+
+
 
         # keep modular
         assert not (cfg.REGEN_DATA and cfg.OVERWRITE_NORMS)  # btw, both imply killing worker before exp

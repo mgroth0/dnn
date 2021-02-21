@@ -5,10 +5,12 @@ from lib.nn.nn_lib import RSA, rsa_corr
 from mlib.JsonSerializable import FigSet
 from mlib.boot import log
 from mlib.boot.lang import listkeys, enum, islinux
+from mlib.boot.mlog import err
 from mlib.boot.stream import concat, listmap, randperm, listitems
 from mlib.fig.PlotData import PlotData
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.file import Folder, mkdir, File
+from mlib.term import log_invokation
 
 SANITY = False
 SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
@@ -178,8 +180,6 @@ def main():
                       0].tolist()
             log('resampled2')
 
-            norm_rsa_mat = fd.data / np.max(fd.data)
-
             # need to do this again after downsampling
             fd.confuse_target = np.max(fd.data)
 
@@ -192,51 +192,10 @@ def main():
             fd.imgFile = file.resrepext('png')
             backend.makeAllPlots([fd], overwrite=True)
 
-            dissimilarity_NS = 0
-            dissimilarity_S = 0
-            dissimilarity_across = 0
+            scores = debug_process(fd, scores, result_folder, net, block_len, arch, size, 'AC')
 
-            for i, c in enum(CLASSES):
-                # if i > 4: break
-                for ii, cc in enum(CLASSES):
-                    if ii < i: continue
-                    sc = slice(block_len * i, block_len * (i + 1))
-                    sr = slice(block_len * ii, block_len * (ii + 1))
-                    comp_mat = norm_rsa_mat[sc, sr]
-                    avg_dis = 1 - np.mean(comp_mat)
-
-                    if c.startswith('NS') and cc.startswith('NS'):
-                        dissimilarity_NS += avg_dis
-                    elif c.startswith('S') and cc.startswith('S'):
-                        dissimilarity_S += avg_dis
-                    else:
-                        dissimilarity_across += avg_dis
-            scores[arch][size] = dissimilarity_across
-            fd = PlotData(
-                y=[dissimilarity_NS, dissimilarity_S, dissimilarity_across],
-                x=[
-                    'dissimilarity_NS',
-                    'dissimilarity_S',
-                    'dissimilarity_across'
-                ],
-                item_type='bar',
-                item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
-                ylim=[0, 20],
-                title=f'Dissimilarities of {LAYERS[arch]} from {net}',
-                err=[0, 0, 0],
-                xlabel='Class Comparison Groups',
-                ylabel='Dissimilarity Score',
-                bar_sideways_labels=False
-            )
-            fd.make = True
-            file = result_folder[net + "_dis.mfig"]
-            file.save(fd)
-            backend = MPLFigsBackend
-            fd = file.loado()
-            fd.file = file
-            fd.imgFile = file.resrepext('png')
-            backend.makeAllPlots([fd], overwrite=True)
-
+    save_scores(result_folder, scores)
+def save_scores(result_folder, scores):
     c_map = {
         "SQN"      : [1, 0, 0],  # 784
         "AlexNet"  : [0, 0, 1],  # 4096
@@ -252,7 +211,119 @@ def main():
         'c_map'        : c_map,
         'result_folder': result_folder
     }
-    File('temp.p').save(debugData)
+    File(f'temp{norm}.p').save(debugData)
+
+@log_invokation
+def debug_process_post(plot):
+    result_folder = mkdir('_figs/rsa')
+    sqn_act_len = None
+
+    scores = {}
+    for arch in NETS:
+        log(f'in arch: {arch}')
+        scores[arch] = {}
+        arch_rand_perm = None
+        for size in T_SIZES:
+            net = arch + '_' + str(size)
+            block_len = 10
+
+            acts_for_rsa = None
+
+            file = result_folder[net + ".mfig"]
+            fd = file.loado()
+            fd.file = file
+            fd.imgFile = file.resrepext('png')
+
+            scores = debug_process(fd, scores, result_folder, net, block_len, arch, size, plot)
+    save_scores(result_folder, scores)
+
+
+NORMALIZE = True
+norm = ''
+if NORMALIZE: norm = '_norm'
+
+@log_invokation
+def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
+    fd = fd.viss[0]  # so confused why i have to do this locally but not on OM
+
+    norm_rsa_mat = fd.data / np.max(fd.data)
+    average = np.mean(norm_rsa_mat)
+
+    similarity_NS = 0
+    similarity_S = 0
+    dissimilarity_across = 0
+
+    # total_n = len(CLASSES) * len(CLASSES)
+    dvs = [0, 0, 0]
+
+    for i, c in enum(CLASSES):
+        # if i > 4: break
+        for ii, cc in enum(CLASSES):
+            if ii < i: continue
+            sc = slice(block_len * i, block_len * (i + 1))
+            sr = slice(block_len * ii, block_len * (ii + 1))
+            comp_mat = norm_rsa_mat[sc, sr]
+            avg_dis = np.mean(comp_mat)
+            if NORMALIZE:
+                avg_dis = avg_dis / average
+
+            if c.startswith('NS') and cc.startswith('NS'):
+                similarity_NS += avg_dis
+                dvs[0] += 1
+            elif c.startswith('S') and cc.startswith('S'):
+                similarity_S += avg_dis
+                dvs[1] += 1
+            else:
+                if NORMALIZE:
+                    # avg_dis = avg_dis - ((avg_dis - 1) * 2)
+                    # avg_dis = avg_dis - ((2 * avg_dis) - 2)
+                    # avg_dis = avg_dis - (2 * avg_dis) + 2
+                    # avg_dis = (-2 * avg_dis) + 2 + avg_dis
+                    avg_dis = -avg_dis + 2
+                else:
+                    avg_dis = 1 - avg_dis
+                dissimilarity_across += avg_dis
+                dvs[2] += 1
+
+    similarity_NS = similarity_NS / dvs[0]
+    similarity_S = similarity_S / dvs[1]
+    dissimilarity_across = dissimilarity_across / dvs[2]
+
+    if plot == 'AC':
+        scores[arch][size] = dissimilarity_across
+    elif plot == 'S':
+        scores[arch][size] = similarity_S
+    elif plot == 'NS':
+        scores[arch][size] = similarity_NS
+    else:
+        err('bad')
+
+    fd = PlotData(
+        y=[similarity_NS, similarity_S, dissimilarity_across],
+        x=[
+            'dissimilarity_NS',
+            'dissimilarity_S',
+            'dissimilarity_across'
+        ],
+        item_type='bar',
+        item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
+        ylim=[0, 20],
+        title=f'Dissimilarities of {LAYERS[arch]} from {net}',
+        err=[0, 0, 0],
+        xlabel='Class Comparison Groups',
+        ylabel='Dissimilarity Score',
+        bar_sideways_labels=False
+    )
+    fd.make = True
+    file = result_folder[net + f"_dis{norm}.mfig"]
+    file.save(fd)
+    backend = MPLFigsBackend
+    fd = file.loado()
+    fd.file = file
+    fd.imgFile = file.resrepext('png')
+    backend.makeAllPlots([fd], overwrite=True)
+    return scores
+
 
 
 
@@ -261,7 +332,7 @@ def main2():
     for arch in NETS:
         line = []
         for size in T_SIZES:
-            dis = File(f'_figs/rsa/{arch}_{size}_dis.mfig').load()['viss'][0]['y'][2]
+            dis = File(f'_figs/rsa/{arch}_{size}_dis{norm}.mfig').load()['viss'][0]['y'][2]
             line.append(dis)
         data.append(line)
     fd = PlotData(
@@ -278,7 +349,7 @@ def main2():
 
     fd.make = True
     result_folder = mkdir('_figs/rsa')
-    file = result_folder["line.mfig"]
+    file = result_folder[f"line{norm}.mfig"]
     file.save(fd)
     backend = MPLFigsBackend
     fd = file.loado()
@@ -317,9 +388,15 @@ def sanity():
     backend.makeAllPlots([fd], overwrite=True)
 
 
-def test_line():
+PLOTS = {
+    'S' : 'Symmetry Representation Homogeneity',
+    'NS': 'Asymmetry Representation Homogeneity',
+    'AC': 'Dissimilarity Between Symmetry and Asymmetry Representations'
+}
+
+def test_line(plot):
     fs = FigSet()
-    debugData = File('temp.p').load()
+    debugData = File(f'temp{norm}.p').load()
     scores = debugData['scores']
     c_map = debugData['c_map']
     result_folder = debugData['result_folder']
@@ -343,7 +420,7 @@ def test_line():
             # title=akey,
             # err=[0, 0, 0],
             xlabel='Training Sizes',
-            ylabel=akey,#'Dissimilarity Score',
+            ylabel=akey,  # 'Dissimilarity Score',
             # x=[1, 2, 3],
             bar_sideways_labels=False,
         )
@@ -354,19 +431,22 @@ def test_line():
         x=[],
         item_type='scatter',
         item_color=[],  # ,c_list,
-        title='Dissimilarities',
+        title=PLOTS[plot],
         xlabel='Training Sizes',
-        ylabel='Dissimilarity Score',
+        ylabel='Dissimilarity Score' if plot == 'AC' else 'Homogeneity Score',
         bar_sideways_labels=False,
     ))
     fs.viss[-1].make = True
     fs.make = True
-    file = result_folder["scatter.mfig"]
+    file = result_folder[f"scatter_{plot}{norm}.mfig"]
+    for vis in fs.viss:
+        vis.title_size = 25
     file.save(fs)
     backend = MPLFigsBackend
     fs = file.loado()
     fs.file = file
     fs.imgFile = file.resrepext('png')
+
     # fs.viss[0].legend = listmap(
     #     # akey, arch
     #     lambda item: Line2D([0], [0], color=c_map[item[0]], lw=4, label=item[0]),
@@ -381,4 +461,4 @@ if __name__ == '__main__':
     else:
         main()
         # main2()
-        test_line()
+        test_line('AC')

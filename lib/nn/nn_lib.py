@@ -205,10 +205,8 @@ def RSA(
 
     log('getting norms...')
 
-    global fun_for_pickle,sorted_acts_for_pickle
+    global fun_for_pickle, sorted_acts_for_pickle
     fun_for_pickle = fun
-
-
 
     sorted_acts_for_pickle = sorted_acts
 
@@ -237,6 +235,7 @@ def RSA(
 
     mx = np.max(special_confuse_mat)
 
+    # so red is SIMILAR and blue is DISSIMILAR
     def fix(thing):
         return abs(mx - thing)
 
