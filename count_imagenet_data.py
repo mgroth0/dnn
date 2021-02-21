@@ -17,7 +17,7 @@ def count():
     for k, v in listitems(data['validation']):
         real_data[k]['validation'] = v
 
-    File('imagenet_count.json').write(real_data)
+    File('imagenet_count.json').save(real_data)
 
 def count_split(spl):
     data = {}
