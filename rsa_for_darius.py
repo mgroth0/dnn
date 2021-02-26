@@ -144,7 +144,7 @@ def main():
                 net = arch
             else:
                 net = arch + '_' + str(size)
-            block_len = 10
+            block_len = 100  # PIXELS_PER_CLASS
 
             acts_for_rsa = None
 
@@ -200,8 +200,7 @@ def main():
             # breakpoint()
 
             log('resampling1')
-            PIXELS_PER_CLASS = 100
-            fd.data = imutil.resampleim(np.array(fd.data), len(CLASSES) * PIXELS_PER_CLASS, len(CLASSES) * PIXELS_PER_CLASS, nchan=1)[:, :,0].tolist()
+            fd.data = imutil.resampleim(np.array(fd.data), len(CLASSES) * block_len, len(CLASSES) * block_len, nchan=1)[:, :, 0].tolist()
             log('resampled2')
 
             # need to do this again after downsampling
