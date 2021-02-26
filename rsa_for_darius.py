@@ -197,6 +197,7 @@ def main():
                 sort=False,
                 return_result=True
             )
+            breakpoint()
 
             log('resampling1')
             fd.data = imutil.resampleim(np.array(fd.data), len(CLASSES) * 10, len(CLASSES) * 10, nchan=1)[:, :,

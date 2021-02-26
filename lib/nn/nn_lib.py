@@ -235,7 +235,7 @@ def RSA(
     log('finished placing norms')
 
     mx = np.max(special_confuse_mat)
-    breakpoint()
+    # breakpoint()
     # so red is SIMILAR and blue is DISSIMILAR
     def fix(thing):
         return abs(mx - thing)
