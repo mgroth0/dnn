@@ -57,7 +57,7 @@ LAYERS = {
     "IRN"      : 'conv_7b_ac',  # 98304
     "IV3"      : 'mixed10',  # 131072
     "RN18"     : 'res5b-relu',  # 25088,
-    "LSTM" : 'final cell'
+    "LSTM"     : 'final cell'
 }
 if SHOBHITA:
     NETS = ["LSTM"]
@@ -69,9 +69,9 @@ T_SIZES = [
     100,
     150,
     200
-]
+]  # 6 epochs for all, and only 70% for training
 if SHOBHITA:
-    T_SIZES = [333]
+    T_SIZES = [100000]
 CLASSES = [
     'NS0',
     'NS2',
@@ -150,6 +150,7 @@ def main():
 
             for c in CLASSES:
                 if SHOBHITA:
+                    breakpoint()
                     acts = activations[net][c].load().flatten()
                 else:
                     acts = activations[net][c].load()['imageActivations']
