@@ -124,7 +124,7 @@ def main():
         activations = {'LSTM': {}}
         files = {f.name.split('Cat')[1].split('_')[0]: f for f in folder.files}
         for c in CLASSES:
-            activations['LSTM'][c] = folder['activations_rsa_ID'][files[c]]
+            activations['LSTM'][c] = folder['activations_rsa_ID'][files[c].name].abspath
 
     log(f'finished net_folder loop')
 
@@ -150,7 +150,6 @@ def main():
 
             for c in CLASSES:
                 if SHOBHITA:
-                    breakpoint()
                     acts = activations[net][c].load().flatten()
                 else:
                     acts = activations[net][c].load()['imageActivations']
