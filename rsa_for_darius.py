@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 
 from lib.misc import imutil
@@ -144,8 +146,8 @@ def main():
                 net = arch
             else:
                 net = arch + '_' + str(size)
-            # block_len = 100  # PIXELS_PER_CLASS
-            block_len = 500  # PIXELS_PER_CLASS
+            block_len = 100  # PIXELS_PER_CLASS
+            # block_len = 500  # PIXELS_PER_CLASS
 
             acts_for_rsa = None
 
@@ -205,6 +207,15 @@ def main():
             if lennnn == fd.data.shape[0]:
                 fd.data = fd.data.tolist()
             else:
+
+                # DEBUG
+                for rowi,row in enum(fd.data):
+                    copy = fd.data[rowi]
+                    random.shuffle(copy)
+                    fd.data[rowi] = copy
+
+
+
                 fd.data = imutil.resampleim(np.array(fd.data), lennnn, lennnn, nchan=1)[:, :, 0].tolist()
             log('resampled2')
 
