@@ -90,7 +90,6 @@ CLASSES = [
 
 def main():
     log('running rsa_for_darius')
-    breakpoint()
     if not SHOBHITA:
         if islinux():
             imgActivations = Folder('/matt/data/imgActivationsForRSA')
