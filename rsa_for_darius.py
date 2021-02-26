@@ -247,7 +247,10 @@ def debug_process_post(plot):
         scores[arch] = {}
         arch_rand_perm = None
         for size in T_SIZES:
-            net = arch + '_' + str(size)
+            if SHOBHITA:
+                net = arch
+            else:
+                net = arch + '_' + str(size)
             block_len = 10
 
             acts_for_rsa = None
