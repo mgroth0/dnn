@@ -7,7 +7,7 @@ import matplotlib.image as mpimg
 import cv2
 import tensorflow as tf
 
-from inc_test import assemble_layers, CHANNEL_AXIS, INC_HW
+from lib.misc.scripts.models_for_script.inc_test import assemble_layers, CHANNEL_AXIS, INC_HW
 HW = INC_HW
 
 # from alex_test import assemble_layers, CHANNEL_AXIS, ALEX_HW
