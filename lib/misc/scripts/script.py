@@ -72,7 +72,7 @@ print('starting script')
 
 
 
-from proko_inc import CustomInceptionResNetV2
+from lib.misc.scripts.models_for_script.proko_inc import CustomInceptionResNetV2
 net = CustomInceptionResNetV2(
     include_top=True,
     weights=None,  # 'imagenet',
