@@ -25,46 +25,13 @@ class DNN(Project):
         _human_exp_flags = listmap(__.name, HUMAN_EXPS_FOLDER.folders)
     else:
         _human_exp_flags = []
-    extra_flags = _human_exp_flags + MODES
+    extra_flags = _human_exp_flags + MODES + [
+        'IMAGENET_COUNT',
+        'RSA_MAIN',
+        'RSA_NEW',
+        'ASD'
+    ]
     def run(self, cfg):
-
-
-
-        # import count_imagenet_data
-        # count_imagenet_data.count()
-        # return None
-
-
-
-        # print('here1, doing Darius-RSA')
-        # import rsa_for_darius
-        rsa_for_darius.main()
-        return None
-
-
-
-
-        rsa_for_darius.debug_process_post('AC')
-        rsa_for_darius.test_line('AC')
-        rsa_for_darius.debug_process_post('S')
-        rsa_for_darius.test_line('S')
-        rsa_for_darius.debug_process_post('NS')
-        rsa_for_darius.test_line('NS')
-        # print('here2, finished Darius-RSA')
-
-
-        return None
-
-
-
-
-
-
-
-
-
-
-
 
         # keep modular
         assert not (cfg.REGEN_DATA and cfg.OVERWRITE_NORMS)  # btw, both imply killing worker before exp
@@ -77,6 +44,24 @@ class DNN(Project):
 
         shadow.SHOW_INDEX = False
 
+
+        if len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'IMAGENET_COUNT':
+            import count_imagenet_data
+            count_imagenet_data.count()
+        elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'RSA_MAIN':
+            # print('here1, doing Darius-RSA')
+            # import rsa_for_darius
+            rsa_for_darius.main()
+        elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'RSA_NEW':
+            rsa_for_darius.debug_process_post('AC')
+            rsa_for_darius.test_line('AC')
+            rsa_for_darius.debug_process_post('S')
+            rsa_for_darius.test_line('S')
+            rsa_for_darius.debug_process_post('NS')
+            rsa_for_darius.test_line('NS')
+            # print('here2, finished Darius-RSA')
+        elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'ASD':
+            from lib.misc.scripts import script
         if len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
             from human_exps.mc_wait_pilot.mc_wait_pilot import MC_Wait_Pilot
             from human_exps.time_pilot.time_pilot import Time_Pilot
