@@ -124,7 +124,7 @@ def main():
         activations = {'LSTM': {}}
         files = {f.name.split('Cat')[1].split('_')[0]: f for f in folder.files}
         for c in CLASSES:
-            activations['LSTM'][c] = folder['activations_rsa_ID'][files[c].name]
+            activations['LSTM'][c] = folder[files[c].name]
 
     log(f'finished net_folder loop')
 
