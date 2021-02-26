@@ -197,11 +197,11 @@ def main():
                 sort=False,
                 return_result=True
             )
-            breakpoint()
+            # breakpoint()
 
             log('resampling1')
-            fd.data = imutil.resampleim(np.array(fd.data), len(CLASSES) * 10, len(CLASSES) * 10, nchan=1)[:, :,
-                      0].tolist()
+            PIXELS_PER_CLASS = 100
+            fd.data = imutil.resampleim(np.array(fd.data), len(CLASSES) * PIXELS_PER_CLASS, len(CLASSES) * PIXELS_PER_CLASS, nchan=1)[:, :,0].tolist()
             log('resampled2')
 
             # need to do this again after downsampling
