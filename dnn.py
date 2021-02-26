@@ -38,7 +38,12 @@ class DNN(Project):
 
         # print('here1, doing Darius-RSA')
         # import rsa_for_darius
-        # rsa_for_darius.main()
+        rsa_for_darius.main()
+        return None
+
+
+
+
         rsa_for_darius.debug_process_post('AC')
         rsa_for_darius.test_line('AC')
         rsa_for_darius.debug_process_post('S')

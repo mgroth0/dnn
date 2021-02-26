@@ -83,6 +83,7 @@ CLASSES = [
 
 def main():
     log('running rsa_for_darius')
+    breakpoint()
     if islinux():
         imgActivations = Folder('/matt/data/imgActivationsForRSA')
     else:
@@ -316,11 +317,14 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     )
     fd.make = True
     file = result_folder[net + f"_dis{norm}.mfig"]
-    file.save(fd)
+    fs = FigSet()
+    fs.viss.append(fd)
+    file.save(fs)
     backend = MPLFigsBackend
     fd = file.loado()
     fd.file = file
     fd.imgFile = file.resrepext('png')
+
     backend.makeAllPlots([fd], overwrite=True)
     return scores
 
