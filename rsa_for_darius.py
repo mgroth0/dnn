@@ -203,7 +203,7 @@ def main():
             log('resampling1')
             lennnn = len(CLASSES) * block_len
             if lennnn == fd.data.shape[0]:
-                fd.data = fd.data.tolist(0)
+                fd.data = fd.data.tolist()
             else:
                 fd.data = imutil.resampleim(np.array(fd.data), lennnn, lennnn, nchan=1)[:, :, 0].tolist()
             log('resampled2')
