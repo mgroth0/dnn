@@ -211,7 +211,8 @@ def RSA(
     sorted_acts_for_pickle = sorted_acts
 
     t1 = log('Starting CPU Pool Test')
-    DEBUG_NO_POOL = True # because 16...
+    # DEBUG_NO_POOL = True # because 16...
+    DEBUG_NO_POOL=False
     # breakpoint()
     with Pool() as p:
         if islinux() and (not DEBUG_NO_POOL):

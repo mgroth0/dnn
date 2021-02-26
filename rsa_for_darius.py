@@ -50,7 +50,7 @@ N_PER_CLASS = 500  # (max) # NO LONGER IN SLURM BC REQUEST WONT GO THROUGH, SO C
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
 
-SHOBHITA = True
+SHOBHITA = False
 
 LAYERS = {
     "SQN"      : 'relu_conv10',  # 784
