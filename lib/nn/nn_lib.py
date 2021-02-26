@@ -218,6 +218,7 @@ def RSA(
             r = listmap(fun_wrap, itr(sorted_acts))
     t2 = log('\tFinished CPU Pool Test')
     log(f'\t\ttotal time: {t2 - t1}s')
+    breakpoint()
 
     # with Progress(len(sorted_acts)) as prog:
     #     for i in itr(sorted_acts):

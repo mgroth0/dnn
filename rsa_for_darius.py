@@ -184,7 +184,7 @@ def main():
                         acts,
                         axis=0
                     )
-            breakpoint()
+            # breakpoint()
             fd = RSA(
                 f'L2 Norm of {LAYERS[arch]} from {net}',
                 acts_for_rsa,
