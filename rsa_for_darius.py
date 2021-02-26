@@ -209,10 +209,10 @@ def main():
             else:
 
                 # DEBUG
-                for rowi,row in enum(fd.data):
-                    copy = fd.data[rowi]
-                    random.shuffle(copy)
-                    fd.data[rowi] = copy
+                # for rowi,row in enum(fd.data):
+                #     copy = fd.data[rowi]
+                #     random.shuffle(copy)
+                #     fd.data[rowi] = copy
 
 
 
