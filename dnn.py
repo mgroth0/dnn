@@ -48,10 +48,12 @@ class DNN(Project):
         if len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'IMAGENET_COUNT':
             import count_imagenet_data
             count_imagenet_data.count()
+            return None
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'RSA_MAIN':
             # print('here1, doing Darius-RSA')
             # import rsa_for_darius
             rsa_for_darius.main()
+            return None
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'RSA_NEW':
             rsa_for_darius.debug_process_post('AC')
             rsa_for_darius.test_line('AC')
@@ -60,8 +62,10 @@ class DNN(Project):
             rsa_for_darius.debug_process_post('NS')
             rsa_for_darius.test_line('NS')
             # print('here2, finished Darius-RSA')
+            return None
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'ASD':
             from lib.misc.scripts import script
+            return None
         if len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
             from human_exps.mc_wait_pilot.mc_wait_pilot import MC_Wait_Pilot
             from human_exps.time_pilot.time_pilot import Time_Pilot

@@ -155,6 +155,7 @@ def main():
                 if SHOBHITA:
                     # 500 = num images
                     # 400 = len of one activation array
+                    breakpoint()
                     acts = activations[net][c].load().reshape(500, 400)
                 else:
                     acts = activations[net][c].load()['imageActivations']
