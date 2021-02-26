@@ -2,14 +2,14 @@ import numpy as np
 
 from lib.misc import imutil
 from lib.nn.nn_lib import RSA, rsa_corr
-from mlib.JsonSerializable import FigSet
 from mlib.boot import log
-from mlib.boot.lang import listkeys, enum, islinux
+from mlib.boot.lang import enum, islinux, listkeys
 from mlib.boot.mlog import err
-from mlib.boot.stream import concat, listmap, randperm, listitems
-from mlib.fig.PlotData import PlotData
+from mlib.boot.stream import concat, listitems, listmap, randperm
 from mlib.fig.makefigslib import MPLFigsBackend
-from mlib.file import Folder, mkdir, File
+from mlib.fig.PlotData import PlotData
+from mlib.file import File, Folder, mkdir
+from mlib.JsonSerializable import FigSet
 from mlib.term import log_invokation
 
 SANITY = False
@@ -48,16 +48,21 @@ N_PER_CLASS = 500  # (max) # NO LONGER IN SLURM BC REQUEST WONT GO THROUGH, SO C
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
 
+SHOBHITA = True
+
 LAYERS = {
     "SQN"      : 'relu_conv10',  # 784
-
     "AlexNet"  : 'fc7',  # 4096
     "GoogleNet": 'inception_5b-output',  # 50176
     "IRN"      : 'conv_7b_ac',  # 98304
     "IV3"      : 'mixed10',  # 131072
-    "RN18"     : 'res5b-relu'  # 25088
+    "RN18"     : 'res5b-relu',  # 25088,
+    "LSTM" : 'final cell'
 }
-NETS = listkeys(LAYERS)
+if SHOBHITA:
+    NETS = ["LSTM"]
+else:
+    NETS = listkeys(LAYERS)
 T_SIZES = [
     25,
     50,
@@ -65,6 +70,8 @@ T_SIZES = [
     150,
     200
 ]
+if SHOBHITA:
+    T_SIZES = [333]
 CLASSES = [
     'NS0',
     'NS2',
@@ -84,34 +91,41 @@ CLASSES = [
 def main():
     log('running rsa_for_darius')
     breakpoint()
-    if islinux():
-        imgActivations = Folder('/matt/data/imgActivationsForRSA')
-    else:
-        imgActivations = Folder('_data/imgActivationsForRSA')
-    activations = {}
+    if not SHOBHITA:
+        if islinux():
+            imgActivations = Folder('/matt/data/imgActivationsForRSA')
+        else:
+            imgActivations = Folder('_data/imgActivationsForRSA')
+        activations = {}
 
-    for net_folder in imgActivations.files:
-        log(f'net_folder:{net_folder}')
-        if not net_folder.isdir:
-            continue
-        net_folder = Folder(net_folder)
-        modelname = net_folder.name
-        if modelname not in activations:
-            activations[modelname] = {}
-        arch, ntrain = modelname.split('_')
-        # breakpoint()
-        net_folder.delete_icon_file_if_exists()
-        log(f'net_folder:{net_folder}: getting activations')
-        print('b4 files')
-        # stream.enable_debug = True
-        the_files = net_folder.files
-        print('after files')
-        for activations_mat in the_files.filtered(
-                lambda x: x.ext == 'mat'
-        ):
-            log(f'net_folder:{net_folder}: {activations_mat.name_pre_ext}')
-            classname = activations_mat.name_pre_ext
-            activations[modelname][classname] = activations_mat
+        for net_folder in imgActivations.files:
+            log(f'net_folder:{net_folder}')
+            if not net_folder.isdir:
+                continue
+            net_folder = Folder(net_folder)
+            modelname = net_folder.name
+            if modelname not in activations:
+                activations[modelname] = {}
+            arch, ntrain = modelname.split('_')
+            # breakpoint()
+            net_folder.delete_icon_file_if_exists()
+            log(f'net_folder:{net_folder}: getting activations')
+            print('b4 files')
+            # stream.enable_debug = True
+            the_files = net_folder.files
+            print('after files')
+            for activations_mat in the_files.filtered(
+                    lambda x: x.ext == 'mat'
+            ):
+                log(f'net_folder:{net_folder}: {activations_mat.name_pre_ext}')
+                classname = activations_mat.name_pre_ext
+                activations[modelname][classname] = activations_mat
+    else:
+        folder = Folder('/matt/data/rsa_activations_shobhita')
+        activations = {'LSTM': {}}
+        files = {f.name.split('Cat')[1].split('_')[0]: f for f in folder.files}
+        for c in CLASSES:
+            activations['LSTM'][c] = folder['activations_rsa_ID'][files[c]]
 
     log(f'finished net_folder loop')
 
@@ -127,13 +141,19 @@ def main():
         arch_rand_perm = None
 
         for size in T_SIZES:
-            net = arch + '_' + str(size)
+            if SHOBHITA:
+                net = arch
+            else:
+                net = arch + '_' + str(size)
             block_len = 10
 
             acts_for_rsa = None
 
             for c in CLASSES:
-                acts = activations[net][c].load()['imageActivations']
+                if SHOBHITA:
+                    acts = activations[net][c].load().flatten()
+                else:
+                    acts = activations[net][c].load()['imageActivations']
                 log(f'total images per class: {len(acts)}')
                 log(f'total acts per image: {len(acts[0])}')
                 if sqn_act_len is None:
@@ -203,7 +223,8 @@ def save_scores(result_folder, scores):
         "GoogleNet": [0, 1, 0],  # 50176
         "IRN"      : [1, 1, 0],  # 98304
         "IV3"      : [1, 0, 1],  # 131072
-        "RN18"     : [0, 1, 1]  # 25088
+        "RN18"     : [0, 1, 1],  # 25088,
+        "LSTM"     : [0, 0, 0]
     }
     fs = FigSet()
 
