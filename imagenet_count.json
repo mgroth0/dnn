@@ -1,0 +1,3998 @@
+{
+  "parachute, chute": {
+    "train": 201,
+    "validation": 50
+  },
+  "rugby ball": {
+    "train": 211,
+    "validation": 50
+  },
+  "groenendael": {
+    "train": 209,
+    "validation": 50
+  },
+  "piggy bank, penny bank": {
+    "train": 219,
+    "validation": 50
+  },
+  "hamper": {
+    "train": 198,
+    "validation": 50
+  },
+  "bustard": {
+    "train": 183,
+    "validation": 50
+  },
+  "trilobite": {
+    "train": 198,
+    "validation": 50
+  },
+  "chain mail, ring mail, mail, chain armor, chain armour, ring armor, ring armour": {
+    "train": 219,
+    "validation": 50
+  },
+  "hammer": {
+    "train": 195,
+    "validation": 50
+  },
+  "spiny lobster, langouste, rock lobster, crawfish, crayfish, sea crawfish": {
+    "train": 208,
+    "validation": 50
+  },
+  "patas, hussar monkey, Erythrocebus patas": {
+    "train": 212,
+    "validation": 50
+  },
+  "church, church building": {
+    "train": 215,
+    "validation": 50
+  },
+  "sax, saxophone": {
+    "train": 231,
+    "validation": 50
+  },
+  "harmonica, mouth organ, harp, mouth harp": {
+    "train": 206,
+    "validation": 50
+  },
+  "restaurant, eating house, eating place, eatery": {
+    "train": 211,
+    "validation": 50
+  },
+  "pop bottle, soda bottle": {
+    "train": 202,
+    "validation": 50
+  },
+  "window shade": {
+    "train": 220,
+    "validation": 50
+  },
+  "potter's wheel": {
+    "train": 190,
+    "validation": 50
+  },
+  "German shepherd, German shepherd dog, German police dog, alsatian": {
+    "train": 187,
+    "validation": 50
+  },
+  "saltshaker, salt shaker": {
+    "train": 224,
+    "validation": 50
+  },
+  "paper towel": {
+    "train": 240,
+    "validation": 50
+  },
+  "swing": {
+    "train": 220,
+    "validation": 50
+  },
+  "great grey owl, great gray owl, Strix nebulosa": {
+    "train": 198,
+    "validation": 50
+  },
+  "beaver": {
+    "train": 235,
+    "validation": 50
+  },
+  "soup bowl": {
+    "train": 193,
+    "validation": 50
+  },
+  "envelope": {
+    "train": 200,
+    "validation": 50
+  },
+  "capuchin, ringtail, Cebus capucinus": {
+    "train": 227,
+    "validation": 50
+  },
+  "hen-of-the-woods, hen of the woods, Polyporus frondosus, Grifola frondosa": {
+    "train": 183,
+    "validation": 50
+  },
+  "Windsor tie": {
+    "train": 195,
+    "validation": 50
+  },
+  "cellular telephone, cellular phone, cellphone, cell, mobile phone": {
+    "train": 205,
+    "validation": 50
+  },
+  "barrow, garden cart, lawn cart, wheelbarrow": {
+    "train": 191,
+    "validation": 50
+  },
+  "king crab, Alaska crab, Alaskan king crab, Alaska king crab, Paralithodes camtschatica": {
+    "train": 213,
+    "validation": 50
+  },
+  "digital watch": {
+    "train": 150,
+    "validation": 50
+  },
+  "jean, blue jean, denim": {
+    "train": 193,
+    "validation": 50
+  },
+  "accordion, piano accordion, squeeze box": {
+    "train": 217,
+    "validation": 50
+  },
+  "scabbard": {
+    "train": 190,
+    "validation": 50
+  },
+  "butcher shop, meat market": {
+    "train": 186,
+    "validation": 50
+  },
+  "diamondback, diamondback rattlesnake, Crotalus adamanteus": {
+    "train": 213,
+    "validation": 50
+  },
+  "bearskin, busby, shako": {
+    "train": 205,
+    "validation": 50
+  },
+  "mortarboard": {
+    "train": 199,
+    "validation": 50
+  },
+  "stove": {
+    "train": 191,
+    "validation": 50
+  },
+  "safety pin": {
+    "train": 192,
+    "validation": 50
+  },
+  "Norwich terrier": {
+    "train": 203,
+    "validation": 50
+  },
+  "bottlecap": {
+    "train": 203,
+    "validation": 50
+  },
+  "shopping cart": {
+    "train": 234,
+    "validation": 50
+  },
+  "Irish wolfhound": {
+    "train": 205,
+    "validation": 50
+  },
+  "notebook, notebook computer": {
+    "train": 202,
+    "validation": 50
+  },
+  "red wolf, maned wolf, Canis rufus, Canis niger": {
+    "train": 181,
+    "validation": 50
+  },
+  "Weimaraner": {
+    "train": 197,
+    "validation": 50
+  },
+  "bullfrog, Rana catesbeiana": {
+    "train": 220,
+    "validation": 50
+  },
+  "quill, quill pen": {
+    "train": 208,
+    "validation": 50
+  },
+  "rule, ruler": {
+    "train": 205,
+    "validation": 50
+  },
+  "echidna, spiny anteater, anteater": {
+    "train": 210,
+    "validation": 50
+  },
+  "limpkin, Aramus pictus": {
+    "train": 214,
+    "validation": 50
+  },
+  "toucan": {
+    "train": 216,
+    "validation": 50
+  },
+  "water tower": {
+    "train": 217,
+    "validation": 50
+  },
+  "mailbag, postbag": {
+    "train": 214,
+    "validation": 50
+  },
+  "bald eagle, American eagle, Haliaeetus leucocephalus": {
+    "train": 189,
+    "validation": 50
+  },
+  "soft-coated wheaten terrier": {
+    "train": 220,
+    "validation": 50
+  },
+  "cheetah, chetah, Acinonyx jubatus": {
+    "train": 215,
+    "validation": 50
+  },
+  "barn spider, Araneus cavaticus": {
+    "train": 210,
+    "validation": 50
+  },
+  "African grey, African gray, Psittacus erithacus": {
+    "train": 220,
+    "validation": 50
+  },
+  "backpack, back pack, knapsack, packsack, rucksack, haversack": {
+    "train": 228,
+    "validation": 50
+  },
+  "sarong": {
+    "train": 203,
+    "validation": 50
+  },
+  "organ, pipe organ": {
+    "train": 227,
+    "validation": 50
+  },
+  "tennis ball": {
+    "train": 195,
+    "validation": 50
+  },
+  "diaper, nappy, napkin": {
+    "train": 201,
+    "validation": 50
+  },
+  "canoe": {
+    "train": 190,
+    "validation": 50
+  },
+  "trimaran": {
+    "train": 183,
+    "validation": 50
+  },
+  "ambulance": {
+    "train": 219,
+    "validation": 50
+  },
+  "matchstick": {
+    "train": 202,
+    "validation": 50
+  },
+  "alligator lizard": {
+    "train": 220,
+    "validation": 50
+  },
+  "sea slug, nudibranch": {
+    "train": 202,
+    "validation": 50
+  },
+  "harp": {
+    "train": 211,
+    "validation": 50
+  },
+  "half track": {
+    "train": 206,
+    "validation": 50
+  },
+  "cannon": {
+    "train": 226,
+    "validation": 50
+  },
+  "maillot": {
+    "train": 210,
+    "validation": 50
+  },
+  "pill bottle": {
+    "train": 205,
+    "validation": 50
+  },
+  "lighter, light, igniter, ignitor": {
+    "train": 214,
+    "validation": 50
+  },
+  "Brittany spaniel": {
+    "train": 209,
+    "validation": 50
+  },
+  "ruffed grouse, partridge, Bonasa umbellus": {
+    "train": 202,
+    "validation": 50
+  },
+  "hammerhead, hammerhead shark": {
+    "train": 209,
+    "validation": 50
+  },
+  "stupa, tope": {
+    "train": 194,
+    "validation": 50
+  },
+  "barbershop": {
+    "train": 198,
+    "validation": 50
+  },
+  "torch": {
+    "train": 197,
+    "validation": 50
+  },
+  "bulbul": {
+    "train": 222,
+    "validation": 50
+  },
+  "horse cart, horse-cart": {
+    "train": 210,
+    "validation": 50
+  },
+  "meat loaf, meatloaf": {
+    "train": 202,
+    "validation": 50
+  },
+  "sulphur butterfly, sulfur butterfly": {
+    "train": 206,
+    "validation": 50
+  },
+  "cocktail shaker": {
+    "train": 175,
+    "validation": 50
+  },
+  "bobsled, bobsleigh, bob": {
+    "train": 182,
+    "validation": 50
+  },
+  "strawberry": {
+    "train": 233,
+    "validation": 50
+  },
+  "cleaver, meat cleaver, chopper": {
+    "train": 165,
+    "validation": 50
+  },
+  "tile roof": {
+    "train": 223,
+    "validation": 50
+  },
+  "timber wolf, grey wolf, gray wolf, Canis lupus": {
+    "train": 168,
+    "validation": 50
+  },
+  "beer bottle": {
+    "train": 215,
+    "validation": 50
+  },
+  "home theater, home theatre": {
+    "train": 199,
+    "validation": 50
+  },
+  "minivan": {
+    "train": 186,
+    "validation": 50
+  },
+  "apron": {
+    "train": 197,
+    "validation": 50
+  },
+  "fountain pen": {
+    "train": 217,
+    "validation": 50
+  },
+  "Welsh springer spaniel": {
+    "train": 213,
+    "validation": 50
+  },
+  "doormat, welcome mat": {
+    "train": 228,
+    "validation": 50
+  },
+  "bighorn, bighorn sheep, cimarron, Rocky Mountain bighorn, Rocky Mountain sheep, Ovis canadensis": {
+    "train": 205,
+    "validation": 50
+  },
+  "prayer rug, prayer mat": {
+    "train": 233,
+    "validation": 50
+  },
+  "military uniform": {
+    "train": 215,
+    "validation": 50
+  },
+  "handkerchief, hankie, hanky, hankey": {
+    "train": 213,
+    "validation": 50
+  },
+  "mountain bike, all-terrain bike, off-roader": {
+    "train": 198,
+    "validation": 50
+  },
+  "tractor": {
+    "train": 186,
+    "validation": 50
+  },
+  "theater curtain, theatre curtain": {
+    "train": 199,
+    "validation": 50
+  },
+  "radiator": {
+    "train": 183,
+    "validation": 50
+  },
+  "frying pan, frypan, skillet": {
+    "train": 192,
+    "validation": 50
+  },
+  "bagel, beigel": {
+    "train": 204,
+    "validation": 50
+  },
+  "stingray": {
+    "train": 187,
+    "validation": 50
+  },
+  "espresso maker": {
+    "train": 175,
+    "validation": 50
+  },
+  "miniature schnauzer": {
+    "train": 214,
+    "validation": 50
+  },
+  "weevil": {
+    "train": 201,
+    "validation": 50
+  },
+  "ground beetle, carabid beetle": {
+    "train": 217,
+    "validation": 50
+  },
+  "fur coat": {
+    "train": 199,
+    "validation": 50
+  },
+  "acorn": {
+    "train": 192,
+    "validation": 50
+  },
+  "ocarina, sweet potato": {
+    "train": 194,
+    "validation": 50
+  },
+  "pillow": {
+    "train": 204,
+    "validation": 50
+  },
+  "panpipe, pandean pipe, syrinx": {
+    "train": 200,
+    "validation": 50
+  },
+  "holster": {
+    "train": 212,
+    "validation": 50
+  },
+  "dial telephone, dial phone": {
+    "train": 211,
+    "validation": 50
+  },
+  "barometer": {
+    "train": 197,
+    "validation": 50
+  },
+  "swimming trunks, bathing trunks": {
+    "train": 209,
+    "validation": 50
+  },
+  "robin, American robin, Turdus migratorius": {
+    "train": 209,
+    "validation": 50
+  },
+  "palace": {
+    "train": 218,
+    "validation": 50
+  },
+  "binder, ring-binder": {
+    "train": 185,
+    "validation": 50
+  },
+  "rock crab, Cancer irroratus": {
+    "train": 201,
+    "validation": 50
+  },
+  "analog clock": {
+    "train": 219,
+    "validation": 50
+  },
+  "magnetic compass": {
+    "train": 176,
+    "validation": 50
+  },
+  "chickadee": {
+    "train": 211,
+    "validation": 50
+  },
+  "black-and-tan coonhound": {
+    "train": 118,
+    "validation": 50
+  },
+  "comic book": {
+    "train": 200,
+    "validation": 50
+  },
+  "lemon": {
+    "train": 212,
+    "validation": 50
+  },
+  "chest": {
+    "train": 215,
+    "validation": 50
+  },
+  "gong, tam-tam": {
+    "train": 207,
+    "validation": 50
+  },
+  "screwdriver": {
+    "train": 198,
+    "validation": 50
+  },
+  "Mexican hairless": {
+    "train": 133,
+    "validation": 50
+  },
+  "African chameleon, Chamaeleo chamaeleon": {
+    "train": 207,
+    "validation": 50
+  },
+  "upright, upright piano": {
+    "train": 200,
+    "validation": 50
+  },
+  "geyser": {
+    "train": 198,
+    "validation": 50
+  },
+  "honeycomb": {
+    "train": 204,
+    "validation": 50
+  },
+  "Blenheim spaniel": {
+    "train": 229,
+    "validation": 50
+  },
+  "cello, violoncello": {
+    "train": 185,
+    "validation": 50
+  },
+  "little blue heron, Egretta caerulea": {
+    "train": 200,
+    "validation": 50
+  },
+  "African elephant, Loxodonta africana": {
+    "train": 194,
+    "validation": 50
+  },
+  "car mirror": {
+    "train": 215,
+    "validation": 50
+  },
+  "shower curtain": {
+    "train": 204,
+    "validation": 50
+  },
+  "leatherback turtle, leatherback, leathery turtle, Dermochelys coriacea": {
+    "train": 225,
+    "validation": 50
+  },
+  "Dutch oven": {
+    "train": 198,
+    "validation": 50
+  },
+  "web site, website, internet site, site": {
+    "train": 207,
+    "validation": 50
+  },
+  "electric fan, blower": {
+    "train": 198,
+    "validation": 50
+  },
+  "magpie": {
+    "train": 216,
+    "validation": 50
+  },
+  "chow, chow chow": {
+    "train": 202,
+    "validation": 50
+  },
+  "Lakeland terrier": {
+    "train": 219,
+    "validation": 50
+  },
+  "hair slide": {
+    "train": 223,
+    "validation": 50
+  },
+  "Norwegian elkhound, elkhound": {
+    "train": 185,
+    "validation": 50
+  },
+  "bloodhound, sleuthhound": {
+    "train": 199,
+    "validation": 50
+  },
+  "amphibian, amphibious vehicle": {
+    "train": 228,
+    "validation": 50
+  },
+  "power drill": {
+    "train": 145,
+    "validation": 50
+  },
+  "racket, racquet": {
+    "train": 208,
+    "validation": 50
+  },
+  "Walker hound, Walker foxhound": {
+    "train": 150,
+    "validation": 50
+  },
+  "hermit crab": {
+    "train": 181,
+    "validation": 50
+  },
+  "Norfolk terrier": {
+    "train": 223,
+    "validation": 50
+  },
+  "throne": {
+    "train": 180,
+    "validation": 50
+  },
+  "gar, garfish, garpike, billfish, Lepisosteus osseus": {
+    "train": 186,
+    "validation": 50
+  },
+  "Border terrier": {
+    "train": 222,
+    "validation": 50
+  },
+  "garter snake, grass snake": {
+    "train": 218,
+    "validation": 50
+  },
+  "gasmask, respirator, gas helmet": {
+    "train": 217,
+    "validation": 50
+  },
+  "lynx, catamount": {
+    "train": 215,
+    "validation": 50
+  },
+  "grasshopper, hopper": {
+    "train": 202,
+    "validation": 50
+  },
+  "soccer ball": {
+    "train": 215,
+    "validation": 50
+  },
+  "maze, labyrinth": {
+    "train": 217,
+    "validation": 50
+  },
+  "dingo, warrigal, warragal, Canis dingo": {
+    "train": 200,
+    "validation": 50
+  },
+  "pinwheel": {
+    "train": 176,
+    "validation": 50
+  },
+  "macaque": {
+    "train": 198,
+    "validation": 50
+  },
+  "wing": {
+    "train": 202,
+    "validation": 50
+  },
+  "tricycle, trike, velocipede": {
+    "train": 210,
+    "validation": 50
+  },
+  "cornet, horn, trumpet, trump": {
+    "train": 218,
+    "validation": 50
+  },
+  "Madagascar cat, ring-tailed lemur, Lemur catta": {
+    "train": 239,
+    "validation": 50
+  },
+  "wool, woolen, woollen": {
+    "train": 211,
+    "validation": 50
+  },
+  "space heater": {
+    "train": 153,
+    "validation": 50
+  },
+  "carton": {
+    "train": 195,
+    "validation": 50
+  },
+  "golden retriever": {
+    "train": 199,
+    "validation": 50
+  },
+  "proboscis monkey, Nasalis larvatus": {
+    "train": 218,
+    "validation": 50
+  },
+  "snow leopard, ounce, Panthera uncia": {
+    "train": 212,
+    "validation": 50
+  },
+  "cinema, movie theater, movie theatre, movie house, picture palace": {
+    "train": 209,
+    "validation": 50
+  },
+  "indigo bunting, indigo finch, indigo bird, Passerina cyanea": {
+    "train": 206,
+    "validation": 50
+  },
+  "wild boar, boar, Sus scrofa": {
+    "train": 226,
+    "validation": 50
+  },
+  "Australian terrier": {
+    "train": 192,
+    "validation": 50
+  },
+  "German short-haired pointer": {
+    "train": 210,
+    "validation": 50
+  },
+  "tray": {
+    "train": 175,
+    "validation": 50
+  },
+  "Italian greyhound": {
+    "train": 197,
+    "validation": 50
+  },
+  "coil, spiral, volute, whorl, helix": {
+    "train": 203,
+    "validation": 50
+  },
+  "coral fungus": {
+    "train": 211,
+    "validation": 50
+  },
+  "beagle": {
+    "train": 198,
+    "validation": 50
+  },
+  "spatula": {
+    "train": 222,
+    "validation": 50
+  },
+  "ibex, Capra ibex": {
+    "train": 199,
+    "validation": 50
+  },
+  "barracouta, snoek": {
+    "train": 200,
+    "validation": 50
+  },
+  "moped": {
+    "train": 189,
+    "validation": 50
+  },
+  "iPod": {
+    "train": 228,
+    "validation": 50
+  },
+  "hare": {
+    "train": 210,
+    "validation": 50
+  },
+  "sidewinder, horned rattlesnake, Crotalus cerastes": {
+    "train": 204,
+    "validation": 50
+  },
+  "shovel": {
+    "train": 223,
+    "validation": 50
+  },
+  "spider web, spider's web": {
+    "train": 190,
+    "validation": 50
+  },
+  "pay-phone, pay-station": {
+    "train": 210,
+    "validation": 50
+  },
+  "Arctic fox, white fox, Alopex lagopus": {
+    "train": 186,
+    "validation": 50
+  },
+  "banana": {
+    "train": 224,
+    "validation": 50
+  },
+  "macaw": {
+    "train": 199,
+    "validation": 50
+  },
+  "punching bag, punch bag, punching ball, punchball": {
+    "train": 177,
+    "validation": 50
+  },
+  "dishwasher, dish washer, dishwashing machine": {
+    "train": 197,
+    "validation": 50
+  },
+  "weasel": {
+    "train": 206,
+    "validation": 50
+  },
+  "nipple": {
+    "train": 226,
+    "validation": 50
+  },
+  "aircraft carrier, carrier, flattop, attack aircraft carrier": {
+    "train": 192,
+    "validation": 50
+  },
+  "king penguin, Aptenodytes patagonica": {
+    "train": 211,
+    "validation": 50
+  },
+  "puffer, pufferfish, blowfish, globefish": {
+    "train": 194,
+    "validation": 50
+  },
+  "buckle": {
+    "train": 202,
+    "validation": 50
+  },
+  "horned viper, cerastes, sand viper, horned asp, Cerastes cornutus": {
+    "train": 211,
+    "validation": 50
+  },
+  "goldfinch, Carduelis carduelis": {
+    "train": 230,
+    "validation": 50
+  },
+  "folding chair": {
+    "train": 217,
+    "validation": 50
+  },
+  "cliff dwelling": {
+    "train": 203,
+    "validation": 50
+  },
+  "carpenter's kit, tool kit": {
+    "train": 196,
+    "validation": 50
+  },
+  "sliding door": {
+    "train": 201,
+    "validation": 50
+  },
+  "airliner": {
+    "train": 201,
+    "validation": 50
+  },
+  "albatross, mollymawk": {
+    "train": 207,
+    "validation": 50
+  },
+  "marmoset": {
+    "train": 206,
+    "validation": 50
+  },
+  "tank, army tank, armored combat vehicle, armoured combat vehicle": {
+    "train": 206,
+    "validation": 50
+  },
+  "suspension bridge": {
+    "train": 214,
+    "validation": 50
+  },
+  "wallet, billfold, notecase, pocketbook": {
+    "train": 225,
+    "validation": 50
+  },
+  "snorkel": {
+    "train": 185,
+    "validation": 50
+  },
+  "candle, taper, wax light": {
+    "train": 222,
+    "validation": 50
+  },
+  "axolotl, mud puppy, Ambystoma mexicanum": {
+    "train": 233,
+    "validation": 50
+  },
+  "recreational vehicle, RV, R.V.": {
+    "train": 204,
+    "validation": 50
+  },
+  "grille, radiator grille": {
+    "train": 197,
+    "validation": 50
+  },
+  "colobus, colobus monkey": {
+    "train": 188,
+    "validation": 50
+  },
+  "red fox, Vulpes vulpes": {
+    "train": 198,
+    "validation": 50
+  },
+  "acorn squash": {
+    "train": 195,
+    "validation": 50
+  },
+  "plane, carpenter's plane, woodworking plane": {
+    "train": 206,
+    "validation": 50
+  },
+  "bison": {
+    "train": 204,
+    "validation": 50
+  },
+  "black widow, Latrodectus mactans": {
+    "train": 202,
+    "validation": 50
+  },
+  "dishrag, dishcloth": {
+    "train": 210,
+    "validation": 50
+  },
+  "Band Aid": {
+    "train": 192,
+    "validation": 50
+  },
+  "Scotch terrier, Scottish terrier, Scottie": {
+    "train": 218,
+    "validation": 50
+  },
+  "Rhodesian ridgeback": {
+    "train": 229,
+    "validation": 50
+  },
+  "barber chair": {
+    "train": 174,
+    "validation": 50
+  },
+  "meerkat, mierkat": {
+    "train": 170,
+    "validation": 50
+  },
+  "skunk, polecat, wood pussy": {
+    "train": 211,
+    "validation": 50
+  },
+  "cockroach, roach": {
+    "train": 195,
+    "validation": 50
+  },
+  "chambered nautilus, pearly nautilus, nautilus": {
+    "train": 207,
+    "validation": 50
+  },
+  "hognose snake, puff adder, sand viper": {
+    "train": 205,
+    "validation": 50
+  },
+  "studio couch, day bed": {
+    "train": 204,
+    "validation": 50
+  },
+  "Egyptian cat": {
+    "train": 232,
+    "validation": 50
+  },
+  "orangutan, orang, orangutang, Pongo pygmaeus": {
+    "train": 208,
+    "validation": 50
+  },
+  "menu": {
+    "train": 209,
+    "validation": 50
+  },
+  "tabby, tabby cat": {
+    "train": 213,
+    "validation": 50
+  },
+  "bell pepper": {
+    "train": 199,
+    "validation": 50
+  },
+  "schipperke": {
+    "train": 221,
+    "validation": 50
+  },
+  "corn": {
+    "train": 208,
+    "validation": 50
+  },
+  "ski mask": {
+    "train": 208,
+    "validation": 50
+  },
+  "tiger shark, Galeocerdo cuvieri": {
+    "train": 209,
+    "validation": 50
+  },
+  "vacuum, vacuum cleaner": {
+    "train": 200,
+    "validation": 50
+  },
+  "kite": {
+    "train": 233,
+    "validation": 50
+  },
+  "langur": {
+    "train": 211,
+    "validation": 50
+  },
+  "Greater Swiss Mountain dog": {
+    "train": 207,
+    "validation": 50
+  },
+  "switch, electric switch, electrical switch": {
+    "train": 199,
+    "validation": 50
+  },
+  "school bus": {
+    "train": 188,
+    "validation": 50
+  },
+  "purse": {
+    "train": 194,
+    "validation": 50
+  },
+  "vending machine": {
+    "train": 201,
+    "validation": 50
+  },
+  "sewing machine": {
+    "train": 213,
+    "validation": 50
+  },
+  "warthog": {
+    "train": 186,
+    "validation": 50
+  },
+  "mosque": {
+    "train": 220,
+    "validation": 50
+  },
+  "pedestal, plinth, footstall": {
+    "train": 192,
+    "validation": 50
+  },
+  "ladybug, ladybeetle, lady beetle, ladybird, ladybird beetle": {
+    "train": 201,
+    "validation": 50
+  },
+  "binoculars, field glasses, opera glasses": {
+    "train": 229,
+    "validation": 50
+  },
+  "killer whale, killer, orca, grampus, sea wolf, Orcinus orca": {
+    "train": 248,
+    "validation": 50
+  },
+  "balloon": {
+    "train": 199,
+    "validation": 50
+  },
+  "boxer": {
+    "train": 197,
+    "validation": 50
+  },
+  "packet": {
+    "train": 194,
+    "validation": 50
+  },
+  "beer glass": {
+    "train": 212,
+    "validation": 50
+  },
+  "American chameleon, anole, Anolis carolinensis": {
+    "train": 214,
+    "validation": 50
+  },
+  "slot, one-armed bandit": {
+    "train": 222,
+    "validation": 50
+  },
+  "can opener, tin opener": {
+    "train": 217,
+    "validation": 50
+  },
+  "bow tie, bow-tie, bowtie": {
+    "train": 233,
+    "validation": 50
+  },
+  "fox squirrel, eastern fox squirrel, Sciurus niger": {
+    "train": 212,
+    "validation": 50
+  },
+  "boathouse": {
+    "train": 215,
+    "validation": 50
+  },
+  "hip, rose hip, rosehip": {
+    "train": 185,
+    "validation": 50
+  },
+  "maypole": {
+    "train": 196,
+    "validation": 50
+  },
+  "sandbar, sand bar": {
+    "train": 203,
+    "validation": 50
+  },
+  "tripod": {
+    "train": 203,
+    "validation": 50
+  },
+  "radio, wireless": {
+    "train": 178,
+    "validation": 50
+  },
+  "moving van": {
+    "train": 207,
+    "validation": 50
+  },
+  "zucchini, courgette": {
+    "train": 200,
+    "validation": 50
+  },
+  "cup": {
+    "train": 200,
+    "validation": 50
+  },
+  "airship, dirigible": {
+    "train": 210,
+    "validation": 50
+  },
+  "snowplow, snowplough": {
+    "train": 205,
+    "validation": 50
+  },
+  "coffee mug": {
+    "train": 203,
+    "validation": 50
+  },
+  "obelisk": {
+    "train": 218,
+    "validation": 50
+  },
+  "balance beam, beam": {
+    "train": 221,
+    "validation": 50
+  },
+  "pitcher, ewer": {
+    "train": 229,
+    "validation": 50
+  },
+  "yellow lady's slipper, yellow lady-slipper, Cypripedium calceolus, Cypripedium parviflorum": {
+    "train": 209,
+    "validation": 50
+  },
+  "abaya": {
+    "train": 196,
+    "validation": 50
+  },
+  "American Staffordshire terrier, Staffordshire terrier, American pit bull terrier, pit bull terrier": {
+    "train": 212,
+    "validation": 50
+  },
+  "Chihuahua": {
+    "train": 209,
+    "validation": 50
+  },
+  "shield, buckler": {
+    "train": 205,
+    "validation": 50
+  },
+  "anemone fish": {
+    "train": 210,
+    "validation": 50
+  },
+  "cardoon": {
+    "train": 186,
+    "validation": 50
+  },
+  "water bottle": {
+    "train": 209,
+    "validation": 50
+  },
+  "feather boa, boa": {
+    "train": 194,
+    "validation": 50
+  },
+  "EntleBucher": {
+    "train": 183,
+    "validation": 50
+  },
+  "lab coat, laboratory coat": {
+    "train": 219,
+    "validation": 50
+  },
+  "Rottweiler": {
+    "train": 194,
+    "validation": 50
+  },
+  "Scottish deerhound, deerhound": {
+    "train": 181,
+    "validation": 50
+  },
+  "bluetick": {
+    "train": 198,
+    "validation": 50
+  },
+  "stinkhorn, carrion fungus": {
+    "train": 206,
+    "validation": 50
+  },
+  "zebra": {
+    "train": 213,
+    "validation": 50
+  },
+  "crate": {
+    "train": 193,
+    "validation": 50
+  },
+  "wooden spoon": {
+    "train": 214,
+    "validation": 50
+  },
+  "stretcher": {
+    "train": 188,
+    "validation": 50
+  },
+  "flatworm, platyhelminth": {
+    "train": 225,
+    "validation": 50
+  },
+  "paddlewheel, paddle wheel": {
+    "train": 195,
+    "validation": 50
+  },
+  "solar dish, solar collector, solar furnace": {
+    "train": 211,
+    "validation": 50
+  },
+  "mongoose": {
+    "train": 208,
+    "validation": 50
+  },
+  "bath towel": {
+    "train": 210,
+    "validation": 50
+  },
+  "kit fox, Vulpes macrotis": {
+    "train": 209,
+    "validation": 50
+  },
+  "vulture": {
+    "train": 210,
+    "validation": 50
+  },
+  "drumstick": {
+    "train": 181,
+    "validation": 50
+  },
+  "prison, prison house": {
+    "train": 208,
+    "validation": 50
+  },
+  "quilt, comforter, comfort, puff": {
+    "train": 215,
+    "validation": 50
+  },
+  "lacewing, lacewing fly": {
+    "train": 198,
+    "validation": 50
+  },
+  "Bernese mountain dog": {
+    "train": 210,
+    "validation": 50
+  },
+  "megalith, megalithic structure": {
+    "train": 211,
+    "validation": 50
+  },
+  "green snake, grass snake": {
+    "train": 203,
+    "validation": 50
+  },
+  "book jacket, dust cover, dust jacket, dust wrapper": {
+    "train": 184,
+    "validation": 50
+  },
+  "hoopskirt, crinoline": {
+    "train": 226,
+    "validation": 50
+  },
+  "revolver, six-gun, six-shooter": {
+    "train": 191,
+    "validation": 50
+  },
+  "dhole, Cuon alpinus": {
+    "train": 187,
+    "validation": 50
+  },
+  "hay": {
+    "train": 223,
+    "validation": 50
+  },
+  "washer, automatic washer, washing machine": {
+    "train": 180,
+    "validation": 50
+  },
+  "rain barrel": {
+    "train": 221,
+    "validation": 50
+  },
+  "badger": {
+    "train": 185,
+    "validation": 50
+  },
+  "bull mastiff": {
+    "train": 212,
+    "validation": 50
+  },
+  "car wheel": {
+    "train": 217,
+    "validation": 50
+  },
+  "coral reef": {
+    "train": 202,
+    "validation": 50
+  },
+  "carbonara": {
+    "train": 222,
+    "validation": 50
+  },
+  "daisy": {
+    "train": 212,
+    "validation": 50
+  },
+  "platypus, duckbill, duckbilled platypus, duck-billed platypus, Ornithorhynchus anatinus": {
+    "train": 198,
+    "validation": 50
+  },
+  "stole": {
+    "train": 231,
+    "validation": 50
+  },
+  "jersey, T-shirt, tee shirt": {
+    "train": 209,
+    "validation": 50
+  },
+  "coffeepot": {
+    "train": 211,
+    "validation": 50
+  },
+  "ice cream, icecream": {
+    "train": 233,
+    "validation": 50
+  },
+  "cocker spaniel, English cocker spaniel, cocker": {
+    "train": 202,
+    "validation": 50
+  },
+  "French loaf": {
+    "train": 193,
+    "validation": 50
+  },
+  "water buffalo, water ox, Asiatic buffalo, Bubalus bubalis": {
+    "train": 210,
+    "validation": 50
+  },
+  "sea cucumber, holothurian": {
+    "train": 218,
+    "validation": 50
+  },
+  "whiskey jug": {
+    "train": 134,
+    "validation": 50
+  },
+  "hotdog, hot dog, red hot": {
+    "train": 204,
+    "validation": 50
+  },
+  "lesser panda, red panda, panda, bear cat, cat bear, Ailurus fulgens": {
+    "train": 216,
+    "validation": 50
+  },
+  "harvestman, daddy longlegs, Phalangium opilio": {
+    "train": 182,
+    "validation": 50
+  },
+  "joystick": {
+    "train": 195,
+    "validation": 50
+  },
+  "flagpole, flagstaff": {
+    "train": 224,
+    "validation": 50
+  },
+  "crane": {
+    "train": 415,
+    "validation": 100
+  },
+  "bathing cap, swimming cap": {
+    "train": 212,
+    "validation": 50
+  },
+  "Old English sheepdog, bobtail": {
+    "train": 213,
+    "validation": 50
+  },
+  "bucket, pail": {
+    "train": 211,
+    "validation": 50
+  },
+  "electric ray, crampfish, numbfish, torpedo": {
+    "train": 215,
+    "validation": 50
+  },
+  "ostrich, Struthio camelus": {
+    "train": 204,
+    "validation": 50
+  },
+  "ptarmigan": {
+    "train": 216,
+    "validation": 50
+  },
+  "loupe, jeweler's loupe": {
+    "train": 205,
+    "validation": 50
+  },
+  "parking meter": {
+    "train": 215,
+    "validation": 50
+  },
+  "oystercatcher, oyster catcher": {
+    "train": 190,
+    "validation": 50
+  },
+  "streetcar, tram, tramcar, trolley, trolley car": {
+    "train": 213,
+    "validation": 50
+  },
+  "swab, swob, mop": {
+    "train": 189,
+    "validation": 50
+  },
+  "refrigerator, icebox": {
+    "train": 201,
+    "validation": 50
+  },
+  "house finch, linnet, Carpodacus mexicanus": {
+    "train": 207,
+    "validation": 50
+  },
+  "quail": {
+    "train": 218,
+    "validation": 50
+  },
+  "safe": {
+    "train": 142,
+    "validation": 50
+  },
+  "ashcan, trash can, garbage can, wastebin, ash bin, ash-bin, ashbin, dustbin, trash barrel, trash bin": {
+    "train": 207,
+    "validation": 50
+  },
+  "caldron, cauldron": {
+    "train": 214,
+    "validation": 50
+  },
+  "English springer, English springer spaniel": {
+    "train": 225,
+    "validation": 50
+  },
+  "oboe, hautboy, hautbois": {
+    "train": 222,
+    "validation": 50
+  },
+  "rotisserie": {
+    "train": 212,
+    "validation": 50
+  },
+  "screw": {
+    "train": 215,
+    "validation": 50
+  },
+  "Loafer": {
+    "train": 194,
+    "validation": 50
+  },
+  "gibbon, Hylobates lar": {
+    "train": 211,
+    "validation": 50
+  },
+  "dumbbell": {
+    "train": 197,
+    "validation": 50
+  },
+  "crash helmet": {
+    "train": 206,
+    "validation": 50
+  },
+  "Great Pyrenees": {
+    "train": 200,
+    "validation": 50
+  },
+  "slug": {
+    "train": 193,
+    "validation": 50
+  },
+  "pickup, pickup truck": {
+    "train": 216,
+    "validation": 50
+  },
+  "gas pump, gasoline pump, petrol pump, island dispenser": {
+    "train": 188,
+    "validation": 50
+  },
+  "Komodo dragon, Komodo lizard, dragon lizard, giant lizard, Varanus komodoensis": {
+    "train": 220,
+    "validation": 50
+  },
+  "curly-coated retriever": {
+    "train": 181,
+    "validation": 50
+  },
+  "combination lock": {
+    "train": 180,
+    "validation": 50
+  },
+  "jellyfish": {
+    "train": 210,
+    "validation": 50
+  },
+  "hourglass": {
+    "train": 194,
+    "validation": 50
+  },
+  "Pembroke, Pembroke Welsh corgi": {
+    "train": 196,
+    "validation": 50
+  },
+  "mashed potato": {
+    "train": 177,
+    "validation": 50
+  },
+  "West Highland white terrier": {
+    "train": 209,
+    "validation": 50
+  },
+  "coho, cohoe, coho salmon, blue jack, silver salmon, Oncorhynchus kisutch": {
+    "train": 220,
+    "validation": 50
+  },
+  "sports car, sport car": {
+    "train": 199,
+    "validation": 50
+  },
+  "microwave, microwave oven": {
+    "train": 213,
+    "validation": 50
+  },
+  "wok": {
+    "train": 230,
+    "validation": 50
+  },
+  "chiton, coat-of-mail shell, sea cradle, polyplacophore": {
+    "train": 225,
+    "validation": 50
+  },
+  "marmot": {
+    "train": 217,
+    "validation": 50
+  },
+  "pajama, pyjama, pj's, jammies": {
+    "train": 198,
+    "validation": 50
+  },
+  "parallel bars, bars": {
+    "train": 209,
+    "validation": 50
+  },
+  "scoreboard": {
+    "train": 240,
+    "validation": 50
+  },
+  "street sign": {
+    "train": 215,
+    "validation": 50
+  },
+  "assault rifle, assault gun": {
+    "train": 223,
+    "validation": 50
+  },
+  "four-poster": {
+    "train": 190,
+    "validation": 50
+  },
+  "greenhouse, nursery, glasshouse": {
+    "train": 212,
+    "validation": 50
+  },
+  "Lhasa, Lhasa apso": {
+    "train": 219,
+    "validation": 50
+  },
+  "Christmas stocking": {
+    "train": 194,
+    "validation": 50
+  },
+  "partridge": {
+    "train": 201,
+    "validation": 50
+  },
+  "sea anemone, anemone": {
+    "train": 222,
+    "validation": 50
+  },
+  "toilet tissue, toilet paper, bathroom tissue": {
+    "train": 188,
+    "validation": 50
+  },
+  "oxcart": {
+    "train": 203,
+    "validation": 50
+  },
+  "thatch, thatched roof": {
+    "train": 194,
+    "validation": 50
+  },
+  "centipede": {
+    "train": 192,
+    "validation": 50
+  },
+  "cicada, cicala": {
+    "train": 220,
+    "validation": 50
+  },
+  "long-horned beetle, longicorn, longicorn beetle": {
+    "train": 204,
+    "validation": 50
+  },
+  "Bouvier des Flandres, Bouviers des Flandres": {
+    "train": 222,
+    "validation": 50
+  },
+  "pencil box, pencil case": {
+    "train": 218,
+    "validation": 50
+  },
+  "Irish terrier": {
+    "train": 207,
+    "validation": 50
+  },
+  "three-toed sloth, ai, Bradypus tridactylus": {
+    "train": 204,
+    "validation": 50
+  },
+  "coyote, prairie wolf, brush wolf, Canis latrans": {
+    "train": 216,
+    "validation": 50
+  },
+  "keeshond": {
+    "train": 203,
+    "validation": 50
+  },
+  "paddle, boat paddle": {
+    "train": 215,
+    "validation": 50
+  },
+  "butternut squash": {
+    "train": 199,
+    "validation": 50
+  },
+  "jaguar, panther, Panthera onca, Felis onca": {
+    "train": 180,
+    "validation": 50
+  },
+  "valley, vale": {
+    "train": 192,
+    "validation": 50
+  },
+  "isopod": {
+    "train": 224,
+    "validation": 50
+  },
+  "conch": {
+    "train": 197,
+    "validation": 50
+  },
+  "sundial": {
+    "train": 229,
+    "validation": 50
+  },
+  "viaduct": {
+    "train": 178,
+    "validation": 50
+  },
+  "wig": {
+    "train": 201,
+    "validation": 50
+  },
+  "grey whale, gray whale, devilfish, Eschrichtius gibbosus, Eschrichtius robustus": {
+    "train": 187,
+    "validation": 50
+  },
+  "malamute, malemute, Alaskan malamute": {
+    "train": 206,
+    "validation": 50
+  },
+  "warplane, military plane": {
+    "train": 202,
+    "validation": 50
+  },
+  "wolf spider, hunting spider": {
+    "train": 214,
+    "validation": 50
+  },
+  "birdhouse": {
+    "train": 205,
+    "validation": 50
+  },
+  "American egret, great white heron, Egretta albus": {
+    "train": 215,
+    "validation": 50
+  },
+  "ski": {
+    "train": 178,
+    "validation": 50
+  },
+  "velvet": {
+    "train": 154,
+    "validation": 50
+  },
+  "hartebeest": {
+    "train": 190,
+    "validation": 50
+  },
+  "pug, pug-dog": {
+    "train": 191,
+    "validation": 50
+  },
+  "rapeseed": {
+    "train": 196,
+    "validation": 50
+  },
+  "lifeboat": {
+    "train": 188,
+    "validation": 50
+  },
+  "flute, transverse flute": {
+    "train": 215,
+    "validation": 50
+  },
+  "goose": {
+    "train": 241,
+    "validation": 50
+  },
+  "horizontal bar, high bar": {
+    "train": 228,
+    "validation": 50
+  },
+  "toaster": {
+    "train": 206,
+    "validation": 50
+  },
+  "wombat": {
+    "train": 236,
+    "validation": 50
+  },
+  "koala, koala bear, kangaroo bear, native bear, Phascolarctos cinereus": {
+    "train": 204,
+    "validation": 50
+  },
+  "sombrero": {
+    "train": 187,
+    "validation": 50
+  },
+  "washbasin, handbasin, washbowl, lavabo, wash-hand basin": {
+    "train": 212,
+    "validation": 50
+  },
+  "neck brace": {
+    "train": 183,
+    "validation": 50
+  },
+  "bittern": {
+    "train": 202,
+    "validation": 50
+  },
+  "thimble": {
+    "train": 214,
+    "validation": 50
+  },
+  "bassoon": {
+    "train": 219,
+    "validation": 50
+  },
+  "mixing bowl": {
+    "train": 209,
+    "validation": 50
+  },
+  "perfume, essence": {
+    "train": 179,
+    "validation": 50
+  },
+  "freight car": {
+    "train": 207,
+    "validation": 50
+  },
+  "hamster": {
+    "train": 190,
+    "validation": 50
+  },
+  "volcano": {
+    "train": 205,
+    "validation": 50
+  },
+  "scale, weighing machine": {
+    "train": 212,
+    "validation": 50
+  },
+  "bookshop, bookstore, bookstall": {
+    "train": 225,
+    "validation": 50
+  },
+  "harvester, reaper": {
+    "train": 220,
+    "validation": 50
+  },
+  "black stork, Ciconia nigra": {
+    "train": 192,
+    "validation": 50
+  },
+  "teapot": {
+    "train": 194,
+    "validation": 50
+  },
+  "polecat, fitch, foulmart, foumart, Mustela putorius": {
+    "train": 208,
+    "validation": 50
+  },
+  "wire-haired fox terrier": {
+    "train": 152,
+    "validation": 50
+  },
+  "hippopotamus, hippo, river horse, Hippopotamus amphibius": {
+    "train": 210,
+    "validation": 50
+  },
+  "bathtub, bathing tub, bath, tub": {
+    "train": 224,
+    "validation": 50
+  },
+  "alp": {
+    "train": 216,
+    "validation": 50
+  },
+  "police van, police wagon, paddy wagon, patrol wagon, wagon, black Maria": {
+    "train": 234,
+    "validation": 50
+  },
+  "lens cap, lens cover": {
+    "train": 218,
+    "validation": 50
+  },
+  "starfish, sea star": {
+    "train": 209,
+    "validation": 50
+  },
+  "mousetrap": {
+    "train": 210,
+    "validation": 50
+  },
+  "nail": {
+    "train": 232,
+    "validation": 50
+  },
+  "microphone, mike": {
+    "train": 216,
+    "validation": 50
+  },
+  "Indian elephant, Elephas maximus": {
+    "train": 212,
+    "validation": 50
+  },
+  "Chesapeake Bay retriever": {
+    "train": 193,
+    "validation": 50
+  },
+  "pole": {
+    "train": 223,
+    "validation": 50
+  },
+  "reflex camera": {
+    "train": 193,
+    "validation": 50
+  },
+  "trench coat": {
+    "train": 166,
+    "validation": 50
+  },
+  "pizza, pizza pie": {
+    "train": 221,
+    "validation": 50
+  },
+  "French bulldog": {
+    "train": 221,
+    "validation": 50
+  },
+  "shopping basket": {
+    "train": 242,
+    "validation": 50
+  },
+  "flamingo": {
+    "train": 205,
+    "validation": 50
+  },
+  "black swan, Cygnus atratus": {
+    "train": 211,
+    "validation": 50
+  },
+  "bubble": {
+    "train": 185,
+    "validation": 50
+  },
+  "Airedale, Airedale terrier": {
+    "train": 218,
+    "validation": 50
+  },
+  "necklace": {
+    "train": 213,
+    "validation": 50
+  },
+  "dock, dockage, docking facility": {
+    "train": 185,
+    "validation": 50
+  },
+  "snail": {
+    "train": 207,
+    "validation": 50
+  },
+  "plunger, plumber's helper": {
+    "train": 211,
+    "validation": 50
+  },
+  "red-backed sandpiper, dunlin, Erolia alpina": {
+    "train": 195,
+    "validation": 50
+  },
+  "trailer truck, tractor trailer, trucking rig, rig, articulated lorry, semi": {
+    "train": 229,
+    "validation": 50
+  },
+  "soap dispenser": {
+    "train": 197,
+    "validation": 50
+  },
+  "guinea pig, Cavia cobaya": {
+    "train": 202,
+    "validation": 50
+  },
+  "hot pot, hotpot": {
+    "train": 176,
+    "validation": 50
+  },
+  "cassette": {
+    "train": 199,
+    "validation": 50
+  },
+  "mushroom": {
+    "train": 237,
+    "validation": 50
+  },
+  "night snake, Hypsiglena torquata": {
+    "train": 201,
+    "validation": 50
+  },
+  "syringe": {
+    "train": 222,
+    "validation": 50
+  },
+  "potpie": {
+    "train": 222,
+    "validation": 50
+  },
+  "beach wagon, station wagon, wagon, estate car, beach waggon, station waggon, waggon": {
+    "train": 186,
+    "validation": 50
+  },
+  "miniskirt, mini": {
+    "train": 220,
+    "validation": 50
+  },
+  "steel arch bridge": {
+    "train": 183,
+    "validation": 50
+  },
+  "porcupine, hedgehog": {
+    "train": 190,
+    "validation": 50
+  },
+  "fig": {
+    "train": 187,
+    "validation": 50
+  },
+  "strainer": {
+    "train": 225,
+    "validation": 50
+  },
+  "shoji": {
+    "train": 226,
+    "validation": 50
+  },
+  "bell cote, bell cot": {
+    "train": 199,
+    "validation": 50
+  },
+  "Indian cobra, Naja naja": {
+    "train": 205,
+    "validation": 50
+  },
+  "lotion": {
+    "train": 208,
+    "validation": 50
+  },
+  "milk can": {
+    "train": 179,
+    "validation": 50
+  },
+  "golf ball": {
+    "train": 223,
+    "validation": 50
+  },
+  "rock python, rock snake, Python sebae": {
+    "train": 161,
+    "validation": 50
+  },
+  "Persian cat": {
+    "train": 219,
+    "validation": 50
+  },
+  "vestment": {
+    "train": 203,
+    "validation": 50
+  },
+  "titi, titi monkey": {
+    "train": 229,
+    "validation": 50
+  },
+  "motor scooter, scooter": {
+    "train": 221,
+    "validation": 50
+  },
+  "fireboat": {
+    "train": 218,
+    "validation": 50
+  },
+  "trifle": {
+    "train": 214,
+    "validation": 50
+  },
+  "green mamba": {
+    "train": 202,
+    "validation": 50
+  },
+  "seat belt, seatbelt": {
+    "train": 203,
+    "validation": 50
+  },
+  "mosquito net": {
+    "train": 197,
+    "validation": 50
+  },
+  "orange": {
+    "train": 214,
+    "validation": 50
+  },
+  "castle": {
+    "train": 197,
+    "validation": 50
+  },
+  "missile": {
+    "train": 181,
+    "validation": 50
+  },
+  "apiary, bee house": {
+    "train": 207,
+    "validation": 50
+  },
+  "triumphal arch": {
+    "train": 208,
+    "validation": 50
+  },
+  "china cabinet, china closet": {
+    "train": 203,
+    "validation": 50
+  },
+  "kelpie": {
+    "train": 216,
+    "validation": 50
+  },
+  "Polaroid camera, Polaroid Land camera": {
+    "train": 215,
+    "validation": 50
+  },
+  "pot, flowerpot": {
+    "train": 190,
+    "validation": 50
+  },
+  "basketball": {
+    "train": 205,
+    "validation": 50
+  },
+  "space bar": {
+    "train": 172,
+    "validation": 50
+  },
+  "hair spray": {
+    "train": 169,
+    "validation": 50
+  },
+  "miniature poodle": {
+    "train": 215,
+    "validation": 50
+  },
+  "breastplate, aegis, egis": {
+    "train": 209,
+    "validation": 50
+  },
+  "whiptail, whiptail lizard": {
+    "train": 213,
+    "validation": 50
+  },
+  "jay": {
+    "train": 212,
+    "validation": 50
+  },
+  "common iguana, iguana, Iguana iguana": {
+    "train": 231,
+    "validation": 50
+  },
+  "ping-pong ball": {
+    "train": 200,
+    "validation": 50
+  },
+  "projectile, missile": {
+    "train": 201,
+    "validation": 50
+  },
+  "iron, smoothing iron": {
+    "train": 176,
+    "validation": 50
+  },
+  "teddy, teddy bear": {
+    "train": 202,
+    "validation": 50
+  },
+  "fire screen, fireguard": {
+    "train": 217,
+    "validation": 50
+  },
+  "sea urchin": {
+    "train": 218,
+    "validation": 50
+  },
+  "standard schnauzer": {
+    "train": 210,
+    "validation": 50
+  },
+  "broccoli": {
+    "train": 214,
+    "validation": 50
+  },
+  "chime, bell, gong": {
+    "train": 208,
+    "validation": 50
+  },
+  "garden spider, Aranea diademata": {
+    "train": 178,
+    "validation": 50
+  },
+  "unicycle, monocycle": {
+    "train": 206,
+    "validation": 50
+  },
+  "chimpanzee, chimp, Pan troglodytes": {
+    "train": 207,
+    "validation": 50
+  },
+  "sorrel": {
+    "train": 174,
+    "validation": 50
+  },
+  "Maltese dog, Maltese terrier, Maltese": {
+    "train": 214,
+    "validation": 50
+  },
+  "basenji": {
+    "train": 206,
+    "validation": 50
+  },
+  "baseball": {
+    "train": 200,
+    "validation": 50
+  },
+  "modem": {
+    "train": 192,
+    "validation": 50
+  },
+  "hook, claw": {
+    "train": 224,
+    "validation": 50
+  },
+  "rocking chair, rocker": {
+    "train": 202,
+    "validation": 50
+  },
+  "pencil sharpener": {
+    "train": 226,
+    "validation": 50
+  },
+  "Great Dane": {
+    "train": 217,
+    "validation": 50
+  },
+  "knot": {
+    "train": 208,
+    "validation": 50
+  },
+  "shower cap": {
+    "train": 223,
+    "validation": 50
+  },
+  "cradle": {
+    "train": 212,
+    "validation": 50
+  },
+  "oscilloscope, scope, cathode-ray oscilloscope, CRO": {
+    "train": 229,
+    "validation": 50
+  },
+  "plate rack": {
+    "train": 202,
+    "validation": 50
+  },
+  "redshank, Tringa totanus": {
+    "train": 203,
+    "validation": 50
+  },
+  "peacock": {
+    "train": 199,
+    "validation": 50
+  },
+  "cock": {
+    "train": 222,
+    "validation": 50
+  },
+  "junco, snowbird": {
+    "train": 196,
+    "validation": 50
+  },
+  "jackfruit, jak, jack": {
+    "train": 190,
+    "validation": 50
+  },
+  "jeep, landrover": {
+    "train": 213,
+    "validation": 50
+  },
+  "vizsla, Hungarian pointer": {
+    "train": 198,
+    "validation": 50
+  },
+  "bicycle-built-for-two, tandem bicycle, tandem": {
+    "train": 205,
+    "validation": 50
+  },
+  "spider monkey, Ateles geoffroyi": {
+    "train": 209,
+    "validation": 50
+  },
+  "Gordon setter": {
+    "train": 227,
+    "validation": 50
+  },
+  "picket fence, paling": {
+    "train": 220,
+    "validation": 50
+  },
+  "rubber eraser, rubber, pencil eraser": {
+    "train": 223,
+    "validation": 50
+  },
+  "ant, emmet, pismire": {
+    "train": 216,
+    "validation": 50
+  },
+  "lawn mower, mower": {
+    "train": 197,
+    "validation": 50
+  },
+  "steam locomotive": {
+    "train": 210,
+    "validation": 50
+  },
+  "dome": {
+    "train": 229,
+    "validation": 50
+  },
+  "Saint Bernard, St Bernard": {
+    "train": 201,
+    "validation": 50
+  },
+  "catamaran": {
+    "train": 211,
+    "validation": 50
+  },
+  "Saluki, gazelle hound": {
+    "train": 203,
+    "validation": 50
+  },
+  "croquet ball": {
+    "train": 214,
+    "validation": 50
+  },
+  "crutch": {
+    "train": 210,
+    "validation": 50
+  },
+  "printer": {
+    "train": 200,
+    "validation": 50
+  },
+  "malinois": {
+    "train": 215,
+    "validation": 50
+  },
+  "boa constrictor, Constrictor constrictor": {
+    "train": 214,
+    "validation": 50
+  },
+  "squirrel monkey, Saimiri sciureus": {
+    "train": 214,
+    "validation": 50
+  },
+  "Japanese spaniel": {
+    "train": 113,
+    "validation": 50
+  },
+  "spoonbill": {
+    "train": 209,
+    "validation": 50
+  },
+  "red-breasted merganser, Mergus serrator": {
+    "train": 198,
+    "validation": 50
+  },
+  "library": {
+    "train": 197,
+    "validation": 50
+  },
+  "Angora, Angora rabbit": {
+    "train": 213,
+    "validation": 50
+  },
+  "custard apple": {
+    "train": 211,
+    "validation": 50
+  },
+  "tarantula": {
+    "train": 194,
+    "validation": 50
+  },
+  "green lizard, Lacerta viridis": {
+    "train": 220,
+    "validation": 50
+  },
+  "plow, plough": {
+    "train": 198,
+    "validation": 50
+  },
+  "admiral": {
+    "train": 189,
+    "validation": 50
+  },
+  "bookcase": {
+    "train": 211,
+    "validation": 50
+  },
+  "park bench": {
+    "train": 203,
+    "validation": 50
+  },
+  "Arabian camel, dromedary, Camelus dromedarius": {
+    "train": 213,
+    "validation": 50
+  },
+  "papillon": {
+    "train": 192,
+    "validation": 50
+  },
+  "bikini, two-piece": {
+    "train": 178,
+    "validation": 50
+  },
+  "wreck": {
+    "train": 214,
+    "validation": 50
+  },
+  "maraca": {
+    "train": 228,
+    "validation": 50
+  },
+  "rifle": {
+    "train": 204,
+    "validation": 50
+  },
+  "indri, indris, Indri indri, Indri brevicaudatus": {
+    "train": 197,
+    "validation": 50
+  },
+  "bakery, bakeshop, bakehouse": {
+    "train": 206,
+    "validation": 50
+  },
+  "carousel, carrousel, merry-go-round, roundabout, whirligig": {
+    "train": 210,
+    "validation": 50
+  },
+  "leopard, Panthera pardus": {
+    "train": 220,
+    "validation": 50
+  },
+  "Shetland sheepdog, Shetland sheep dog, Shetland": {
+    "train": 190,
+    "validation": 50
+  },
+  "basset, basset hound": {
+    "train": 204,
+    "validation": 50
+  },
+  "manhole cover": {
+    "train": 192,
+    "validation": 50
+  },
+  "pomegranate": {
+    "train": 220,
+    "validation": 50
+  },
+  "vault": {
+    "train": 193,
+    "validation": 50
+  },
+  "Granny Smith": {
+    "train": 182,
+    "validation": 50
+  },
+  "toilet seat": {
+    "train": 218,
+    "validation": 50
+  },
+  "American black bear, black bear, Ursus americanus, Euarctos americanus": {
+    "train": 200,
+    "validation": 50
+  },
+  "beacon, lighthouse, beacon light, pharos": {
+    "train": 207,
+    "validation": 50
+  },
+  "bulletproof vest": {
+    "train": 181,
+    "validation": 50
+  },
+  "Eskimo dog, husky": {
+    "train": 200,
+    "validation": 50
+  },
+  "tench, Tinca tinca": {
+    "train": 211,
+    "validation": 50
+  },
+  "scorpion": {
+    "train": 223,
+    "validation": 50
+  },
+  "American alligator, Alligator mississipiensis": {
+    "train": 223,
+    "validation": 50
+  },
+  "worm fence, snake fence, snake-rail fence, Virginia fence": {
+    "train": 207,
+    "validation": 50
+  },
+  "corkscrew, bottle screw": {
+    "train": 229,
+    "validation": 50
+  },
+  "brambling, Fringilla montifringilla": {
+    "train": 193,
+    "validation": 50
+  },
+  "puck, hockey puck": {
+    "train": 209,
+    "validation": 50
+  },
+  "dragonfly, darning needle, devil's darning needle, sewing needle, snake feeder, snake doctor, mosquito hawk, skeeter hawk": {
+    "train": 198,
+    "validation": 50
+  },
+  "breakwater, groin, groyne, mole, bulwark, seawall, jetty": {
+    "train": 191,
+    "validation": 50
+  },
+  "sturgeon": {
+    "train": 211,
+    "validation": 50
+  },
+  "wall clock": {
+    "train": 172,
+    "validation": 50
+  },
+  "chainlink fence": {
+    "train": 230,
+    "validation": 50
+  },
+  "academic gown, academic robe, judge's robe": {
+    "train": 207,
+    "validation": 50
+  },
+  "paintbrush": {
+    "train": 238,
+    "validation": 50
+  },
+  "gazelle": {
+    "train": 185,
+    "validation": 50
+  },
+  "flat-coated retriever": {
+    "train": 218,
+    "validation": 50
+  },
+  "beaker": {
+    "train": 194,
+    "validation": 50
+  },
+  "screen, CRT screen": {
+    "train": 202,
+    "validation": 50
+  },
+  "redbone": {
+    "train": 192,
+    "validation": 50
+  },
+  "Pomeranian": {
+    "train": 193,
+    "validation": 50
+  },
+  "promontory, headland, head, foreland": {
+    "train": 218,
+    "validation": 50
+  },
+  "grey fox, gray fox, Urocyon cinereoargenteus": {
+    "train": 183,
+    "validation": 50
+  },
+  "sock": {
+    "train": 195,
+    "validation": 50
+  },
+  "black grouse": {
+    "train": 205,
+    "validation": 50
+  },
+  "digital clock": {
+    "train": 195,
+    "validation": 50
+  },
+  "remote control, remote": {
+    "train": 204,
+    "validation": 50
+  },
+  "baboon": {
+    "train": 190,
+    "validation": 50
+  },
+  "tree frog, tree-frog": {
+    "train": 192,
+    "validation": 50
+  },
+  "pineapple, ananas": {
+    "train": 226,
+    "validation": 50
+  },
+  "Samoyed, Samoyede": {
+    "train": 213,
+    "validation": 50
+  },
+  "standard poodle": {
+    "train": 174,
+    "validation": 50
+  },
+  "tick": {
+    "train": 201,
+    "validation": 50
+  },
+  "Dungeness crab, Cancer magister": {
+    "train": 205,
+    "validation": 50
+  },
+  "pirate, pirate ship": {
+    "train": 163,
+    "validation": 50
+  },
+  "ringneck snake, ring-necked snake, ring snake": {
+    "train": 208,
+    "validation": 50
+  },
+  "sulphur-crested cockatoo, Kakatoe galerita, Cacatua galerita": {
+    "train": 222,
+    "validation": 50
+  },
+  "Shih-Tzu": {
+    "train": 216,
+    "validation": 50
+  },
+  "jack-o'-lantern": {
+    "train": 194,
+    "validation": 50
+  },
+  "laptop, laptop computer": {
+    "train": 186,
+    "validation": 50
+  },
+  "barrel, cask": {
+    "train": 205,
+    "validation": 50
+  },
+  "chain saw, chainsaw": {
+    "train": 186,
+    "validation": 50
+  },
+  "sunscreen, sunblock, sun blocker": {
+    "train": 173,
+    "validation": 50
+  },
+  "lion, king of beasts, Panthera leo": {
+    "train": 198,
+    "validation": 50
+  },
+  "electric guitar": {
+    "train": 225,
+    "validation": 50
+  },
+  "steel drum": {
+    "train": 226,
+    "validation": 50
+  },
+  "African hunting dog, hyena dog, Cape hunting dog, Lycaon pictus": {
+    "train": 230,
+    "validation": 50
+  },
+  "impala, Aepyceros melampus": {
+    "train": 194,
+    "validation": 50
+  },
+  "totem pole": {
+    "train": 199,
+    "validation": 50
+  },
+  "coucal": {
+    "train": 230,
+    "validation": 50
+  },
+  "fiddler crab": {
+    "train": 203,
+    "validation": 50
+  },
+  "cliff, drop, drop-off": {
+    "train": 189,
+    "validation": 50
+  },
+  "toy poodle": {
+    "train": 224,
+    "validation": 50
+  },
+  "table lamp": {
+    "train": 226,
+    "validation": 50
+  },
+  "sea snake": {
+    "train": 214,
+    "validation": 50
+  },
+  "crayfish, crawfish, crawdad, crawdaddy": {
+    "train": 200,
+    "validation": 50
+  },
+  "cassette player": {
+    "train": 215,
+    "validation": 50
+  },
+  "limousine, limo": {
+    "train": 215,
+    "validation": 50
+  },
+  "suit, suit of clothes": {
+    "train": 209,
+    "validation": 50
+  },
+  "Crock Pot": {
+    "train": 172,
+    "validation": 50
+  },
+  "sweatshirt": {
+    "train": 159,
+    "validation": 50
+  },
+  "umbrella": {
+    "train": 230,
+    "validation": 50
+  },
+  "mask": {
+    "train": 180,
+    "validation": 50
+  },
+  "grand piano, grand": {
+    "train": 196,
+    "validation": 50
+  },
+  "tape player": {
+    "train": 189,
+    "validation": 50
+  },
+  "dalmatian, coach dog, carriage dog": {
+    "train": 207,
+    "validation": 50
+  },
+  "brassiere, bra, bandeau": {
+    "train": 191,
+    "validation": 50
+  },
+  "howler monkey, howler": {
+    "train": 236,
+    "validation": 50
+  },
+  "walking stick, walkingstick, stick insect": {
+    "train": 217,
+    "validation": 50
+  },
+  "pick, plectrum, plectron": {
+    "train": 204,
+    "validation": 50
+  },
+  "ladle": {
+    "train": 220,
+    "validation": 50
+  },
+  "ringlet, ringlet butterfly": {
+    "train": 207,
+    "validation": 50
+  },
+  "whippet": {
+    "train": 208,
+    "validation": 50
+  },
+  "mitten": {
+    "train": 213,
+    "validation": 50
+  },
+  "bullet train, bullet": {
+    "train": 211,
+    "validation": 50
+  },
+  "English setter": {
+    "train": 196,
+    "validation": 50
+  },
+  "mantis, mantid": {
+    "train": 207,
+    "validation": 50
+  },
+  "cabbage butterfly": {
+    "train": 200,
+    "validation": 50
+  },
+  "guacamole": {
+    "train": 206,
+    "validation": 50
+  },
+  "common newt, Triturus vulgaris": {
+    "train": 231,
+    "validation": 50
+  },
+  "container ship, containership, container vessel": {
+    "train": 207,
+    "validation": 50
+  },
+  "chocolate sauce, chocolate syrup": {
+    "train": 185,
+    "validation": 50
+  },
+  "ear, spike, capitulum": {
+    "train": 209,
+    "validation": 50
+  },
+  "ruddy turnstone, Arenaria interpres": {
+    "train": 208,
+    "validation": 50
+  },
+  "European fire salamander, Salamandra salamandra": {
+    "train": 217,
+    "validation": 50
+  },
+  "speedboat": {
+    "train": 221,
+    "validation": 50
+  },
+  "chiffonier, commode": {
+    "train": 214,
+    "validation": 50
+  },
+  "disk brake, disc brake": {
+    "train": 188,
+    "validation": 50
+  },
+  "oxygen mask": {
+    "train": 210,
+    "validation": 50
+  },
+  "giant panda, panda, panda bear, coon bear, Ailuropoda melanoleuca": {
+    "train": 196,
+    "validation": 50
+  },
+  "vase": {
+    "train": 188,
+    "validation": 50
+  },
+  "sea lion": {
+    "train": 195,
+    "validation": 50
+  },
+  "football helmet": {
+    "train": 220,
+    "validation": 50
+  },
+  "kuvasz": {
+    "train": 189,
+    "validation": 50
+  },
+  "burrito": {
+    "train": 191,
+    "validation": 50
+  },
+  "dowitcher": {
+    "train": 180,
+    "validation": 50
+  },
+  "hen": {
+    "train": 202,
+    "validation": 50
+  },
+  "ballplayer, baseball player": {
+    "train": 200,
+    "validation": 50
+  },
+  "cougar, puma, catamount, mountain lion, painter, panther, Felis concolor": {
+    "train": 204,
+    "validation": 50
+  },
+  "prairie chicken, prairie grouse, prairie fowl": {
+    "train": 200,
+    "validation": 50
+  },
+  "desk": {
+    "train": 225,
+    "validation": 50
+  },
+  "Labrador retriever": {
+    "train": 203,
+    "validation": 50
+  },
+  "siamang, Hylobates syndactylus, Symphalangus syndactylus": {
+    "train": 180,
+    "validation": 50
+  },
+  "barn": {
+    "train": 195,
+    "validation": 50
+  },
+  "bonnet, poke bonnet": {
+    "train": 182,
+    "validation": 50
+  },
+  "confectionery, confectionary, candy store": {
+    "train": 179,
+    "validation": 50
+  },
+  "water jug": {
+    "train": 217,
+    "validation": 50
+  },
+  "ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus": {
+    "train": 224,
+    "validation": 50
+  },
+  "banjo": {
+    "train": 210,
+    "validation": 50
+  },
+  "measuring cup": {
+    "train": 226,
+    "validation": 50
+  },
+  "Irish water spaniel": {
+    "train": 149,
+    "validation": 50
+  },
+  "acoustic guitar": {
+    "train": 239,
+    "validation": 50
+  },
+  "Border collie": {
+    "train": 226,
+    "validation": 50
+  },
+  "water ouzel, dipper": {
+    "train": 217,
+    "validation": 50
+  },
+  "padlock": {
+    "train": 222,
+    "validation": 50
+  },
+  "sunglasses, dark glasses, shades": {
+    "train": 209,
+    "validation": 50
+  },
+  "kimono": {
+    "train": 213,
+    "validation": 50
+  },
+  "Pekinese, Pekingese, Peke": {
+    "train": 203,
+    "validation": 50
+  },
+  "Tibetan mastiff": {
+    "train": 229,
+    "validation": 50
+  },
+  "bolo tie, bolo, bola tie, bola": {
+    "train": 202,
+    "validation": 50
+  },
+  "terrapin": {
+    "train": 210,
+    "validation": 50
+  },
+  "tub, vat": {
+    "train": 206,
+    "validation": 50
+  },
+  "gorilla, Gorilla gorilla": {
+    "train": 216,
+    "validation": 50
+  },
+  "jacamar": {
+    "train": 199,
+    "validation": 50
+  },
+  "eel": {
+    "train": 177,
+    "validation": 50
+  },
+  "Bedlington terrier": {
+    "train": 202,
+    "validation": 50
+  },
+  "cash machine, cash dispenser, automated teller machine, automatic teller machine, automated teller, automatic teller, ATM": {
+    "train": 223,
+    "validation": 50
+  },
+  "ice lolly, lolly, lollipop, popsicle": {
+    "train": 203,
+    "validation": 50
+  },
+  "artichoke, globe artichoke": {
+    "train": 200,
+    "validation": 50
+  },
+  "computer keyboard, keypad": {
+    "train": 221,
+    "validation": 50
+  },
+  "jinrikisha, ricksha, rickshaw": {
+    "train": 201,
+    "validation": 50
+  },
+  "wallaby, brush kangaroo": {
+    "train": 212,
+    "validation": 50
+  },
+  "dining table, board": {
+    "train": 206,
+    "validation": 50
+  },
+  "spaghetti squash": {
+    "train": 209,
+    "validation": 50
+  },
+  "monastery": {
+    "train": 178,
+    "validation": 50
+  },
+  "komondor": {
+    "train": 204,
+    "validation": 50
+  },
+  "volleyball": {
+    "train": 214,
+    "validation": 50
+  },
+  "typewriter keyboard": {
+    "train": 217,
+    "validation": 50
+  },
+  "jigsaw puzzle": {
+    "train": 210,
+    "validation": 50
+  },
+  "dugong, Dugong dugon": {
+    "train": 237,
+    "validation": 50
+  },
+  "great white shark, white shark, man-eater, man-eating shark, Carcharodon carcharias": {
+    "train": 212,
+    "validation": 50
+  },
+  "submarine, pigboat, sub, U-boat": {
+    "train": 214,
+    "validation": 50
+  },
+  "bolete": {
+    "train": 189,
+    "validation": 50
+  },
+  "fly": {
+    "train": 206,
+    "validation": 50
+  },
+  "Siamese cat, Siamese": {
+    "train": 196,
+    "validation": 50
+  },
+  "consomme": {
+    "train": 207,
+    "validation": 50
+  },
+  "giant schnauzer": {
+    "train": 208,
+    "validation": 50
+  },
+  "planetarium": {
+    "train": 215,
+    "validation": 50
+  },
+  "triceratops": {
+    "train": 200,
+    "validation": 50
+  },
+  "radio telescope, radio reflector": {
+    "train": 197,
+    "validation": 50
+  },
+  "guillotine": {
+    "train": 189,
+    "validation": 50
+  },
+  "ballpoint, ballpoint pen, ballpen, Biro": {
+    "train": 205,
+    "validation": 50
+  },
+  "leafhopper": {
+    "train": 195,
+    "validation": 50
+  },
+  "reel": {
+    "train": 182,
+    "validation": 50
+  },
+  "hummingbird": {
+    "train": 220,
+    "validation": 50
+  },
+  "gown": {
+    "train": 213,
+    "validation": 50
+  },
+  "cricket": {
+    "train": 208,
+    "validation": 50
+  },
+  "lycaenid, lycaenid butterfly": {
+    "train": 204,
+    "validation": 50
+  },
+  "rhinoceros beetle": {
+    "train": 214,
+    "validation": 50
+  },
+  "abacus": {
+    "train": 209,
+    "validation": 50
+  },
+  "knee pad": {
+    "train": 200,
+    "validation": 50
+  },
+  "pickelhaube": {
+    "train": 210,
+    "validation": 50
+  },
+  "head cabbage": {
+    "train": 202,
+    "validation": 50
+  },
+  "fire engine, fire truck": {
+    "train": 191,
+    "validation": 50
+  },
+  "maillot, tank suit": {
+    "train": 202,
+    "validation": 50
+  },
+  "tow truck, tow car, wrecker": {
+    "train": 195,
+    "validation": 50
+  },
+  "tailed frog, bell toad, ribbed toad, tailed toad, Ascaphus trui": {
+    "train": 226,
+    "validation": 50
+  },
+  "snowmobile": {
+    "train": 187,
+    "validation": 50
+  },
+  "cauliflower": {
+    "train": 213,
+    "validation": 50
+  },
+  "mud turtle": {
+    "train": 182,
+    "validation": 50
+  },
+  "waffle iron": {
+    "train": 171,
+    "validation": 50
+  },
+  "dam, dike, dyke": {
+    "train": 206,
+    "validation": 50
+  },
+  "spindle": {
+    "train": 239,
+    "validation": 50
+  },
+  "vine snake": {
+    "train": 183,
+    "validation": 50
+  },
+  "stethoscope": {
+    "train": 204,
+    "validation": 50
+  },
+  "patio, terrace": {
+    "train": 181,
+    "validation": 50
+  },
+  "dung beetle": {
+    "train": 204,
+    "validation": 50
+  },
+  "eggnog": {
+    "train": 189,
+    "validation": 50
+  },
+  "cairn, cairn terrier": {
+    "train": 193,
+    "validation": 50
+  },
+  "grocery store, grocery, food market, market": {
+    "train": 215,
+    "validation": 50
+  },
+  "convertible": {
+    "train": 203,
+    "validation": 50
+  },
+  "yawl": {
+    "train": 182,
+    "validation": 50
+  },
+  "Tibetan terrier, chrysanthemum dog": {
+    "train": 233,
+    "validation": 50
+  },
+  "CD player": {
+    "train": 201,
+    "validation": 50
+  },
+  "llama": {
+    "train": 217,
+    "validation": 50
+  },
+  "rock beauty, Holocanthus tricolor": {
+    "train": 162,
+    "validation": 50
+  },
+  "mortar": {
+    "train": 220,
+    "validation": 50
+  },
+  "face powder": {
+    "train": 183,
+    "validation": 50
+  },
+  "crossword puzzle, crossword": {
+    "train": 186,
+    "validation": 50
+  },
+  "stage": {
+    "train": 213,
+    "validation": 50
+  },
+  "Cardigan, Cardigan Welsh corgi": {
+    "train": 192,
+    "validation": 50
+  },
+  "tiger cat": {
+    "train": 182,
+    "validation": 50
+  },
+  "barbell": {
+    "train": 201,
+    "validation": 50
+  },
+  "cloak": {
+    "train": 160,
+    "validation": 50
+  },
+  "agaric": {
+    "train": 206,
+    "validation": 50
+  },
+  "drum, membranophone, tympan": {
+    "train": 189,
+    "validation": 50
+  },
+  "loggerhead, loggerhead turtle, Caretta caretta": {
+    "train": 208,
+    "validation": 50
+  },
+  "American lobster, Northern lobster, Maine lobster, Homarus americanus": {
+    "train": 214,
+    "validation": 50
+  },
+  "bannister, banister, balustrade, balusters, handrail": {
+    "train": 203,
+    "validation": 50
+  },
+  "Afghan hound, Afghan": {
+    "train": 213,
+    "validation": 50
+  },
+  "tobacco shop, tobacconist shop, tobacconist": {
+    "train": 203,
+    "validation": 50
+  },
+  "poncho": {
+    "train": 198,
+    "validation": 50
+  },
+  "cab, hack, taxi, taxicab": {
+    "train": 205,
+    "validation": 50
+  },
+  "Model T": {
+    "train": 185,
+    "validation": 50
+  },
+  "otterhound, otter hound": {
+    "train": 111,
+    "validation": 50
+  },
+  "Brabancon griffon": {
+    "train": 159,
+    "validation": 50
+  },
+  "pier": {
+    "train": 221,
+    "validation": 50
+  },
+  "leaf beetle, chrysomelid": {
+    "train": 222,
+    "validation": 50
+  },
+  "letter opener, paper knife, paperknife": {
+    "train": 140,
+    "validation": 50
+  },
+  "toy terrier": {
+    "train": 140,
+    "validation": 50
+  },
+  "monarch, monarch butterfly, milkweed butterfly, Danaus plexippus": {
+    "train": 207,
+    "validation": 50
+  },
+  "turnstile": {
+    "train": 217,
+    "validation": 50
+  },
+  "sloth bear, Melursus ursinus, Ursus ursinus": {
+    "train": 202,
+    "validation": 50
+  },
+  "king snake, kingsnake": {
+    "train": 193,
+    "validation": 50
+  },
+  "hand blower, blow dryer, blow drier, hair dryer, hair drier": {
+    "train": 218,
+    "validation": 50
+  },
+  "espresso": {
+    "train": 198,
+    "validation": 50
+  },
+  "mobile home, manufactured home": {
+    "train": 195,
+    "validation": 50
+  },
+  "Dandie Dinmont, Dandie Dinmont terrier": {
+    "train": 184,
+    "validation": 50
+  },
+  "banded gecko": {
+    "train": 183,
+    "validation": 50
+  },
+  "ox": {
+    "train": 177,
+    "validation": 50
+  },
+  "goldfish, Carassius auratus": {
+    "train": 197,
+    "validation": 50
+  },
+  "thunder snake, worm snake, Carphophis amoenus": {
+    "train": 201,
+    "validation": 50
+  },
+  "pretzel": {
+    "train": 193,
+    "validation": 50
+  },
+  "overskirt": {
+    "train": 166,
+    "validation": 50
+  },
+  "silky terrier, Sydney silky": {
+    "train": 190,
+    "validation": 50
+  },
+  "stopwatch, stop watch": {
+    "train": 185,
+    "validation": 50
+  },
+  "altar": {
+    "train": 200,
+    "validation": 50
+  },
+  "go-kart": {
+    "train": 204,
+    "validation": 50
+  },
+  "Gila monster, Heloderma suspectum": {
+    "train": 203,
+    "validation": 50
+  },
+  "Sussex spaniel": {
+    "train": 223,
+    "validation": 50
+  },
+  "whistle": {
+    "train": 209,
+    "validation": 50
+  },
+  "sunglass": {
+    "train": 202,
+    "validation": 50
+  },
+  "eft": {
+    "train": 212,
+    "validation": 50
+  },
+  "toyshop": {
+    "train": 224,
+    "validation": 50
+  },
+  "crib, cot": {
+    "train": 228,
+    "validation": 50
+  },
+  "buckeye, horse chestnut, conker": {
+    "train": 192,
+    "validation": 50
+  },
+  "water snake": {
+    "train": 212,
+    "validation": 50
+  },
+  "miniature pinscher": {
+    "train": 197,
+    "validation": 50
+  },
+  "bee eater": {
+    "train": 207,
+    "validation": 50
+  },
+  "loudspeaker, speaker, speaker unit, loudspeaker system, speaker system": {
+    "train": 207,
+    "validation": 50
+  },
+  "broom": {
+    "train": 180,
+    "validation": 50
+  },
+  "traffic light, traffic signal, stoplight": {
+    "train": 192,
+    "validation": 50
+  },
+  "mink": {
+    "train": 202,
+    "validation": 50
+  },
+  "Yorkshire terrier": {
+    "train": 203,
+    "validation": 50
+  },
+  "gondola": {
+    "train": 206,
+    "validation": 50
+  },
+  "sleeping bag": {
+    "train": 183,
+    "validation": 50
+  },
+  "Staffordshire bullterrier, Staffordshire bull terrier": {
+    "train": 196,
+    "validation": 50
+  },
+  "English foxhound": {
+    "train": 138,
+    "validation": 50
+  },
+  "minibus": {
+    "train": 206,
+    "validation": 50
+  },
+  "African crocodile, Nile crocodile, Crocodylus niloticus": {
+    "train": 211,
+    "validation": 50
+  },
+  "medicine chest, medicine cabinet": {
+    "train": 202,
+    "validation": 50
+  },
+  "European gallinule, Porphyrio porphyrio": {
+    "train": 231,
+    "validation": 50
+  },
+  "tiger, Panthera tigris": {
+    "train": 216,
+    "validation": 50
+  },
+  "monitor": {
+    "train": 214,
+    "validation": 50
+  },
+  "affenpinscher, monkey pinscher, monkey dog": {
+    "train": 152,
+    "validation": 50
+  },
+  "spotlight, spot": {
+    "train": 203,
+    "validation": 50
+  },
+  "tusker": {
+    "train": 228,
+    "validation": 50
+  },
+  "mailbox, letter box": {
+    "train": 192,
+    "validation": 50
+  },
+  "violin, fiddle": {
+    "train": 223,
+    "validation": 50
+  },
+  "trombone": {
+    "train": 209,
+    "validation": 50
+  },
+  "space shuttle": {
+    "train": 197,
+    "validation": 50
+  },
+  "hand-held computer, hand-held microcomputer": {
+    "train": 148,
+    "validation": 50
+  },
+  "French horn, horn": {
+    "train": 209,
+    "validation": 50
+  },
+  "liner, ocean liner": {
+    "train": 192,
+    "validation": 50
+  },
+  "muzzle": {
+    "train": 190,
+    "validation": 50
+  },
+  "shoe shop, shoe-shop, shoe store": {
+    "train": 226,
+    "validation": 50
+  },
+  "cuirass": {
+    "train": 231,
+    "validation": 50
+  },
+  "agama": {
+    "train": 198,
+    "validation": 50
+  },
+  "photocopier": {
+    "train": 206,
+    "validation": 50
+  },
+  "running shoe": {
+    "train": 214,
+    "validation": 50
+  },
+  "Doberman, Doberman pinscher": {
+    "train": 224,
+    "validation": 50
+  },
+  "dough": {
+    "train": 218,
+    "validation": 50
+  },
+  "American coot, marsh hen, mud hen, water hen, Fulica americana": {
+    "train": 228,
+    "validation": 50
+  },
+  "racer, race car, racing car": {
+    "train": 190,
+    "validation": 50
+  },
+  "Ibizan hound, Ibizan Podenco": {
+    "train": 227,
+    "validation": 50
+  },
+  "chain": {
+    "train": 208,
+    "validation": 50
+  },
+  "Appenzeller": {
+    "train": 186,
+    "validation": 50
+  },
+  "pool table, billiard table, snooker table": {
+    "train": 216,
+    "validation": 50
+  },
+  "seashore, coast, seacoast, sea-coast": {
+    "train": 198,
+    "validation": 50
+  },
+  "wood rabbit, cottontail, cottontail rabbit": {
+    "train": 216,
+    "validation": 50
+  },
+  "nematode, nematode worm, roundworm": {
+    "train": 200,
+    "validation": 50
+  },
+  "hyena, hyaena": {
+    "train": 222,
+    "validation": 50
+  },
+  "plastic bag": {
+    "train": 169,
+    "validation": 50
+  },
+  "tiger beetle": {
+    "train": 203,
+    "validation": 50
+  },
+  "yurt": {
+    "train": 213,
+    "validation": 50
+  },
+  "bow": {
+    "train": 220,
+    "validation": 50
+  },
+  "wardrobe, closet, press": {
+    "train": 212,
+    "validation": 50
+  },
+  "file, file cabinet, filing cabinet": {
+    "train": 198,
+    "validation": 50
+  },
+  "cowboy boot": {
+    "train": 211,
+    "validation": 50
+  },
+  "borzoi, Russian wolfhound": {
+    "train": 192,
+    "validation": 50
+  },
+  "drake": {
+    "train": 195,
+    "validation": 50
+  },
+  "ram, tup": {
+    "train": 230,
+    "validation": 50
+  },
+  "cheeseburger": {
+    "train": 227,
+    "validation": 50
+  },
+  "slide rule, slipstick": {
+    "train": 180,
+    "validation": 50
+  },
+  "box turtle, box tortoise": {
+    "train": 195,
+    "validation": 50
+  },
+  "spotted salamander, Ambystoma maculatum": {
+    "train": 225,
+    "validation": 50
+  },
+  "passenger car, coach, carriage": {
+    "train": 220,
+    "validation": 50
+  },
+  "hornbill": {
+    "train": 198,
+    "validation": 50
+  },
+  "hog, pig, grunter, squealer, Sus scrofa": {
+    "train": 218,
+    "validation": 50
+  },
+  "earthstar": {
+    "train": 189,
+    "validation": 50
+  },
+  "window screen": {
+    "train": 210,
+    "validation": 50
+  },
+  "stone wall": {
+    "train": 219,
+    "validation": 50
+  },
+  "mountain tent": {
+    "train": 220,
+    "validation": 50
+  },
+  "electric locomotive": {
+    "train": 237,
+    "validation": 50
+  },
+  "brass, memorial tablet, plaque": {
+    "train": 211,
+    "validation": 50
+  },
+  "lumbermill, sawmill": {
+    "train": 223,
+    "validation": 50
+  },
+  "scuba diver": {
+    "train": 220,
+    "validation": 50
+  },
+  "white stork, Ciconia ciconia": {
+    "train": 207,
+    "validation": 50
+  },
+  "sandal": {
+    "train": 219,
+    "validation": 50
+  },
+  "bassinet": {
+    "train": 202,
+    "validation": 50
+  },
+  "entertainment center": {
+    "train": 227,
+    "validation": 50
+  },
+  "oil filter": {
+    "train": 180,
+    "validation": 50
+  },
+  "television, television system": {
+    "train": 216,
+    "validation": 50
+  },
+  "groom, bridegroom": {
+    "train": 193,
+    "validation": 50
+  },
+  "trolleybus, trolley coach, trackless trolley": {
+    "train": 213,
+    "validation": 50
+  },
+  "lakeside, lakeshore": {
+    "train": 200,
+    "validation": 50
+  },
+  "cucumber, cuke": {
+    "train": 186,
+    "validation": 50
+  },
+  "Irish setter, red setter": {
+    "train": 200,
+    "validation": 50
+  },
+  "brain coral": {
+    "train": 203,
+    "validation": 50
+  },
+  "golfcart, golf cart": {
+    "train": 210,
+    "validation": 50
+  },
+  "drilling platform, offshore rig": {
+    "train": 225,
+    "validation": 50
+  },
+  "pelican": {
+    "train": 207,
+    "validation": 50
+  },
+  "Sealyham terrier, Sealyham": {
+    "train": 136,
+    "validation": 50
+  },
+  "cowboy hat, ten-gallon hat": {
+    "train": 219,
+    "validation": 50
+  },
+  "bee": {
+    "train": 192,
+    "validation": 50
+  },
+  "cardigan": {
+    "train": 216,
+    "validation": 50
+  },
+  "forklift": {
+    "train": 200,
+    "validation": 50
+  },
+  "mouse, computer mouse": {
+    "train": 203,
+    "validation": 50
+  },
+  "Kerry blue terrier": {
+    "train": 201,
+    "validation": 50
+  },
+  "lionfish": {
+    "train": 204,
+    "validation": 50
+  },
+  "otter": {
+    "train": 201,
+    "validation": 50
+  },
+  "bib": {
+    "train": 199,
+    "validation": 50
+  },
+  "Petri dish": {
+    "train": 156,
+    "validation": 50
+  },
+  "lipstick, lip rouge": {
+    "train": 210,
+    "validation": 50
+  },
+  "brown bear, bruin, Ursus arctos": {
+    "train": 199,
+    "validation": 50
+  },
+  "hatchet": {
+    "train": 136,
+    "validation": 50
+  },
+  "collie": {
+    "train": 193,
+    "validation": 50
+  },
+  "clumber, clumber spaniel": {
+    "train": 229,
+    "validation": 50
+  },
+  "Siberian husky": {
+    "train": 222,
+    "validation": 50
+  },
+  "Boston bull, Boston terrier": {
+    "train": 191,
+    "validation": 50
+  },
+  "garbage truck, dustcart": {
+    "train": 194,
+    "validation": 50
+  },
+  "dogsled, dog sled, dog sleigh": {
+    "train": 190,
+    "validation": 50
+  },
+  "desktop computer": {
+    "train": 214,
+    "validation": 50
+  },
+  "damselfly": {
+    "train": 191,
+    "validation": 50
+  },
+  "clog, geta, patten, sabot": {
+    "train": 214,
+    "validation": 50
+  },
+  "armadillo": {
+    "train": 198,
+    "validation": 50
+  },
+  "lorikeet": {
+    "train": 181,
+    "validation": 50
+  },
+  "thresher, thrasher, threshing machine": {
+    "train": 181,
+    "validation": 50
+  },
+  "guenon, guenon monkey": {
+    "train": 231,
+    "validation": 50
+  },
+  "white wolf, Arctic wolf, Canis lupus tundrarum": {
+    "train": 212,
+    "validation": 50
+  },
+  "briard": {
+    "train": 209,
+    "validation": 50
+  },
+  "red wine": {
+    "train": 222,
+    "validation": 50
+  },
+  "plate": {
+    "train": 186,
+    "validation": 50
+  },
+  "projector": {
+    "train": 188,
+    "validation": 50
+  },
+  "goblet": {
+    "train": 193,
+    "validation": 50
+  },
+  "frilled lizard, Chlamydosaurus kingi": {
+    "train": 181,
+    "validation": 50
+  },
+  "Newfoundland, Newfoundland dog": {
+    "train": 206,
+    "validation": 50
+  },
+  "marimba, xylophone": {
+    "train": 219,
+    "validation": 50
+  },
+  "fountain": {
+    "train": 208,
+    "validation": 50
+  },
+  "Leonberg": {
+    "train": 209,
+    "validation": 50
+  },
+  "wine bottle": {
+    "train": 213,
+    "validation": 50
+  },
+  "black-footed ferret, ferret, Mustela nigripes": {
+    "train": 203,
+    "validation": 50
+  },
+  "hard disc, hard disk, fixed disk": {
+    "train": 210,
+    "validation": 50
+  },
+  "gyromitra": {
+    "train": 184,
+    "validation": 50
+  },
+  "odometer, hodometer, mileometer, milometer": {
+    "train": 195,
+    "validation": 50
+  },
+  "schooner": {
+    "train": 207,
+    "validation": 50
+  },
+  "black and gold garden spider, Argiope aurantia": {
+    "train": 207,
+    "validation": 50
+  },
+  "lampshade, lamp shade": {
+    "train": 219,
+    "validation": 50
+  }
+}
