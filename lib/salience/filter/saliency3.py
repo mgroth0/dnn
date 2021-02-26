@@ -25,14 +25,13 @@
 # on the command line.
 #
 
-import math
-import logging
+import os.path
+
 import cv2
+import logging
+import math
 import numpy
 from scipy.ndimage.filters import maximum_filter
-
-import os.path
-import sys
 
 # if sys.version_info[0] != 2:
 #     raise Exception("This script was written for Python version 2.  You're running Python %s." % sys.version)
@@ -61,12 +60,12 @@ def features(image, channel, levels=9, start_size=(640, 480), ):
         image = cv2.resize(image, dsize=start_size)
 
     scales = [image]
-    for l in xrange(levels - 1):
+    for l in range(levels - 1):
         logger.debug("scaling at level %d", l)
         scales.append(cv2.pyrDown(scales[-1]))
 
     features = []
-    for i in xrange(1, levels - 5):
+    for i in range(1, levels - 5):
         big = scales[i]
         for j in (3, 4):
             logger.debug("computing features for levels %d and %d", i, i + j)

@@ -351,7 +351,6 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
             # not sure why I didn't have this line in sym code any more
             saveTestValResults(net.ARCH_LABEL, nam, net.train_data, i)
 
-
             [a.after_fit(i, net, nam) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
 
         # log(f'moving_mean(post-train):{net.net.moving_mean}')

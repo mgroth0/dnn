@@ -18,7 +18,9 @@ for i in range(1, 9):
 
 for center in [2, 3, 4]:
     for surround in [center + x for x in [3, 4]]:
-        scale_diff = surround - center
+        s
+
+        cale_diff = surround - center
         center_im = scales[center]
         surround_im = scales[center]
         feat_intense = zeros(center_im.shape[0], center_im.shape[1])

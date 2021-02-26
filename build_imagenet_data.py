@@ -104,7 +104,7 @@ OVERWRITE = False  # if false, skip files already written. useful when kicked of
 
 # @dataclass
 class Opt:
-    # output_directory: str = '/om5/user/mjgroth/data/ImageNet/output'
+    # output_direoctory: str = '/om5/user/mjgroth/data/ImageNet/output'
     output_directory: str = '/om5/user/mjgroth/data/ImageNet/output_tf'  # different labels (https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a#gistcomment-2575723)
     num_threads: int = 16
     half_split: bool = False

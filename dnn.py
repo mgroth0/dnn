@@ -30,12 +30,9 @@ class DNN(Project):
 
 
 
-        import count_imagenet_data
-        count_imagenet_data.count()
-
-
-
-        return None
+        # import count_imagenet_data
+        # count_imagenet_data.count()
+        # return None
 
 
 
