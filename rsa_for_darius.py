@@ -150,7 +150,9 @@ def main():
 
             for c in CLASSES:
                 if SHOBHITA:
-                    acts = activations[net][c].load().flatten()
+                    # 500 = num images
+                    # 400 = len of one activation array
+                    acts = activations[net][c].load().reshape(500, 400)
                 else:
                     acts = activations[net][c].load()['imageActivations']
                 log(f'total images per class: {len(acts)}')
