@@ -18,7 +18,14 @@ tf.compat.v1.enable_eager_execution()
 HEIGHT_WIDTH = 299 #inc
 # HEIGHT_WIDTH = 224
 # HEIGHT_WIDTH = 227 #alex
-BATCH_SIZE = 10
+
+
+
+# BATCH_SIZE = 10
+BATCH_SIZE = 1 #DEBUG
+
+
+
 VERBOSE = 2
 
 SANITY_SWITCH = False

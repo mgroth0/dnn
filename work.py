@@ -1,7 +1,6 @@
 import json
 
 from mlib.boot.mlog import setTic, setup_logging
-from mlib.boot.stream import isempty
 from mlib.input import margparse
 FLAGS = margparse(
     cfg=str,
