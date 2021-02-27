@@ -88,7 +88,7 @@ def preprocess(file, HEIGHT_WIDTH, preprocess_class):
             # imdata = tf.keras.applications.inception_resnet_v2.preprocess_input(
             imdata, data_format=None
         )
-    
+
     return imdata, class_map[os.path.basename(os.path.dirname(file))]
 
 def proko_train(

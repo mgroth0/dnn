@@ -8,9 +8,6 @@ from tensorflow.python.keras.applications.mobilenet_v2 import MobileNetV2
 from tensorflow.python.keras.applications.nasnet import NASNetLarge, NASNetMobile
 from tensorflow.python.keras.applications.resnet import ResNet101, ResNet152, ResNet50
 from tensorflow.python.keras.applications.resnet_v2 import ResNet101V2
-from tensorflow.python.keras.applications.vgg16 import VGG16
-from tensorflow.python.keras.applications.vgg19 import VGG19
-from tensorflow.python.keras.applications.xception import Xception
 
 from arch import INC
 from arch.proko_inc import CustomInceptionResNetV2
@@ -47,12 +44,12 @@ fold = Folder(f'_data/result/keras_zoo_{int(time.time())}').mkdirs()
 # NUM_CLASSES = 1000 #2
 
 models_to_test = {
-    # 'Xception'         : lambda: Xception, # ValueError: Shapes (10, 1) and (10, 10, 10, 2048) are incompatible
-    # 'VGG16'            : lambda: VGG16, # ValueError: Shapes (10, 1) and (10, 9, 9, 512) are incompatible
-    # 'VGG19'            : lambda: VGG19, #ValueError: Shapes (10, 1) and (10, 9, 9, 512) are incompatible
+    'Xception'         : lambda: Xception, # ValueError: Shapes (10, 1) and (10, 10, 10, 2048) are incompatible
+    'VGG16'            : lambda: VGG16, # ValueError: Shapes (10, 1) and (10, 9, 9, 512) are incompatible
+    'VGG19'            : lambda: VGG19, #ValueError: Shapes (10, 1) and (10, 9, 9, 512) are incompatible
 
 
-    'ResNet50'         : lambda: ResNet50, # ValueError: Shapes (10, 1) and (10, 10, 10, 2048) are incompatible
+    'ResNet50'         : lambda: ResNet50,  # ValueError: Shapes (10, 1) and (10, 10, 10, 2048) are incompatible
     #  ValueError: Shapes (12, 1) and (12, 10, 10, 2048)
 
 
@@ -88,11 +85,11 @@ for name, model in list(models_to_test.items()):
         model(),
         num_epochs,
         num_ims,
-        include_top=False,
+        include_top=False,  # THIS WAS THE BUG!!!!
         weights='imagenet',
         preprocess_class=None,
-        classes = 1000,
-        loss = 'categorical_crossentropy'
+        classes=1000,
+        loss='categorical_crossentropy'
     )  # more epochs without BN is required to get to overfit
     data_result.append({
         'model_name': name,
