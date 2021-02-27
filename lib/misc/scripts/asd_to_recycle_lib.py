@@ -1,7 +1,7 @@
 import cv2
 import os
 import random
-
+import matplotlib.image as mpimg
 from lib.nn.tf_lib import Verbose
 BATCH_SIZE = 10
 SANITY_SWITCH = False
@@ -46,14 +46,14 @@ def get_data(num_ims_per_class='ALL'):
         test_data = tmp_data
     return train_data, test_data
 
-def get_gen(data):
+def get_gen(data,HEIGHT_WIDTH):
     def gen():
         pairs = []
         i = 0
         for im_file in data:
             i += 1
             if i <= BATCH_SIZE:
-                pairs += [preprocess(im_file)]
+                pairs += [preprocess(im_file,HEIGHT_WIDTH)]
             if i == BATCH_SIZE:
                 yield (
                     [pair[0] for pair in pairs],
@@ -63,7 +63,7 @@ def get_gen(data):
                 i = 0
     return gen
 
-def get_ds(data):
+def get_ds(data,HEIGHT_WIDTH):
     return tf.data.Dataset.from_generator(
         get_gen(data),
         (tf.float32, tf.int64),
@@ -73,7 +73,7 @@ def get_ds(data):
         )
     )
 
-def preprocess(file):
+def preprocess(file,HEIGHT_WIDTH):
     imdata = mpimg.imread(file)
 
     imdata = cv2.resize(imdata, dsize=(HEIGHT_WIDTH, HEIGHT_WIDTH), interpolation=cv2.INTER_LINEAR) * 255.0
@@ -99,7 +99,7 @@ def proko_train(model_class, epochs, num_ims_per_class,include_top=True,weights=
         loss='binary_crossentropy',
         metrics=['accuracy']
     )
-
+    HEIGHT_WIDTH = net.input.shape[0]
 
     # overfitting?
     # look at both accuracy and val accuracy!
@@ -109,17 +109,17 @@ def proko_train(model_class, epochs, num_ims_per_class,include_top=True,weights=
 
     print(f'starting training (num ims per class = {num_ims_per_class})')
     history = net.fit(
-        get_ds(train_data),
+        get_ds(train_data,HEIGHT_WIDTH),
         epochs=epochs,
         verbose=Verbose.PROGRESS_BAR,
         use_multiprocessing=False,
         shuffle=False,
-        validation_data=get_ds(train_data)
+        validation_data=get_ds(train_data,HEIGHT_WIDTH)
     )
     print('starting testing')
     print_output = True
     print(net.evaluate(
-        get_ds(train_data),
+        get_ds(train_data,HEIGHT_WIDTH),
         verbose=Verbose.PROGRESS_BAR,
         use_multiprocessing=False
     ))
