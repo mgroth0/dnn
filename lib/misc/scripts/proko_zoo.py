@@ -84,13 +84,14 @@ for name, model in list(models_to_test.items()):
     print(f'TESTING MODEL: {name}')
     num_epochs = 2
     num_ims = 10
+    model_class = model()
     history = proko_train(
-        model(),
+        model_class,
         num_epochs,
         num_ims,
         include_top=True,  # THIS WAS THE BUG!!!! Probably used a different loss function while it was false
         weights='imagenet',
-        preprocess_class=None,
+        preprocess_class=model_class,
         classes=1000,
         # loss='categorical_crossentropy',
         loss='mse'
