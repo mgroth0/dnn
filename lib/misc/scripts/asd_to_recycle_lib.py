@@ -122,7 +122,7 @@ def proko_train(
 
 
     ds = get_ds(train_data, HEIGHT_WIDTH)
-
+    test_ds = ds = get_ds(test_data, HEIGHT_WIDTH)
 
 
     history = net.fit(
@@ -131,14 +131,14 @@ def proko_train(
         verbose=Verbose.PROGRESS_BAR,
         use_multiprocessing=False,
         shuffle=False,
-        validation_data=get_ds(train_data, HEIGHT_WIDTH)
+        validation_data=test_ds
     )
     print('starting testing')
     print_output = True
 
-    ds = get_ds(test_data, HEIGHT_WIDTH)
 
-    
+
+
 
 
     print(net.evaluate(
