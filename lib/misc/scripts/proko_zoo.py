@@ -17,6 +17,22 @@ from lib.misc.scripts.asd_to_recycle_lib import proko_train
 from mlib.file import Folder
 
 data_result = []
+
+fold = Folder(f'_data/result/keras_{int(time.time())}').mkdirs()
+
+for i in range(86, 102, 1):
+    num_epochs = 50
+    history = proko_train(CustomInceptionResNetV2, num_epochs,i)  # more epochs without BN is required to get to overfit
+    data_result.append({
+        'num_images': i,
+        'history'   : history.history
+    })
+    fold['data_result.json'].save(data_result)
+
+
+
+
+data_result = []
 fold = Folder(f'_data/result/keras_zoo_{int(time.time())}').mkdirs()
 
 # NUM_CLASSES = 1000 #2
@@ -61,15 +77,3 @@ for name, model in list(models_to_test.items()):
     })
     fold['data_result.json'].save(data_result)
 
-data_result = []
-
-fold = Folder(f'_data/result/keras_{int(time.time())}').mkdirs()
-
-for i in range(86, 102, 1):
-    num_epochs = 50
-    history = proko_train(CustomInceptionResNetV2, num_epochs,i)  # more epochs without BN is required to get to overfit
-    data_result.append({
-        'num_images': i,
-        'history'   : history.history
-    })
-    fold['data_result.json'].save(data_result)
