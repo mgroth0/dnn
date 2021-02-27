@@ -90,11 +90,14 @@ for name, model in list(models_to_test.items()):
         num_epochs,
         num_ims,
         include_top=True,  # THIS WAS THE BUG!!!! Probably used a different loss function while it was false
-        weights='imagenet',
+        # weights='imagenet',
+        weights=None,
         preprocess_class=None,
-        classes=1000,
+        # classes=1000,
+        classes = 1,
         # loss='categorical_crossentropy',
-        loss='mse'
+        # loss='mse',
+        loss='binary_crossentropy'
     )  # more epochs without BN is required to get to overfit
     data_result.append({
         'model_name': name,
