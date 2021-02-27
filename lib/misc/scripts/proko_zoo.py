@@ -49,7 +49,7 @@ fold = Folder(f'_data/result/keras_zoo_{int(time.time())}').mkdirs()
 models_to_test = {
     'Xception'         : lambda: Xception,
     # 'VGG16'            : lambda: VGG16, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
-    'VGG19'            : lambda: VGG19,
+    # 'VGG19'            : lambda: VGG19, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
 
 
     'ResNet50'         : lambda: ResNet50,  # ValueError: Shapes (10, 1) and (10, 10, 10, 2048) are incompatible
