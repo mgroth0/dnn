@@ -52,10 +52,7 @@ models_to_test = {
     # 'VGG19'            : lambda: VGG19, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
 
 
-    'ResNet50'         : lambda: ResNet50,  # ValueError: Shapes (10, 1) and (10, 10, 10, 2048) are incompatible
-    #  ValueError: Shapes (12, 1) and (12, 10, 10, 2048)
-
-
+    'ResNet50'         : lambda: ResNet50,
     'ResNet101'        : lambda: ResNet101,
     'ResNet152'        : lambda: ResNet152,
     # 'ResNet50V3'       : lambda: ResNet50V3(classes=NUM_CLASSES),
@@ -65,7 +62,7 @@ models_to_test = {
     'InceptionResNetV2': lambda: InceptionResNetV2,
     'MobileNet'        : lambda: MobileNet,
     'MobileNetV2'      : lambda: MobileNetV2,
-    'DenseNet121'      : lambda: DenseNet121,
+    # 'DenseNet121'      : lambda: DenseNet121, # DenseNet121() got an unexpected keyword argument 'classifier_activation
     'DenseNet169'      : lambda: DenseNet169,
     'DenseNet201'      : lambda: DenseNet201,
     'NASNetMobile'     : lambda: NASNetMobile,
