@@ -103,7 +103,7 @@ def proko_train(
         pooling=None,
         classes=1,  # 1000,2
         classifier_activation='sigmoid',
-        layers=tf.keras.layers
+        # layers=tf.keras.layers
     )
     net.compile(
         optimizer='adam',
