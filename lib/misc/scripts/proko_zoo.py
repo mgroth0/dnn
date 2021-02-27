@@ -12,6 +12,7 @@ from tensorflow.python.keras.applications.vgg16 import VGG16
 from tensorflow.python.keras.applications.vgg19 import VGG19
 from tensorflow.python.keras.applications.xception import Xception
 
+from arch import INC
 from arch.proko_inc import CustomInceptionResNetV2
 from lib.misc.scripts.asd_to_recycle_lib import proko_train
 from mlib.file import Folder
@@ -25,7 +26,8 @@ for i in range(1, 5, 1):
     history = proko_train(
         CustomInceptionResNetV2,
         num_epochs,
-        i
+        i,
+        HEIGHT_WIDTH=INC.HEIGHT_WIDTH
     )  # more epochs without BN is required to get to overfit
     data_result.append({
         'num_images': i,

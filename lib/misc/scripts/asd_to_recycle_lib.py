@@ -91,7 +91,8 @@ def proko_train(
         epochs,
         num_ims_per_class,
         include_top=True,
-        weights=None
+        weights=None,
+        HEIGHT_WIDTH = 300
 ):
     print(f'starting script (num_ims_per_class={num_ims_per_class})')
     net = model_class(
@@ -111,7 +112,7 @@ def proko_train(
     )
 
     # HEIGHT_WIDTH = net.input.shape[0]
-    HEIGHT_WIDTH = 300
+
 
     # overfitting?
     # look at both accuracy and val accuracy!
@@ -124,7 +125,7 @@ def proko_train(
     ds = get_ds(train_data, HEIGHT_WIDTH)
     test_ds = get_ds(test_data, HEIGHT_WIDTH)
 
-    breakpoint()
+    # breakpoint()
 
     history = net.fit(
         ds,
