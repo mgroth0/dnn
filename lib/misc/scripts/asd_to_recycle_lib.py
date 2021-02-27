@@ -97,7 +97,8 @@ def proko_train(
         num_ims_per_class,
         include_top=True,
         weights=None,
-        HEIGHT_WIDTH = 300
+        HEIGHT_WIDTH = 300,
+        preprocess_class = None
 ):
     print(f'starting script (num_ims_per_class={num_ims_per_class})')
     net = model_class(
@@ -126,8 +127,9 @@ def proko_train(
     print(f'starting training (num ims per class = {num_ims_per_class})')
 
 
-    print('getting preprocess_input from ' + str(model_class))
-    preprocess_class = model_class
+    if preprocess_class is None:
+        print('getting preprocess_input from ' + str(model_class))
+        preprocess_class = model_class
 
 
     ds = get_ds(train_data, HEIGHT_WIDTH,preprocess_class)

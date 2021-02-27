@@ -22,6 +22,8 @@ data_result = []
 
 fold = Folder(f'_data/result/keras_{int(time.time())}').mkdirs()
 
+from asd_to_recycle_lib import tf
+
 for i in range(10, 12, 1):
     if i < BATCH_SIZE:
         err('bad')
@@ -30,16 +32,14 @@ for i in range(10, 12, 1):
         CustomInceptionResNetV2,
         num_epochs,
         i,
-        HEIGHT_WIDTH=INC.HEIGHT_WIDTH
+        HEIGHT_WIDTH=INC.HEIGHT_WIDTH,
+        preprocess_class=tf.keras.applications.inception_resnet_v
     )  # more epochs without BN is required to get to overfit
     data_result.append({
         'num_images': i,
         'history'   : history.history
     })
     fold['data_result.json'].save(data_result)
-
-
-
 
 data_result = []
 fold = Folder(f'_data/result/keras_zoo_{int(time.time())}').mkdirs()
@@ -78,11 +78,11 @@ models_to_test = {
 for name, model in list(models_to_test.items()):
     num_epochs = 2
     num_ims = 10
-    history = proko_train(model(), num_epochs, num_ims, include_top=False,weights='imagenet')  # more epochs without BN is required to get to overfit
+    history = proko_train(model(), num_epochs, num_ims, include_top=False,
+                          weights='imagenet')  # more epochs without BN is required to get to overfit
     data_result.append({
         'model_name': name,
         'num_images': num_ims,
         'history'   : history.history
     })
     fold['data_result.json'].save(data_result)
-
