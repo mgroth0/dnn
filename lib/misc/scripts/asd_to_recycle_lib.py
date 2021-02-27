@@ -118,8 +118,15 @@ def proko_train(
     train_data, test_data = get_data(num_ims_per_class)
 
     print(f'starting training (num ims per class = {num_ims_per_class})')
+
+
+
+    ds = get_ds(train_data, HEIGHT_WIDTH)
+
+
+
     history = net.fit(
-        get_ds(train_data, HEIGHT_WIDTH),
+        ds,
         epochs=epochs,
         verbose=Verbose.PROGRESS_BAR,
         use_multiprocessing=False,
@@ -128,8 +135,14 @@ def proko_train(
     )
     print('starting testing')
     print_output = True
+
+    ds = get_ds(test_data, HEIGHT_WIDTH)
+
+    
+
+
     print(net.evaluate(
-        get_ds(train_data, HEIGHT_WIDTH),
+        ds,
         verbose=Verbose.PROGRESS_BAR,
         use_multiprocessing=False
     ))
