@@ -14,14 +14,17 @@ from tensorflow.python.keras.applications.xception import Xception
 
 from arch import INC
 from arch.proko_inc import CustomInceptionResNetV2
-from lib.misc.scripts.asd_to_recycle_lib import proko_train
+from lib.misc.scripts.asd_to_recycle_lib import BATCH_SIZE, proko_train
+from mlib.boot.mlog import err
 from mlib.file import Folder
 
 data_result = []
 
 fold = Folder(f'_data/result/keras_{int(time.time())}').mkdirs()
 
-for i in range(1, 5, 1):
+for i in range(10, 15, 1):
+    if i < BATCH_SIZE:
+        err('bad')
     num_epochs = 5
     history = proko_train(
         CustomInceptionResNetV2,
