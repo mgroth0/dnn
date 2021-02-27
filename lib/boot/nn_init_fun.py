@@ -1,3 +1,5 @@
+import logging
+
 from types import ModuleType
 
 from mlib.err import pub_print_warn
@@ -18,6 +20,9 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
     # gpus = tf.config.experimental.list_physical_devices('GPU')
     # for gpu in gpus: tf.config.experimental.set_memory_growth(gpu, True)
     tf.debugging.set_log_device_placement(EXTRA_TF_LOGGING)
+    logger = tf.get_logger()
+    logger.disabled = True
+    logger.setLevel(logging.FATAL)
     return tf
 
 def runWithMultiProcess(main_nn_fun):
