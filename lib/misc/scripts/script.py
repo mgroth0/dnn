@@ -126,12 +126,12 @@ def preprocess(file):
     return imdata, class_map[os.path.basename(os.path.dirname(file))]
 
 
-print('FIX FILES!')
-sys.exit(1)
-train_data = [f'data/Training/cat/{x}' for x in os.listdir('data/Training/cat')] + [f'data/Training/dog/{x}' for x in
-                                                                                    os.listdir('data/Training/dog')]
-test_data = [f'data/Testing/cat/{x}' for x in os.listdir('data/Testing/cat')] + [f'data/Testing/dog/{x}' for x in
-                                                                                 os.listdir('data/Testing/dog')]
+data = '/matt/data'
+
+train_data = [fdata + '/Training/cat/{x}' for x in os.listdir('data/Training/cat')] + [data + f'/Training/dog/{x}' for x in
+                                                                                    os.listdir(data + '/Training/dog')]
+test_data = [data + f'/Testing/cat/{x}' for x in os.listdir(data + '/Testing/cat')] + [data + f'/Testing/dog/{x}' for x in
+                                                                                 os.listdir(data + '/Testing/dog')]
 
 random.shuffle(train_data)
 random.shuffle(test_data)
