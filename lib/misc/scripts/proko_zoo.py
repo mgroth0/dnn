@@ -1,4 +1,7 @@
 import time
+from keras_applications.vgg16 import VGG16
+from keras_applications.vgg19 import VGG19
+from keras_applications.xception import Xception
 from tensorflow.python.keras.applications.densenet import DenseNet121, DenseNet169, DenseNet201
 from tensorflow.python.keras.applications.efficientnet import EfficientNetB0, EfficientNetB1, EfficientNetB2, EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6, EfficientNetB7
 from tensorflow.python.keras.applications.inception_resnet_v2 import InceptionResNetV2
