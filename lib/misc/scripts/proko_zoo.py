@@ -76,6 +76,7 @@ models_to_test = {
 }
 
 for name, model in list(models_to_test.items()):
+    print(f'TESTING MODEL: {name}')
     num_epochs = 2
     num_ims = 10
     history = proko_train(
