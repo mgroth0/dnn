@@ -124,6 +124,7 @@ def proko_train(
     ds = get_ds(train_data, HEIGHT_WIDTH)
     test_ds = get_ds(test_data, HEIGHT_WIDTH)
 
+    breakpoint()
 
     history = net.fit(
         ds,
