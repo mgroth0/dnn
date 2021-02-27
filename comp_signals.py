@@ -23,7 +23,7 @@ class CompSignaler:
             f.write(json.dumps({
                 'id'     : self.id,
                 'started': start_time,
-                'ended'  : time()
+                'ended'  : end_time
                 # 'message': 'STARTED'
             }))
 
