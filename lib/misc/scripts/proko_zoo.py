@@ -78,8 +78,14 @@ models_to_test = {
 for name, model in list(models_to_test.items()):
     num_epochs = 2
     num_ims = 10
-    history = proko_train(model(), num_epochs, num_ims, include_top=False,
-                          weights='imagenet')  # more epochs without BN is required to get to overfit
+    history = proko_train(
+        model(),
+        num_epochs,
+        num_ims,
+        include_top=False,
+        weights='imagenet',
+        preprocess_class=tf.keras.applications.inception_resnet_v2
+    )  # more epochs without BN is required to get to overfit
     data_result.append({
         'model_name': name,
         'num_images': num_ims,
