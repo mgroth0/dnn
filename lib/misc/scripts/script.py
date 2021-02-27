@@ -128,7 +128,7 @@ def preprocess(file):
 
 data = '/matt/data'
 
-train_data = [data + f'/Training/cat/{x}' for x in os.listdir('data/Training/cat')] + [data + f'/Training/dog/{x}' for x in
+train_data = [data + f'/Training/cat/{x}' for x in os.listdir(data  + '/Training/cat')] + [data + f'/Training/dog/{x}' for x in
                                                                                     os.listdir(data + '/Training/dog')]
 test_data = [data + f'/Testing/cat/{x}' for x in os.listdir(data + '/Testing/cat')] + [data + f'/Testing/dog/{x}' for x in
                                                                                  os.listdir(data + '/Testing/dog')]
