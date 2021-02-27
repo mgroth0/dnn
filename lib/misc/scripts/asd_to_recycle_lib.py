@@ -126,6 +126,7 @@ def proko_train(
     print(f'starting training (num ims per class = {num_ims_per_class})')
 
 
+    print('getting preprocess_input from ' + str(model_class))
     preprocess_class = model_class
 
 
