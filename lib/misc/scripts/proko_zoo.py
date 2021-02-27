@@ -65,7 +65,7 @@ models_to_test = {
     # 'DenseNet121'      : lambda: DenseNet121, # DenseNet121() got an unexpected keyword argument 'classifier_activation
     # 'DenseNet169'      : lambda: DenseNet169, # [MP|503.47|shell         ] TypeError: DenseNet169() got an unexpected keyword argument 'classifier_activation'
 
-    'DenseNet201'      : lambda: DenseNet201,
+    # 'DenseNet201'      : lambda: DenseNet201, # TypeError: DenseNet201() got an unexpected keyword argument 'classifier_activation'
     'NASNetMobile'     : lambda: NASNetMobile,
     'NASNetLarge'      : lambda: NASNetLarge,
     'EfficientNetB0'   : lambda: EfficientNetB0,
