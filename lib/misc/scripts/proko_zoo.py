@@ -47,7 +47,7 @@ fold = Folder(f'_data/result/keras_zoo_{int(time.time())}').mkdirs()
 # NUM_CLASSES = 1000 #2
 
 models_to_test = {
-    'Xception'         : lambda: Xception,
+    # 'Xception'         : lambda: Xception, # ValueError: Shapes (10, 1) and (10, 10, 10, 2048) are incompatible
     'VGG16'            : lambda: VGG16,
     'VGG19'            : lambda: VGG19,
     'ResNet50'         : lambda: ResNet50,
