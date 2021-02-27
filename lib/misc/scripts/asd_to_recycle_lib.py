@@ -96,6 +96,7 @@ def proko_train(model_class, epochs, num_ims_per_class,include_top=True,weights=
         pooling=None,
         classes=1,  # 1000,2
         classifier_activation='sigmoid',
+        layers=tf.keras.layers
     )
     net.compile(
         optimizer='adam',

@@ -29,7 +29,7 @@ def CustomInceptionResNetV2(include_top=True,
     if 'layers' in kwargs:
         layers = kwargs.pop('layers')
     # else:
-        # layers = VersionAwareLayers()
+    #     layers = VersionAwareLayers()
     #   see import
 
 
