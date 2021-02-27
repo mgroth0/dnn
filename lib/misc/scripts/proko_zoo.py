@@ -24,7 +24,7 @@ fold = Folder(f'_data/result/keras_{int(time.time())}').mkdirs()
 
 # from lib. import tf
 
-for i in range(10, 12, 1):
+for i in range(13, 14, 1):
     if i < BATCH_SIZE:
         err('bad')
     num_epochs = 3
