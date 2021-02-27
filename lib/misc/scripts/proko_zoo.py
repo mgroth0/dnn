@@ -27,7 +27,7 @@ fold = Folder(f'_data/result/keras_{int(time.time())}').mkdirs()
 for i in range(13, 14, 1):
     if i < BATCH_SIZE:
         err('bad')
-    num_epochs = 3
+    num_epochs = 1
     history = proko_train(
         CustomInceptionResNetV2,
         num_epochs,
