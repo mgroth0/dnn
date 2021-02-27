@@ -20,9 +20,19 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
     # gpus = tf.config.experimental.list_physical_devices('GPU')
     # for gpu in gpus: tf.config.experimental.set_memory_growth(gpu, True)
     tf.debugging.set_log_device_placement(EXTRA_TF_LOGGING)
+
+
+
+    # trying to prevent endless allocation logging
     logger = tf.get_logger()
     logger.disabled = True
     logger.setLevel(logging.FATAL)
+
+    # trying to prevent endless allocation logging
+    # example: locator.cc:998] 1 Chunks of size 11645184 totalling 11.11MiB
+    # 2021-02-27 17:51:27.248635: I tensorflow/core/common_runtime/bfc_allocator.cc:998] 1 Chunks of size 11645440 totalling 11.11MiB
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
     return tf
 
 def runWithMultiProcess(main_nn_fun):
