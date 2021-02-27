@@ -5,4 +5,9 @@ echo "CONDA_HOME in dnn is:"$CONDA_HOME
 if [ -z "${CONDA_HOME}" ]; then
   CONDA_HOME="$HOME/miniconda3"
 fi
-exec "$CONDA_HOME/envs/dnn/bin/python" "boot.py" "$@"
+if [ -d "$CONDA_HOME" ]; then
+    exec "$CONDA_HOME/envs/dnn/bin/python" "boot.py" "$@"
+else
+    exec python boot.py "$@"
+fi
+

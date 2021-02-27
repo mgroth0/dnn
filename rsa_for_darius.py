@@ -73,7 +73,7 @@ T_SIZES = [
     200
 ]  # 6 epochs for all, and only 70% for training
 if SHOBHITA:
-    T_SIZES = [100000]
+    T_SIZES = [100000] #num epochs?
 CLASSES = [
     'NS0',
     'NS2',
