@@ -9,6 +9,9 @@ SANITY_MIX = True
 from lib.boot.nn_init_fun import setupTensorFlow
 tf = setupTensorFlow()
 class_map = {'dog': 0, 'cat': 1}
+
+
+
 def get_data(num_ims_per_class='ALL'):
 
     data = '/matt/data/tf_bug1'
@@ -99,7 +102,9 @@ def proko_train(model_class, epochs, num_ims_per_class,include_top=True,weights=
         loss='binary_crossentropy',
         metrics=['accuracy']
     )
-    HEIGHT_WIDTH = net.input.shape[0]
+
+    # HEIGHT_WIDTH = net.input.shape[0]
+    HEIGHT_WIDTH = 300
 
     # overfitting?
     # look at both accuracy and val accuracy!
