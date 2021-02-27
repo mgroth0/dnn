@@ -97,7 +97,7 @@ def proko_train(
         num_ims_per_class,
         include_top=True,
         weights=None,
-        HEIGHT_WIDTH=300,
+        HEIGHT_WIDTH=299,
         preprocess_class=None,
         loss='binary_crossentropy',
         classes=1,
