@@ -63,7 +63,8 @@ models_to_test = {
     'MobileNet'        : lambda: MobileNet,
     'MobileNetV2'      : lambda: MobileNetV2,
     # 'DenseNet121'      : lambda: DenseNet121, # DenseNet121() got an unexpected keyword argument 'classifier_activation
-    'DenseNet169'      : lambda: DenseNet169,
+    # 'DenseNet169'      : lambda: DenseNet169, # [MP|503.47|shell         ] TypeError: DenseNet169() got an unexpected keyword argument 'classifier_activation'
+
     'DenseNet201'      : lambda: DenseNet201,
     'NASNetMobile'     : lambda: NASNetMobile,
     'NASNetLarge'      : lambda: NASNetLarge,
@@ -79,7 +80,7 @@ models_to_test = {
 
 for name, model in list(models_to_test.items()):
     print(f'TESTING MODEL: {name}')
-    num_epochs = 2
+    num_epochs = 1
     num_ims = 10
     model_class = model()
     history = proko_train(
