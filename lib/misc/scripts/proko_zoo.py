@@ -33,7 +33,7 @@ for i in range(10, 12, 1):
         num_epochs,
         i,
         HEIGHT_WIDTH=INC.HEIGHT_WIDTH,
-        preprocess_class=tf.keras.applications.inception_resnet_v
+        preprocess_class=tf.keras.applications.inception_resnet_v2
     )  # more epochs without BN is required to get to overfit
     data_result.append({
         'num_images': i,
