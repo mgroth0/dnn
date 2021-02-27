@@ -13,7 +13,7 @@ def get_data(num_ims_per_class='ALL'):
 
     data = '/matt/data/tf_bug1'
 
-    train_data_cat = [data + f'/Training/cat/{x}' for x in os.listdir('data/Training/cat')]
+    train_data_cat = [data + f'/Training/cat/{x}' for x in os.listdir(data + '/Training/cat')]
     train_data_dog = [data + f'/Training/dog/{x}' for x in os.listdir(data + '/Training/dog')]
     random.shuffle(train_data_cat)
     random.shuffle(train_data_dog)
