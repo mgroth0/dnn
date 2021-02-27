@@ -49,14 +49,14 @@ def get_data(num_ims_per_class='ALL'):
         test_data = tmp_data
     return train_data, test_data
 
-def get_gen(data, HEIGHT_WIDTH,preprocess_class):
+def get_gen(data, HEIGHT_WIDTH, preprocess_class):
     def gen():
         pairs = []
         i = 0
         for im_file in data:
             i += 1
             if i <= BATCH_SIZE:
-                pairs += [preprocess(im_file, HEIGHT_WIDTH,preprocess_class)]
+                pairs += [preprocess(im_file, HEIGHT_WIDTH, preprocess_class)]
             if i == BATCH_SIZE:
                 yield (
                     [pair[0] for pair in pairs],
@@ -72,7 +72,7 @@ def get_ds(
         preprocess_class
 ):
     return tf.data.Dataset.from_generator(
-        get_gen(data, HEIGHT_WIDTH,preprocess_class),
+        get_gen(data, HEIGHT_WIDTH, preprocess_class),
         (tf.float32, tf.int64),
         output_shapes=(
             tf.TensorShape((BATCH_SIZE, HEIGHT_WIDTH, HEIGHT_WIDTH, 3)),
@@ -80,12 +80,12 @@ def get_ds(
         )
     )
 
-def preprocess(file, HEIGHT_WIDTH,preprocess_class):
+def preprocess(file, HEIGHT_WIDTH, preprocess_class):
     imdata = mpimg.imread(file)
 
     imdata = cv2.resize(imdata, dsize=(HEIGHT_WIDTH, HEIGHT_WIDTH), interpolation=cv2.INTER_LINEAR) * 255.0
     imdata = preprocess_class.preprocess_input(
-    # imdata = tf.keras.applications.inception_resnet_v2.preprocess_input(
+        # imdata = tf.keras.applications.inception_resnet_v2.preprocess_input(
         imdata, data_format=None
     )
 
@@ -97,23 +97,37 @@ def proko_train(
         num_ims_per_class,
         include_top=True,
         weights=None,
-        HEIGHT_WIDTH = 300,
-        preprocess_class = None
+        HEIGHT_WIDTH=300,
+        preprocess_class=None,
+        loss='binary_crossentropy',
+        classes=1,
+
 ):
     print(f'starting script (num_ims_per_class={num_ims_per_class})')
-    net = model_class(
-        include_top=include_top,
-        weights=weights,  # 'imagenet' <- Proko used imagenet,
-        input_tensor=None,
-        input_shape=None,
-        pooling=None,
-        classes=1,  # 1000,2
-        classifier_activation='sigmoid',
-        # layers=tf.keras.layers
-    )
+    if classes == 1:
+        net = model_class(
+            include_top=include_top,
+            weights=weights,  # 'imagenet' <- Proko used imagenet,
+            input_tensor=None,
+            input_shape=None,
+            pooling=None,
+            classes=classes,  # 1000,2
+            classifier_activation='sigmoid',
+            # layers=tf.keras.layers
+        )
+    else:
+        net = model_class(
+            include_top=include_top,
+            weights=weights,  # 'imagenet' <- Proko used imagenet,
+            input_tensor=None,
+            input_shape=None,
+            pooling=None,
+            classes=classes,  # 1000,2
+            # layers=tf.keras.layers
+        )
     net.compile(
         optimizer='adam',
-        loss='binary_crossentropy',
+        loss=loss,
         metrics=['accuracy']
     )
 
@@ -126,14 +140,12 @@ def proko_train(
 
     print(f'starting training (num ims per class = {num_ims_per_class})')
 
-
     if preprocess_class is None:
         print('getting preprocess_input from ' + str(model_class))
         preprocess_class = model_class
 
-
-    ds = get_ds(train_data, HEIGHT_WIDTH,preprocess_class)
-    test_ds = get_ds(test_data, HEIGHT_WIDTH,preprocess_class)
+    ds = get_ds(train_data, HEIGHT_WIDTH, preprocess_class)
+    test_ds = get_ds(test_data, HEIGHT_WIDTH, preprocess_class)
 
     history = net.fit(
         ds,
@@ -145,11 +157,6 @@ def proko_train(
     )
     print('starting testing')
     print_output = True
-
-
-
-
-
 
     print(net.evaluate(
         ds,

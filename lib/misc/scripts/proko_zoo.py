@@ -84,7 +84,9 @@ for name, model in list(models_to_test.items()):
         num_ims,
         include_top=False,
         weights='imagenet',
-        preprocess_class=tf.keras.applications.inception_resnet_v2
+        preprocess_class=tf.keras.applications.inception_resnet_v2,
+        classes = 1000,
+        loss = 'categorical_crossentropy'
     )  # more epochs without BN is required to get to overfit
     data_result.append({
         'model_name': name,
