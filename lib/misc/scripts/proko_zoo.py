@@ -14,7 +14,7 @@ from tensorflow.python.keras.applications.xception import Xception
 
 from arch import INC
 from arch.proko_inc import CustomInceptionResNetV2
-from lib.misc.scripts.asd_to_recycle_lib import BATCH_SIZE, proko_train
+from lib.misc.scripts.asd_to_recycle_lib import BATCH_SIZE, proko_train, tf
 from mlib.boot.mlog import err
 from mlib.file import Folder
 
@@ -22,7 +22,7 @@ data_result = []
 
 fold = Folder(f'_data/result/keras_{int(time.time())}').mkdirs()
 
-from asd_to_recycle_lib import tf
+# from lib. import tf
 
 for i in range(10, 12, 1):
     if i < BATCH_SIZE:
