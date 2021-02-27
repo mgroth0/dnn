@@ -2,6 +2,8 @@ import logging
 
 from types import ModuleType
 
+from mlib.boot import log
+from mlib.boot.mlog import err
 from mlib.err import pub_print_warn
 
 EXTRA_TF_LOGGING = False
@@ -17,8 +19,12 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
     tf.random.set_seed(22)
     tf.compat.v1.enable_eager_execution()
     # by default all gpu mem is used. this option just makes it allocate less in the beginning and more as needed. Not sure why I would need this
-    # gpus = tf.config.experimental.list_physical_devices('GPU')
-    # for gpu in gpus: tf.config.experimental.set_memory_growth(gpu, True)
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    if len(gpus) == 0:
+        err('no gpus')
+    for gpu in gpus:
+        log(f'GPU:{gpu}')
+        # tf.config.esxperimental.set_memory_growth(gpu, True)
     tf.debugging.set_log_device_placement(EXTRA_TF_LOGGING)
 
 

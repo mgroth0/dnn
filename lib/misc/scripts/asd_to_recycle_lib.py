@@ -4,7 +4,7 @@ import os
 import random
 
 from lib.nn.tf_lib import Verbose
-BATCH_SIZE = 12
+BATCH_SIZE = 4
 SANITY_SWITCH = False
 SANITY_MIX = True
 from lib.boot.nn_init_fun import setupTensorFlow

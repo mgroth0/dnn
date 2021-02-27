@@ -24,7 +24,7 @@ fold = Folder(f'_data/result/keras_{int(time.time())}').mkdirs()
 
 # from lib. import tf
 
-for i in range(13, 14, 1):
+for i in range(4, 5, 1):
     if i < BATCH_SIZE:
         err('bad')
     num_epochs = 1
@@ -67,7 +67,16 @@ models_to_test = {
 
     # 'DenseNet201'      : lambda: DenseNet201, # TypeError: DenseNet201() got an unexpected keyword argument 'classifier_activation'
     # 'NASNetMobile'     : lambda: NASNetMobile, #  TypeError: NASNetMobile() got an unexpected keyword argument 'classifier_activation'
+
+
+
+
     'NASNetLarge'      : lambda: NASNetLarge,
+
+
+
+
+
     'EfficientNetB0'   : lambda: EfficientNetB0,
     'EfficientNetB1'   : lambda: EfficientNetB1,
     'EfficientNetB2'   : lambda: EfficientNetB2,
@@ -79,9 +88,9 @@ models_to_test = {
 }
 
 for name, model in list(models_to_test.items()):
-    print(f'TESTING MODEL: {name}')
+    print(f'\n\n\n\nTESTING MODEL: {name}')
     num_epochs = 1
-    num_ims = 10
+    num_ims = BATCH_SIZE
     model_class = model()
     history = proko_train(
         model_class,
