@@ -140,8 +140,8 @@ def proko_train(
 
     print(f'starting training (num ims per class = {num_ims_per_class})')
 
-    if preprocess_class is None:
-        preprocess_class = net
+    # if preprocess_class is None:
+    #     preprocess_class = net
     #     print('getting preprocess_input from ' + str(model_class))
     #     preprocess_class = model_class
 
