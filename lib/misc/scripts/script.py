@@ -126,7 +126,7 @@ def preprocess(file):
     return imdata, class_map[os.path.basename(os.path.dirname(file))]
 
 
-data = '/matt/data'
+data = '/matt/data/tf_bug1'
 
 train_data = [data + f'/Training/cat/{x}' for x in os.listdir(data  + '/Training/cat')] + [data + f'/Training/dog/{x}' for x in
                                                                                     os.listdir(data + '/Training/dog')]
