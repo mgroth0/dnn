@@ -85,7 +85,7 @@ for name, model in list(models_to_test.items()):
         model(),
         num_epochs,
         num_ims,
-        include_top=False,  # THIS WAS THE BUG!!!!
+        include_top=True,  # THIS WAS THE BUG!!!! Probably used a different loss function while it was false
         weights='imagenet',
         preprocess_class=None,
         classes=1000,
