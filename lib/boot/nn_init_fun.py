@@ -1,5 +1,7 @@
+from types import ModuleType
+
 from mlib.err import pub_print_warn
-def setupTensorFlow(FLAGS):
+def setupTensorFlow(FLAGS=None) -> ModuleType:
     import os
 
     # This was central to how I managed to have multiple parallel jobs each with their own GPU. But I have to temporarily remove it to test if I can get gpus working in open mind at all

@@ -1,3 +1,4 @@
+from lib.nn.tf_lib import Verbose
 print('assembled_model.py: top')
 from typing import Optional
 import numpy as np
@@ -61,7 +62,7 @@ class AssembledModel(ModelWrapper, ABC):
             log('not loading weights because TRANSFER_LEARNING is disabled')
         self._compile(net_mets.METS_TO_USE())
 
-    VERBOSE_MODE = 2  # 0=silent,1=progress bar,2=one line per epoch
+    VERBOSE_MODE = Verbose.PRINT_LINE_PER_EPOCH
     def train(self):
         log('training network...')
         nnstate.CURRENT_PRED_MAP = self.train_data.class_label_map
@@ -122,7 +123,7 @@ class AssembledModel(ModelWrapper, ABC):
         y_pred = arr(self.net.predict(
             ds,
             steps=steps,
-            verbose=1,
+            verbose=Verbose.PROGRESS_BAR,
             use_multiprocessing=True,
             workers=16,
         ))
@@ -137,7 +138,7 @@ class AssembledModel(ModelWrapper, ABC):
         inter_activations = arr(inter_output_model.predict(
             ds,
             steps=steps,
-            verbose=1,
+            verbose=Verbose.PROGRESS_BAR,
             use_multiprocessing=True,
             workers=16
         ))

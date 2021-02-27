@@ -64,7 +64,7 @@ class DNN(Project):
             # print('here2, finished Darius-RSA')
             return None
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'ASD':
-            from lib.misc.scripts import script
+            from lib.misc.scripts import proko_zoo
             return None
         if len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
             from human_exps.mc_wait_pilot.mc_wait_pilot import MC_Wait_Pilot

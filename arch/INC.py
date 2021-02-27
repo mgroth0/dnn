@@ -1,7 +1,7 @@
 from arch.INC_ORIG import INC_HW
 from arch.assembled_model import AssembledModel
 
-
+USE_BATCH_NORMALIZATION = True # was false for tf_bug1/script.py
 
 class INC(AssembledModel):
     # STATIC = AssembledModel.STATIC_ATTS(
@@ -56,15 +56,16 @@ class INC(AssembledModel):
                        name=name)(x)
             if not use_bias:
                 bn_name = None if name is None else name + '_bn'
-                x = BatchNormalization(axis=self.CHANNEL_AXIS,
-                                       scale=False,
-                                       name=bn_name,
+                if USE_BATCH_NORMALIZATION:
+                    x = BatchNormalization(axis=self.CHANNEL_AXIS,
+                                           scale=False,
+                                           name=bn_name,
 
-                                       # DEBUG
-                                       # trainable=True
+                                           # DEBUG
+                                           # trainable=True
 
 
-                                       )(x)
+                                           )(x)
             if activation is not None:
                 ac_name = None if name is None else name + '_ac'
                 x = Activation(activation, name=ac_name)(x)

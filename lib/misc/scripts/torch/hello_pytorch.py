@@ -1,74 +1,31 @@
-import sys
-
-import argparse
-
 import torch
 import torch.nn as nn
-import torch.optim as optim
 import torchnet as tnt
+from torch import optim
 from torch.autograd import Variable
 from torchvision import datasets, transforms
 
-parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
-parser.add_argument(
-    '--batch-size',
-    type=int,
-    default=128,
-    help='input batch size for training (default: 128)'
-)
-parser.add_argument(
-    '--epochs',
-    type=int,
-    default=10,
-    help='number of epochs to train (default: 10)'
-)
-parser.add_argument(
-    '--lr',
-    type=float,
-    default=0.1,
-    help='learning rate (default: 0.1)'
-)
-parser.add_argument(
-    '--dropout',
-    type=float,
-    default=0.25,
-    help='dropout probability (default: 0.25)'
-)
-parser.add_argument(
-    '--momentum',
-    type=float,
-    default=0.9,
-    help='heavy ball momentum in gradient descent (default: 0.9)'
-)
-print('NEED TO FIX --DATA-DIR')
-sys.exit(1)
-parser.add_argument(
-    '--data-dir',
-    type=str,
-    default='./data'
-)
-args = parser.parse_args()
-args.cuda = torch.cuda.is_available()
-
-# Print out arguments to the log
-print('Training LeNet on MNIST')
-for p in vars(args).items():
-    print('  ', p[0] + ': ', p[1])
-print('\n')
+BATCH_SIZE = 128
+EPOCHS = 10
+LEARNING_RATE = 0.1
+DROPOUT = 0.25
+MOMENTUM = 0.9  # heavy ball momentum in gradient descent
+DATA_DIR = '/matt/data'
+CUDA = torch.cuda.is_available()
 
 # Data loaders
-kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
+kwargs = {'num_workers': 1, 'pin_memory': True} if CUDA else {}
 
 train_loader = torch.utils.data.DataLoader(
-    datasets.MNIST(args.data_dir, train=True, download=True,
+    datasets.MNIST(DATA_DIR, train=True, download=True,
                    transform=transforms.Compose([
                        transforms.ToTensor(),
                        transforms.Normalize((0.1307,), (0.3081,))
                    ])),
-    batch_size=args.batch_size, shuffle=True, **kwargs)
+    batch_size=BATCH_SIZE, shuffle=True, **kwargs)
 
 test_loader = torch.utils.data.DataLoader(
-    datasets.MNIST(args.data_dir, train=False, download=True, transform=transforms.Compose([
+    datasets.MNIST(DATA_DIR, train=False, download=True, transform=transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])),
@@ -96,13 +53,13 @@ class LeNet(nn.Module):
                 nn.Dropout(p))
 
         self.m = nn.Sequential(
-            convbn(1, 20, 5, 3, args.dropout),
-            convbn(20, 50, 5, 2, args.dropout),
+            convbn(1, 20, 5, 3, DROPOUT),
+            convbn(20, 50, 5, 2, DROPOUT),
             View(50 * 2 * 2),
             nn.Linear(50 * 2 * 2, 500),
             nn.BatchNorm1d(500),
             nn.ReLU(True),
-            nn.Dropout(args.dropout),
+            nn.Dropout(DROPOUT),
             nn.Linear(500, 10))
 
     def forward(self, x):
@@ -112,18 +69,18 @@ class LeNet(nn.Module):
 # Initialize the model, the loss function and the optimizer
 model = LeNet()
 loss_function = nn.CrossEntropyLoss()
-if args.cuda:
+if CUDA:
     model.cuda()
     loss_function.cuda()
 
-optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
+optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM)
 
 
 # Function to train the model on one epoch of data
 def train(epoch):
     model.train()
     for batch_ix, (data, target) in enumerate(train_loader):
-        if args.cuda:
+        if CUDA:
             data, target = data.cuda(), target.cuda()
         data, target = Variable(data), Variable(target)
         optimizer.zero_grad()
@@ -145,7 +102,7 @@ def test():
     test_loss = tnt.meter.AverageValueMeter()
     top1 = tnt.meter.ClassErrorMeter()
     for data, target in test_loader:
-        if args.cuda:
+        if CUDA:
             data, target = data.cuda(), target.cuda()
         data, target = Variable(data, volatile=True), Variable(target)
         output = model(data)
@@ -161,6 +118,6 @@ def test():
 
 
 if __name__ == "__main__":
-    for epoch in range(1, args.epochs + 1):
+    for epoch in range(1, EPOCHS + 1):
         train(epoch)
         test()
