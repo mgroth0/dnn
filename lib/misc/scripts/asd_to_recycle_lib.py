@@ -65,7 +65,7 @@ def get_gen(data,HEIGHT_WIDTH):
 
 def get_ds(data,HEIGHT_WIDTH):
     return tf.data.Dataset.from_generator(
-        get_gen(data),
+        get_gen(data,HEIGHT_WIDTH),
         (tf.float32, tf.int64),
         output_shapes=(
             tf.TensorShape((BATCH_SIZE, HEIGHT_WIDTH, HEIGHT_WIDTH, 3)),
