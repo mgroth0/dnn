@@ -82,13 +82,13 @@ def get_ds(
 
 def preprocess(file, HEIGHT_WIDTH, preprocess_class):
     imdata = mpimg.imread(file)
-
-    imdata = cv2.resize(imdata, dsize=(HEIGHT_WIDTH, HEIGHT_WIDTH), interpolation=cv2.INTER_LINEAR) * 255.0
-    imdata = preprocess_class.preprocess_input(
-        # imdata = tf.keras.applications.inception_resnet_v2.preprocess_input(
-        imdata, data_format=None
-    )
-
+    if preprocess_class is not None:
+        imdata = cv2.resize(imdata, dsize=(HEIGHT_WIDTH, HEIGHT_WIDTH), interpolation=cv2.INTER_LINEAR) * 255.0
+        imdata = preprocess_class.preprocess_input(
+            # imdata = tf.keras.applications.inception_resnet_v2.preprocess_input(
+            imdata, data_format=None
+        )
+    
     return imdata, class_map[os.path.basename(os.path.dirname(file))]
 
 def proko_train(
@@ -140,9 +140,9 @@ def proko_train(
 
     print(f'starting training (num ims per class = {num_ims_per_class})')
 
-    if preprocess_class is None:
-        print('getting preprocess_input from ' + str(model_class))
-        preprocess_class = model_class
+    # if preprocess_class is None:
+    #     print('getting preprocess_input from ' + str(model_class))
+    #     preprocess_class = model_class
 
     ds = get_ds(train_data, HEIGHT_WIDTH, preprocess_class)
     test_ds = get_ds(test_data, HEIGHT_WIDTH, preprocess_class)

@@ -50,7 +50,12 @@ models_to_test = {
     # 'Xception'         : lambda: Xception, # ValueError: Shapes (10, 1) and (10, 10, 10, 2048) are incompatible
     # 'VGG16'            : lambda: VGG16, # ValueError: Shapes (10, 1) and (10, 9, 9, 512) are incompatible
     # 'VGG19'            : lambda: VGG19, #ValueError: Shapes (10, 1) and (10, 9, 9, 512) are incompatible
+
+
     'ResNet50'         : lambda: ResNet50, # ValueError: Shapes (10, 1) and (10, 10, 10, 2048) are incompatible
+    #  ValueError: Shapes (12, 1) and (12, 10, 10, 2048)
+
+
     'ResNet101'        : lambda: ResNet101,
     'ResNet152'        : lambda: ResNet152,
     # 'ResNet50V3'       : lambda: ResNet50V3(classes=NUM_CLASSES),
@@ -85,7 +90,7 @@ for name, model in list(models_to_test.items()):
         num_ims,
         include_top=False,
         weights='imagenet',
-        preprocess_class=tf.keras.applications.inception_resnet_v2,
+        preprocess_class=None,
         classes = 1000,
         loss = 'categorical_crossentropy'
     )  # more epochs without BN is required to get to overfit
