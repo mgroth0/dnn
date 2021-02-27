@@ -104,3 +104,7 @@ for name, model in list(models_to_test.items()):
         'history'   : history.history
     })
     fold['data_result.json'].save(data_result)
+
+
+
+# [MP|260.39|shell         ] tensorflow.python.framework.errors_impl.ResourceExhaustedError:  OOM when allocating tensor with shape[12,1024,19,19] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
