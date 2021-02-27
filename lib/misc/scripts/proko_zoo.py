@@ -92,7 +92,8 @@ for name, model in list(models_to_test.items()):
         weights='imagenet',
         preprocess_class=None,
         classes=1000,
-        loss='categorical_crossentropy'
+        # loss='categorical_crossentropy',
+        loss='mse'
     )  # more epochs without BN is required to get to overfit
     data_result.append({
         'model_name': name,
