@@ -161,10 +161,11 @@ def proko_train(
     log('list of gpus:')
     for gpu in gpus:
         log(f'\tGPU:{gpu}')
-    history = None
+
+    a_dict={'history': None}
     def private_gpu_mem():
         print('starting private gpu mem')
-        history = net.fit(
+        a_dict['history'] = net.fit(
             ds,
             epochs=epochs,
             verbose=Verbose.PROGRESS_BAR,
@@ -183,10 +184,10 @@ def proko_train(
         print('script complete')
         print('ending private gpu mem')
 
-    # run_and_clear_gpu_mem_after(private_gpu_mem)
-    private_gpu_mem()
+    run_and_clear_gpu_mem_after(private_gpu_mem)
+    # private_gpu_mem()
 
-    return history
+    return a_dict['history']
 
 def run_and_clear_gpu_mem_after(lamb):
     # https://github.com/tensorflow/tensorflow/issues/36465
