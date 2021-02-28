@@ -88,6 +88,8 @@ models_to_test = {
 }
 
 for name, model in list(models_to_test.items()):
+    if name == 'ResNet50':
+        break
     print('\n\n\n\n')
     print(f'TESTING MODEL: {name}')
     num_epochs = 1

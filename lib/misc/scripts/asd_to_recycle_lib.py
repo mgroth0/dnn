@@ -180,13 +180,15 @@ def proko_train(
         print(net.evaluate(
             ds,
             verbose=Verbose.PROGRESS_BAR,
+            # use_multiprocessing=True,
             use_multiprocessing=False
         ))
         print('script complete')
         print('ending private gpu mem')
 
-    run_and_clear_gpu_mem_after(private_gpu_mem)
-    # private_gpu_mem()
+    # run_and_clear_gpu_mem_after(private_gpu_mem) #async memcpy from host to device: CUDA_ERROR_NOT_INITIALIZED: initialization error; GPU dst: 0xb041ef800; host src: 0x55b9b7f50dc0; size: 8=0x8
+
+    private_gpu_mem()
 
     return a_dict['history']
 

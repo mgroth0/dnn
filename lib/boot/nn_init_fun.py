@@ -6,7 +6,7 @@ from mlib.boot import log
 from mlib.boot.mlog import err
 from mlib.err import pub_print_warn
 
-EXTRA_TF_LOGGING = True
+EXTRA_TF_LOGGING = False
 
 def setupTensorFlow(FLAGS=None) -> ModuleType:
     import os
