@@ -22,8 +22,9 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
     gpus = tf.config.experimental.list_physical_devices('GPU')
     if len(gpus) == 0:
         err('no gpus')
+    log('list of gpus:')
     for gpu in gpus:
-        log(f'GPU:{gpu}')
+        log(f'\tGPU:{gpu}')
         # tf.config.esxperimental.set_memory_growth(gpu, True)
     tf.debugging.set_log_device_placement(EXTRA_TF_LOGGING)
 
