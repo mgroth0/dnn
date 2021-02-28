@@ -1,12 +1,26 @@
 import logging
-
 from types import ModuleType
 
 from mlib.boot import log
 from mlib.boot.mlog import err
 from mlib.err import pub_print_warn
 
-EXTRA_TF_LOGGING = True
+# MIN LOGS
+# TF_LOG_DEVICE = False
+# TF_LOG_CPP = '3'  # higher is fewer logs
+# TF_LOG_DISABLE = True
+# TF_LOG_LEVEL = logging.FATAL
+
+TF_LOG_DEVICE = False
+TF_LOG_CPP = '1'  # higher is fewer logs
+TF_LOG_DISABLE = False
+TF_LOG_LEVEL = logging.WARN
+
+# MAX LOGS
+# TF_LOG_DEVICE = True
+# TF_LOG_CPP = '0'  # higher is fewer logs
+# TF_LOG_DISABLE = False
+# TF_LOG_LEVEL = logging.INFO
 
 def setupTensorFlow(FLAGS=None) -> ModuleType:
     import os
@@ -19,9 +33,7 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
     # DEBUG
     os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
-
-    if not EXTRA_TF_LOGGING:
-        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #BEFORE importing tf... now I think it worked!
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = TF_LOG_CPP  # BEFORE importing tf... now I think it worked!
 
     import tensorflow as tf
     tf.random.set_seed(22)
@@ -34,15 +46,13 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
     for gpu in gpus:
         log(f'\tGPU:{gpu}')
         # tf.config.esxperimental.set_memory_growth(gpu, True)
-    tf.debugging.set_log_device_placement(EXTRA_TF_LOGGING)
 
-
+    tf.debugging.set_log_device_placement(TF_LOG_DEVICE)
 
     # trying to prevent endless allocation logging
-    if not EXTRA_TF_LOGGING:
-        logger = tf.get_logger()
-        logger.disabled = True
-        logger.setLevel(logging.FATAL)
+    logger = tf.get_logger()
+    logger.disabled = TF_LOG_DISABLE
+    logger.setLevel(TF_LOG_LEVEL)
 
     # trying to prevent endless allocation logging
     # example: locator.cc:998] 1 Chunks of size 11645184 totalling 11.11MiB
@@ -77,7 +87,6 @@ def NRC_IS_FINISHED():
     pub_print_warn()
     print('NRC IS FINISHED')
 
-
     # this used to be in loggy which is now in mlib
     from . import nn_init_fun
     def nrc_is_finished_upgrade(old):
@@ -88,17 +97,5 @@ def NRC_IS_FINISHED():
     if nn_init_fun.NRC_IS_FINISHED.__name__ != 'f':
         nn_init_fun.NRC_IS_FINISHED = nrc_is_finished_upgrade(nn_init_fun.NRC_IS_FINISHED)
 
-
-
-
-
-
-
-
-
-
-
-
     import os
     os._exit(0)
-
