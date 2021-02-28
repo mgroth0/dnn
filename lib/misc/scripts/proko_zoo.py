@@ -88,7 +88,8 @@ models_to_test = {
 }
 
 for name, model in list(models_to_test.items()):
-    print(f'\n\n\n\nTESTING MODEL: {name}')
+    print('\n\n\n\n')
+    print(f'TESTING MODEL: {name}')
     num_epochs = 1
     num_ims = BATCH_SIZE
     model_class = model()
@@ -119,3 +120,6 @@ for name, model in list(models_to_test.items()):
 # [MP|260.39|shell         ] tensorflow.python.framework.errors_impl.ResourceExhaustedError:  OOM when allocating tensor with shape[12,1024,19,19] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
 
 # [MP|1291.42|shell         ] 2021-02-27 17:02:34.093494: W tensorflow/core/framework/op_kernel.cc:1753] OP_REQUIRES failed at conv_ops.cc:930 : Resource exhausted: OOM when allocating tensor with shape[1824,304,1,1] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
+
+
+# [MP|2286.50|shell         ] tensorflow.python.framework.errors_impl.ResourceExhaustedError:  OOM when allocating tensor with shape[960] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
