@@ -11,7 +11,7 @@ from mlib.err import pub_print_warn
 # TF_LOG_DISABLE = True
 # TF_LOG_LEVEL = logging.FATAL
 
-TF_LOG_DEVICE = True
+TF_LOG_DEVICE = False  # wayyyyyy too much logging. Fills entire console buffer in like 2 seconds
 TF_LOG_CPP = '0'  # higher is fewer logs
 TF_LOG_DISABLE = False
 TF_LOG_LEVEL = logging.INFO
