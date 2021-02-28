@@ -95,6 +95,7 @@ models_to_test = {
 }
 
 for name, model in list(models_to_test.items()):
+    break
     if name == 'ResNet101':
         break
     print('\n\n\n\n')

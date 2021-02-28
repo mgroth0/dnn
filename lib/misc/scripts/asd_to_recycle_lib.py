@@ -17,7 +17,9 @@ class_map = {'dog': 0, 'cat': 1}
 
 def get_data(num_ims_per_class='ALL'):
     print('get_data')
-    data = '/matt/data/tf_bug1'
+    # data = '/matt/data/tf_bug1/' #small set with hundreds I generated from imagenet
+    data = '/matt/data/tf_bug1/dogscats' #thousands, downloaded from kaggle
+
 
     train_data_cat = [data + f'/Training/cat/{x}' for x in os.listdir(data + '/Training/cat')]
     train_data_dog = [data + f'/Training/dog/{x}' for x in os.listdir(data + '/Training/dog')]
