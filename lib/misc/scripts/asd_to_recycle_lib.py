@@ -150,28 +150,42 @@ def proko_train(
     ds = get_ds(train_data, HEIGHT_WIDTH, preprocess_class)
     test_ds = get_ds(test_data, HEIGHT_WIDTH, preprocess_class)
 
-
     gpus = tf.config.experimental.list_physical_devices('GPU')
     if len(gpus) == 0:
         err('no gpus')
     log('list of gpus:')
     for gpu in gpus:
         log(f'\tGPU:{gpu}')
-    history = net.fit(
-        ds,
-        epochs=epochs,
-        verbose=Verbose.PROGRESS_BAR,
-        use_multiprocessing=True,
-        shuffle=False,
-        validation_data=test_ds
-    )
-    print('starting testing')
-    print_output = True
+    history = None
+    def private_gpu_mem():
+        print('starting private gpu mem')
+        history = net.fit(
+            ds,
+            epochs=epochs,
+            verbose=Verbose.PROGRESS_BAR,
+            use_multiprocessing=True,
+            shuffle=False,
+            validation_data=test_ds
+        )
+        print('starting testing')
+        print_output = True
 
-    print(net.evaluate(
-        ds,
-        verbose=Verbose.PROGRESS_BAR,
-        use_multiprocessing=False
-    ))
-    print('script complete')
+        print(net.evaluate(
+            ds,
+            verbose=Verbose.PROGRESS_BAR,
+            use_multiprocessing=False
+        ))
+        print('script complete')
+        print('ending private gpu mem')
+    run_and_clear_gpu_mem_after(private_gpu_mem)
     return history
+
+def run_and_clear_gpu_mem_after(lamb):
+    # https://github.com/tensorflow/tensorflow/issues/36465
+    import multiprocessing
+
+    process_eval = multiprocessing.Process(target=lamb)
+    process_eval.start()
+    process_eval.join()
+
+

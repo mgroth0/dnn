@@ -48,7 +48,7 @@ fold = Folder(f'_data/result/keras_zoo_{int(time.time())}').mkdirs()
 
 models_to_test = {
     'Xception'         : lambda: Xception,
-    # 'VGG16'            : lambda: VGG16, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
+    'VGG16'            : lambda: VGG16, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
     # 'VGG19'            : lambda: VGG19, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
 
 
@@ -123,3 +123,6 @@ for name, model in list(models_to_test.items()):
 
 
 # [MP|2286.50|shell         ] tensorflow.python.framework.errors_impl.ResourceExhaustedError:  OOM when allocating tensor with shape[960] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
+
+
+# [MP|2248.22|err           ] len(exceptions)=0
