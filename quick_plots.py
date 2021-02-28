@@ -3,7 +3,7 @@ from textwrap import shorten
 
 from files import SALIENCE_RESULT_FOLDER
 from mlib.boot.lang import listkeys
-from mlib.file import mkdir
+from mlib.str import shorten_str
 
 
 def main():
@@ -110,22 +110,27 @@ def _log_plot(log_data, fig_root, model):
     important_text = []
     important_time = []
     for lin, file_line, t in log_data:
-        if 'bash dnn.simgw' in file_line or '__DNN_IS_FINISHED__' in file_line:
-            important_text.append(file_line)
+        if 'bash dnn.simgw' in file_line:
+            important_text.append('bash dnn.simgw')
+            important_time.append(t)
+        if '__DNN_IS_FINISHED__' in file_line:
+            important_text.append('__DNN_IS_FINISHED__')
             important_time.append(t)
 
-    important_text = [shorten(s, width=20) for s in important_text]
+    important_text = [shorten_str(s, 20) for s in important_text]
 
     fig, axs = plt.subplots(nrows=2)
     table_ax = axs[0]
     pie_ax = axs[1]
     table_ax.set_axis_off()
+
+    important_time = [round(t, 2) for t in important_time]
     table = table_ax.table(
-        cellText=[str(t) for t in important_time],
+        cellText=[[str(t)] for t in important_time],
         rowLabels=important_text,
         colLabels=['time'],
-        rowColours=["palegreen"] * len(important_text),
-        colColours=["palegreen"] * 1,
+        rowColours=["palegreen"] * (len(important_text) + 1),
+        colColours=["palegreen"] * 2,
         cellLoc='center',
         loc='upper left'
     )
@@ -152,3 +157,6 @@ def _log_plot(log_data, fig_root, model):
 
     plt.savefig(fig_root['logs.png'].abspath)
     plt.clf()
+
+if __name__ == '__main__':
+    main()
