@@ -48,6 +48,7 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
     # example: locator.cc:998] 1 Chunks of size 11645184 totalling 11.11MiB
     # 2021-02-27 17:51:27.248635: I tensorflow/core/common_runtime/bfc_allocator.cc:998] 1 Chunks of size 11645440 totalling 11.11MiB
 
+    print('TF VERSION:' + str(tf.__version__))
 
     return tf
 
