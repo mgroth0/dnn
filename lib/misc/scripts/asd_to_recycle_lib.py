@@ -169,8 +169,8 @@ def proko_train(
             ds,
             epochs=epochs,
             verbose=Verbose.PROGRESS_BAR,
-            # use_multiprocessing=True,
-            use_multiprocessing=False,
+            use_multiprocessing=True,
+            # use_multiprocessing=False,
             shuffle=False,
             validation_data=test_ds
         )
@@ -180,8 +180,8 @@ def proko_train(
         print(net.evaluate(
             ds,
             verbose=Verbose.PROGRESS_BAR,
-            # use_multiprocessing=True,
-            use_multiprocessing=False
+            use_multiprocessing=True,
+            # use_multiprocessing=False
         ))
         print('script complete')
         print('ending private gpu mem')
