@@ -1,105 +1,154 @@
 import matplotlib.pyplot as plt
-import json
+from textwrap import shorten
 
+from files import SALIENCE_RESULT_FOLDER
 from mlib.boot.lang import listkeys
-from mlib.file import Folder, mkdir
+from mlib.file import mkdir
 
 
-print('hello world')
+def main():
+    print('hello world')
 
-# models = {
-#     'keras_no_bn'  : 'keras_1612270680',
-#     'pytorch_no_bn': 'pytorch_1612268175',
-#     'pytorch_bn'   : 'pytorch_1612275289'
-# }
-models = {
-    # 'keras_no_bn_more_ims': 'keras_1612790199',
-    # 'keras_no_bn_more_ims2': 'keras_1612887039',
+    # models = {
+    #     'keras_no_bn'  : 'keras_1612270680',
+    #     'pytorch_no_bn': 'pytorch_1612268175',
+    #     'pytorch_bn'   : 'pytorch_1612275289'
+    # }
+    models = {
+        # 'keras_no_bn_more_ims': 'keras_1612790199',
+        # 'keras_no_bn_more_ims2': 'keras_1612887039',
 
-    # 'pytorch_bn2'   : 'pytorch_bn_1612415904',
-    # 'pytorch_zoo_1'   : 'pytorch_zoo_1612889472'
-    # 'pytorch_zoo_50'   : 'pytorch_zoo_1612891265'
-    # 'keras_no_bn_more_ims_combined': 'keras_combined',
+        # 'pytorch_bn2'   : 'pytorch_bn_1612415904',
+        # 'pytorch_zoo_1'   : 'pytorch_zoo_1612889472'
+        # 'pytorch_zoo_50'   : 'pytorch_zoo_1612891265'
+        # 'keras_no_bn_more_ims_combined': 'keras_combined',
 
 
-    # 'keras_no_bn_more_ims_combined': 'keras_combined',
+        # 'keras_no_bn_more_ims_combined': 'keras_combined',
 
-    'keras_new': 'keras_1614492790',
-}
+        'keras_new': 'keras_1614492790',
+    }
 
-zoos = ['pytorch_zoo_1', 'pytorch_zoo_50']
+    zoos = ['pytorch_zoo_1', 'pytorch_zoo_50']
 
-# fig_root = '_figs/salience'
-fig_root = '_data/result/salience_figs'
+    # fig_root = '_figs/salience'
+    # fig_root = '_data/result/salience_figs'
 
-models = {}
-i = 0
-for folder in Folder('_data/result').files:
-    if folder.name == 'old': continue
-    if folder.name == 'salience_figs': continue
-    models[f'keras{i}'] = folder.name
-    i = i + 1
+    models = {}
+    i = 0
 
-for model in listkeys(models):
-    # with open(f'tf_bug1/data_tfbug/data_result/{models[model]}/data_result.json', 'r') as f:
-    with open(f'_data/result/{models[model]}/data_result.json', 'r') as f:
-        if Folder(fig_root)[model].exists:
-            print(f'not making plot for {model}, already exists')
+    for folder in SALIENCE_RESULT_FOLDER.files:
+        if folder.name == 'old': continue
+        # if folder.name == 'salience_figs': continue
+        models[f'keras{i}'] = folder.name
+        i = i + 1
+
+    for model in listkeys(models):
+        # with open(f'tf_bug1/data_tfbug/data_result/{models[model]}/data_result.json', 'r') as f:
+        my_result_folder = SALIENCE_RESULT_FOLDER[models[model]]
+        my_fig_root = my_result_folder['figs']
+        if my_fig_root.exists:
+            print(f'not making plot for {models[model]}, already exists')
         else:
-            print(f'making plot for {model}, does not yet exist')
-            data = json.loads(f.read())
+            print(f'making plot for {models[model]}, does not yet exist')
+            my_fig_root.mkdirs()
+            data = my_result_folder['data_result.json'].load()
+            log_data = my_result_folder['log.pkl'].load()
+            _main_plot(data, model, zoos, my_fig_root)
+            _log_plot(log_data, my_fig_root, model)
+    print('done')
+def _main_plot(data, model, zoos, fig_root):
+    factor = 1 if 'pytorch' in model else 100
 
-            factor = 1 if 'pytorch' in model else 100
+    num_imss = []
+    total_averages = []
+    last_10_averages = []
+    lasts = []
 
-            num_imss = []
-            total_averages = []
-            last_10_averages = []
-            lasts = []
+    for i in range(len(data)):  # for num_ims/model
 
+        num_imss.append(data[i]["num_images"])
+        total_averages.append(sum(data[i]['history']['accuracy']) / len(data[i]['history']['accuracy']))
+        last_10_averages.append(sum(data[i]['history']['accuracy'][-10:]) / 10)
+        lasts.append([-1])
 
+        plt.plot(
+            [x * factor for x in data[i]['history']['accuracy']], 'b', label='Training Accuracy'
+        )
+        plt.plot(
+            [x * factor for x in data[i]['history']['val_accuracy']], 'g', label='Evaluation Accuracy'
+        )
+        plt.legend()
+        plt.ylim(0, 100)
+        num_images = data[i]["num_images"]
+        if model not in zoos:
+            plt.title(f'{model},num_images={num_images}')
+        else:
+            plt.title(f'{data[i]["model_name"]},num_images={num_images}')
+        print('saving figure')
 
-            for i in range(len(data)): # for num_ims/model
+        if model not in zoos:
+            plt.savefig(fig_root[f'{data[i]["num_images"]}.png'].abspath)
+        else:
+            plt.savefig(fig_root[f'{data[i]["model_name"]}.png'].abspath)
+        plt.clf()
 
-                num_imss.append(data[i]["num_images"])
-                total_averages.append(sum(data[i]['history']['accuracy'])/len(data[i]['history']['accuracy']))
-                last_10_averages.append(sum(data[i]['history']['accuracy'][-10:])/10)
-                lasts.append([-1])
+    if model not in zoos:
+        plt.plot(num_imss, total_averages, 'b', label='total average accuracy')
+        plt.plot(num_imss, last_10_averages, 'g', label='average accuracy last 10 epochs')
+        plt.plot(num_imss, lasts, 'r', label='average accuracy of final epoch')
+        plt.title("how results vary as we modify # training images")
+        plt.xlabel("# training and testing images per epoch")
+        plt.legend()
+        plt.ylim(0, 1)
 
-                plt.plot(
-                    [x * factor for x in data[i]['history']['accuracy']], 'b', label='Training Accuracy'
-                )
-                plt.plot(
-                    [x * factor for x in data[i]['history']['val_accuracy']], 'g', label='Evaluation Accuracy'
-                )
-                plt.legend()
-                plt.ylim(0, 100)
-                num_images = data[i]["num_images"]
-                if model not in zoos:
-                    plt.title(f'{model},num_images={num_images}')
-                else:
-                    plt.title(f'{data[i]["model_name"]},num_images={num_images}')
-                print('saving figure')
-
-                mkdir(fig_root)
-                mkdir(f'{fig_root}/{model}')
-                if model not in zoos:
-                    plt.savefig(f'{fig_root}/{model}/{data[i]["num_images"]}')
-                else:
-                    plt.savefig(f'{fig_root}/{model}/{data[i]["model_name"]}')
-                plt.clf()
-
-            if model not in zoos:
-                plt.plot(num_imss,total_averages,'b',label='total average accuracy')
-                plt.plot(num_imss,last_10_averages,'g',label = 'average accuracy last 10 epochs')
-                plt.plot(num_imss,lasts,'r',label='average accuracy of final epoch')
-                plt.title("how results vary as we modify # training images")
-                plt.xlabel("# training and testing images per epoch")
-                plt.legend()
-                plt.ylim(0, 1)
-                plt.savefig(f'{fig_root}/{model}/summary.png')
-                plt.clf()
+        plt.savefig(fig_root['summary.png'].abspath)
+        plt.clf()
 
 
-print('done')
+def _log_plot(log_data, fig_root, model):
+    important_text = []
+    important_time = []
+    for lin, file_line, t in log_data:
+        if 'bash dnn.simgw' in file_line or '__DNN_IS_FINISHED__' in file_line:
+            important_text.append(file_line)
+            important_time.append(t)
 
-dummy_var = 5
+    important_text = [shorten(s, width=20) for s in important_text]
+
+    fig, axs = plt.subplots(nrows=2)
+    table_ax = axs[0]
+    pie_ax = axs[1]
+    table_ax.set_axis_off()
+    table = table_ax.table(
+        cellText=[str(t) for t in important_time],
+        rowLabels=important_text,
+        colLabels=['time'],
+        rowColours=["palegreen"] * len(important_text),
+        colColours=["palegreen"] * 1,
+        cellLoc='center',
+        loc='upper left'
+    )
+
+    table_ax.set_title('Important Logs', fontweight="bold")
+
+    time_amounts = []
+    last = 0
+    for t in important_time:
+        time_amounts.append(t - last)
+        last = t
+    sizes = important_time
+    colors = ['gold', 'yellowgreen', 'lightcoral', 'lightskyblue']
+
+    while len(colors) < len(sizes):
+        colors = colors + colors
+    colors = colors[:len(sizes)]
+
+    pie = pie_ax.pie(
+        time_amounts,
+        labels=important_text,
+        colors=colors
+    )
+
+    plt.savefig(fig_root['logs.png'].abspath)
+    plt.clf()
