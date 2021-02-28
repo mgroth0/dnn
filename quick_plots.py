@@ -114,6 +114,7 @@ def _log_plot(log_data, fig_root, model):
             important_text.append('bash dnn.simgw')
             important_time.append(t)
         if '__DNN_IS_FINISHED__' in file_line and 'got __DNN_IS_FINISHED__' not in file_line:
+            # https://github.com/keras-team/keras/issues/12561
             important_text.append('__DNN_IS_FINISHED__')
             important_time.append(t)
 
