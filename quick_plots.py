@@ -4,7 +4,7 @@ from files import SALIENCE_RESULT_FOLDER
 from mlib.boot.lang import listkeys
 from mlib.str import shorten_str
 
-DEBUG_REMAKE = True
+DEBUG_REMAKE = False
 
 def main():
     print('hello world')
@@ -113,7 +113,7 @@ def _log_plot(log_data, fig_root, model):
         if 'bash dnn.simgw' in file_line:
             important_text.append('bash dnn.simgw')
             important_time.append(t)
-        if '__DNN_IS_FINISHED__' in file_line:
+        if '__DNN_IS_FINISHED__' in file_line and 'got __DNN_IS_FINISHED__' not in file_line:
             important_text.append('__DNN_IS_FINISHED__')
             important_time.append(t)
 
@@ -166,8 +166,6 @@ def _log_plot(log_data, fig_root, model):
     )
 
     plt.savefig(fig_root['logs.png'].abspath)
-
-
 
     plt.clf()
 
