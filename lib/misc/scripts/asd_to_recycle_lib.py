@@ -182,7 +182,10 @@ def proko_train(
         ))
         print('script complete')
         print('ending private gpu mem')
-    run_and_clear_gpu_mem_after(private_gpu_mem)
+
+    # run_and_clear_gpu_mem_after(private_gpu_mem)
+    private_gpu_mem()
+
     return history
 
 def run_and_clear_gpu_mem_after(lamb):
