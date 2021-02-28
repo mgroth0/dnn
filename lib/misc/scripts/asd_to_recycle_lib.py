@@ -169,7 +169,8 @@ def proko_train(
             ds,
             epochs=epochs,
             verbose=Verbose.PROGRESS_BAR,
-            use_multiprocessing=True,
+            # use_multiprocessing=True,
+            use_multiprocessing=False,
             shuffle=False,
             validation_data=test_ds
         )
