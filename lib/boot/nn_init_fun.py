@@ -16,7 +16,8 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
     #     os.environ["CUDA_VISIBLE_DEVICES"] = ','.join([c for c in FLAGS.gpus])
     #
 
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #BEFORE importing tf
+
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #BEFORE importing tf... now I think it worked!
 
     import tensorflow as tf
     tf.random.set_seed(22)
