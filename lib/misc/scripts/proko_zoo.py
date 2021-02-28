@@ -24,7 +24,7 @@ fold = Folder(f'_data/result/keras_{int(time.time())}').mkdirs()
 
 # from lib. import tf
 
-for i in range(4, 6, 1):
+for i in range(1, 2, 1):
     print('in first loop')
     if i < BATCH_SIZE:
         err('bad')
