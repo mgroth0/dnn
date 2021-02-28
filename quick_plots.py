@@ -36,7 +36,8 @@ models = {}
 i = 0
 for folder in Folder('_data/result').files:
     if folder.name == 'old': continue
-    models[f'keras{i}'] = 'folder.name'
+    if folder.name == 'salience_figs': continue
+    models[f'keras{i}'] = folder.name
     i = i + 1
 
 for model in listkeys(models):
@@ -45,7 +46,7 @@ for model in listkeys(models):
         if Folder(fig_root)[model].exists:
             print(f'not making plot for {model}, already exists')
         else:
-            print(f'making plot for {model}, already exists')
+            print(f'making plot for {model}, does not yet exist')
             data = json.loads(f.read())
 
             factor = 1 if 'pytorch' in model else 100
