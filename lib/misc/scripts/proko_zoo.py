@@ -1,8 +1,8 @@
 import time
-from tensorflow.python.keras.applications.vgg16 import VGG16
-from tensorflow.python.keras.applications.vgg19 import VGG19
+# from tensorflow.python.keras.applications.vgg16 import VGG16
+# from tensorflow.python.keras.applications.vgg19 import VGG19
 from tensorflow.python.keras.applications.xception import Xception
-from tensorflow.python.keras.applications.densenet import DenseNet121, DenseNet169, DenseNet201
+# from tensorflow.python.keras.applications.densenet import DenseNet121, DenseNet169, DenseNet201
 from tensorflow.python.keras.applications.efficientnet import EfficientNetB0, EfficientNetB1, EfficientNetB2, EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6, EfficientNetB7
 from tensorflow.python.keras.applications.inception_resnet_v2 import InceptionResNetV2
 from tensorflow.python.keras.applications.inception_v3 import InceptionV3
@@ -25,6 +25,7 @@ fold = Folder(f'_data/result/keras_{int(time.time())}').mkdirs()
 # from lib. import tf
 
 for i in range(4, 5, 1):
+    print('in first loop')
     if i < BATCH_SIZE:
         err('bad')
     num_epochs = 1
@@ -40,6 +41,7 @@ for i in range(4, 5, 1):
         'history'   : history.history
     })
     fold['data_result.json'].save(data_result)
+    print('finished first loop')
 
 data_result = []
 fold = Folder(f'_data/result/keras_zoo_{int(time.time())}').mkdirs()
@@ -48,7 +50,12 @@ fold = Folder(f'_data/result/keras_zoo_{int(time.time())}').mkdirs()
 
 models_to_test = {
     'Xception'         : lambda: Xception,
-    'VGG16'            : lambda: VGG16, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
+
+
+
+
+    # For these valueerrors, I think that they didn't occur in the tensorflow-latest(2.4?) image but are occuring in mine(2.2?) simply because of an old bug! https://github.com/tensorflow/tensorflow/issues/41537
+    # 'VGG16'            : lambda: VGG16, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
     # 'VGG19'            : lambda: VGG19, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
 
 
@@ -88,7 +95,7 @@ models_to_test = {
 }
 
 for name, model in list(models_to_test.items()):
-    if name == 'ResNet50':
+    if name == 'ResNet101':
         break
     print('\n\n\n\n')
     print(f'TESTING MODEL: {name}')
