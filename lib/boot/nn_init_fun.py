@@ -6,7 +6,7 @@ from mlib.boot import log
 from mlib.boot.mlog import err
 from mlib.err import pub_print_warn
 
-EXTRA_TF_LOGGING = False
+EXTRA_TF_LOGGING = True
 
 def setupTensorFlow(FLAGS=None) -> ModuleType:
     import os
@@ -20,7 +20,8 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
     os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
 
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #BEFORE importing tf... now I think it worked!
+    if not EXTRA_TF_LOGGING:
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #BEFORE importing tf... now I think it worked!
 
     import tensorflow as tf
     tf.random.set_seed(22)
@@ -38,9 +39,10 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
 
 
     # trying to prevent endless allocation logging
-    logger = tf.get_logger()
-    logger.disabled = True
-    logger.setLevel(logging.FATAL)
+    if not EXTRA_TF_LOGGING:
+        logger = tf.get_logger()
+        logger.disabled = True
+        logger.setLevel(logging.FATAL)
 
     # trying to prevent endless allocation logging
     # example: locator.cc:998] 1 Chunks of size 11645184 totalling 11.11MiB
