@@ -43,102 +43,105 @@ for i in range(4, 5, 1):
     fold['data_result.json'].save(data_result)
     print('finished first loop')
 
-data_result = []
-fold = Folder(f'_data/result/keras_zoo_{int(time.time())}').mkdirs()
+MORE = False
+if MORE:
 
-# NUM_CLASSES = 1000 #2
+    data_result = []
+    fold = Folder(f'_data/result/keras_zoo_{int(time.time())}').mkdirs()
 
-models_to_test = {
-    'Xception'         : lambda: Xception,
+    # NUM_CLASSES = 1000 #2
 
-
-
-
-    # For these valueerrors, I think that they didn't occur in the tensorflow-latest(2.4?) image but are occuring in mine(2.2?) simply because of an old bug! https://github.com/tensorflow/tensorflow/issues/41537
-    # 'VGG16'            : lambda: VGG16, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
-    # 'VGG19'            : lambda: VGG19, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
-
-
-    'ResNet50'         : lambda: ResNet50,
-    'ResNet101'        : lambda: ResNet101,
-    'ResNet152'        : lambda: ResNet152,
-    # 'ResNet50V3'       : lambda: ResNet50V3(classes=NUM_CLASSES),
-    'ResNet101V2'      : lambda: ResNet101V2,
-    # 'ResNet152V3'      : lambda: ResNet152V3,
-    'InceptionV3'      : lambda: InceptionV3,
-    'InceptionResNetV2': lambda: InceptionResNetV2,
-    'MobileNet'        : lambda: MobileNet,
-    'MobileNetV2'      : lambda: MobileNetV2,
-    # 'DenseNet121'      : lambda: DenseNet121, # DenseNet121() got an unexpected keyword argument 'classifier_activation
-    # 'DenseNet169'      : lambda: DenseNet169, # [MP|503.47|shell         ] TypeError: DenseNet169() got an unexpected keyword argument 'classifier_activation'
-
-    # 'DenseNet201'      : lambda: DenseNet201, # TypeError: DenseNet201() got an unexpected keyword argument 'classifier_activation'
-    # 'NASNetMobile'     : lambda: NASNetMobile, #  TypeError: NASNetMobile() got an unexpected keyword argument 'classifier_activation'
+    models_to_test = {
+        'Xception'         : lambda: Xception,
 
 
 
 
-    'NASNetLarge'      : lambda: NASNetLarge,
+        # For these valueerrors, I think that they didn't occur in the tensorflow-latest(2.4?) image but are occuring in mine(2.2?) simply because of an old bug! https://github.com/tensorflow/tensorflow/issues/41537
+        # 'VGG16'            : lambda: VGG16, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
+        # 'VGG19'            : lambda: VGG19, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
+
+
+        'ResNet50'         : lambda: ResNet50,
+        'ResNet101'        : lambda: ResNet101,
+        'ResNet152'        : lambda: ResNet152,
+        # 'ResNet50V3'       : lambda: ResNet50V3(classes=NUM_CLASSES),
+        'ResNet101V2'      : lambda: ResNet101V2,
+        # 'ResNet152V3'      : lambda: ResNet152V3,
+        'InceptionV3'      : lambda: InceptionV3,
+        'InceptionResNetV2': lambda: InceptionResNetV2,
+        'MobileNet'        : lambda: MobileNet,
+        'MobileNetV2'      : lambda: MobileNetV2,
+        # 'DenseNet121'      : lambda: DenseNet121, # DenseNet121() got an unexpected keyword argument 'classifier_activation
+        # 'DenseNet169'      : lambda: DenseNet169, # [MP|503.47|shell         ] TypeError: DenseNet169() got an unexpected keyword argument 'classifier_activation'
+
+        # 'DenseNet201'      : lambda: DenseNet201, # TypeError: DenseNet201() got an unexpected keyword argument 'classifier_activation'
+        # 'NASNetMobile'     : lambda: NASNetMobile, #  TypeError: NASNetMobile() got an unexpected keyword argument 'classifier_activation'
+
+
+
+
+        'NASNetLarge'      : lambda: NASNetLarge,
 
 
 
 
 
-    'EfficientNetB0'   : lambda: EfficientNetB0,
-    'EfficientNetB1'   : lambda: EfficientNetB1,
-    'EfficientNetB2'   : lambda: EfficientNetB2,
-    'EfficientNetB3'   : lambda: EfficientNetB3,
-    'EfficientNetB4'   : lambda: EfficientNetB4,
-    'EfficientNetB5'   : lambda: EfficientNetB5,
-    'EfficientNetB6'   : lambda: EfficientNetB6,
-    'EfficientNetB7'   : lambda: EfficientNetB7,
-}
+        'EfficientNetB0'   : lambda: EfficientNetB0,
+        'EfficientNetB1'   : lambda: EfficientNetB1,
+        'EfficientNetB2'   : lambda: EfficientNetB2,
+        'EfficientNetB3'   : lambda: EfficientNetB3,
+        'EfficientNetB4'   : lambda: EfficientNetB4,
+        'EfficientNetB5'   : lambda: EfficientNetB5,
+        'EfficientNetB6'   : lambda: EfficientNetB6,
+        'EfficientNetB7'   : lambda: EfficientNetB7,
+    }
 
-for name, model in list(models_to_test.items()):
-    break
-    if name == 'ResNet101':
+    for name, model in list(models_to_test.items()):
         break
-    print('\n\n\n\n')
-    print(f'TESTING MODEL: {name}')
-    num_epochs = 1
-    num_ims = BATCH_SIZE
-    model_class = model()
-    history = proko_train(
-        model_class,
-        num_epochs,
-        num_ims,
-        include_top=True,  # THIS WAS THE BUG!!!! Probably used a different loss function while it was false
-        # weights='imagenet',
-        weights=None,
-        preprocess_class=None,
-        # classes=1000,
-        classes=2,
-        # classes = 1, #classifer activation not keyword
-        # loss='categorical_crossentropy',
-        # loss='mse',
-        loss='binary_crossentropy'
-    )  # more epochs without BN is required to get to overfit
-    data_result.append({
-        'model_name': name,
-        'num_images': num_ims,
-        'history'   : history.history
-    })
-    fold['data_result.json'].save(data_result)
+        if name == 'ResNet101':
+            break
+        print('\n\n\n\n')
+        print(f'TESTING MODEL: {name}')
+        num_epochs = 1
+        num_ims = BATCH_SIZE
+        model_class = model()
+        history = proko_train(
+            model_class,
+            num_epochs,
+            num_ims,
+            include_top=True,  # THIS WAS THE BUG!!!! Probably used a different loss function while it was false
+            # weights='imagenet',
+            weights=None,
+            preprocess_class=None,
+            # classes=1000,
+            classes=2,
+            # classes = 1, #classifer activation not keyword
+            # loss='categorical_crossentropy',
+            # loss='mse',
+            loss='binary_crossentropy'
+        )  # more epochs without BN is required to get to overfit
+        data_result.append({
+            'model_name': name,
+            'num_images': num_ims,
+            'history'   : history.history
+        })
+        fold['data_result.json'].save(data_result)
 
 
 
-# [MP|260.39|shell         ] tensorflow.python.framework.errors_impl.ResourceExhaustedError:  OOM when allocating tensor with shape[12,1024,19,19] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
+    # [MP|260.39|shell         ] tensorflow.python.framework.errors_impl.ResourceExhaustedError:  OOM when allocating tensor with shape[12,1024,19,19] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
 
-# [MP|1291.42|shell         ] 2021-02-27 17:02:34.093494: W tensorflow/core/framework/op_kernel.cc:1753] OP_REQUIRES failed at conv_ops.cc:930 : Resource exhausted: OOM when allocating tensor with shape[1824,304,1,1] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
-
-
-# [MP|2286.50|shell         ] tensorflow.python.framework.errors_impl.ResourceExhaustedError:  OOM when allocating tensor with shape[960] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
+    # [MP|1291.42|shell         ] 2021-02-27 17:02:34.093494: W tensorflow/core/framework/op_kernel.cc:1753] OP_REQUIRES failed at conv_ops.cc:930 : Resource exhausted: OOM when allocating tensor with shape[1824,304,1,1] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
 
 
-# [MP|2248.22|err           ] len(exceptions)=0
+    # [MP|2286.50|shell         ] tensorflow.python.framework.errors_impl.ResourceExhaustedError:  OOM when allocating tensor with shape[960] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
 
 
-# base:
-    # [MP|251.95|err
-# multiprocess = true for train and eval:
-    # [MP|268.33|err           ] len(exceptions)=0
+    # [MP|2248.22|err           ] len(exceptions)=0
+
+
+    # base:
+        # [MP|251.95|err
+    # multiprocess = true for train and eval:
+        # [MP|268.33|err           ] len(exceptions)=0
