@@ -4,6 +4,8 @@ import os
 import random
 
 from lib.nn.tf_lib import Verbose
+from mlib.boot import log
+from mlib.boot.mlog import err
 BATCH_SIZE = 4
 SANITY_SWITCH = False
 SANITY_MIX = True
@@ -148,6 +150,13 @@ def proko_train(
     ds = get_ds(train_data, HEIGHT_WIDTH, preprocess_class)
     test_ds = get_ds(test_data, HEIGHT_WIDTH, preprocess_class)
 
+
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    if len(gpus) == 0:
+        err('no gpus')
+    log('list of gpus:')
+    for gpu in gpus:
+        log(f'\tGPU:{gpu}')
     history = net.fit(
         ds,
         epochs=epochs,
