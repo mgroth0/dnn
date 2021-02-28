@@ -1,4 +1,3 @@
-import rsa_for_darius
 print('top of dnn.py')
 from lib import makereport
 print('dnn.py: about to import log')
@@ -52,9 +51,11 @@ class DNN(Project):
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'RSA_MAIN':
             # print('here1, doing Darius-RSA')
             # import rsa_for_darius
+            import rsa_for_darius
             rsa_for_darius.main()
             return None
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'RSA_NEW':
+            import rsa_for_darius
             rsa_for_darius.debug_process_post('AC')
             rsa_for_darius.test_line('AC')
             rsa_for_darius.debug_process_post('S')

@@ -15,6 +15,9 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
     # if FLAGS.gpus is not None:
     #     os.environ["CUDA_VISIBLE_DEVICES"] = ','.join([c for c in FLAGS.gpus])
     #
+
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #BEFORE importing tf
+
     import tensorflow as tf
     tf.random.set_seed(22)
     tf.compat.v1.enable_eager_execution()
@@ -38,7 +41,7 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
     # trying to prevent endless allocation logging
     # example: locator.cc:998] 1 Chunks of size 11645184 totalling 11.11MiB
     # 2021-02-27 17:51:27.248635: I tensorflow/core/common_runtime/bfc_allocator.cc:998] 1 Chunks of size 11645440 totalling 11.11MiB
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 
     return tf
 
