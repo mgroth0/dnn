@@ -16,6 +16,7 @@ class_map = {'dog': 0, 'cat': 1}
 
 
 def get_data(num_ims_per_class='ALL'):
+    print('get_data')
     data = '/matt/data/tf_bug1'
 
     train_data_cat = [data + f'/Training/cat/{x}' for x in os.listdir(data + '/Training/cat')]
@@ -52,7 +53,9 @@ def get_data(num_ims_per_class='ALL'):
     return train_data, test_data
 
 def get_gen(data, HEIGHT_WIDTH, preprocess_class):
+    print('get_gen')
     def gen():
+        print('gen')
         pairs = []
         i = 0
         for im_file in data:
@@ -73,6 +76,7 @@ def get_ds(
         HEIGHT_WIDTH,
         preprocess_class
 ):
+    print('get_ds')
     return tf.data.Dataset.from_generator(
         get_gen(data, HEIGHT_WIDTH, preprocess_class),
         (tf.float32, tf.int64),
@@ -83,6 +87,7 @@ def get_ds(
     )
 
 def preprocess(file, HEIGHT_WIDTH, preprocess_class):
+    print('preprocessing')
     imdata = mpimg.imread(file)
     if preprocess_class is not None:
         imdata = cv2.resize(imdata, dsize=(HEIGHT_WIDTH, HEIGHT_WIDTH), interpolation=cv2.INTER_LINEAR) * 255.0
