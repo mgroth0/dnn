@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
-from textwrap import shorten
 
 from files import SALIENCE_RESULT_FOLDER
 from mlib.boot.lang import listkeys
 from mlib.str import shorten_str
 
+DEBUG_REMAKE = True
 
 def main():
     print('hello world')
@@ -47,7 +47,7 @@ def main():
         # with open(f'tf_bug1/data_tfbug/data_result/{models[model]}/data_result.json', 'r') as f:
         my_result_folder = SALIENCE_RESULT_FOLDER[models[model]]
         my_fig_root = my_result_folder['figs']
-        if my_fig_root.exists:
+        if my_fig_root.exists and not (DEBUG_REMAKE):
             print(f'not making plot for {models[model]}, already exists')
         else:
             print(f'making plot for {models[model]}, does not yet exist')
@@ -131,8 +131,9 @@ def _log_plot(log_data, fig_root, model):
         colLabels=['time'],
         rowColours=["palegreen"] * (len(important_text) + 1),
         colColours=["palegreen"] * 2,
+        colWidths=[0.5, 0.5],
         cellLoc='center',
-        loc='upper left'
+        loc='center'
     )
 
     table_ax.set_title('Important Logs', fontweight="bold")
@@ -155,7 +156,19 @@ def _log_plot(log_data, fig_root, model):
         colors=colors
     )
 
+    pie_ax.text(
+        0.5,
+        -0.25,
+        '* +2 seconds for figure generation',
+        horizontalalignment='center',
+        verticalalignment='center',
+        transform=pie_ax.transAxes
+    )
+
     plt.savefig(fig_root['logs.png'].abspath)
+
+
+
     plt.clf()
 
 if __name__ == '__main__':
