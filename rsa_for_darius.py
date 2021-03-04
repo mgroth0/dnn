@@ -244,6 +244,7 @@ def main():
                             comp_mat = rsa_mat[sc, sr]
                             avg_dis = np.mean(comp_mat)
                             # fd.data = arr(fd.data)
+                            breakpoint()
                             fdd.data[sc, sr] = avg_dis
                             # fd.data = fd.data.tolist()
 
@@ -435,13 +436,13 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot,fu
         'p_across_ns': p_across_ns
     })
 
-    try:
+    # try:
 
-        similarity_NS_std = np.std(similarity_NS_flat)
-        similarity_S_stf = np.std(similarity_S_flat)
-        dissimilarity_across_std = np.std(sim_across_flat)
-    except:
-        breakpoint()
+    similarity_NS_std = np.std(similarity_NS_flat)
+    similarity_S_stf = np.std(similarity_S_flat)
+    dissimilarity_across_std = np.std(sim_across_flat)
+    # except:
+    #     breakpoint()
 
     if plot == 'AC':
         scores[arch][size] = dissimilarity_across
