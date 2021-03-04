@@ -1,4 +1,4 @@
-from arch.proko_inc import CustomInceptionResNetV2, NoBN_INC_PROKO
+from arch.proko_inc import NoBN_INC_PROKO
 from lib.misc.scripts.asd_to_recycle_lib import get_data, get_ds, get_gen, preprocess, proko_train
 from mlib.boot.mlog import err
 print('nn_main.py: top')
@@ -26,14 +26,13 @@ ARCH_MAP = {
     'INC'     : INC,
     'INC_ORIG': INC_ORIG,
     'SCRATCH' : SCRATCH,
-    'CUSTOM' : NoBN_INC_PROKO
+    'CUSTOM'  : NoBN_INC_PROKO
 }
 
 # breakpoint()
 
 @log_invokation()
 def nnet_main(FLAGS):
-
     _IMAGES_FOLDER = pwdf()['_images'].mkdirs(mker=True)
     HUMAN_IMAGE_FOLDER = pwdf()['_images_human'].mkdirs(mker=True)
 
@@ -89,7 +88,6 @@ def nnet_main(FLAGS):
     net.train_data = datasetTrain.prep(net.HEIGHT_WIDTH, net.PP)
     net.val_data = datasetVal.prep(net.HEIGHT_WIDTH, net.PP)
     net.test_data = datasetTest.prep(net.HEIGHT_WIDTH, net.PP)
-
 
     proko_train()
     return trainTestRecord(net, '', FLAGS.epochs)
