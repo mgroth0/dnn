@@ -434,9 +434,13 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
         'p_across_ns': p_across_ns
     })
 
-    similarity_NS_std = np.std(similarity_NS_flat)
-    similarity_S_stf = np.std(similarity_S_flat)
-    dissimilarity_across_std = np.std(sim_across_flat)
+    try:
+
+        similarity_NS_std = np.std(similarity_NS_flat)
+        similarity_S_stf = np.std(similarity_S_flat)
+        dissimilarity_across_std = np.std(sim_across_flat)
+    except:
+        breakpoint()
 
     if plot == 'AC':
         scores[arch][size] = dissimilarity_across
