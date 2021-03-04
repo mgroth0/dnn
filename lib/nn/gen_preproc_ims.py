@@ -381,7 +381,7 @@ class PreDataset:
                             #         str(the_new.data.dtype) != "float32") or str(
                             #         the_new.data.shape) != '(299, 299, 3)':  # debug
                             #     breakpoint()
-                            log('finished preprocess')
+                            # log('finished preprocess')
                             the_new.label = self.class_label_map[imd.clazz]
                         else:
                             the_new = getReal((imd, HW),

@@ -45,7 +45,10 @@ class Inc_debug_preprocess():
         file = None
         if is_file(im):
             file = im
+            im.default_quiet = True
             im = im.load()
+            im.default_quiet = False
+
         # imdata = mpimg.imread(file)
         from arch.INC_ORIG import INC_HW
         imdata = cv2.resize(im, dsize=(INC_HW, INC_HW), interpolation=cv2.INTER_LINEAR) * 255.0
@@ -74,6 +77,7 @@ class Preprocessor:
         file = None
         if is_file(im):
             file = im
+
             im = im.load()
 
         assert self.data_format == 'channels_last'
