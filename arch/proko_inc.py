@@ -8,6 +8,8 @@ from lib.nn import nnstate
 
 class NoBN_INC_PROKO(INC):
 
+    PP = 'INC_DEBUG'
+
     def assemble_layers(self):
         include_top = True
         weights = None

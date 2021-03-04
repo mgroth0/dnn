@@ -11,93 +11,11 @@ from mlib.term import log_invokation
 SANITY_SWITCH = False
 SANITY_MIX = True
 import tensorflow as tf
-class_map = {'dog': 0, 'cat': 1}
 
 
 
-def get_data(num_ims_per_class='ALL'):
-    print('get_data')
-    # data = '/matt/data/tf_bug1/' #small set with hundreds I generated from imagenet
-    data = '/matt/data/tf_bug1/dogscats'  # thousands, downloaded from kaggle
 
-    train_data_cat = [data + f'/Training/cat/{x}' for x in os.listdir(data + '/Training/cat')]
-    train_data_dog = [data + f'/Training/dog/{x}' for x in os.listdir(data + '/Training/dog')]
-    random.shuffle(train_data_cat)
-    random.shuffle(train_data_dog)
-    if num_ims_per_class != 'ALL':
-        train_data_cat = train_data_cat[0:num_ims_per_class]
-    train_data_dog = train_data_dog[0:num_ims_per_class]
-    train_data = train_data_cat + train_data_dog
 
-    test_data_cat = [data + f'/Testing/cat/{x}' for x in os.listdir(data + '/Testing/cat')]
-    test_data_dog = [data + f'/Testing/dog/{x}' for x in os.listdir(data + '/Testing/dog')]
-    random.shuffle(test_data_cat)
-    random.shuffle(test_data_dog)
-    if num_ims_per_class != 'ALL':
-        test_data_cat = test_data_cat[0:num_ims_per_class]
-        test_data_dog = test_data_dog[0:num_ims_per_class]
-    test_data = test_data_cat + test_data_dog
-
-    random.shuffle(train_data)
-    random.shuffle(test_data)
-
-    if SANITY_MIX:
-        mixed_data = train_data + test_data
-        random.shuffle(mixed_data)
-        train_data = mixed_data[:len(train_data)]
-        test_data = mixed_data[len(train_data):]
-
-    if SANITY_SWITCH:
-        tmp_data = train_data
-        train_data = test_data
-        test_data = tmp_data
-    return train_data, test_data
-
-def get_gen(data, HEIGHT_WIDTH, preprocess_class):
-    print('get_gen')
-    def gen():
-        print('gen')
-        pairs = []
-        i = 0
-        for im_file in data:
-            i += 1
-            if i <= nnstate.FLAGS.batchsize:
-                pairs += [preprocess(im_file, HEIGHT_WIDTH, preprocess_class)]
-            if i == nnstate.FLAGS.batchsize:
-                yield (
-                    [pair[0] for pair in pairs],
-                    [pair[1] for pair in pairs]
-                )
-                pairs.clear()
-                i = 0
-    return gen
-
-def get_ds(
-        data,
-        HEIGHT_WIDTH,
-        preprocess_class
-):
-    print('get_ds')
-    return tf.data.Dataset.from_generator(
-        get_gen(data, HEIGHT_WIDTH, preprocess_class),
-        (tf.float32, tf.int64),
-        output_shapes=(
-            tf.TensorShape((nnstate.FLAGS.batchsize, HEIGHT_WIDTH, HEIGHT_WIDTH, 3)),
-            tf.TensorShape(([nnstate.FLAGS.batchsize]))
-        )
-    )
-
-def preprocess(file, HEIGHT_WIDTH, preprocess_class):
-    print('preprocessing')
-    imdata = mpimg.imread(file)
-    if preprocess_class is not None:
-        imdata = cv2.resize(imdata, dsize=(HEIGHT_WIDTH, HEIGHT_WIDTH), interpolation=cv2.INTER_LINEAR) * 255.0
-        imdata = preprocess_class.preprocess_input(
-            # imdata = tf.keras.applications.inception_resnet_v2.preprocess_input(
-            imdata, data_format=None
-        )
-
-    return imdata, class_map[os.path.basename(os.path.dirname(file))]
 
 @log_invokation(with_args=True)
 def proko_train(

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from arch import INC
 from lib.misc.imutil import resampleim, make255
 from mlib.boot import log
 from mlib.boot.mlog import err
@@ -33,8 +34,27 @@ def preprocessors(hw): return {
         resize=hw + 29,  # so it becomes recommended 256 for alexnet but also works for other networks
         crop=hw,
         subtract_imagenet_means=True
-    )
+    ),
+    'INC_DEBUG':
 }
+
+import matplotlib.image as mpimg
+import cv2
+
+class Inc_debug_preprocess():
+    def preprocess(self,im):
+        file = None
+        if is_file(im):
+            file = im
+            im = im.load()
+        # imdata = mpimg.imread(file)
+        imdata = cv2.resize(im, dsize=(INC.HW, INC.HW), interpolation=cv2.INTER_LINEAR) * 255.0
+        import tensorflow as tf
+        imdata = tf.keras.applications.inception_resnet_v2.preprocess_input(
+            # imdata = tf.keras.applications.inception_resnet_v2.preprocess_input(
+            imdata, data_format=None
+        )
+        return imdata
 
 
 @dataclass

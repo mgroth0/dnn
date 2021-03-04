@@ -1,6 +1,8 @@
 from arch.proko_inc import NoBN_INC_PROKO
 from lib.misc.scripts.asd_to_recycle_lib import get_data, get_ds, get_gen, preprocess, proko_train
 from mlib.boot.mlog import err
+from mlib.boot.stream import listitems
+from mlib.file import Folder
 print('nn_main.py: top')
 print('nn_main.py: about to do arch imports')
 from arch import ALEX, GNET, INC, SCRATCH, AssembledModel
@@ -39,11 +41,23 @@ def nnet_main(FLAGS):
     if FLAGS.gen:
         gen_main(FLAGS, _IMAGES_FOLDER, HUMAN_IMAGE_FOLDER)
     if FLAGS.salience:
-        GPU_IMAGES_FOLDER = get_data()
-        get_gen()
-        get_ds()
-        preprocess()
-        err('work. ')
+        class_map = {'dog': 0, 'cat': 1}
+
+        # dogcatfolder = '/matt/data/tf_bug1/' #small set with hundreds I generated from imagenet
+        dogcatfolder = '/matt/data/tf_bug1/dogscats'  # thousands, downloaded from kaggle
+
+        dogcatfolder = Folder(dogcatfolder)
+        ntrain_folder = dogcatfolder['ntrain']
+        dummy_folder = dogcatfolder['dummy']
+        ntrain_folder.deleteIfExists()
+        for k, v in listitems(class_map):
+            dogcatfolder[k].mkdirs()
+            for im in dogcatfolder['Training'][k].files.shuffled()[0:FLAGS.ntrain]:
+                im.copyinto(dogcatfolder[k])
+
+        GPU_TRAIN_FOLDER = ntrain_folder
+        GPU_TEST_FOLDER = dogcatfolder['Testing']
+        GPU_RSA_FOLDER = dummy_folder
     else:
         GPU_IMAGES_FOLDER = _IMAGES_FOLDER[f'gpu{FLAGS.mygpufordata}']
 
