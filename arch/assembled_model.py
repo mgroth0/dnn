@@ -74,7 +74,6 @@ class AssembledModel(ModelWrapper, ABC):
             len(listkeys(nnstate.CURRENT_PRED_MAP)),
             len(listkeys(nnstate.CURRENT_TRUE_MAP))
         )
-        breakpoint()
         history = self.net.fit(
             # x,y,
             ds,

@@ -101,7 +101,7 @@ def nnet_main(FLAGS):
         )
     net.build(FLAGS)
     [a.after_build(FLAGS, net) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
-
+    breakpoint()
     net.train_data = datasetTrain.prep(net.HEIGHT_WIDTH, net.PP)
     net.val_data = datasetVal.prep(net.HEIGHT_WIDTH, net.PP)
     net.test_data = datasetTest.prep(net.HEIGHT_WIDTH, net.PP)
