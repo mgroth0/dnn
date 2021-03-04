@@ -1,7 +1,6 @@
 import random
 
 from arch.proko_inc import NoBN_INC_PROKO
-from lib.misc.scripts.asd_to_recycle_lib import proko_train
 from mlib.boot.mlog import err
 from mlib.boot.stream import listitems
 from mlib.file import Folder
