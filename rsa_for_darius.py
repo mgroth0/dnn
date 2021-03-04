@@ -73,7 +73,7 @@ T_SIZES = [
     200
 ]  # 6 epochs for all, and only 70% for training
 if SHOBHITA:
-    T_SIZES = [100000] #num epochs?
+    T_SIZES = [100000]  # num epochs?
 CLASSES = [
     'NS0',
     'NS2',
@@ -190,7 +190,7 @@ def main():
                         axis=0
                     )
             # breakpoint()
-            fd = RSA(
+            fd = RSA(  # gets SIMILARITIES, not DiSSIMILARTIES due to fix()
                 f'L2 Norm of {LAYERS[arch]} from {net}',
                 acts_for_rsa,
                 None,
@@ -209,7 +209,6 @@ def main():
             if lennnn == fd.data.shape[0]:
                 fd.data = fd.data.tolist()
             else:
-
                 # DEBUG
                 # for rowi,row in enum(fd.data):
                 #     copy = fd.data[rowi]
@@ -297,6 +296,7 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     similarity_NS = 0
     similarity_S = 0
     dissimilarity_across = 0
+    similarity_across = 0
 
     similarity_NS_flat = []
     similarity_S_flat = []
@@ -327,6 +327,7 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
                 dvs[1] += 1
                 similarity_S_flat += flatten(all_dis).tolist()
             else:
+                similarity_across += avg_dis
                 if NORMALIZE:
                     # avg_dis = avg_dis - ((avg_dis - 1) * 2)
                     # avg_dis = avg_dis - ((2 * avg_dis) - 2)
@@ -342,6 +343,7 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     similarity_NS = similarity_NS / dvs[0]
     similarity_S = similarity_S / dvs[1]
     dissimilarity_across = dissimilarity_across / dvs[2]
+    similarity_across = similarity_across / dvs[2]
 
     similarity_NS_std = np.std(arr(similarity_NS_flat))
     similarity_S_stf = np.std(arr(similarity_S_flat))
@@ -357,11 +359,11 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
         err('bad')
 
     fd = PlotData(
-        y=[similarity_NS, similarity_S, dissimilarity_across],
+        y=[similarity_NS, similarity_S, similarity_across],
         x=[
             'similarity_NS',
             'similarity_S',
-            'dissimilarity_across'
+            'similarity_across'
         ],
         item_type='bar',
         item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
