@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
+import numpy as np
+
 from arch import INC
-from lib.misc.imutil import resampleim, make255
+from lib.misc.imutil import make255, resampleim
 from mlib.boot import log
 from mlib.boot.mlog import err
 from mlib.boot.stream import arr
-import numpy as np
-
 from mlib.file import is_file
 
 
@@ -35,14 +35,13 @@ def preprocessors(hw): return {
         crop=hw,
         subtract_imagenet_means=True
     ),
-    'INC_DEBUG':
+    'INC_DEBUG'           : Inc_debug_preprocess()
 }
 
-import matplotlib.image as mpimg
 import cv2
 
 class Inc_debug_preprocess():
-    def preprocess(self,im):
+    def preprocess(self, im):
         file = None
         if is_file(im):
             file = im
