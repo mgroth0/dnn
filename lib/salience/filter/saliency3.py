@@ -8,7 +8,7 @@ from scipy.ndimage.filters import maximum_filter
 
 logger = logging.getLogger(__name__)
 
-levels=9 # DEFAULT
+levels = 9  # DEFAULT
 # levels=8
 
 # (640, 480)
@@ -145,7 +145,6 @@ def sumNormalizedFeatures(features):
     """
     commonWidth = start_size[0] / 2**(levels / 2 - 1)
     commonHeight = start_size[1] / 2**(levels / 2 - 1)
-    breakpoint()
     commonSize = int(commonWidth), int(commonHeight)
     logger.info("Size of conspicuity map: %s", commonSize)
     consp = N(cv2.resize(features[0][1], commonSize))
@@ -220,32 +219,13 @@ def markMaxima(saliency):
     marked = cv2.merge((b, g, r))
     return marked
 
+
+
+
+im = None
 start_size = None
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
-
-    import argparse
-    import sys
-    parser = argparse.ArgumentParser(description="Simple Itti-Koch-style conspicuity.")
-    parser.add_argument('--fileList', type=str, dest='fileList', action='store',
-                        help='Text file containing input file names, one per line.')
-    parser.add_argument('--inputFile', type=str, dest='inputFile', action='store',
-                        help='File to compute compute saliency list for.  Need either --fileList or --inputFile.')
-    parser.add_argument('--intensityOutput', type=str, dest='intensityOutput', action='store',
-                        help="Filename for intensity conspicuity map,")
-    parser.add_argument('--gaborOutput', type=str, dest='gaborOutput', action='store',
-                        help="Filename for intensity conspicuity map,")
-    parser.add_argument('--rgOutput', type=str, dest='rgOutput', action='store',
-                        help="Filename for rg conspicuity map,")
-    parser.add_argument('--byOutput', type=str, dest='byOutput', action='store',
-                        help="Filename for by conspicuity map,")
-    parser.add_argument('--cOutput', type=str, dest='cOutput', action='store',
-                        help="Filename for color conspicuity map,")
-    parser.add_argument('--saliencyOutput', type=str, dest='saliencyOutput', action='store',
-                        help="Filename for saliency map,")
-    parser.add_argument("--markMaxima", action='store_true', help="Mark maximum saliency in output image.")
-    args = parser.parse_args()
-
+def main(args):
+    global im,start_size
     if args.fileList is None and args.inputFile is None:
         logger.error("Need either --fileList or --inputFile cmd line arguments.")
         sys.exit()
@@ -254,12 +234,11 @@ if __name__ == "__main__":
         sys.exit()
     else:
         if args.fileList:
-            # we are reading filenames from a file.
+            print('we are reading filenames from a file.')
             filenames = (filename[:-1] for filename in open(args.fileList))  # remove end-of line character
         else:
-            # filenames were given on the command line.
+            print('filenames were given on the command line.')
             filenames = [args.inputFile]
-
         for filename in filenames:
             im = cv2.imread(filename, cv2.COLOR_BGR2RGB)  # assume BGR, convert to RGB---more intuitive code.
             start_size = (im.shape[1], im.shape[0])
@@ -293,3 +272,32 @@ if __name__ == "__main__":
             writeCond(args.byOutput, by)
             writeCond(args.cOutput, .25 * c)
             writeCond(args.saliencyOutput, saliency)
+
+
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
+
+    import argparse
+    import sys
+    parser = argparse.ArgumentParser(description="Simple Itti-Koch-style conspicuity.")
+    parser.add_argument('--fileList', type=str, dest='fileList', action='store',
+                        help='Text file containing input file names, one per line.')
+    parser.add_argument('--inputFile', type=str, dest='inputFile', action='store',
+                        help='File to compute compute saliency list for.  Need either --fileList or --inputFile.')
+    parser.add_argument('--intensityOutput', type=str, dest='intensityOutput', action='store',
+                        help="Filename for intensity conspicuity map,")
+    parser.add_argument('--gaborOutput', type=str, dest='gaborOutput', action='store',
+                        help="Filename for intensity conspicuity map,")
+    parser.add_argument('--rgOutput', type=str, dest='rgOutput', action='store',
+                        help="Filename for rg conspicuity map,")
+    parser.add_argument('--byOutput', type=str, dest='byOutput', action='store',
+                        help="Filename for by conspicuity map,")
+    parser.add_argument('--cOutput', type=str, dest='cOutput', action='store',
+                        help="Filename for color conspicuity map,")
+    parser.add_argument('--saliencyOutput', type=str, dest='saliencyOutput', action='store',
+                        help="Filename for saliency map,")
+    parser.add_argument("--markMaxima", action='store_true', help="Mark maximum saliency in output image.")
+    args = parser.parse_args()
+    main(args)

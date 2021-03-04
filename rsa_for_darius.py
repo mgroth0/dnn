@@ -50,7 +50,7 @@ N_PER_CLASS = 500  # (max) # NO LONGER IN SLURM BC REQUEST WONT GO THROUGH, SO C
 import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
 
-SHOBHITA = False
+SHOBHITA = True
 
 LAYERS = {
     "SQN"      : 'relu_conv10',  # 784
@@ -122,7 +122,7 @@ def main():
                 classname = activations_mat.name_pre_ext
                 activations[modelname][classname] = activations_mat
     else:
-        folder = Folder('/matt/data/rsa_activations_shobhita')
+        folder = Folder('/matt/data/rsa_activations_shobhita2')
         activations = {'LSTM': {}}
         files = {f.name.split('Cat')[1].split('_')[0]: f for f in folder.files}
         for c in CLASSES:
