@@ -136,19 +136,6 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
             # not sure why I didn't have this line in sym code any more
             saveTestValResults(net.ARCH_LABEL, nam, net.train_data, i)
 
-            err('''
-            data_result = []
-
-    model_class = model()
-    for i in experiment.num_ims:
-        data_result.append({
-            'model_name': name,
-            'num_images': i,
-            'history'   : proko_train().history
-        })
-        EXP_FOLDER()['data_result.json'].save(data_result)
-            ''')
-
             [a.after_fit(i, net, nam) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
 
         # log(f'moving_mean(post-train):{net.net.moving_mean}')
