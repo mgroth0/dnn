@@ -1,4 +1,4 @@
-from arch.proko_inc import CustomInceptionResNetV2
+from arch.proko_inc import CustomInceptionResNetV2, NoBN_INC_PROKO
 from lib.misc.scripts.asd_to_recycle_lib import get_data, get_ds, get_gen, preprocess, proko_train
 from mlib.boot.mlog import err
 print('nn_main.py: top')
@@ -26,7 +26,7 @@ ARCH_MAP = {
     'INC'     : INC,
     'INC_ORIG': INC_ORIG,
     'SCRATCH' : SCRATCH,
-    'CUSTOM' : CustomInceptionResNetV2
+    'CUSTOM' : NoBN_INC_PROKO
 }
 
 # breakpoint()
