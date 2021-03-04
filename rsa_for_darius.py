@@ -7,7 +7,7 @@ from lib.nn.nn_lib import RSA, rsa_corr
 from mlib.boot import log
 from mlib.boot.lang import enum, islinux, listkeys
 from mlib.boot.mlog import err
-from mlib.boot.stream import concat, listitems, listmap, randperm
+from mlib.boot.stream import arr, concat, flatten, listitems, listmap, randperm
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.fig.PlotData import PlotData
 from mlib.file import File, Folder, mkdir
@@ -298,6 +298,10 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     similarity_S = 0
     dissimilarity_across = 0
 
+    similarity_NS_flat = []
+    similarity_S_flat = []
+    dissimilarity_across_flat = []
+
     # total_n = len(CLASSES) * len(CLASSES)
     dvs = [0, 0, 0]
 
@@ -309,15 +313,19 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
             sr = slice(block_len * ii, block_len * (ii + 1))
             comp_mat = norm_rsa_mat[sc, sr]
             avg_dis = np.mean(comp_mat)
+            all_dis = comp_mat
             if NORMALIZE:
                 avg_dis = avg_dis / average
+                all_dis = comp_mat / average
 
             if c.startswith('NS') and cc.startswith('NS'):
                 similarity_NS += avg_dis
                 dvs[0] += 1
+                similarity_NS_flat += flatten(all_dis)
             elif c.startswith('S') and cc.startswith('S'):
                 similarity_S += avg_dis
                 dvs[1] += 1
+                similarity_S_flat += flatten(all_dis)
             else:
                 if NORMALIZE:
                     # avg_dis = avg_dis - ((avg_dis - 1) * 2)
@@ -329,10 +337,15 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
                     avg_dis = 1 - avg_dis
                 dissimilarity_across += avg_dis
                 dvs[2] += 1
+                dissimilarity_across_flat += flatten(all_dis)
 
     similarity_NS = similarity_NS / dvs[0]
     similarity_S = similarity_S / dvs[1]
     dissimilarity_across = dissimilarity_across / dvs[2]
+
+    similarity_NS_std = np.std(arr(similarity_NS_flat))
+    similarity_S_stf = np.std(arr(similarity_S_flat))
+    dissimilarity_across_std = np.std(arr(dissimilarity_across_flat))
 
     if plot == 'AC':
         scores[arch][size] = dissimilarity_across
@@ -346,20 +359,21 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     fd = PlotData(
         y=[similarity_NS, similarity_S, dissimilarity_across],
         x=[
-            'dissimilarity_NS',
-            'dissimilarity_S',
+            'similarity_NS',
+            'similarity_S',
             'dissimilarity_across'
         ],
         item_type='bar',
         item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
         ylim=[0, 20],
-        title=f'Dissimilarities of {LAYERS[arch]} from {net}',
-        err=[0, 0, 0],
+        title=f'{net}: Dissimilarities of {LAYERS[arch]}',
+        err=[similarity_NS_std, similarity_S_stf, dissimilarity_across_std],
         xlabel='Class Comparison Groups',
         ylabel='Dissimilarity Score',
         bar_sideways_labels=False
     )
     fd.make = True
+    fd.title_size = 20
     file = result_folder[net + f"_dis{norm}.mfig"]
     fs = FigSet()
     fs.viss.append(fd)
