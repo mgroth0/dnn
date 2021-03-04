@@ -50,7 +50,7 @@ def nnet_main(FLAGS):
 
         dogcatfolder = Folder(dogcatfolder)
         ntrain_folder = dogcatfolder['ntrain']
-        dummy_folder = dogcatfolder['dummy']
+        dummy_folder = dogcatfolder['dummy'].mkdir()
         ntrain_folder.deleteIfExists()
         for k, v in listitems(class_map):
             dogcatfolder[k].mkdirs()
