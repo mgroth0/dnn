@@ -233,9 +233,9 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
                 class_label_map[the_name] = next_label
                 next_label = next_label + 1
         for ff in f.files:
-            if not ff.ext == 'png':
-                log('problem with $', ff)
-                err('all files in data_dir folders should be images')
+            if not ff.ext == 'png' and not ff.abspath.split('.')[-1] in ['png', 'jpg', 'jpeg']: # cat.123.png
+                    log('problem with $', ff)
+                    err('all files in data_dir folders should be images')
 
     CLASS_NAMES = np.array([item.name for item in data_dir.glob('*') if mlib.file.filename != "LICENSE.txt"])
     if nnstate.use_reduced_map:
@@ -481,7 +481,6 @@ class PreDataset:
 #     return self.xy[idx]
 
 
-
 def gen_main(FLAGS, _IMAGES_FOLDER, HUMAN_IMAGE_FOLDER):
     log('in gen!')
     _IMAGES_FOLDER.clearIfExists()
@@ -508,7 +507,6 @@ def gen_main(FLAGS, _IMAGES_FOLDER, HUMAN_IMAGE_FOLDER):
         nnstate.reduced_map[d] = 'dog'
     for c in cats:
         nnstate.reduced_map[c] = 'cat'
-
 
     if FLAGS.salience:
         log('in gen salience!')
