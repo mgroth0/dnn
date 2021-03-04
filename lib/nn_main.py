@@ -53,7 +53,6 @@ def nnet_main(FLAGS):
         dummy_folder = dogcatfolder['dummy'].mkdir()
         ntrain_folder.deleteIfExists().mkdir()
         for k, v in listitems(class_map):
-            dogcatfolder[k].mkdirs()
             log('getting files')
             files = dogcatfolder['Training'][k].files.tolist()
             random.shuffle(files)
