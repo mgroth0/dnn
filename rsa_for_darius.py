@@ -299,7 +299,7 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
 
     similarity_NS_flat = []
     similarity_S_flat = []
-    dissimilarity_across_flat = []
+    sim_across_flat = []
 
     # total_n = len(CLASSES) * len(CLASSES)
     dvs = [0, 0, 0]
@@ -328,7 +328,7 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
             else:
                 similarity_across += avg_dis
                 dvs[2] += 1
-                dissimilarity_across_flat += flatten(all_dis).tolist()
+                sim_across_flat += flatten(all_dis).tolist()
                 if NORMALIZE:
                     # avg_dis = avg_dis - ((avg_dis - 1) * 2)
                     # avg_dis = avg_dis - ((2 * avg_dis) - 2)
@@ -344,23 +344,22 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     dissimilarity_across = dissimilarity_across / dvs[2]
     similarity_across = similarity_across / dvs[2]
 
-    breakpoint()
-
     similarity_NS_flat = arr(similarity_NS_flat)
     similarity_S_flat = arr(similarity_S_flat)
-    dissimilarity_across_flat = arr(dissimilarity_across_flat)
+    sim_across_flat = arr(sim_across_flat)
 
     p_ns_s = scipy.stats.ttest_ind(similarity_NS_flat, similarity_S_flat, alternative='two-sided')[1]
-    p_across_s = scipy.stats.ttest_ind(dissimilarity_across_flat, similarity_S_flat, alternative='less')[1]
-    p_across_ns = scipy.stats.ttest_ind(dissimilarity_across_flat, similarity_NS_flat, alternative='less')[1]
-    
+    p_across_s = scipy.stats.ttest_ind(sim_across_flat, similarity_S_flat, alternative='less')[1]
+    p_across_ns = scipy.stats.ttest_ind(sim_across_flat, similarity_NS_flat, alternative='less')[1]
+
+    breakpoint()
     print(f'{p_ns_s=}')
     print(f'{p_across_s=}')
     print(f'{p_across_ns=}')
 
     similarity_NS_std = np.std(similarity_NS_flat)
     similarity_S_stf = np.std(similarity_S_flat)
-    dissimilarity_across_std = np.std(dissimilarity_across_flat)
+    dissimilarity_across_std = np.std(sim_across_flat)
 
     if plot == 'AC':
         scores[arch][size] = dissimilarity_across
