@@ -221,3 +221,4 @@ configs:
   default:
 #  <<: *final_sym
     <<: *salience_1
+    BATCH_SIZE: 1
