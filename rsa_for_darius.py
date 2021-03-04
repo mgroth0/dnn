@@ -229,7 +229,7 @@ def main():
             file.save(fd)
             backend = MPLFigsBackend
             fd = file.loado()
-            fd.file = file
+            fd.dataFile = file
             fd.imgFile = file.resrepext('png')
             backend.makeAllPlots([fd], overwrite=True)
 
@@ -276,7 +276,7 @@ def debug_process_post(plot):
 
             file = result_folder[net + ".mfig"]
             fd = file.loado()
-            fd.file = file
+            fd.dataFile = file
             fd.imgFile = file.resrepext('png')
 
             scores = debug_process(fd, scores, result_folder, net, block_len, arch, size, plot)
@@ -366,7 +366,7 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     file.save(fs)
     backend = MPLFigsBackend
     fd = file.loado()
-    fd.file = file
+    fd.dataFile = file
     fd.imgFile = file.resrepext('png')
 
     backend.makeAllPlots([fd], overwrite=True)
@@ -401,7 +401,7 @@ def main2():
     file.save(fd)
     backend = MPLFigsBackend
     fd = file.loado()
-    fd.file = file
+    fd.dataFile = file
     fd.imgFile = file.resrepext('png')
     backend.makeAllPlots([fd], overwrite=True)
 
@@ -431,7 +431,7 @@ def sanity():
     file.save(fd)
     backend = MPLFigsBackend
     fd = file.loado()
-    fd.file = file
+    fd.dataFile = file
     fd.imgFile = file.resrepext('png')
     backend.makeAllPlots([fd], overwrite=True)
 
