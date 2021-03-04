@@ -38,7 +38,7 @@ def nnet_main(FLAGS):
     _IMAGES_FOLDER = pwdf()['_images'].mkdirs(mker=True)
     HUMAN_IMAGE_FOLDER = pwdf()['_images_human'].mkdirs(mker=True)
 
-    if FLAGS.gen_main:
+    if FLAGS.gen:
         gen_main(FLAGS, _IMAGES_FOLDER, HUMAN_IMAGE_FOLDER)
 
     GPU_IMAGES_FOLDER = _IMAGES_FOLDER[f'gpu{FLAGS.mygpufordata}']

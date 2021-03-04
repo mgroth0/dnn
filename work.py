@@ -24,7 +24,7 @@ FLAGS = margparse(
 )
 from lib.boot import nn_init_fun
 tf = nn_init_fun.setupTensorFlow(FLAGS)
-if FLAGS.expid == '0' and (not FLAGS.gen_main) and (not FLAGS.deletenorms): nn_init_fun.NRC_IS_FINISHED()
+if FLAGS.expid == '0' and (not FLAGS.gen) and (not FLAGS.deletenorms): nn_init_fun.NRC_IS_FINISHED()
 setup_logging(verbose=FLAGS.verbose)
 if FLAGS.tic is not None: setTic(FLAGS.tic * 1000)
 from mlib.proj.struct import Project
