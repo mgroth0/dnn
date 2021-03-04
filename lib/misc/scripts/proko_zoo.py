@@ -1,148 +1,47 @@
-import time
-# from tensorflow.python.keras.applications.densenet import DenseNet121, DenseNet169, DenseNet201
-from tensorflow.python.keras.applications.efficientnet import EfficientNetB0, EfficientNetB1, EfficientNetB2, EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6, EfficientNetB7
-from tensorflow.python.keras.applications.inception_resnet_v2 import InceptionResNetV2
-from tensorflow.python.keras.applications.inception_v3 import InceptionV3
-from tensorflow.python.keras.applications.mobilenet import MobileNet
-from tensorflow.python.keras.applications.mobilenet_v2 import MobileNetV2
-from tensorflow.python.keras.applications.nasnet import NASNetLarge  # , # NASNetMobile
-from tensorflow.python.keras.applications.resnet import ResNet101, ResNet152, ResNet50
-from tensorflow.python.keras.applications.resnet_v2 import ResNet101V2
-# from tensorflow.python.keras.applications.vgg16 import VGG16
-# from tensorflow.python.keras.applications.vgg19 import VGG19
-from tensorflow.python.keras.applications.xception import Xception
+from time import time
 
 from arch import INC
 from arch.proko_inc import CustomInceptionResNetV2
 from files import SALIENCE_RESULT_FOLDER
 from lib.misc.scripts.asd_to_recycle_lib import BATCH_SIZE, proko_train, tf
-from mlib.boot.mlog import err
+from lib.misc.scripts.keras_models_to_test import models_to_test
+from mlib.JsonSerializable import obj
+
+NUM_EPOCHS = 1
+
+experiment = obj([{
+    'filekey'         : '',
+    'models'          : {'customINC': lambda: CustomInceptionResNetV2},
+    'num_ims'         : range(1, 2, 1),
+    'loss'            : None,
+    'preprocess_class': tf.keras.applications.inception_resnet_v2,
+    'classes'         : None
+}, {
+    'filekey'         : '_zoo',
+    'models'          : models_to_test,
+    'num_ims'         : [BATCH_SIZE],
+    'loss'            : 'binary_crossentropy',
+    'preprocess_class': None,
+    'classes'         : 2
+}][0])
 
 data_result = []
+my_result_fold = SALIENCE_RESULT_FOLDER[f'keras{experiment.filekey}_{int(time())}'].mkdirs()
 
-
-my_result_fold = SALIENCE_RESULT_FOLDER[f'keras_{int(time.time())}'].mkdirs()
-
-# from lib. import tf
-
-for i in range(1, 2, 1):
-    print('in first loop')
-    if i < BATCH_SIZE:
-        err('bad')
-    num_epochs = 1
-    history = proko_train(
-        CustomInceptionResNetV2,
-        num_epochs,
-        i,
-        HEIGHT_WIDTH=INC.HEIGHT_WIDTH,
-        preprocess_class=tf.keras.applications.inception_resnet_v2
-    )  # more epochs without BN is required to get to overfit
-    data_result.append({
-        'num_images': i,
-        'history'   : history.history
-    })
-    my_result_fold['data_result.json'].save(data_result)
-    print('finished first loop')
-
-MORE = False
-if MORE:
-
-    data_result = []
-    my_result_fold = SALIENCE_RESULT_FOLDER[f'keras_zoo_{int(time.time())}'].mkdirs()
-
-    # NUM_CLASSES = 1000 #2
-
-    models_to_test = {
-        'Xception'         : lambda: Xception,
-
-
-
-
-        # For these valueerrors, I think that they didn't occur in the tensorflow-latest(2.4?) image but are occuring in mine(2.2?) simply because of an old bug! https://github.com/tensorflow/tensorflow/issues/41537
-        # 'VGG16'            : lambda: VGG16, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
-        # 'VGG19'            : lambda: VGG19, # ValueError: Input 0 of layer fc1 is incompatible with the layer: expected axis -1 of input shape to have value 25088 but received input with shape [12, 41472]
-
-
-        'ResNet50'         : lambda: ResNet50,
-        'ResNet101'        : lambda: ResNet101,
-        'ResNet152'        : lambda: ResNet152,
-        # 'ResNet50V3'       : lambda: ResNet50V3(classes=NUM_CLASSES),
-        'ResNet101V2'      : lambda: ResNet101V2,
-        # 'ResNet152V3'      : lambda: ResNet152V3,
-        'InceptionV3'      : lambda: InceptionV3,
-        'InceptionResNetV2': lambda: InceptionResNetV2,
-        'MobileNet'        : lambda: MobileNet,
-        'MobileNetV2'      : lambda: MobileNetV2,
-        # 'DenseNet121'      : lambda: DenseNet121, # DenseNet121() got an unexpected keyword argument 'classifier_activation
-        # 'DenseNet169'      : lambda: DenseNet169, # [MP|503.47|shell         ] TypeError: DenseNet169() got an unexpected keyword argument 'classifier_activation'
-
-        # 'DenseNet201'      : lambda: DenseNet201, # TypeError: DenseNet201() got an unexpected keyword argument 'classifier_activation'
-        # 'NASNetMobile'     : lambda: NASNetMobile, #  TypeError: NASNetMobile() got an unexpected keyword argument 'classifier_activation'
-
-
-
-
-        'NASNetLarge'      : lambda: NASNetLarge,
-
-
-
-
-
-        'EfficientNetB0'   : lambda: EfficientNetB0,
-        'EfficientNetB1'   : lambda: EfficientNetB1,
-        'EfficientNetB2'   : lambda: EfficientNetB2,
-        'EfficientNetB3'   : lambda: EfficientNetB3,
-        'EfficientNetB4'   : lambda: EfficientNetB4,
-        'EfficientNetB5'   : lambda: EfficientNetB5,
-        'EfficientNetB6'   : lambda: EfficientNetB6,
-        'EfficientNetB7'   : lambda: EfficientNetB7,
-    }
-
-    for name, model in list(models_to_test.items()):
-        break
-        if name == 'ResNet101':
-            break
-        print('\n\n\n\n')
-        print(f'TESTING MODEL: {name}')
-        num_epochs = 1
-        num_ims = BATCH_SIZE
-        model_class = model()
-        history = proko_train(
-            model_class,
-            num_epochs,
-            num_ims,
-            include_top=True,  # THIS WAS THE BUG!!!! Probably used a different loss function while it was false
-            # weights='imagenet',
-            weights=None,
-            preprocess_class=None,
-            # classes=1000,
-            classes=2,
-            # classes = 1, #classifer activation not keyword
-            # loss='categorical_crossentropy',
-            # loss='mse',
-            loss='binary_crossentropy'
-        )  # more epochs without BN is required to get to overfit
+for name, model in list(experiment.models_to_test.items()):
+    model_class = model()
+    for i in experiment.num_ims:
         data_result.append({
             'model_name': name,
-            'num_images': num_ims,
-            'history'   : history.history
+            'num_images': i,
+            'history'   : proko_train(
+                model_class,
+                NUM_EPOCHS,
+                i,
+                HEIGHT_WIDTH=INC.HEIGHT_WIDTH,
+                preprocess_class=experiment.preprocess_class,
+                **({'loss': experiment.loss} if experiment.loss is not None else {}),
+                **({'classes': experiment.classes} if experiment.classes is not None else {})
+            ).history
         })
         my_result_fold['data_result.json'].save(data_result)
-
-
-
-    # [MP|260.39|shell         ] tensorflow.python.framework.errors_impl.ResourceExhaustedError:  OOM when allocating tensor with shape[12,1024,19,19] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
-
-    # [MP|1291.42|shell         ] 2021-02-27 17:02:34.093494: W tensorflow/core/framework/op_kernel.cc:1753] OP_REQUIRES failed at conv_ops.cc:930 : Resource exhausted: OOM when allocating tensor with shape[1824,304,1,1] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
-
-
-    # [MP|2286.50|shell         ] tensorflow.python.framework.errors_impl.ResourceExhaustedError:  OOM when allocating tensor with shape[960] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
-
-
-    # [MP|2248.22|err           ] len(exceptions)=0
-
-
-    # base:
-        # [MP|251.95|err
-    # multiprocess = true for train and eval:
-        # [MP|268.33|err           ] len(exceptions)=0

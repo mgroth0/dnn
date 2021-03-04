@@ -6,6 +6,7 @@ import random
 from lib.nn.tf_lib import Verbose
 from mlib.boot import log
 from mlib.boot.mlog import err
+from mlib.term import log_invokation
 BATCH_SIZE = 1
 SANITY_SWITCH = False
 SANITY_MIX = True
@@ -100,11 +101,12 @@ def preprocess(file, HEIGHT_WIDTH, preprocess_class):
 
     return imdata, class_map[os.path.basename(os.path.dirname(file))]
 
+@log_invokation(with_args=True)
 def proko_train(
         model_class,
         epochs,
         num_ims_per_class,
-        include_top=True,
+        include_top=True, # THIS WAS THE BUG!!!! Probably used a different loss function while it was false
         weights=None,
         HEIGHT_WIDTH=299,
         preprocess_class=None,
@@ -112,6 +114,8 @@ def proko_train(
         classes=1,
 
 ):
+    if num_ims_per_class < BATCH_SIZE:
+        err('bad')
     print(f'starting script (num_ims_per_class={num_ims_per_class})')
     if classes == 1:
         net = model_class(

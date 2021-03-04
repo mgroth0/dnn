@@ -1,10 +1,10 @@
+from lib.human_exp import human_exp
 print('top of dnn.py')
 from lib import makereport
 print('dnn.py: about to import log')
 from mlib.boot import log
 print('dnn.py: quarter through imports')
 from mlib.boot.lang import isblank, ismac
-from mlib.input import boolinput, strinput
 print('dnn.py: half through imports')
 from mlib.web import shadow
 from mlib.file import Folder
@@ -35,7 +35,6 @@ class DNN(Project):
         # keep modular
         assert not (cfg.REGEN_DATA and cfg.OVERWRITE_NORMS)  # btw, both imply killing worker before exp
 
-        from mlib.boot.mlog import err
         from lib.dnn_lib import dnn
         from mlib.web.api import API
         from mlib.web.database import Database
@@ -64,39 +63,14 @@ class DNN(Project):
             rsa_for_darius.test_line('NS')
             # print('here2, finished Darius-RSA')
             return None
-        elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'ASD':
-            from lib.misc.scripts import proko_zoo
-            return None
-        if len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
-            from human_exps.mc_wait_pilot.mc_wait_pilot import MC_Wait_Pilot
-            from human_exps.time_pilot.time_pilot import Time_Pilot
-            from human_exps.contour_pilot.contour_pilot import Contour_Pilot
-            exp = {
-                'time_pilot'   : Time_Pilot,
-                'mc_wait_pilot': MC_Wait_Pilot,
-                'contour_pilot': Contour_Pilot,
-            }[cfg.FLAGS[0]](_DEV=boolinput('dev'))
-            command = strinput(f'what to do with {cfg.FLAGS[0]}', ['build', 'analyze'])
-            if command == 'build':
-                if boolinput('offline mode'):
-                    API.offline_mode = True
-                    Database.offline_mode = True
-                if False:
-                    exp.DATABASE_IDS._hard_reset()
-                    exp.DATABASE_DATA._hard_reset()
-                exp.build(
-                    _UPLOAD_RESOURCES=boolinput('upload resources'),
-                    _LOCAL_ONLY=boolinput('local only')
-                )
-            elif command == 'analyze':
-                exp.analyze()
-            else:
-                err(f'unknown command: {command}')
+        elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
+            human_exp(cfg)
         else:
             flag_mode = ''.join(arr(cfg.FLAGS).filtered(
                 lambda s: s in self.MODES
             ))
             if not isblank(flag_mode): cfg.MODE = flag_mode
+            if isblank(cfg.MODE): cfg.MODE = ''.join(self.MODES)  # unnecessary?
             if cfg.offline:
                 API.offline_mode = True
                 Database.offline_mode = True
@@ -104,7 +78,6 @@ class DNN(Project):
             from mlib.km import kmscript  # keep modular
             if ismac():
                 kmscript('activate run tool window')
-            if isblank(cfg.MODE): cfg.MODE = ''.join(self.MODES)  # unnecessary?
             dnn(cfg)
 
     instructions = '''Generate some images, train/test a model, run analyses, and generate plots. Tested on Mac, but not yet on linux/Windows.

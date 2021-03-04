@@ -1,7 +1,5 @@
 from mlib.boot.mlog import err
 print('nn_main.py: top')
-from itertools import chain
-import numpy as np
 print('nn_main.py: about to do arch imports')
 from arch import ALEX, GNET, INC, SCRATCH, AssembledModel
 from arch.INC_ORIG import INC_ORIG
@@ -9,17 +7,14 @@ from arch.PROTO import PROTO
 print('nn_main.py: finished arch imports')
 from lib.nn.nnstate import reset_global_met_log
 from lib.nn import nn_plotting, nnstate
-from lib.nn.gen_preproc_ims import NN_Data_Dir, load_and_preprocess_ims, SymAsymClassPair, gen_images
+from lib.nn.gen_preproc_ims import gen_main, NN_Data_Dir, load_and_preprocess_ims
 from lib.dnn_data_saving import saveTestValResults, EXP_FOLDER
 from lib.boot import nn_init_fun
 from mlib.analyses import ANALYSES, AnalysisMode
 print('nn_main.py: halfway through imports')
 from mlib.boot import log
-from mlib.boot.lang import listkeys, enum
-from mlib.boot.stream import ints, listitems
-from mlib.file import TempFolder, Folder
+from mlib.boot.lang import listkeys
 from mlib.proj.struct import pwdf
-from mlib.str import utf_decode
 from mlib.term import log_invokation
 print('nn_main.py: done with imports')
 
@@ -33,249 +28,18 @@ ARCH_MAP = {
 
 # breakpoint()
 
-import tensorflow as tf
 @log_invokation()
 def nnet_main(FLAGS):
     if FLAGS.salience:
-        log('salience was here!')
+        from lib.misc.scripts import proko_zoo
+        nn_init_fun.NRC_IS_FINISHED()
+
 
     _IMAGES_FOLDER = pwdf()['_images'].mkdirs(mker=True)
     HUMAN_IMAGE_FOLDER = pwdf()['_images_human'].mkdirs(mker=True)
 
-    #  these numbers might be lower now that I'm excluding images that aren't squares
-    # nevermind. I think trying to only take squares didn't work
-    cats = ['Egyptian cat',  # >=200
-            'Siamese cat',  # 196
-            'Persian cat',  # >=200
-            'tiger cat',  # 182
-            'tabby cat']  # >=100
-    dogs = [
-        'Afghan hound',  # >=200
-        'basset hound',  # >=200
-        'beagle',  # 198
-        'bloodhound',  # 199
-        'bluetick'  # >=100
-    ]
-    classes = cats + dogs
-    not_trained = ['tabby cat', 'bluetick']
-    for d in dogs:
-        nnstate.reduced_map[d] = 'dog'
-    for c in cats:
-        nnstate.reduced_map[c] = 'cat'
-
-    if FLAGS.gen:
-        log('in gen!')
-        _IMAGES_FOLDER.clearIfExists()
-        HUMAN_IMAGE_FOLDER.clearIfExists()
-        gen_cfg = FLAGS.cfg_cfg['gen_cfg']
-
-        if FLAGS.salience:
-            log('in gen salience!')
-            root = Folder('/matt/data/ImageNet/output_tf')
-            filenames = root.glob('train*').map(lambda x: x.abspath).tolist()  # validation
-            ds = tf.data.TFRecordDataset(filenames)
-            #     for subroot in root:
-            #         for imgfile in subroot:
-
-            image_feature_description = {
-                'image/height'      : tf.io.FixedLenFeature([], tf.int64),
-                'image/width'       : tf.io.FixedLenFeature([], tf.int64),
-                'image/colorspace'  : tf.io.FixedLenFeature([], tf.string),
-                'image/channels'    : tf.io.FixedLenFeature([], tf.int64),
-                'image/class/label' : tf.io.FixedLenFeature([], tf.int64),
-                'image/class/synset': tf.io.FixedLenFeature([], tf.string),
-                'image/class/text'  : tf.io.FixedLenFeature([], tf.string),
-                # 'image/object/bbox/xmin' : tf.io.FixedLenFeature([], tf.float32),
-                # 'image/object/bbox/xmax' : tf.io.FixedLenFeature([], tf.float32),
-                # 'image/object/bbox/ymin' : tf.io.FixedLenFeature([], tf.float32),
-                # 'image/object/bbox/ymax' : tf.io.FixedLenFeature([], tf.float32),
-                # 'image/object/bbox/label': tf.io.FixedLenFeature([], tf.int64),
-                'image/format'      : tf.io.FixedLenFeature([], tf.string),
-                'image/filename'    : tf.io.FixedLenFeature([], tf.string),
-                'image/encoded'     : tf.io.FixedLenFeature([], tf.string),
-            }
-            # imap = {}
-            # current_i = -1
-            # def input_gen():
-            log('looping imagenet')
-
-            _IMAGES_FOLDER[f'Training/{FLAGS.REGEN_NTRAIN}'].mkdirs()
-            _IMAGES_FOLDER['Testing'].mkdirs()
-
-            # classes = [
-            #     'barn spider',
-            #     'garden spider',
-            #     'black widow',
-            #     'wolf spider',
-            #     'black and gold garden spider',
-            #
-            #     'emmet' ,#ant
-            #     'grasshopper',
-            #     'cricket',
-            #     'stick insect',
-            #     'cockroach'
-            # ]
-
-
-
-            class_count = {cn: 0 for cn in classes}
-
-            for i, raw_record in enum(ds):
-                example = tf.io.parse_single_example(raw_record, image_feature_description)
-                # r[f'tf']['y_true'][i] = example['image/class/label'].numpy()
-                # return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                # if example['image/height'] != example['image/width']:
-                #     continue
-
-                if i % 100 == 0:
-                    log(f'on image {i}')
-                classname = utf_decode(example['image/class/text'].numpy())
-                for cn in classes:
-                    if (cn in classname) and (
-                            class_count[cn] < (FLAGS.REGEN_NTRAIN if cn in not_trained else (FLAGS.REGEN_NTRAIN * 2))):
-                        log(f'saving {cn} {class_count[cn] + 1}')
-                        rrr = tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-                        if class_count[cn] < FLAGS.REGEN_NTRAIN:
-                            _IMAGES_FOLDER['Testing'][cn][f'{i}.png'].save(rrr)
-                        else:
-                            _IMAGES_FOLDER[f'Training/{FLAGS.REGEN_NTRAIN}']['dog' if cn in dogs else 'cat'][
-                                f'{i}.png'].save(rrr)
-                        class_count[cn] += 1
-                        break
-                break_all = True
-                for cn, cc in listitems(class_count):
-                    if (cn in not_trained and cc != FLAGS.REGEN_NTRAIN) or (
-                            cn not in not_trained and cc != (FLAGS.REGEN_NTRAIN * 2)):
-                        break_all = False
-                if break_all:
-                    break
-
-                # current_i = current_i + 1
-                # imap[i] = rrr
-                # yield rrr
-            # igen = input_gen()
-
-            # def get_input(index):
-            #     # log(f'trying to get index {index}')
-            #     # log(f'current indices range from {safemin(list(imap.keys()))} to {safemax(list(imap.keys()))}')
-            #     if index not in imap:
-            #         # log('coud not get it')
-            #         next(igen)
-            #         return get_input(index)
-            #     else:
-            #         # log('got it!')
-            #         rr = imap[index]
-            #         for k in list(imap.keys()):
-            #             if k < index:
-            #                 del imap[k]
-            #         return rr
-            #     # for raw_record in ds:
-            #     #     example = tf.io.parse_single_example(raw_record, image_feature_description)
-            #     #     r[f'tf']['y_true'][index] = example['image/class/label'].numpy()
-            #     #     return tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-            #     # yield example
-            # # y_true = []
-            # # ifs_for_labels = input_files()
-            # # for i in range(SANITY_SET.num):
-            # #     y_true.append(next(ifs_for_labels)['image/class/label'].numpy())
-            # # r[f'tf']['y_true'] = y_true
-            # # def input_file_raws():
-            # #     gen = input_files()
-            # #     for example in gen:
-            # #         yield tf.image.decode_jpeg(example['image/encoded'], channels=3).numpy()
-            # # IN_files = input_file_raws()
-            # IN_files = get_input
-
-
-            # test_class_pairs = [
-            #     pair for pair in chain(*[
-            #         (
-            #             SymAsymClassPair(n, False),
-            #             SymAsymClassPair(n, True)
-            #         ) for n in ints(np.linspace(0, 10, 6))
-            #     ])
-            # ]
-            # class_pairs = [
-            #     SymAsymClassPair(0, False),
-            #     SymAsymClassPair(4, False)
-            # ]
-            # human_class_pairs = [
-            #     SymAsymClassPair(0, False),
-            #     SymAsymClassPair(2, False),
-            #     SymAsymClassPair(4, False),
-            #     SymAsymClassPair(6, False),
-            #     SymAsymClassPair(8, False)
-            # ]
-            # gen_cfg = FLAGS.cfg_cfg['gen_cfg']
-            # gen_images(
-            #     folder=HUMAN_IMAGE_FOLDER['TimePilot'],
-            #     class_pairs=human_class_pairs,
-            #     ims_per_class=10
-            # )
-
-        else:
-            test_class_pairs = [
-                pair for pair in chain(*[
-                    (
-                        SymAsymClassPair(n, False),
-                        SymAsymClassPair(n, True)
-                    ) for n in ints(np.linspace(0, 10, 6))
-                ])
-            ]
-            class_pairs = [
-                SymAsymClassPair(0, False),
-                SymAsymClassPair(4, False)
-            ]
-            human_class_pairs = [
-                SymAsymClassPair(0, False),
-                SymAsymClassPair(2, False),
-                SymAsymClassPair(4, False),
-                SymAsymClassPair(6, False),
-                SymAsymClassPair(8, False)
-            ]
-
-            gen_images(
-                folder=HUMAN_IMAGE_FOLDER['TimePilot'],
-                class_pairs=human_class_pairs,
-                ims_per_class=10
-            )
-            gen_images(
-                folder=_IMAGES_FOLDER['RSA'],
-                class_pairs=test_class_pairs,
-                ims_per_class=10,
-                # ims_per_class=1
-            )
-            gen_images(
-                folder=_IMAGES_FOLDER['Testing'],
-                class_pairs=test_class_pairs,
-                ims_per_class=10,
-                # ims_per_class=500,
-                # ims_per_class=1
-            )
-            # for n in (25, 50, 100, 150, 200, 1000):
-            for n in (10,):
-                gen_images(
-                    folder=_IMAGES_FOLDER['Training'][n],
-                    class_pairs=class_pairs,
-                    ims_per_class=n
-                )
-
-        log('doing thing with _temp_ims')
-        with TempFolder('_temp_ims') as temp:
-            log('temp_ims_1')
-            if temp.exists and temp.isdir:
-                temp.clear()
-            log('temp_ims_2')
-            temp.mkdirs()
-            log('temp_ims_3')
-            [_IMAGES_FOLDER.copy_to(temp[f'gpu{i + 1}']) for i in range(gen_cfg['num_gpus'])]
-            log('temp_ims_4')
-            _IMAGES_FOLDER.clear()
-            log('temp_ims_5')
-            [temp[f'gpu{i + 1}'].moveinto(_IMAGES_FOLDER) for i in range(gen_cfg['num_gpus'])]
-            log('temp_ims_6')
-        log('finished thing with _temp_ims')
-        nn_init_fun.NRC_IS_FINISHED()  # must be invoked this way since value of function changes
+    if FLAGS.gen_main:
+        gen_main(FLAGS, _IMAGES_FOLDER, HUMAN_IMAGE_FOLDER)
 
     GPU_IMAGES_FOLDER = _IMAGES_FOLDER[f'gpu{FLAGS.mygpufordata}']
 

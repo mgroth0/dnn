@@ -1,30 +1,3 @@
-# coding=utf-8
-#
-# !/usr/bin/python
-#
-# Copyright 2013 Johannes Bauer, Universitaet Hamburg
-#
-# This file is free software.  Do with it whatever you like.
-# It comes with no warranty, explicit or implicit, whatsoever.
-#
-# This python script implements an early version of Itti and Koch's
-# saliency model.  Specifically, it was written according to the
-# information contained in the following paper:
-#
-#   Laurent Itti, Christof Koch, and Ernst Niebur. A model of
-#   Saliency-Based visual attention for rapid scene analysis. IEEE
-#   Transactions on Pattern Analysis and Machine Intelligence,
-#   20(11):1254–1259, 1998.
-#
-# If you find it useful or if you have any questions, do not
-# hesitate to contact me at
-#   bauer at informatik dot uni dash hamburg dot de.
-#
-# For information on how to use this script, type
-#   > python saliency.py -h
-# on the command line.
-#
-
 import os.path
 
 import cv2
@@ -33,13 +6,13 @@ import math
 import numpy
 from scipy.ndimage.filters import maximum_filter
 
-# if sys.version_info[0] != 2:
-#     raise Exception("This script was written for Python version 2.  You're running Python %s." % sys.version)
-
 logger = logging.getLogger(__name__)
 
+levels=9 # DEFAULT
+# levels=8
 
-def features(image, channel, levels=9, start_size=(640, 480), ):
+# (640, 480)
+def features(image, channel):
     """
         Extracts features by down-scaling the image levels times,
         transforms the image by applying the function channel to
@@ -119,16 +92,18 @@ def intensityConspicuity(image):
     fs = features(image=im, channel=intensity)
     return sumNormalizedFeatures(fs)
 
-def gaborConspicuity(image, steps):
+def gaborConspicuity(image, steps, shape):
     """
         Creates the conspicuity map for the channel `orientations'.
     """
-    gaborConspicuity = numpy.zeros((60, 80), numpy.uint8)
+    #  numpy.uint8
+    gaborConspicuity = numpy.zeros(shape)
     for step in range(steps):
         theta = step * (math.pi / steps)
         gaborFilter = makeGaborFilter(dims=(10, 10), lambd=2.5, theta=theta, psi=math.pi / 2, sigma=2.5, gamma=.5)
         gaborFeatures = features(image=intensity(im), channel=gaborFilter)
         summedFeatures = sumNormalizedFeatures(gaborFeatures)
+        # breakpoint()
         gaborConspicuity += N(summedFeatures)
         # numpy.add(gaborConspicuity, summedFeatures, out=gaborConspicuity, casting="unsafe")
     return gaborConspicuity
@@ -155,7 +130,8 @@ def byConspicuity(image):
     fs = features(image=image, channel=by)
     return sumNormalizedFeatures(fs)
 
-def sumNormalizedFeatures(features, levels=9, startSize=(640, 480)):
+# (640, 480)
+def sumNormalizedFeatures(features):
     """
         Normalizes the feature maps in argument features and combines them into one.
         Arguments:
@@ -167,8 +143,9 @@ def sumNormalizedFeatures(features, levels=9, startSize=(640, 480)):
         returns:
             a combined feature map.
     """
-    commonWidth = startSize[0] / 2**(levels / 2 - 1)
-    commonHeight = startSize[1] / 2**(levels / 2 - 1)
+    commonWidth = start_size[0] / 2**(levels / 2 - 1)
+    commonHeight = start_size[1] / 2**(levels / 2 - 1)
+    breakpoint()
     commonSize = int(commonWidth), int(commonHeight)
     logger.info("Size of conspicuity map: %s", commonSize)
     consp = N(cv2.resize(features[0][1], commonSize))
@@ -243,7 +220,7 @@ def markMaxima(saliency):
     marked = cv2.merge((b, g, r))
     return marked
 
-
+start_size = None
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
@@ -285,13 +262,14 @@ if __name__ == "__main__":
 
         for filename in filenames:
             im = cv2.imread(filename, cv2.COLOR_BGR2RGB)  # assume BGR, convert to RGB---more intuitive code.
-
+            start_size = (im.shape[1], im.shape[0])
             if im is None:
                 logger.fatal("Could not load file \"%s.\"", filename)
                 sys.exit()
 
             intensty = intensityConspicuity(im)
-            gabor = gaborConspicuity(im, 4)
+            # breakpoint()
+            gabor = gaborConspicuity(im, 4, intensty.shape)
 
             im = makeNormalizedColorChannels(im)
             rg = rgConspicuity(im)

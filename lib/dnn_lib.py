@@ -83,3 +83,4 @@ def dnn(
         # makefigs(exp_group.compile_folder, cfg.fig_backend, overwrite=True)
     # if 'MAKEREPORT' in mode:
     #     makereport.makereport()
+
