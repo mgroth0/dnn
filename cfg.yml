@@ -28,7 +28,7 @@ profiles:
 
 #    NTRAIN: [10]
 #    NTRAIN: [90]
-    NTRAIN: [1]
+    NTRAIN: [20]
 
 
   default:
@@ -207,7 +207,7 @@ configs:
 
 
 
-    BATCH_SIZE: 1
+    BATCH_SIZE: 20
     EPOCHS: 1
 
 
