@@ -107,7 +107,6 @@ def nnet_main(FLAGS):
     net.val_data = datasetVal.prep(net.HEIGHT_WIDTH, net.PP)
     net.test_data = datasetTest.prep(net.HEIGHT_WIDTH, net.PP)
 
-    proko_train()
     return trainTestRecord(net, '', FLAGS.epochs)
 
 

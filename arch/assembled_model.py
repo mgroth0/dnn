@@ -74,7 +74,7 @@ class AssembledModel(ModelWrapper, ABC):
             len(listkeys(nnstate.CURRENT_PRED_MAP)),
             len(listkeys(nnstate.CURRENT_TRUE_MAP))
         )
-        rrr = self.net.fit(
+        history = self.net.fit(
             # x,y,
             ds,
             epochs=1,
@@ -85,7 +85,7 @@ class AssembledModel(ModelWrapper, ABC):
             shuffle=False
         )
 
-        return rrr
+        return history
 
     def val_eval(self):
         nnstate.CURRENT_TRUE_MAP = self.val_data.class_label_map

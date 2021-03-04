@@ -5,17 +5,21 @@ from arch import INC
 from lib.nn import nnstate
 # layers = tf.keras.layers
 # from tensorflow.python.keras.layers import VersionAwareLayers
+from mlib.boot.mlog import err
 
 class NoBN_INC_PROKO(INC):
 
     PP = 'INC_DEBUG'
+    _LOSS = 'binary_crossentropy'
 
     def assemble_layers(self):
         include_top = True
         weights = None
         pooling = None
-        classes = nnstate.FLAGS.PRED_SIZE
-        classifier_activation = 'softmax'
+        classes = 1
+        if nnstate.FLAGS.PRED_SIZE != 2:
+            err('bad')
+        classifier_activation = 'sigmoid'
 
         x = conv2d_bn(self.inputs, 32, 3, strides=2, padding='valid')
         x = conv2d_bn(x, 32, 3, padding='valid')
