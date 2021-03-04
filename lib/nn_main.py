@@ -1,3 +1,5 @@
+import random
+
 from arch.proko_inc import NoBN_INC_PROKO
 from lib.misc.scripts.asd_to_recycle_lib import proko_train
 from mlib.boot.mlog import err
@@ -52,7 +54,11 @@ def nnet_main(FLAGS):
         ntrain_folder.deleteIfExists()
         for k, v in listitems(class_map):
             dogcatfolder[k].mkdirs()
-            for im in dogcatfolder['Training'][k].files.shuffled()[0:FLAGS.ntrain]:
+            log('getting files')
+            files = dogcatfolder['Training'][k].files.tolist()
+            random.shuffle(files)
+            log('looping files')
+            for im in files[0:FLAGS.ntrain]:
                 im.copyinto(dogcatfolder[k])
 
         GPU_TRAIN_FOLDER = ntrain_folder
