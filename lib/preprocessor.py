@@ -45,9 +45,9 @@ class Inc_debug_preprocess():
         file = None
         if is_file(im):
             file = im
-            im.default_quiet = True
+            file.default_quiet = True
             im = im.load()
-            im.default_quiet = False
+            file.default_quiet = False
 
         # imdata = mpimg.imread(file)
         from arch.INC_ORIG import INC_HW
