@@ -6,7 +6,7 @@ from lib.nn.nn_lib import RSA, rsa_corr
 from mlib.boot import log
 from mlib.boot.lang import enum, islinux, listkeys
 from mlib.boot.mlog import err
-from mlib.boot.stream import arr, concat, flatten, listitems, listmap, randperm
+from mlib.boot.stream import arr, concat, flatten, isnan, listitems, listmap, randperm
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.fig.PlotData import PlotData
 from mlib.file import File, Folder, mkdir
@@ -188,50 +188,76 @@ def main():
                         acts,
                         axis=0
                     )
-            # breakpoint()
-            fd = RSA(  # gets SIMILARITIES, not DiSSIMILARTIES due to fix()
-                f'L2 Norm of {LAYERS[arch]} from {net}',
-                acts_for_rsa,
-                None,
-                None,
-                layer_name='fc7',
-                layer_i=None,
-                classnames=CLASSES,
-                block_len=block_len,
-                sort=False,
-                return_result=True
-            )
-            # breakpoint()
 
-            log('resampling1')
-            lennnn = len(CLASSES) * block_len
-            if lennnn == fd.data.shape[0]:
-                fd.data = fd.data.tolist()
-            else:
-                # DEBUG
-                # for rowi,row in enum(fd.data):
-                #     copy = fd.data[rowi]
-                #     random.shuffle(copy)
-                #     fd.data[rowi] = copy
+            for cfg in [
+                {
+                    'get_scores'       : True,
+                    'average_per_block': False
+                },
+                {
+                    'get_scores'       : False,
+                    'average_per_block': False
+                }
+            ]:
+                # breakpoint()
+                fd = RSA(  # gets SIMILARITIES, not DiSSIMILARTIES due to fix()
+                    f'L2 Norm of {LAYERS[arch]} from {net}',
+                    acts_for_rsa,
+                    None,
+                    None,
+                    layer_name='fc7',
+                    layer_i=None,
+                    classnames=CLASSES,
+                    block_len=block_len,
+                    sort=False,
+                    return_result=True
+                )
+                rsa_mat = fd.data
+                if cfg['average_per_block']:
+                    for i, c in enum(CLASSES):
+                        for ii, cc in enum(CLASSES):
+                            if ii < i: continue
+                            sc = slice(block_len * i, block_len * (i + 1))
+                            sr = slice(block_len * ii, block_len * (ii + 1))
+                            comp_mat = rsa_mat[sc, sr]
+                            avg_dis = np.mean(comp_mat)
+                            # fd.data = arr(fd.data)
+                            fd.data[sc, sr] = avg_dis
+                            # fd.data = fd.data.tolist()
+
+                # breakpoint()
+
+                log('resampling1')
+                lennnn = len(CLASSES) * block_len
+                if lennnn == fd.data.shape[0]:
+                    fd.data = fd.data.tolist()
+                else:
+                    # DEBUG
+                    # for rowi,row in enum(fd.data):
+                    #     copy = fd.data[rowi]
+                    #     random.shuffle(copy)
+                    #     fd.data[rowi] = copy
 
 
 
-                fd.data = imutil.resampleim(np.array(fd.data), lennnn, lennnn, nchan=1)[:, :, 0].tolist()
-            log('resampled2')
+                    fd.data = imutil.resampleim(np.array(fd.data), lennnn, lennnn, nchan=1)[:, :, 0].tolist()
+                log('resampled2')
 
-            # need to do this again after downsampling
-            fd.confuse_target = np.max(fd.data)
+                # need to do this again after downsampling
+                fd.confuse_target = np.max(fd.data)
 
-            fd.make = True
-            file = result_folder[net + ".mfig"]
-            file.save(fd)
-            backend = MPLFigsBackend
-            fd = file.loado()
-            fd.dataFile = file
-            fd.imgFile = file.resrepext('png')
-            backend.makeAllPlots([fd], overwrite=True)
-
-            scores = debug_process(fd, scores, result_folder, net, block_len, arch, size, 'AC')
+                fd.make = True
+                extra = ''
+                if cfg['average_per_block']: extra = '_avg'
+                file = result_folder[net + extra + ".mfig"]
+                file.save(fd)
+                backend = MPLFigsBackend
+                fd = file.loado()
+                fd.dataFile = file
+                fd.imgFile = file.resrepext('png')
+                backend.makeAllPlots([fd], overwrite=True)
+                if cfg['get_scores']:
+                    scores = debug_process(fd, scores, result_folder, net, block_len, arch, size, 'AC')
 
     save_scores(result_folder, scores)
 def save_scores(result_folder, scores):
@@ -304,13 +330,10 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     # total_n = len(CLASSES) * len(CLASSES)
     dvs = [0, 0, 0]
 
-
-    # prob
-    # std?
     # image?
     # darius?
 
-    debug = [[],[],[]]
+    debug = [[], [], []]
 
     for i, c in enum(CLASSES):
         # if i > 4: break
@@ -319,8 +342,13 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
             sc = slice(block_len * i, block_len * (i + 1))
             sr = slice(block_len * ii, block_len * (ii + 1))
             comp_mat = norm_rsa_mat[sc, sr]
-            avg_dis = np.mean(comp_mat)
-            all_dis = comp_mat
+            if c == cc:
+                for cmi, row in enum(comp_mat):
+                    for cmii, col in enum(row):
+                        if cmi <= cmii:
+                            comp_mat[cmi, cmii] = np.nan
+            avg_dis = np.nanmean(comp_mat)
+            all_dis = arr([num for num in comp_mat.tolist() if not isnan(num)])
             if NORMALIZE:
                 avg_dis = avg_dis / average
                 all_dis = comp_mat / average
@@ -328,17 +356,17 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
             if c.startswith('NS') and cc.startswith('NS'):
                 similarity_NS += avg_dis
                 dvs[0] += 1
-                debug[0].append((c,cc))
+                debug[0].append((c, cc))
                 similarity_NS_flat += flatten(all_dis).tolist()
             elif c.startswith('S') and cc.startswith('S'):
                 similarity_S += avg_dis
                 dvs[1] += 1
-                debug[1].append((c,cc))
+                debug[1].append((c, cc))
                 similarity_S_flat += flatten(all_dis).tolist()
             else:
                 similarity_across += avg_dis
                 dvs[2] += 1
-                debug[2].append((c,cc))
+                debug[2].append((c, cc))
                 sim_across_flat += flatten(all_dis).tolist()
                 if NORMALIZE:
                     # avg_dis = avg_dis - ((avg_dis - 1) * 2)
@@ -366,7 +394,6 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     # scipy.stats.ttest_ind(similarity_NS_flat, similarity_S_flat, alternative='two-sided')
     # scipy.stats.ttest_ind(sim_across_flat, similarity_S_flat, alternative='less')
 
-    breakpoint()
     print(f'{p_ns_s=}')
     print(f'{p_across_s=}')
     print(f'{p_across_ns=}')
