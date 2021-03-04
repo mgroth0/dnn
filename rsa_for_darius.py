@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 import numpy as np
 import scipy
 
@@ -189,6 +191,19 @@ def main():
                         axis=0
                     )
 
+            # breakpoint()
+            fd = RSA(  # gets SIMILARITIES, not DiSSIMILARTIES due to fix()
+                f'L2 Norm of {LAYERS[arch]} from {net}',
+                acts_for_rsa,
+                None,
+                None,
+                layer_name='fc7',
+                layer_i=None,
+                classnames=CLASSES,
+                block_len=block_len,
+                sort=False,
+                return_result=True
+            )
             for cfg in [
                 {
                     'get_scores'       : True,
@@ -199,20 +214,8 @@ def main():
                     'average_per_block': False
                 }
             ]:
-                # breakpoint()
-                fd = RSA(  # gets SIMILARITIES, not DiSSIMILARTIES due to fix()
-                    f'L2 Norm of {LAYERS[arch]} from {net}',
-                    acts_for_rsa,
-                    None,
-                    None,
-                    layer_name='fc7',
-                    layer_i=None,
-                    classnames=CLASSES,
-                    block_len=block_len,
-                    sort=False,
-                    return_result=True
-                )
-                rsa_mat = fd.data
+                fdd = deepcopy(fd)
+                rsa_mat = fdd.data
                 if cfg['average_per_block']:
                     for i, c in enum(CLASSES):
                         for ii, cc in enum(CLASSES):
@@ -222,15 +225,15 @@ def main():
                             comp_mat = rsa_mat[sc, sr]
                             avg_dis = np.mean(comp_mat)
                             # fd.data = arr(fd.data)
-                            fd.data[sc, sr] = avg_dis
+                            fdd.data[sc, sr] = avg_dis
                             # fd.data = fd.data.tolist()
 
                 # breakpoint()
 
                 log('resampling1')
                 lennnn = len(CLASSES) * block_len
-                if lennnn == fd.data.shape[0]:
-                    fd.data = fd.data.tolist()
+                if lennnn == fdd.data.shape[0]:
+                    fdd.data = fdd.data.tolist()
                 else:
                     # DEBUG
                     # for rowi,row in enum(fd.data):
@@ -240,24 +243,24 @@ def main():
 
 
 
-                    fd.data = imutil.resampleim(np.array(fd.data), lennnn, lennnn, nchan=1)[:, :, 0].tolist()
+                    fdd.data = imutil.resampleim(np.array(fdd.data), lennnn, lennnn, nchan=1)[:, :, 0].tolist()
                 log('resampled2')
 
                 # need to do this again after downsampling
-                fd.confuse_target = np.max(fd.data)
+                fdd.confuse_target = np.max(fdd.data)
 
-                fd.make = True
+                fdd.make = True
                 extra = ''
                 if cfg['average_per_block']: extra = '_avg'
                 file = result_folder[net + extra + ".mfig"]
-                file.save(fd)
+                file.save(fdd)
                 backend = MPLFigsBackend
-                fd = file.loado()
-                fd.dataFile = file
-                fd.imgFile = file.resrepext('png')
-                backend.makeAllPlots([fd], overwrite=True)
+                fdd = file.loado()
+                fdd.dataFile = file
+                fdd.imgFile = file.resrepext('png')
+                backend.makeAllPlots([fdd], overwrite=True)
                 if cfg['get_scores']:
-                    scores = debug_process(fd, scores, result_folder, net, block_len, arch, size, 'AC')
+                    scores = debug_process(fdd, scores, result_folder, net, block_len, arch, size, 'AC')
 
     save_scores(result_folder, scores)
 def save_scores(result_folder, scores):
@@ -330,8 +333,6 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     # total_n = len(CLASSES) * len(CLASSES)
     dvs = [0, 0, 0]
 
-    # image?
-    # darius?
 
     debug = [[], [], []]
 
@@ -386,6 +387,8 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     similarity_NS_flat = arr(similarity_NS_flat)
     similarity_S_flat = arr(similarity_S_flat)
     sim_across_flat = arr(sim_across_flat)
+
+    breakpoint()
 
     p_ns_s = scipy.stats.ttest_ind(similarity_NS_flat, similarity_S_flat, alternative='two-sided')[1]
     p_across_s = scipy.stats.ttest_ind(sim_across_flat, similarity_S_flat, alternative='less')[1]
