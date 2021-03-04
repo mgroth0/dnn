@@ -239,15 +239,15 @@ def main():
                     for i, c in enum(CLASSES):
                         for ii, cc in enum(CLASSES):
                             if ii < i: continue
-                            sc = slice(block_len * i, block_len * (i + 1))
-                            sr = slice(block_len * ii, block_len * (ii + 1))
+                            sc = slice(N_PER_CLASS * i, N_PER_CLASS * (i + 1))
+                            sr = slice(N_PER_CLASS * ii, N_PER_CLASS * (ii + 1))
                             comp_mat = rsa_mat[sc, sr]
                             avg_dis = np.mean(comp_mat)
                             # fd.data = arr(fd.data)
                             fdd.data[sc, sr] = avg_dis
                             # fd.data = fd.data.tolist()
 
-                breakpoint()
+                # breakpoint()
 
                 log('resampling1')
                 lennnn = len(CLASSES) * block_len
@@ -359,8 +359,13 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
         # if i > 4: break
         for ii, cc in enum(CLASSES):
             if ii < i: continue
-            sc = slice(block_len * i, block_len * (i + 1))
-            sr = slice(block_len * ii, block_len * (ii + 1))
+
+            # sc = slice(block_len * i, block_len * (i + 1))
+            # sr = slice(block_len * ii, block_len * (ii + 1))
+            #
+            sc = slice(N_PER_CLASS * i, N_PER_CLASS * (i + 1))
+            sr = slice(N_PER_CLASS * ii, N_PER_CLASS * (ii + 1))
+
             comp_mat = norm_rsa_mat[sc, sr]
             if c == cc:
                 for cmi, row in enum(comp_mat):
