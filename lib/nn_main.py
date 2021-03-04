@@ -51,7 +51,7 @@ def nnet_main(FLAGS):
         dogcatfolder = Folder(dogcatfolder)
         ntrain_folder = dogcatfolder['ntrain']
         dummy_folder = dogcatfolder['dummy'].mkdir()
-        ntrain_folder.deleteIfExists()
+        ntrain_folder.deleteIfExists().mkdir()
         for k, v in listitems(class_map):
             dogcatfolder[k].mkdirs()
             log('getting files')
@@ -59,7 +59,7 @@ def nnet_main(FLAGS):
             random.shuffle(files)
             log('looping files')
             for im in files[0:FLAGS.ntrain]:
-                im.copyinto(dogcatfolder[k])
+                im.copyinto(ntrain_folder[k])
 
         GPU_TRAIN_FOLDER = ntrain_folder
         GPU_TEST_FOLDER = dogcatfolder['Testing']
