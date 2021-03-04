@@ -86,7 +86,6 @@ class Muscle:
             if cfg.LOG_DATA:
                 google_compute.gc('', 'get', '/home/matt/mitili/_logs/remote/dnn', '_logs/remote', RECURSE=True,
                                   AUTO_LOGIN=True).interact()
-        breakpoint()
         [f.unzip_to(TEMP_FIGS_FOLDER, delete_after=True) for f in TEMP_FIGS_FOLDER.glob(f'*.zip')]
         TEMP_FIGS_FOLDER.moveto(new_fig_folder)
         return DNN_ExperimentGroup.from_folder(new_fig_folder)
