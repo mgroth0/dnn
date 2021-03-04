@@ -211,7 +211,7 @@ def main():
                 },
                 {
                     'get_scores'       : False,
-                    'average_per_block': False
+                    'average_per_block': True
                 }
             ]:
                 fdd = deepcopy(fd)
@@ -333,7 +333,6 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     # total_n = len(CLASSES) * len(CLASSES)
     dvs = [0, 0, 0]
 
-
     debug = [[], [], []]
 
     for i, c in enum(CLASSES):
@@ -350,9 +349,13 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
                             comp_mat[cmi, cmii] = np.nan
             avg_dis = np.nanmean(comp_mat)
             all_dis = arr([num for num in flatten(comp_mat).tolist() if not isnan(num)])
+
+            # len([n for n in flatten(comp_mat).tolist() if n > 100])
+
+
             if NORMALIZE:
                 avg_dis = avg_dis / average
-                all_dis = comp_mat / average
+                all_dis = all_dis / average
 
             if c.startswith('NS') and cc.startswith('NS'):
                 similarity_NS += avg_dis
@@ -388,7 +391,6 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     similarity_S_flat = arr(similarity_S_flat)
     sim_across_flat = arr(sim_across_flat)
 
-    breakpoint()
 
     p_ns_s = scipy.stats.ttest_ind(similarity_NS_flat, similarity_S_flat, alternative='two-sided')[1]
     p_across_s = scipy.stats.ttest_ind(sim_across_flat, similarity_S_flat, alternative='less')[1]
@@ -400,6 +402,12 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     print(f'{p_ns_s=}')
     print(f'{p_across_s=}')
     print(f'{p_across_ns=}')
+
+    result_folder[net + f"_stats{norm}.json"].save({
+        'p_ns_s'     : p_ns_s,
+        'p_across_s' : p_across_s,
+        'p_across_ns': p_across_ns
+    })
 
     similarity_NS_std = np.std(similarity_NS_flat)
     similarity_S_stf = np.std(similarity_S_flat)
