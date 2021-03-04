@@ -147,8 +147,14 @@ def main():
                 net = arch
             else:
                 net = arch + '_' + str(size)
-            block_len = 100  # PIXELS_PER_CLASS
+
+            # block_len = 100  # PIXELS_PER_CLASS
             # block_len = 500  # PIXELS_PER_CLASS
+
+
+
+            # block_len = 100 if SHOBHITA else 10
+            block_len = 10 #DEBUG
 
             acts_for_rsa = None
 
@@ -207,11 +213,24 @@ def main():
             for cfg in [
                 {
                     'get_scores'       : True,
-                    'average_per_block': False
+                    'average_per_block': False,
+                    'log_by_mean': False
                 },
                 {
                     'get_scores'       : False,
-                    'average_per_block': True
+                    'average_per_block': True,
+                    'log_by_mean': False
+                },
+                {
+                    'get_scores'       : False,
+                    'average_per_block': False,
+                    'log_by_mean': True,
+
+                },
+                {
+                    'get_scores'       : False,
+                    'average_per_block': True,
+                    'log_by_mean': True
                 }
             ]:
                 fdd = deepcopy(fd)
@@ -228,7 +247,7 @@ def main():
                             fdd.data[sc, sr] = avg_dis
                             # fd.data = fd.data.tolist()
 
-                # breakpoint()
+                breakpoint()
 
                 log('resampling1')
                 lennnn = len(CLASSES) * block_len
@@ -252,6 +271,7 @@ def main():
                 fdd.make = True
                 extra = ''
                 if cfg['average_per_block']: extra = '_avg'
+                if cfg['log_by_mean']: extra += '_log'
                 file = result_folder[net + extra + ".mfig"]
                 file.save(fdd)
                 backend = MPLFigsBackend
