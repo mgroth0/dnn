@@ -1,5 +1,3 @@
-from tensorflow.python.keras import backend, layers
-from tensorflow.python.keras.applications import imagenet_utils
 
 from arch import INC
 from lib.nn import nnstate
@@ -9,10 +7,14 @@ from mlib.boot.mlog import err
 
 class NoBN_INC_PROKO(INC):
 
+
     PP = 'INC_DEBUG'
     _LOSS = 'binary_crossentropy'
 
     def assemble_layers(self):
+        from tensorflow.python.keras import backend, layers
+        from tensorflow.python.keras.applications import imagenet_utils
+
         include_top = True
         weights = None
         pooling = None
@@ -119,6 +121,7 @@ def conv2d_bn(x,
     Returns:
       Output tensor after applying `Conv2D` and `BatchNormalization`.
     """
+    from tensorflow.python.keras import backend, layers
     x = layers.Conv2D(
         filters,
         kernel_size,
@@ -167,6 +170,7 @@ def inception_resnet_block(x, scale, block_type, block_idx, activation='relu'):
       ValueError: if `block_type` is not one of `'block35'`,
         `'block17'` or `'block8'`.
     """
+    from tensorflow.python.keras import backend, layers
     if block_type == 'block35':
         branch_0 = conv2d_bn(x, 32, 1)
         branch_1 = conv2d_bn(x, 32, 1)

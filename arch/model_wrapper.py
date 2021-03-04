@@ -6,9 +6,7 @@ import types
 from typing import Optional
 from abc import abstractmethod, ABC
 import numpy as np
-print('model_wrapper.py: importing tf')
-import tensorflow as tf
-print('model_wrapper.py: finished importing tf')
+
 
 from lib.nn.gen_preproc_ims import PreDataset
 from mlib.abstract_attributes import AbstractAttributes, Abstract
@@ -136,6 +134,9 @@ class ModelWrapper(AbstractAttributes, ABC):
 
 
     def predict(self, inputs, verbose=1, **kwargs) -> np.array:
+        # print('model_wrapper.py: importing tf')
+        import tensorflow as tf
+        # print('model_wrapper.py: finished importing tf')
         if not isinstance(inputs, types.GeneratorType) and not isinstance(inputs, tf.keras.utils.Sequence):
             if len(inputs.shape) == 3:
                 inputs = np.expand_dims(inputs, axis=0)
@@ -159,6 +160,7 @@ class ModelWrapper(AbstractAttributes, ABC):
 
 def simple_predict(net: ModelWrapper, pp, inputs, *, length):
     # vs_n = [(V_Stacker(), n) for n in nets]
+    import tensorflow as tf
     class Timer:
         def __init__(self, name):
             self._tic = None

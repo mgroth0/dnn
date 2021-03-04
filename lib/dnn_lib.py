@@ -4,7 +4,7 @@ from lib.dnn_proj_struct import get_last_exp_group, get_figs_folder, DNN_Experim
 from lib.muscle import Muscle
 from mlib import answer_request
 from mlib.boot import log, mlog
-from mlib.boot.lang import pwd
+from mlib.boot.lang import islinux, pwd
 from mlib.file import File, SyncedFolder, Folder
 from mlib.proj.struct import Project
 from mlib.term import log_invokation
@@ -27,7 +27,7 @@ def dnn(
         local=cfg.MUSCLE == 'local'
     )
 
-    if cfg.CLEAR_EG_DATA:
+    if cfg.CLEAR_EG_DATA and islinux():
         Project.DNN_FIGS_FIGS_FOLDER.clear()
 
     if 'JUSTRUN' in mode and cfg.SAVE_DATA:

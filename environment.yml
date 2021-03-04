@@ -1,7 +1,3 @@
-/Users/matt/miniconda3/envs/dnn/lib/python3.8/multiprocessing/resource_tracker.py:216: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
-
-  warnings.warn('resource_tracker: There appear to be %d '
-
 name: base
 
 channels:
@@ -16,15 +12,15 @@ channels:
 
 dependencies:
 
-  - aiohttp=3.6.2=py38h0b31af3_0
+  - aiohttp=3.7.3=py38h96a0964_3
 
   - async-timeout=3.0.1=py_1000
 
-  - attrs=19.3.0=py_0
+  - attrs=20.3.0=pyhd3deb0d_0
 
   - bcrypt=3.1.7=py38h64e0658_1
 
-  - beautifulsoup4=4.9.1=py38h32f6830_0
+  - beautifulsoup4=4.9.1=py_1
 
   - blinker=1.4=py_1
 
@@ -46,7 +42,7 @@ dependencies:
 
   - colorama=0.4.3=py_0
 
-  - conda=4.8.3=py38h32f6830_2
+  - conda=4.9.2=py38h50d1736_0
 
   - conda-package-handling=1.6.0=py38h64e0658_2
 
@@ -72,7 +68,7 @@ dependencies:
 
   - gettext=0.19.8.1=h46ab8bc_1002
 
-  - gitdb=4.0.5=py_0
+  - gitdb=4.0.5=pyhd8ed1ab_1
 
   - gitpython=3.1.3=py_0
 
@@ -144,7 +140,7 @@ dependencies:
 
   - libpq=12.2=h489d428_1
 
-  - libprotobuf=3.12.3=hd174df1_0
+  - libprotobuf=3.12.3=hab81aa3_2
 
   - libsodium=1.0.17=h01d97ff_0
 
@@ -162,17 +158,17 @@ dependencies:
 
   - matplotlib-base=3.2.1=py38h1300a51_0
 
-  - mkl=2019.5=281
+  - mkl=2020.2=260
 
-  - mock=4.0.2=py38h32f6830_0
+  - mock=4.0.3=py38h50d1736_1
 
-  - multidict=4.7.5=py38h64e0658_1
+  - multidict=5.1.0=py38h5406a74_1
 
   - ncurses=6.1=h0a44026_1002
 
   - nettle=3.4.1=h3efe00b_1002
 
-  - ninja=1.10.2=py38hf7b0b51_0
+  - ninja=1.10.0=ha1b3eb9_0
 
   - nspr=4.20=h0a44026_1000
 
@@ -188,7 +184,7 @@ dependencies:
 
   - openh264=2.1.1=hd174df1_0
 
-  - openssl=1.1.1i=h35c211d_0
+  - openssl=1.1.1j=hbcf498f_0
 
   - packaging=20.4=pyh9f0ad1d_0
 
@@ -208,7 +204,7 @@ dependencies:
 
   - ptyprocess=0.6.0=py_1001
 
-  - py-opencv=4.3.0=py38h23f93f0_1
+  - py-opencv=4.3.0=py38h23f93f0_1
 
   - pybtex=0.22.2=py38h32f6830_1
 
@@ -222,7 +218,7 @@ dependencies:
 
   - pygments=2.6.1=py_0
 
-  - pyjwt=1.7.1=py_0
+  - pyjwt=2.0.1=pyhd8ed1ab_0
 
   - pynacl=1.3.0=py38h0b31af3_1001
 
@@ -254,7 +250,7 @@ dependencies:
 
   - readline=8.0=hcfe32e1_0
 
-  - regex=2020.7.14=py38h4d0b108_0
+  - regex=2020.11.13=py38h5406a74_1
 
   - ruamel_yaml=0.15.80=py38h64e0658_1001
 
@@ -266,9 +262,9 @@ dependencies:
 
   - slimit=0.8.1=py38h32f6830_1
 
-  - smmap=3.0.4=pyh9f0ad1d_0
+  - smmap=3.0.5=pyh44b312d_0
 
-  - soupsieve=2.0.1=py38h32f6830_0
+  - soupsieve=2.0.1=py_1
 
   - sqlite=3.30.1=h93121df_0
 
@@ -284,9 +280,9 @@ dependencies:
 
   - tqdm=4.46.1=pyh9f0ad1d_0
 
-  - typing-extensions=3.7.4.2=0
+  - typing-extensions=3.7.4.3=0
 
-  - typing_extensions=3.7.4.2=py_0
+  - typing_extensions=3.7.4.3=py_0
 
   - tzlocal=2.1=pyh9f0ad1d_0
 
@@ -302,11 +298,11 @@ dependencies:
 
   - xz=5.2.5=h0b31af3_0
 
-  - yaml=0.2.5=h0b31af3_0
+  - yaml=0.2.5=haf1e3a3_0
 
   - yapf=0.29.0=py_0
 
-  - yarl=1.3.0=py38h0b31af3_1000
+  - yarl=1.6.3=py38h5406a74_1
 
   - zeromq=4.3.2=h6de7cb9_2
 
@@ -623,5 +619,3 @@ dependencies:
     - wrapt==1.12.1
 
 prefix: /Users/matt/miniconda3/envs/dnn
-
-
