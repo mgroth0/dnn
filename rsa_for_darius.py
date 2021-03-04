@@ -321,11 +321,11 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
             if c.startswith('NS') and cc.startswith('NS'):
                 similarity_NS += avg_dis
                 dvs[0] += 1
-                similarity_NS_flat += flatten(all_dis)
+                similarity_NS_flat += flatten(all_dis).tolist()
             elif c.startswith('S') and cc.startswith('S'):
                 similarity_S += avg_dis
                 dvs[1] += 1
-                similarity_S_flat += flatten(all_dis)
+                similarity_S_flat += flatten(all_dis).tolist()
             else:
                 if NORMALIZE:
                     # avg_dis = avg_dis - ((avg_dis - 1) * 2)
@@ -337,7 +337,7 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
                     avg_dis = 1 - avg_dis
                 dissimilarity_across += avg_dis
                 dvs[2] += 1
-                dissimilarity_across_flat += flatten(all_dis)
+                dissimilarity_across_flat += flatten(all_dis).tolist()
 
     similarity_NS = similarity_NS / dvs[0]
     similarity_S = similarity_S / dvs[1]
