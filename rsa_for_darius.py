@@ -155,8 +155,9 @@ def main():
                 if SHOBHITA:
                     # 500 = num images
                     # 400 = len of one activation array
-                    breakpoint()
-                    acts = activations[net][c].load().reshape(500, 400)
+                    # breakpoint()
+                    # acts = activations[net][c].load().reshape(500, 400)
+                    acts = activations[net][c].load()
                 else:
                     acts = activations[net][c].load()['imageActivations']
                 log(f'total images per class: {len(acts)}')
