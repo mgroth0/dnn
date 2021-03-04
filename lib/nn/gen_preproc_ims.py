@@ -246,6 +246,7 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
     log(f'CLASS_NAMES:{CLASS_NAMES}')
 
     images = []
+    breakpoint()
     for image in data_dir.glob('*/*.png'):
         images.append(image)
 
