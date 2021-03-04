@@ -348,7 +348,7 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
                         if cmi <= cmii:
                             comp_mat[cmi, cmii] = np.nan
             avg_dis = np.nanmean(comp_mat)
-            all_dis = arr([num for num in comp_mat.tolist() if not isnan(num)])
+            all_dis = arr([num for num in flatten(comp_mat).tolist() if not isnan(num)])
             if NORMALIZE:
                 avg_dis = avg_dis / average
                 all_dis = comp_mat / average
