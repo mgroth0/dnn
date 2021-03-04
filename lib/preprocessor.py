@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from arch import INC
+from arch.INC_ORIG import INC_HW
 from lib.misc.imutil import make255, resampleim
 from mlib.boot import log
 from mlib.boot.mlog import err
@@ -47,7 +47,7 @@ class Inc_debug_preprocess():
             file = im
             im = im.load()
         # imdata = mpimg.imread(file)
-        imdata = cv2.resize(im, dsize=(INC.HW, INC.HW), interpolation=cv2.INTER_LINEAR) * 255.0
+        imdata = cv2.resize(im, dsize=(INC_HW, INC_HW), interpolation=cv2.INTER_LINEAR) * 255.0
         import tensorflow as tf
         imdata = tf.keras.applications.inception_resnet_v2.preprocess_input(
             # imdata = tf.keras.applications.inception_resnet_v2.preprocess_input(
