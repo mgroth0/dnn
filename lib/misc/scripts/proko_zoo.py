@@ -28,7 +28,7 @@ experiment = obj([{
 data_result = []
 my_result_fold = SALIENCE_RESULT_FOLDER[f'keras{experiment.filekey}_{int(time())}'].mkdirs()
 
-for name, model in list(experiment.models_to_test.items()):
+for name, model in list(experiment.models.items()):
     model_class = model()
     for i in experiment.num_ims:
         data_result.append({
