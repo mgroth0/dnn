@@ -251,6 +251,7 @@ def main():
 
                 log('resampling1')
                 lennnn = len(CLASSES) * block_len
+                full_data = fdd.data
                 if lennnn == fdd.data.shape[0]:
                     fdd.data = fdd.data.tolist()
                 else:
@@ -280,7 +281,7 @@ def main():
                 fdd.imgFile = file.resrepext('png')
                 backend.makeAllPlots([fdd], overwrite=True)
                 if cfg['get_scores']:
-                    scores = debug_process(fdd, scores, result_folder, net, block_len, arch, size, 'AC')
+                    scores = debug_process(fdd, scores, result_folder, net, block_len, arch, size, 'AC',full_data)
 
     save_scores(result_folder, scores)
 def save_scores(result_folder, scores):
@@ -335,10 +336,10 @@ norm = ''
 if NORMALIZE: norm = '_norm'
 
 @log_invokation
-def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
-    fd = fd.viss[0]  # so confused why i have to do this locally but not on OM
+def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot,full_data):
+    # fd = fd.viss[0]  # so confused why i have to do this locally but not on OM
 
-    norm_rsa_mat = fd.data / np.max(fd.data)
+    norm_rsa_mat = full_data / np.max(full_data)
     average = np.mean(norm_rsa_mat)
 
     similarity_NS = 0
@@ -434,13 +435,13 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
         'p_across_ns': p_across_ns
     })
 
-    try:
+    # try:
 
-        similarity_NS_std = np.std(similarity_NS_flat)
-        similarity_S_stf = np.std(similarity_S_flat)
-        dissimilarity_across_std = np.std(sim_across_flat)
-    except:
-        breakpoint()
+    similarity_NS_std = np.std(similarity_NS_flat)
+    similarity_S_stf = np.std(similarity_S_flat)
+    dissimilarity_across_std = np.std(sim_across_flat)
+    # except:
+    #     breakpoint()
 
     if plot == 'AC':
         scores[arch][size] = dissimilarity_across
