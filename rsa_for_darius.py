@@ -304,6 +304,14 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     # total_n = len(CLASSES) * len(CLASSES)
     dvs = [0, 0, 0]
 
+
+    # prob
+    # std?
+    # image?
+    # darius?
+
+    debug = [[],[],[]]
+
     for i, c in enum(CLASSES):
         # if i > 4: break
         for ii, cc in enum(CLASSES):
@@ -320,14 +328,17 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
             if c.startswith('NS') and cc.startswith('NS'):
                 similarity_NS += avg_dis
                 dvs[0] += 1
+                debug[0].append((c,cc))
                 similarity_NS_flat += flatten(all_dis).tolist()
             elif c.startswith('S') and cc.startswith('S'):
                 similarity_S += avg_dis
                 dvs[1] += 1
+                debug[1].append((c,cc))
                 similarity_S_flat += flatten(all_dis).tolist()
             else:
                 similarity_across += avg_dis
                 dvs[2] += 1
+                debug[2].append((c,cc))
                 sim_across_flat += flatten(all_dis).tolist()
                 if NORMALIZE:
                     # avg_dis = avg_dis - ((avg_dis - 1) * 2)
@@ -351,6 +362,9 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot):
     p_ns_s = scipy.stats.ttest_ind(similarity_NS_flat, similarity_S_flat, alternative='two-sided')[1]
     p_across_s = scipy.stats.ttest_ind(sim_across_flat, similarity_S_flat, alternative='less')[1]
     p_across_ns = scipy.stats.ttest_ind(sim_across_flat, similarity_NS_flat, alternative='less')[1]
+
+    # scipy.stats.ttest_ind(similarity_NS_flat, similarity_S_flat, alternative='two-sided')
+    # scipy.stats.ttest_ind(sim_across_flat, similarity_S_flat, alternative='less')
 
     breakpoint()
     print(f'{p_ns_s=}')
