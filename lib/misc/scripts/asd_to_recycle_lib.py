@@ -3,15 +3,14 @@ import matplotlib.image as mpimg
 import os
 import random
 
+from lib.nn import nnstate
 from lib.nn.tf_lib import Verbose
 from mlib.boot import log
 from mlib.boot.mlog import err
 from mlib.term import log_invokation
-BATCH_SIZE = 1
 SANITY_SWITCH = False
 SANITY_MIX = True
-from lib.boot.nn_init_fun import setupTensorFlow
-tf = setupTensorFlow()
+import tensorflow as tf
 class_map = {'dog': 0, 'cat': 1}
 
 
@@ -19,8 +18,7 @@ class_map = {'dog': 0, 'cat': 1}
 def get_data(num_ims_per_class='ALL'):
     print('get_data')
     # data = '/matt/data/tf_bug1/' #small set with hundreds I generated from imagenet
-    data = '/matt/data/tf_bug1/dogscats' #thousands, downloaded from kaggle
-
+    data = '/matt/data/tf_bug1/dogscats'  # thousands, downloaded from kaggle
 
     train_data_cat = [data + f'/Training/cat/{x}' for x in os.listdir(data + '/Training/cat')]
     train_data_dog = [data + f'/Training/dog/{x}' for x in os.listdir(data + '/Training/dog')]
@@ -63,9 +61,9 @@ def get_gen(data, HEIGHT_WIDTH, preprocess_class):
         i = 0
         for im_file in data:
             i += 1
-            if i <= BATCH_SIZE:
+            if i <= nnstate.FLAGS.batchsize:
                 pairs += [preprocess(im_file, HEIGHT_WIDTH, preprocess_class)]
-            if i == BATCH_SIZE:
+            if i == nnstate.FLAGS.batchsize:
                 yield (
                     [pair[0] for pair in pairs],
                     [pair[1] for pair in pairs]
@@ -84,8 +82,8 @@ def get_ds(
         get_gen(data, HEIGHT_WIDTH, preprocess_class),
         (tf.float32, tf.int64),
         output_shapes=(
-            tf.TensorShape((BATCH_SIZE, HEIGHT_WIDTH, HEIGHT_WIDTH, 3)),
-            tf.TensorShape(([BATCH_SIZE]))
+            tf.TensorShape((nnstate.FLAGS.batchsize, HEIGHT_WIDTH, HEIGHT_WIDTH, 3)),
+            tf.TensorShape(([nnstate.FLAGS.batchsize]))
         )
     )
 
@@ -105,16 +103,17 @@ def preprocess(file, HEIGHT_WIDTH, preprocess_class):
 def proko_train(
         model_class,
         epochs,
+        HEIGHT_WIDTH,
         num_ims_per_class,
-        include_top=True, # THIS WAS THE BUG!!!! Probably used a different loss function while it was false
+        include_top=True,  # THIS WAS THE BUG!!!! Probably used a different loss function while it was false
         weights=None,
-        HEIGHT_WIDTH=299,
+
         preprocess_class=None,
         loss='binary_crossentropy',
         classes=1,
 
 ):
-    if num_ims_per_class < BATCH_SIZE:
+    if num_ims_per_class < nnstate.FLAGS.batchsize:
         err('bad')
     print(f'starting script (num_ims_per_class={num_ims_per_class})')
     if classes == 1:
@@ -168,7 +167,7 @@ def proko_train(
     for gpu in gpus:
         log(f'\tGPU:{gpu}')
 
-    a_dict={'history': None}
+    a_dict = {'history': None}
     def private_gpu_mem():
         print('starting private gpu mem')
         a_dict['history'] = net.fit(
@@ -181,7 +180,6 @@ def proko_train(
             validation_data=test_ds
         )
         print('starting testing')
-        print_output = True
 
         print(net.evaluate(
             ds,
@@ -197,13 +195,5 @@ def proko_train(
     private_gpu_mem()
 
     return a_dict['history']
-
-def run_and_clear_gpu_mem_after(lamb):
-    # https://github.com/tensorflow/tensorflow/issues/36465
-    import multiprocessing
-
-    process_eval = multiprocessing.Process(target=lamb)
-    process_eval.start()
-    process_eval.join()
 
 

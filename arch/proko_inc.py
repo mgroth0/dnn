@@ -6,6 +6,9 @@ from tensorflow.python.keras.utils import data_utils
 from tensorflow.python.keras.utils import layer_utils
 from tensorflow.python.lib.io import file_io
 
+err('''
+HEIGHT_WIDTH=INC.HEIGHT_WIDTH,
+''')
 
 from tensorflow.python.keras import layers
 

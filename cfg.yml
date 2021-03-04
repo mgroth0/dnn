@@ -27,7 +27,8 @@ profiles:
     salience: True
 
 #    NTRAIN: [10]
-    NTRAIN: [90]
+#    NTRAIN: [90]
+    NTRAIN: [1]
 
 
   default:
@@ -192,21 +193,22 @@ configs:
     <<: *run_one
     EXPERIMENT_NAME: test
 #            REGEN_DATA: true
-  salience_1: &salience_1
+  salience_keras: &salience_keras
     <<: *final_sym
     NORM_TRAIN_IMS: False
-    EXPERIMENT_NAME: salience_1
+    EXPERIMENT_NAME: salience_keras
 
 
 
     REGEN_DATA: False
     REGEN_NTRAIN: 90 #100 doesnt work bc not all classes have 200(val). see nn_main.py
-    EPOCHS: 10
     TRANSFER_LEARNING: False
     PRED_SIZE: 2
 
 
 
+    BATCH_SIZE: 1
+    EPOCHS: 1
 
 
 #    PIPELINE: SANITY TRAIN # VAL # REC
@@ -217,8 +219,8 @@ configs:
       -
         <<: *default_exp
 #        arch: INC
-        arch: ALEX
+        arch: CUSTOM
   default:
 #  <<: *final_sym
-    <<: *salience_1
-    BATCH_SIZE: 1
+    <<: *salience_keras
+

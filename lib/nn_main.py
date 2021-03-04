@@ -1,3 +1,5 @@
+from arch.proko_inc import CustomInceptionResNetV2
+from lib.misc.scripts.asd_to_recycle_lib import get_data, get_ds, get_gen, preprocess, proko_train
 from mlib.boot.mlog import err
 print('nn_main.py: top')
 print('nn_main.py: about to do arch imports')
@@ -23,38 +25,41 @@ ARCH_MAP = {
     'GNET'    : GNET,
     'INC'     : INC,
     'INC_ORIG': INC_ORIG,
-    'SCRATCH' : SCRATCH
+    'SCRATCH' : SCRATCH,
+    'CUSTOM' : CustomInceptionResNetV2
 }
 
 # breakpoint()
 
 @log_invokation()
 def nnet_main(FLAGS):
-    if FLAGS.salience:
-        from lib.misc.scripts import proko_zoo
-        nn_init_fun.NRC_IS_FINISHED()
-
 
     _IMAGES_FOLDER = pwdf()['_images'].mkdirs(mker=True)
     HUMAN_IMAGE_FOLDER = pwdf()['_images_human'].mkdirs(mker=True)
 
     if FLAGS.gen:
         gen_main(FLAGS, _IMAGES_FOLDER, HUMAN_IMAGE_FOLDER)
+    if FLAGS.salience:
+        GPU_IMAGES_FOLDER = get_data()
+        get_gen()
+        get_ds()
+        preprocess()
+        err('work. ')
+    else:
+        GPU_IMAGES_FOLDER = _IMAGES_FOLDER[f'gpu{FLAGS.mygpufordata}']
 
-    GPU_IMAGES_FOLDER = _IMAGES_FOLDER[f'gpu{FLAGS.mygpufordata}']
+        GPU_TRAIN_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'Training/{FLAGS.ntrain}'])
+        GPU_TEST_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'Testing'])
+        GPU_RSA_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'RSA'])
 
-    GPU_TRAIN_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'Training/{FLAGS.ntrain}'])
-    GPU_TEST_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'Testing'])
-    GPU_RSA_FOLDER = NN_Data_Dir(GPU_IMAGES_FOLDER[f'RSA'])
+        if FLAGS.deletenorms:
+            GPU_TRAIN_FOLDER.delete_norm_dir()
+            GPU_TEST_FOLDER.delete_norm_dir()
+            GPU_RSA_FOLDER.delete_norm_dir()
+            nn_init_fun.NRC_IS_FINISHED()  # must be invoked this way since value of function changes
 
-    if FLAGS.deletenorms:
-        GPU_TRAIN_FOLDER.delete_norm_dir()
-        GPU_TEST_FOLDER.delete_norm_dir()
-        GPU_RSA_FOLDER.delete_norm_dir()
-        nn_init_fun.NRC_IS_FINISHED()  # must be invoked this way since value of function changes
-
-    if FLAGS.normtrainims:
-        err('im doing this?')
+        if FLAGS.normtrainims:
+            err('im doing this?')
 
     nnstate.use_reduced_map = len(GPU_TRAIN_FOLDER.files) != len(GPU_TEST_FOLDER.files)
     datasetTrain, _ = load_and_preprocess_ims(
@@ -80,10 +85,13 @@ def nnet_main(FLAGS):
     net.build(FLAGS)
     [a.after_build(FLAGS, net) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
 
+    err(''' 'preprocess_class': tf.keras.applications.inception_resnet_v2,''')
     net.train_data = datasetTrain.prep(net.HEIGHT_WIDTH, net.PP)
     net.val_data = datasetVal.prep(net.HEIGHT_WIDTH, net.PP)
     net.test_data = datasetTest.prep(net.HEIGHT_WIDTH, net.PP)
 
+
+    proko_train()
     return trainTestRecord(net, '', FLAGS.epochs)
 
 
@@ -114,6 +122,19 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
 
             # not sure why I didn't have this line in sym code any more
             saveTestValResults(net.ARCH_LABEL, nam, net.train_data, i)
+
+            err('''
+            data_result = []
+
+    model_class = model()
+    for i in experiment.num_ims:
+        data_result.append({
+            'model_name': name,
+            'num_images': i,
+            'history'   : proko_train().history
+        })
+        EXP_FOLDER()['data_result.json'].save(data_result)
+            ''')
 
             [a.after_fit(i, net, nam) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
 
@@ -162,3 +183,11 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
             nn_plotting.plot_metric(nam, nnstate.GLOBAL_MET_LOG[nam], old_name)
 
     return EXP_FOLDER()
+
+def run_and_clear_gpu_mem_after(lamb):
+    # https://github.com/tensorflow/tensorflow/issues/36465
+    import multiprocessing
+
+    process_eval = multiprocessing.Process(target=lamb)
+    process_eval.start()
+    process_eval.join()
