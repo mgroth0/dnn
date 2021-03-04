@@ -1,11 +1,12 @@
 from lib.analyze_exp_group import analyze_exp_group
 from lib.dnn_jobs import make_jobs
-from lib.dnn_proj_struct import get_last_exp_group, get_figs_folder, DNN_ExperimentGroup, experiments_from_cfg
+from lib.dnn_proj_struct import DNN_ExperimentGroup, experiments_from_cfg, get_figs_folder, get_last_exp_group
 from lib.muscle import Muscle
 from mlib import answer_request
 from mlib.boot import log, mlog
 from mlib.boot.lang import islinux, pwd
-from mlib.file import File, SyncedFolder, Folder
+from mlib.fig.makefigs import makefigs
+from mlib.file import File, Folder, SyncedFolder
 from mlib.proj.struct import Project
 from mlib.term import log_invokation
 
@@ -77,10 +78,9 @@ def dnn(
     log(f'MODE IS {mode}')
     if 'COMPILE_TEST_ALL' in mode:
         log('in CTA!')
-        analyze_exp_group(exp_group)
+        analyze_exp_group(exp_group, cfg)
 
         # the stuff below is only temporarily commented out
-        # makefigs(exp_group.compile_folder, cfg.fig_backend, overwrite=True)
+        makefigs(exp_group.compile_folder, cfg.fig_backend, overwrite=True)
     # if 'MAKEREPORT' in mode:
     #     makereport.makereport()
-

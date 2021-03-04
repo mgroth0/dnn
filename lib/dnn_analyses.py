@@ -15,6 +15,8 @@ class PostBuildAnalysis(DNN_Analysis):
     @abstractmethod
     def after_build(self, FLAGS, net): pass
 
+
+
 class PerEpochAnalysis(DNN_Analysis):
     @abstractmethod
     def after_val(self, i, net, nam): pass

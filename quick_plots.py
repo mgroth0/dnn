@@ -106,69 +106,7 @@ def _main_plot(data, model, zoos, fig_root):
         plt.clf()
 
 
-def _log_plot(log_data, fig_root, model):
-    important_text = []
-    important_time = []
-    for lin, file_line, t in log_data:
-        if 'bash dnn.simgw' in file_line:
-            important_text.append('bash dnn.simgw')
-            important_time.append(t)
-        if '__DNN_IS_FINISHED__' in file_line and 'got __DNN_IS_FINISHED__' not in file_line:
-            # https://github.com/keras-team/keras/issues/12561
-            important_text.append('__DNN_IS_FINISHED__')
-            important_time.append(t)
 
-    important_text = [shorten_str(s, 20) for s in important_text]
-
-    fig, axs = plt.subplots(nrows=2)
-    table_ax = axs[0]
-    pie_ax = axs[1]
-    table_ax.set_axis_off()
-
-    important_time = [round(t, 2) for t in important_time]
-    table = table_ax.table(
-        cellText=[[str(t)] for t in important_time],
-        rowLabels=important_text,
-        colLabels=['time'],
-        rowColours=["palegreen"] * (len(important_text) + 1),
-        colColours=["palegreen"] * 2,
-        colWidths=[0.5, 0.5],
-        cellLoc='center',
-        loc='center'
-    )
-
-    table_ax.set_title('Important Logs', fontweight="bold")
-
-    time_amounts = []
-    last = 0
-    for t in important_time:
-        time_amounts.append(t - last)
-        last = t
-    sizes = important_time
-    colors = ['gold', 'yellowgreen', 'lightcoral', 'lightskyblue']
-
-    while len(colors) < len(sizes):
-        colors = colors + colors
-    colors = colors[:len(sizes)]
-
-    pie = pie_ax.pie(
-        time_amounts,
-        labels=important_text,
-        colors=colors
-    )
-
-    pie_ax.text(
-        0.5,
-        -0.25,
-        '* +2 seconds for figure generation',
-        horizontalalignment='center',
-        verticalalignment='center',
-        transform=pie_ax.transAxes
-    )
-
-    plt.savefig(fig_root['logs.png'].abspath)
-
-    plt.clf()
 
 if __name__ == '__main__':
     main()

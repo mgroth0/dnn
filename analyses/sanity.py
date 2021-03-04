@@ -1,11 +1,10 @@
 from copy import deepcopy
 from dataclasses import dataclass
-from enum import Enum, auto
+from enum import auto, Enum
 
 import json
 import numpy as np
 import scipy
-import tensorflow as tf
 
 from arch.model_wrapper import ModelWrapper, simple_predict
 from lib.dnn_analyses import PostBuildAnalysis
@@ -15,11 +14,11 @@ from lib.nn.net_mets import error_rate_core
 from lib.preprocessor import preprocessors
 from mlib.analyses import cell, CellInput, shadow, ShadowFigType
 from mlib.boot import log
-from mlib.boot.lang import enum, isstr, listkeys, isint
-from mlib.boot.stream import listitems, arr, listmap, __, concat, make3d, zeros, maxindex, ints, isnan, nans
+from mlib.boot.lang import enum, isint, isstr, listkeys
+from mlib.boot.stream import __, arr, concat, ints, isnan, listitems, listmap, make3d, maxindex, nans, zeros
 from mlib.fig.text_table_wrap import TextTableWrapper
 from mlib.file import File, Folder
-from mlib.web.html import H3, HTML_Pre, Div, Table, TableRow, DataCell
+from mlib.web.html import DataCell, Div, H3, HTML_Pre, Table, TableRow
 class SanitySet(Enum):
     Set100 = auto()
     # Set50000 = auto()
@@ -33,6 +32,10 @@ SANITY_SET = RealImageNetSet(1000)  # 200 # 49999
 
 
 class SanityAnalysis(PostBuildAnalysis):
+
+    def should_run(self,cfg) -> bool:
+        return 'SANITY' in cfg.PIPELINE
+
     SHOW_SHADOW = True
 
     @cell()
@@ -70,6 +73,7 @@ class SanityAnalysis(PostBuildAnalysis):
             for pp_name, pp in listitems(preprocessors(tf_net.hw)):
                 # , r['ml2tf'][pp_name] =
                 if SANITY_SET != SanitySet.Set100:
+                    import tensorflow as tf
                     root = Folder('/matt/data/ImageNet/output')
                     # root = Folder('/matt/data/ImageNet/output_tf')
                     filenames = root.glob('validation*').map(lambda f: f.abspath).tolist()

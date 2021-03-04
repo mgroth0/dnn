@@ -1,0 +1,194 @@
+<!DOCTYPE html><html><head><meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding"><META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE"><link href="style.css" rel="stylesheet"><style>img {
+    image-rendering: optimizeSpeed; /* Older versions of FF */
+    image-rendering: -moz-crisp-edges; /* FF 6.0+ */
+//image-rendering: -webkit-crisp-edges; /* Webkit (non standard naming) */
+    image-rendering: pixelated; // chrome
+image-rendering: -o-crisp-edges; /* OS X & Windows Opera (12.02+) */
+    image-rendering: crisp-edges; /* Possible future browsers. */
+    -ms-interpolation-mode: nearest-neighbor; /* IE (non standard naming) */
+}</style><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script><link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet"><script src="platform.js"></script><script src="mlib.js"></script><script src="mplotly.js"></script><script>
+
+        onload_funs.push( () => {
+            var links = document.getElementsByTagName('a')			//GEN
+for (link of links) {			//GEN
+    if (link.getAttribute("href") != null && link.getAttribute("href").startsWith("#")) {			//GEN
+        link.onclick = (e) => {			//GEN
+            link.scrollIntoView()			//GEN
+            return false			//GEN
+        }			//GEN
+    }			//GEN
+}
+        })
+        
+</script></head><body style=""><div><div></div></div><br><h4>temp_map_filenames</h4><br><hr></hr><br><h4>compile_eg</h4><br><hr></hr><br><h4>calc_accs</h4><br><pre>{
+  "files": mparray,
+  "ml": {
+    "GNET": {
+      "zerocenter": {
+        "acts": ndarray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      }
+    },
+    "INC": {
+      "zerocenter": {
+        "acts": ndarray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      }
+    }
+  },
+  "tf": {
+    "GNET": {
+      "none": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "divstd_demean": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "unit_scale": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "demean_imagenet": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      }
+    },
+    "INC": {
+      "none": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "divstd_demean": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "unit_scale": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "demean_imagenet": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      }
+    }
+  },
+  "ml2tf": {
+    "GNET": {
+      "none": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "divstd_demean": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "unit_scale": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "demean_imagenet": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      }
+    },
+    "INC": {
+      "none": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "divstd_demean": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "unit_scale": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      },
+      "demean_imagenet": {
+        "acts": mparray,
+        "y_pred": list,
+        "acc": float,
+        "acc5": float
+      }
+    }
+  },
+  "dest": str,
+  "y_true": list
+}</pre><br><hr></hr><br><h4>acc_table</h4><br><div><h3>Tensorflow</h3><pre>+------+------+---------------+------------+-----------------+
+| Arch | none | divstd_demean | unit_scale | demean_imagenet |
++======+======+===============+============+=================+
+| GNET |  71  |       4       |     0      |       76        |
+|      |  90  |      10       |     1      |       91        |
++------+------+---------------+------------+-----------------+
+| INC  |  0   |      90       |     99     |        0        |
+|      |  0   |      95       |    100     |        0        |
++------+------+---------------+------------+-----------------+</pre><h3>MATLAB model imported into Tensorflow</h3><pre>+------+------+---------------+------------+-----------------+
+| Arch | none | divstd_demean | unit_scale | demean_imagenet |
++======+======+===============+============+=================+
+| GNET |  29  |       4       |     0      |       38        |
+|      |  51  |       8       |     1      |       57        |
++------+------+---------------+------------+-----------------+
+| INC  |  0   |      90       |     99     |        0        |
+|      |  0   |      95       |    100     |        0        |
++------+------+---------------+------------+-----------------+</pre>* Darius has uploaded new models that have not yet been tested<h3>MATLAB</h3><pre>+------+------------+
+| Arch | zerocenter |
++======+============+
+| GNET |     96     |
+|      |    100     |
++------+------------+
+| INC  |     99     |
+|      |    100     |
++------+------------+</pre><h3>ImageNet Resuts from Literature</h3><pre>+------+------+
+| Arch | lit  |
++======+======+
+| GNET |  ?   |
+|      |  99  |
++------+------+
+| INC  | 80.4 |
+|      | 95.3 |
++------+------+</pre><pre>
+            Szegedy, Christian, et al. 
+            "Going deeper with convolutions." 
+            Proceedings of the IEEE conference on computer vision and pattern recognition. 2015.
+            
+            Improving Inception and Image Classification in TensorFlow.” 
+            Google AI Blog, 31 Aug. 2016,
+             ai.googleblog.com/2016/08/improving-inception-and-image.html.
+            </pre></div><br><hr></hr><br><h4>same_count_cmat</h4><br><hr></hr><br><h4>same_count_texttable</h4><br><hr></hr><br><h4>same_count_im</h4><br><hr></hr><br><h4>cross_correlate_cmat</h4><br><hr></hr><br><h4>cross_correlate_texttable</h4><br><hr></hr><br><h4>spearman_r_cmat</h4><br><hr></hr><br><h4>spearman_r_texttable</h4><br><hr></hr><br><h4>save</h4><br><br><br><a href="../../index.html">Back to Index</a></body></html>

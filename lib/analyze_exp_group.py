@@ -16,7 +16,8 @@ from mlib.term import log_invokation
 
 @log_invokation(with_args=True)
 def analyze_exp_group(
-        eg: DNN_ExperimentGroup
+        eg: DNN_ExperimentGroup,
+        cfg
 ):
     eg.compile_folder.deleteIfExists()
     eg.metadata.copy_into(eg.compile_folder)
@@ -28,7 +29,7 @@ def analyze_exp_group(
     NTRAINS = eg.metadata['ntrainims']
     NEPOCHS = eg.metadata['nepochs']
 
-    [a.during_compile(eg) for a in ANALYSES(mode=AnalysisMode.PIPELINE)]
+    [a.during_compile(eg) for a in ANALYSES(mode=AnalysisMode.PIPELINE) if a.should_run(cfg)]
 
     experiments = experiments_from_folder(eg.folder)
     random_exp = experiments[0]
@@ -36,6 +37,8 @@ def analyze_exp_group(
     TrainTable = FinalResult(2, 'test/Matthews_Correlation_Coefficient.mfig',
                              data_exists=random_exp.folder[f'test'].exists,
                              is_table=True, rows=ARCH_LABELS, cols=NTRAINS)
+
+    random_exp.folder['log.pkl'].copy_into(eg.compile_folder)
 
     def maybe_avg_result(pre, nepochs, is_table=False, dims=2, suf=None):
         return AverageResult(
@@ -54,13 +57,19 @@ def analyze_exp_group(
             suf='Matthews_Correlation_Coefficient.mfig'
         )
         for ai, arch in enum(ARCH_LABELS):
-            results_to_compile = [
-                TrainTable, MCC,
-                maybe_avg_result(f'L2-Output', NEPOCHS),
-                maybe_avg_result(f'L2-Inter', NEPOCHS),
-                maybe_avg_result(f'L2-Raw', NEPOCHS),
-                maybe_avg_result(f'val', NEPOCHS, is_table=True)
-            ]
+            results_to_compile = [TrainTable, MCC]
+
+            if random_exp.folder['L2-Output'].exists:
+                maybe_avg_result(f'L2-Output', NEPOCHS)
+                maybe_avg_result(f'L2-Inter', NEPOCHS)
+                maybe_avg_result(f'L2-Raw', NEPOCHS)
+
+            results_to_compile.append(maybe_avg_result(f'val', NEPOCHS, is_table=True))
+
+
+
+
+
             results_to_compile = [r for r in results_to_compile if r is not None]
             for exp in experiments.filtered(
                     lambda e: e.arch == arch and e.ntrain == ntrain,
