@@ -225,7 +225,8 @@ configs:
       -
         <<: *default_exp
 #        arch: INC
-        arch: CUSTOM
+#        arch: CUSTOM
+        arch: INC_ORIG
   default:
 #  <<: *final_sym
     <<: *salience_keras
