@@ -63,30 +63,7 @@ class AssembledModel(ModelWrapper, ABC):
             log('not loading weights because TRANSFER_LEARNING is disabled')
         self._compile(net_mets.METS_TO_USE())
 
-    VERBOSE_MODE = Verbose.PRINT_LINE_PER_EPOCH
-    def train(self):
-        log('training network...')
-        nnstate.CURRENT_PRED_MAP = self.train_data.class_label_map
-        nnstate.CURRENT_TRUE_MAP = self.train_data.class_label_map
-        ds = self.train_data.dataset(self.HEIGHT_WIDTH)
-        steps = self.train_data.num_steps
-        log('Training... (ims=$,steps=$)', len(self.train_data), steps)
-        net_mets.cmat = zeros(
-            len(listkeys(nnstate.CURRENT_PRED_MAP)),
-            len(listkeys(nnstate.CURRENT_TRUE_MAP))
-        )
-        history = self.net.fit(
-            # x,y,
-            ds,
-            epochs=1,
-            verbose=self.VERBOSE_MODE,
-            use_multiprocessing=True,
-            workers=16,
-            steps_per_epoch=steps,
-            shuffle=False
-        )
 
-        return history
 
     def val_eval(self):
         nnstate.CURRENT_TRUE_MAP = self.val_data.class_label_map

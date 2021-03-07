@@ -1,3 +1,6 @@
+from lib.nn import net_mets, nnstate
+from lib.nn.tf_lib import Verbose
+from mlib.boot.lang import listkeys
 print('model_wrapper.py: top')
 from copy import deepcopy
 
@@ -155,6 +158,30 @@ class ModelWrapper(AbstractAttributes, ABC):
             self.hw,
             is_pretrained=True
         )
+    VERBOSE_MODE = Verbose.PRINT_LINE_PER_EPOCH
+    def train(self):
+        log('training network...')
+        nnstate.CURRENT_PRED_MAP = self.train_data.class_label_map
+        nnstate.CURRENT_TRUE_MAP = self.train_data.class_label_map
+        ds = self.train_data.dataset(self.HEIGHT_WIDTH)
+        steps = self.train_data.num_steps
+        log('Training... (ims=$,steps=$)', len(self.train_data), steps)
+        net_mets.cmat = np.zeros(
+            len(listkeys(nnstate.CURRENT_PRED_MAP)),
+            len(listkeys(nnstate.CURRENT_TRUE_MAP))
+        )
+        history = self.net.fit(
+            # x,y,
+            ds,
+            epochs=1,
+            verbose=self.VERBOSE_MODE,
+            use_multiprocessing=True,
+            workers=16,
+            steps_per_epoch=steps,
+            shuffle=False
+        )
+
+        return history
 
 
 
@@ -273,3 +300,5 @@ def chain_predict(nets, pp, inputs):
                 vs += n.predict(img)
     return tuple([vs.mat for vs, n in vs_n])
     # return
+
+
