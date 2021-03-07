@@ -57,14 +57,18 @@ def analyze_exp_group(
             suf='Matthews_Correlation_Coefficient.mfig'
         )
         for ai, arch in enum(ARCH_LABELS):
-            results_to_compile = [TrainTable, MCC]
+            if cfg.salience:
+                results_to_compile = [TrainTable]
+            else:
+                results_to_compile = [TrainTable, MCC]
 
             if random_exp.folder['L2-Output'].exists:
                 maybe_avg_result(f'L2-Output', NEPOCHS)
                 maybe_avg_result(f'L2-Inter', NEPOCHS)
                 maybe_avg_result(f'L2-Raw', NEPOCHS)
 
-            results_to_compile.append(maybe_avg_result(f'val', NEPOCHS, is_table=True))
+            if not cfg.salience:
+                results_to_compile.append(maybe_avg_result(f'val', NEPOCHS, is_table=True))
 
 
 
@@ -75,7 +79,10 @@ def analyze_exp_group(
                     lambda e: e.arch == arch and e.ntrain == ntrain,
             ):
                 for res in results_to_compile:
-                    res.append(res.exp_data(exp), (ai, ni, 0), is_GNET=arch == 'GNET')
+                    try:
+                        res.append(res.exp_data(exp), (ai, ni, 0), is_GNET=arch == 'GNET')
+                    except:
+                        breakpoint()
 
             for res in results_to_compile:
                 if not res.data_exists: continue
