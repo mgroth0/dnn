@@ -33,7 +33,7 @@ profiles:
 #                  10 epochs:
 #    NTRAIN: [20] # 5 min 32 sec
 #    NTRAIN: [40] # 446: 7 min 26 sec
-    NTRAIN: [500] # 446: 7 min 26 sec
+    NTRAIN: [500] # 1853 30 min 53 sec
 
 
   default:
@@ -207,7 +207,7 @@ configs:
 
     REGEN_DATA: False
     REGEN_NTRAIN: 90 #100 doesnt work bc not all classes have 200(val). see nn_main.py
-    TRANSFER_LEARNING: False
+    TRANSFER_LEARNING: True
     PRED_SIZE: 2
 
 
