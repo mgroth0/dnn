@@ -55,7 +55,7 @@ class AssembledModel(ModelWrapper, ABC):
             name=self.FULL_NAME.replace(' ', '_')
         )
         if self.WEIGHTS is not None and FLAGS.TRANSFER_LEARNING:  # transfer learning
-            breakpoint()
+            # breakpoint()
             self._load_weights()
             self.write_weight_reports()
             if self.FLIPPED_CONV_WEIGHTS: self._flip_conv_weights()
