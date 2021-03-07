@@ -156,22 +156,7 @@ class AssembledModel(ModelWrapper, ABC):
     @abstractmethod
     def assemble_layers(self): pass
 
-    _OPTIMIZER = 'ADAM'
-    _LOSS = 'sparse_categorical_crossentropy'
 
-    @log_invokation
-    def _compile(self, mets=None):
-        if mets is not None:
-            self.net.compile(
-                optimizer=self._OPTIMIZER,
-                loss=self._LOSS,
-                metrics=mets
-            )
-        else:
-            self.net.compile(
-                optimizer=self._OPTIMIZER,
-                loss=self._LOSS
-            )
 
 
 

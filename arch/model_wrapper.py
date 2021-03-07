@@ -32,6 +32,8 @@ class ModelWrapper(AbstractAttributes, ABC):
     INTER_LAY = -2
     CHANNEL_AXIS = 3
 
+
+
     @classmethod
     def __meta_post_init__(cls):
         # ROW_AXIS: int = field(init=False)
@@ -61,6 +63,23 @@ class ModelWrapper(AbstractAttributes, ABC):
 
     @abstractmethod
     def build_net(self,FLAGS): pass
+
+    _OPTIMIZER = 'ADAM'
+    _LOSS = 'sparse_categorical_crossentropy'
+
+    @log_invokation
+    def _compile(self, mets=None):
+        if mets is not None:
+            self.net.compile(
+                optimizer=self._OPTIMIZER,
+                loss=self._LOSS,
+                metrics=mets
+            )
+        else:
+            self.net.compile(
+                optimizer=self._OPTIMIZER,
+                loss=self._LOSS
+            )
 
     @log_invokation
     def build(self,FLAGS):
