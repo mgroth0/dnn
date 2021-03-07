@@ -208,7 +208,7 @@ configs:
 
 
     BATCH_SIZE: 20
-    EPOCHS: 1
+    EPOCHS: 5
 
 
 #    PIPELINE: SANITY TRAIN # VAL # REC
