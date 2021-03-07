@@ -192,8 +192,9 @@ def basics(y_true, y_pred, fun):
     return rrr, TP, FP, TN, FN, P, N
 
 def unused_metric(fun):
-    return fun.__name__ not in [x.__name__ for x in
-                                METS_TO_USE()]
+    if fun.__name__ == 'error_rate' and 'accuracy' in [x.__name__ for x in METS_TO_USE()]:
+        return True
+    return fun.__name__ not in [x.__name__ for x in METS_TO_USE()]
 
 def empty_tensor(y_true): return y_true.shape[0] is None or (
         y_true.shape[0].__class__.__name__ == 'Dimension' and y_true.shape[0].value is None)
