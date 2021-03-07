@@ -158,6 +158,9 @@ class ModelWrapper(AbstractAttributes, ABC):
             self.hw,
             is_pretrained=True
         )
+
+
+    # why was this in assembled model and not here?
     VERBOSE_MODE = Verbose.PRINT_LINE_PER_EPOCH
     def train(self):
         log('training network...')
@@ -170,6 +173,7 @@ class ModelWrapper(AbstractAttributes, ABC):
             len(listkeys(nnstate.CURRENT_PRED_MAP)),
             len(listkeys(nnstate.CURRENT_TRUE_MAP))
         )
+        breakpoint()
         history = self.net.fit(
             # x,y,
             ds,
