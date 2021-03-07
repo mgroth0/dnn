@@ -10,6 +10,7 @@ class INC_ORIG(PreAssembledModel):
     ARCH_LABEL = 'INC_ORIG'
     HEIGHT_WIDTH = INC_HW
     # )
+    PP = 'INC_DEBUG'
 
     def build_net(self, FLAGS):
         import tensorflow as tf
