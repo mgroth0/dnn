@@ -352,8 +352,11 @@ class PreDataset:
                     if break_outer:
                         break
 
-        breakpoint()
+        # breakpoint()
         return examples
+    # File('/matt/data/temp.png').save(File('/matt/data/tf_bug1/dogscats/ntrain/dog/dog.1648.jpg').load())
+    # File(imd.file))
+    # File('/matt/data/temp.png').save(preprocessors(HW)[pp_type].preprocess(File('/matt/data/tf_bug1/dogscats/ntrain/dog/dog.1648.jpg')))
     def prep(self, HW, pp_type):
         # RANDOMNESS HERE
         random.shuffle(self.imds)
