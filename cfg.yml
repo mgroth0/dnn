@@ -28,7 +28,11 @@ profiles:
 
 #    NTRAIN: [10]
 #    NTRAIN: [90]
-    NTRAIN: [20]
+
+
+#                  10 epochs:
+#    NTRAIN: [20] # 5 min 32 sec
+    NTRAIN: [40] # 5 min 32 sec
 
 
   default:
@@ -209,7 +213,7 @@ configs:
 
     BATCH_SIZE: 20
 #    EPOCHS: 1 #280 sec = 4min, 40sec
-    EPOCHS: 10
+    EPOCHS: 10 #332 sec = 5 min 32 sec
 
 
 #    PIPELINE: SANITY TRAIN # VAL # REC
