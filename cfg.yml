@@ -32,7 +32,8 @@ profiles:
 
 #                  10 epochs:
 #    NTRAIN: [20] # 5 min 32 sec
-    NTRAIN: [40] # 5 min 32 sec
+#    NTRAIN: [40] # 446: 7 min 26 sec
+    NTRAIN: [500] # 446: 7 min 26 sec
 
 
   default:
