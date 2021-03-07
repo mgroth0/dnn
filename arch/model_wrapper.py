@@ -169,11 +169,12 @@ class ModelWrapper(AbstractAttributes, ABC):
         ds = self.train_data.dataset(self.HEIGHT_WIDTH)
         steps = self.train_data.num_steps
         log('Training... (ims=$,steps=$)', len(self.train_data), steps)
+        breakpoint()
         net_mets.cmat = np.zeros(
             len(listkeys(nnstate.CURRENT_PRED_MAP)),
             len(listkeys(nnstate.CURRENT_TRUE_MAP))
         )
-        breakpoint()
+
         history = self.net.fit(
             # x,y,
             ds,
