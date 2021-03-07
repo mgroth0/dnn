@@ -33,7 +33,8 @@ profiles:
 #                  10 epochs:
 #    NTRAIN: [20] # 5 min 32 sec
 #    NTRAIN: [40] # 446: 7 min 26 sec
-    NTRAIN: [500] # 1853 30 min 53 sec
+#    NTRAIN: [500] # 1853 30 min 53 sec
+    NTRAIN: [500] # 1139 18.9 min, after switching from PROKO_INC to INC_ORIG... confused why... optimized? or luck?
 
 
   default:
@@ -214,7 +215,8 @@ configs:
 
     BATCH_SIZE: 20
 #    EPOCHS: 1 #280 sec = 4min, 40sec
-    EPOCHS: 10 #332 sec = 5 min 32 sec
+#    EPOCHS: 10 #332 sec = 5 min 32 sec
+    EPOCHS: 3
 
 
 #    PIPELINE: SANITY TRAIN # VAL # REC
