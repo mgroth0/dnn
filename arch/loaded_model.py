@@ -20,7 +20,7 @@ class LoadedModel(ModelWrapper):
 
         self.OUTPUT_IDX = None
 
-    def build_net(self):
+    def build_net(self,FLAGS):
         import tensorflow as tf
         LRN, PoolHelper = gnet_layer_classes()
         if self.file.ext == '.h5':

@@ -57,7 +57,7 @@ class ModelWrapper(AbstractAttributes, ABC):
         self.test_data: Optional[PreDataset] = None
 
     @abstractmethod
-    def build_net(self): pass
+    def build_net(self,FLAGS): pass
 
     @log_invokation
     def build(self,FLAGS):

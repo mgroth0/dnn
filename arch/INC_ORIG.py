@@ -11,9 +11,9 @@ class INC_ORIG(PreAssembledModel):
     HEIGHT_WIDTH = INC_HW
     # )
 
-    def build_net(self):
+    def build_net(self, FLAGS):
         import tensorflow as tf
         self.net = tf.keras.applications.InceptionResNetV2(
-            include_top=True, weights='imagenet', input_tensor=None, input_shape=None,
+            include_top=True, weights='imagenet' if FLAGS.TRANSFER_LEARNING else None, input_tensor=None, input_shape=None,
             pooling=None, classes=1000, classifier_activation='softmax'
         )
