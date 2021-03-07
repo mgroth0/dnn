@@ -65,24 +65,6 @@ class AssembledModel(ModelWrapper, ABC):
 
 
 
-    def val_eval(self):
-        nnstate.CURRENT_TRUE_MAP = self.val_data.class_label_map
-        ds = self.val_data.dataset(self.HEIGHT_WIDTH)
-        steps = self.val_data.num_steps
-        log('Testing... (ims=$,steps=$)', len(self.val_data), steps)
-        net_mets.cmat = zeros(
-            len(listkeys(nnstate.CURRENT_PRED_MAP)),
-            len(listkeys(nnstate.CURRENT_TRUE_MAP)))
-
-        nnstate.TEST_STEPS = steps
-        return self.net.evaluate(
-            ds
-            , verbose=self.VERBOSE_MODE
-            , steps=steps,
-            use_multiprocessing=True,
-            workers=16,
-        )
-
     @log_invokation
     def test_record(self, ei):
         nnstate.CURRENT_PRED_MAP = self.train_data.class_label_map

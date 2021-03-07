@@ -213,8 +213,8 @@ configs:
 
 
     BATCH_SIZE: 20
-#    EPOCHS: 1 #280 sec = 4min, 40sec
-    EPOCHS: 10 #332 sec = 5 min 32 sec
+    EPOCHS: 1 #280 sec = 4min, 40sec
+#    EPOCHS: 10 #332 sec = 5 min 32 sec
 
 
 #    PIPELINE: SANITY TRAIN # VAL # REC
