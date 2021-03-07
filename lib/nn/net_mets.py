@@ -77,7 +77,7 @@ def error_rate_core(y_true, y_pred):
 
 def error_rate(y_true, y_pred, real_error=True):
     rrr, TP, FP, TN, FN, P, N = basics(y_true, y_pred, error_rate)
-    breakpoint()
+    # breakpoint()
     if TP is not None:
         if (P + N) == 0:
             rrr = _EMPTY_TENSOR
@@ -193,7 +193,7 @@ def basics(y_true, y_pred, fun):
 
 def unused_metric(fun):
     if fun.__name__ == 'error_rate' and 'accuracy' in [x.__name__ for x in METS_TO_USE()]:
-        return True
+        return False
     return fun.__name__ not in [x.__name__ for x in METS_TO_USE()]
 
 def empty_tensor(y_true): return y_true.shape[0] is None or (
