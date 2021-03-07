@@ -209,7 +209,7 @@ configs:
 
     REGEN_DATA: False
     REGEN_NTRAIN: 90 #100 doesnt work bc not all classes have 200(val). see nn_main.py
-    TRANSFER_LEARNING: True
+    TRANSFER_LEARNING: False
     PRED_SIZE: 2
 
 
