@@ -77,6 +77,7 @@ def error_rate_core(y_true, y_pred):
 
 def error_rate(y_true, y_pred, real_error=True):
     rrr, TP, FP, TN, FN, P, N = basics(y_true, y_pred, error_rate)
+    breakpoint()
     if TP is not None:
         if (P + N) == 0:
             rrr = _EMPTY_TENSOR
