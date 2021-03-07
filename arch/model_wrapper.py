@@ -14,7 +14,7 @@ import numpy as np
 from lib.nn.gen_preproc_ims import PreDataset
 from mlib.abstract_attributes import AbstractAttributes, Abstract
 from mlib.boot.mlog import err, log, warn
-from mlib.boot.stream import V_Stacker
+from mlib.boot.stream import V_Stacker, zeros
 from mlib.file import Folder, File
 from mlib.term import log_invokation
 print('model_wrapper.py: finished imports')
@@ -169,8 +169,7 @@ class ModelWrapper(AbstractAttributes, ABC):
         ds = self.train_data.dataset(self.HEIGHT_WIDTH)
         steps = self.train_data.num_steps
         log('Training... (ims=$,steps=$)', len(self.train_data), steps)
-        breakpoint()
-        net_mets.cmat = np.zeros(
+        net_mets.cmat = zeros(
             len(listkeys(nnstate.CURRENT_PRED_MAP)),
             len(listkeys(nnstate.CURRENT_TRUE_MAP))
         )
