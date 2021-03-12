@@ -85,16 +85,25 @@ From: ubuntu:20.04
     apt install graphviz -y # https://github.com/XifengGuo/CapsNet-Keras/issues/7
     /matt/miniconda3/bin/conda install -y -n dnn tensorflow-gpu=2.4.1
 
-    # NOTE: Python 3.9 users will need to add '-c=conda-forge' for installation
-    /matt/miniconda3/bin/conda install -y -n dnn pytorch  -c pytorch
-    /matt/miniconda3/bin/conda install -y -n dnn torchvision -c pytorch
-    /matt/miniconda3/bin/conda install -y -n dnn torchaudio -c pytorch
+    INSTALL_PYTORCH=0
+    if [ $INSTALL_PYTORCH -gt 0 ]
+    then
+        echo "installing pytroch"
+        # NOTE: Python 3.9 users will need to add '-c=conda-forge' for installation
+        /matt/miniconda3/bin/conda install -y -n dnn pytorch  -c pytorch
+        /matt/miniconda3/bin/conda install -y -n dnn torchvision -c pytorch
+        /matt/miniconda3/bin/conda install -y -n dnn torchaudio -c pytorch
+    else
+        echo "not installing pytorch"
+    fi
+
+
 
     # takes forever to install, and its a confusing package. try without it?
     # /matt/miniconda3/bin/conda install -y -n dnn cudatoolkit=11.0 -c pytorch
 
     apt install iputils-ping -y
-    /matt/miniconda3/bin/conda install gdown -y
+
 
     apt install unzip -y
     apt install zip -y # used in pipeline
@@ -103,6 +112,9 @@ From: ubuntu:20.04
     BUNDLE_STUFF=0
     if [ $BUNDLE_STUFF -gt 0 ]
     then
+
+        /matt/miniconda3/bin/conda install gdown -y
+
         echo "bundling stuff"
         /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1wauVN6nG3tKv7VifIfRVBL0fj8XfefVa"
         unzip _resources.zip
