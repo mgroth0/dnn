@@ -56,8 +56,12 @@ From: ubuntu:20.04
     git clone https://github.com/mgroth0/dnn
     git clone https://github.com/mgroth0/mlib
     /matt/miniconda3/bin/conda update -n base -c defaults conda
-    #/matt/miniconda3/bin/conda create -y --name dnn python=3.8
-    /matt/miniconda3/bin/conda create -y --name dnn python=3.9
+
+    DNN_ENV=dnn39
+    MLIB_ENV=dnn39
+
+    #/matt/miniconda3/bin/conda create -y --name $DNN_ENV python=3.8
+    /matt/miniconda3/bin/conda create -y --name $DNN_ENV python=3.9
     /matt/miniconda3/bin/conda config --add channels conda-forge
     #/matt/miniconda3/bin/conda config --add channels mgroth0
     cd dnn
@@ -68,33 +72,33 @@ From: ubuntu:20.04
 
 
     # I think trying to do it all at once is causing problems
-    # /matt/miniconda3/bin/conda install -y -n dnn --file=requirements.txt
+    # /matt/miniconda3/bin/conda install -y -n $DNN_ENV --file=requirements.txt
     # while read p; do
      #  echo "installing conda package: $p"
-     #  /matt/miniconda3/bin/conda install -y -n dnn $p
+     #  /matt/miniconda3/bin/conda install -y -n $DNN_ENV $p
      #  echo "installed conda package: $p"
    #  done <requirements.txt
 
-   /matt/miniconda3/bin/conda install -y -n dnn numpy
-   /matt/miniconda3/bin/conda install -y -n dnn scipy
-   /matt/miniconda3/bin/conda install -y -n dnn bs4
-   /matt/miniconda3/bin/conda install -y -n dnn packaging
+   /matt/miniconda3/bin/conda install -y -n $DNN_ENV numpy
+   /matt/miniconda3/bin/conda install -y -n $DNN_ENV scipy
+   /matt/miniconda3/bin/conda install -y -n $DNN_ENV bs4
+   /matt/miniconda3/bin/conda install -y -n $DNN_ENV packaging
 
-   /matt/miniconda3/envs/dnn/bin/pip install wolframclient
+   /matt/miniconda3/envs/"$DNN_ENV"/bin/pip install wolframclient
 
 
 
     apt install graphviz -y # https://github.com/XifengGuo/CapsNet-Keras/issues/7
-    /matt/miniconda3/bin/conda install -y -n dnn tensorflow-gpu=2.4.1
+    /matt/miniconda3/bin/conda install -y -n $DNN_ENV tensorflow-gpu=2.4.1
 
     INSTALL_PYTORCH=0
     if [ $INSTALL_PYTORCH -gt 0 ]
     then
         echo "installing pytroch"
         # NOTE: Python 3.9 users will need to add '-c=conda-forge' for installation
-        /matt/miniconda3/bin/conda install -y -n dnn pytorch  -c pytorch
-        /matt/miniconda3/bin/conda install -y -n dnn torchvision -c pytorch
-        /matt/miniconda3/bin/conda install -y -n dnn torchaudio -c pytorch
+        /matt/miniconda3/bin/conda install -y -n $DNN_ENV pytorch  -c pytorch
+        /matt/miniconda3/bin/conda install -y -n $DNN_ENV torchvision -c pytorch
+        /matt/miniconda3/bin/conda install -y -n $DNN_ENV torchaudio -c pytorch
     else
         echo "not installing pytorch"
     fi
@@ -102,7 +106,7 @@ From: ubuntu:20.04
 
 
     # takes forever to install, and its a confusing package. try without it?
-    # /matt/miniconda3/bin/conda install -y -n dnn cudatoolkit=11.0 -c pytorch
+    # /matt/miniconda3/bin/conda install -y -n $DNN_ENV cudatoolkit=11.0 -c pytorch
 
     apt install iputils-ping -y
 
@@ -158,7 +162,7 @@ From: ubuntu:20.04
     #cd /matt
     #git clone https://github.com/onnx/onnx-tensorflow
     #cd onnx-tensorflow
-    #/matt/miniconda3/envs/dnn/bin/pip install -e .
+    #/matt/miniconda3/envs/"$DNN_ENV"/bin/pip install -e .
 
 
 
