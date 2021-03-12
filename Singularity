@@ -56,9 +56,10 @@ From: ubuntu:20.04
     git clone https://github.com/mgroth0/dnn
     git clone https://github.com/mgroth0/mlib
     /matt/miniconda3/bin/conda update -n base -c defaults conda
-    /matt/miniconda3/bin/conda create -y --name dnn python=3.8
+    #/matt/miniconda3/bin/conda create -y --name dnn python=3.8
+    /matt/miniconda3/bin/conda create -y --name dnn python=3.9
     /matt/miniconda3/bin/conda config --add channels conda-forge
-    /matt/miniconda3/bin/conda config --add channels mgroth0
+    #/matt/miniconda3/bin/conda config --add channels mgroth0
     cd dnn
 
     # https://dev.to/setevoy/docker-configure-tzdata-and-timezone-during-build-20bk
@@ -68,11 +69,17 @@ From: ubuntu:20.04
 
     # I think trying to do it all at once is causing problems
     # /matt/miniconda3/bin/conda install -y -n dnn --file=requirements.txt
-    while read p; do
-      echo "installing conda package: $p"
-      /matt/miniconda3/bin/conda install -y -n dnn $p
-      echo "installed conda package: $p"
-    done <requirements.txt
+    # while read p; do
+     #  echo "installing conda package: $p"
+     #  /matt/miniconda3/bin/conda install -y -n dnn $p
+     #  echo "installed conda package: $p"
+   #  done <requirements.txt
+
+   conda install -y -n dnn numpy
+   conda install -y -n dnn scipy
+
+   /matt/miniconda3/envs/dnn/pip install wolframclient
+
 
 
     apt install graphviz -y # https://github.com/XifengGuo/CapsNet-Keras/issues/7
