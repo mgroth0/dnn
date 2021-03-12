@@ -134,10 +134,10 @@ From: ubuntu:20.04
     #apt install nvidia-driver-440 -y #440 is the one used by OpenMind as I write this (polestar uses 430.50)
 
 
-    cd /matt
-    git clone https://github.com/onnx/onnx-tensorflow
-    cd onnx-tensorflow
-    /matt/miniconda3/envs/dnn/bin/pip install -e .
+    #cd /matt
+    #git clone https://github.com/onnx/onnx-tensorflow
+    #cd onnx-tensorflow
+    #/matt/miniconda3/envs/dnn/bin/pip install -e .
 
 
 
