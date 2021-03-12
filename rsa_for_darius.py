@@ -90,6 +90,7 @@ CLASSES = [
 
 
 
+DEBUG = True
 
 def main():
     log('running rsa_for_darius')
@@ -164,6 +165,9 @@ def main():
                     # 400 = len of one activation array
                     # breakpoint()
                     # acts = activations[net][c].load().reshape(500, 400)
+                    breakpoint()
+                    if DEBUG:
+                        pass
                     acts = activations[net][c].load()
                 else:
                     acts = activations[net][c].load()['imageActivations']
