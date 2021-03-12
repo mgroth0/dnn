@@ -77,6 +77,8 @@ From: ubuntu:20.04
 
    /matt/miniconda3/bin/conda install -y -n dnn numpy
    /matt/miniconda3/bin/conda install -y -n dnn scipy
+   /matt/miniconda3/bin/conda install -y -n dnn bs4
+   /matt/miniconda3/bin/conda install -y -n dnn packaging
 
    /matt/miniconda3/envs/dnn/bin/pip install wolframclient
 
