@@ -75,8 +75,8 @@ From: ubuntu:20.04
      #  echo "installed conda package: $p"
    #  done <requirements.txt
 
-   conda install -y -n dnn numpy
-   conda install -y -n dnn scipy
+   /matt/miniconda3/bin/conda install -y -n dnn numpy
+   /matt/miniconda3/bin/conda install -y -n dnn scipy
 
    /matt/miniconda3/envs/dnn/pip install wolframclient
 
