@@ -100,23 +100,30 @@ From: ubuntu:20.04
     apt install zip -y # used in pipeline
     cd ..
 
-    /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1wauVN6nG3tKv7VifIfRVBL0fj8XfefVa"
-    unzip _resources.zip
-    rm _resources.zip
+    BUNDLE_STUFF=0
+    if [ $BUNDLE_STUFF -gt 0 ]
+    then
+        echo "bundling stuff"
+        /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1wauVN6nG3tKv7VifIfRVBL0fj8XfefVa"
+        unzip _resources.zip
+        rm _resources.zip
 
-    /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1SWxt9USdj1wB9sPUpV2M26ZEtO5eliyt"
-    unzip _ImageNetTesting.zip
-    rm _ImageNetTesting.zip
+        /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1SWxt9USdj1wB9sPUpV2M26ZEtO5eliyt"
+        unzip _ImageNetTesting.zip
+        rm _ImageNetTesting.zip
 
-    # going to try to generate new images at runtime, like I used to
-    #/matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1HSjjIHeze-bWCycmQrSbeDDpvhmhGqhv"
-    #unzip _images.zip
-    #rm _images.zip
+        # going to try to generate new images at runtime, like I used to
+        #/matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1HSjjIHeze-bWCycmQrSbeDDpvhmhGqhv"
+        #unzip _images.zip
+        #rm _images.zip
 
 
-    /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1PQ3gop_fmV_Sp_GBAAeS3Gr1_ITkbo5G"
-    unzip _data.zip
-    rm _data.zip
+        /matt/miniconda3/bin/gdown "https://drive.google.com/uc?id=1PQ3gop_fmV_Sp_GBAAeS3Gr1_ITkbo5G"
+        unzip _data.zip
+        rm _data.zip
+    else
+        echo "not bundling stuff"
+    fi
 
     rm -rf __MACOSX # not sure where this comes from
 
