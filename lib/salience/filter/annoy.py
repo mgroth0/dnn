@@ -1,19 +1,25 @@
-import os.path
 
-import cv2
-import logging
 import math
+import logging
+import cv2
 import numpy
 from scipy.ndimage.filters import maximum_filter
 
+import os.path
+import sys
+
+import numpy as np
+from os import listdir
+from os.path import join
+
+# if sys.version_info[0] != 2:
+#     raise Exception("This script was written for Python version 2.  You're running Python %s." % sys.version)
+
 logger = logging.getLogger(__name__)
 
-# levels = 3
-levels = 9  # DEFAULT
-# levels=8
-
-# (640, 480)
-def features(image, channel):
+start_size = None
+#def features(image, channel, levels=9, start_size=(640,480), ):
+def features(image, channel, levels=9, ):
     """
         Extracts features by down-scaling the image levels times,
         transforms the image by applying the function channel to
@@ -41,14 +47,14 @@ def features(image, channel):
     features = []
     for i in range(1, levels - 5):
         big = scales[i]
-        for j in (3, 4):
+        for j in (3,4):
             logger.debug("computing features for levels %d and %d", i, i + j)
             small = scales[i + j]
-            srcsize = small.shape[1], small.shape[0]
-            dstsize = big.shape[1], big.shape[0]
+            srcsize = small.shape[1],small.shape[0]
+            dstsize = big.shape[1],big.shape[0]
             logger.debug("Shape source: %s, Shape target :%s", srcsize, dstsize)
             scaled = cv2.resize(src=small, dsize=dstsize)
-            features.append(((i + 1, j + 1), cv2.absdiff(big, scaled)))
+            features.append(((i+1,j+1),cv2.absdiff(big, scaled)))
 
     return features
 
@@ -67,22 +73,22 @@ def makeGaborFilter(dims, lambd, theta, psi, sigma, gamma):
         In some versions of OpenCV, sizes greater than (11,11) will lead
         to segfaults (see http://code.opencv.org/issues/2644).
     """
-    def xpf(i, j):
-        return i * math.cos(theta) + j * math.sin(theta)
-    def ypf(i, j):
-        return -i * math.sin(theta) + j * math.cos(theta)
-    def gabor(i, j):
-        xp = xpf(i, j)
-        yp = ypf(i, j)
-        return math.exp(-(xp**2 + gamma**2 * yp**2) / 2 * sigma**2) * math.cos(2 * math.pi * xp / lambd + psi)
+    def xpf(i,j):
+        return i*math.cos(theta) + j*math.sin(theta)
+    def ypf(i,j):
+        return -i*math.sin(theta) + j*math.cos(theta)
+    def gabor(i,j):
+        xp = xpf(i,j)
+        yp = ypf(i,j)
+        return math.exp(-(xp**2 + gamma**2*yp**2)/2*sigma**2) * math.cos(2*math.pi*xp/lambd + psi)
 
-    halfwidth = dims[0] / 2
-    halfheight = dims[1] / 2
+    halfwidth = dims[0]/2
+    halfheight = dims[1]/2
 
-    kernel = numpy.array([[gabor(halfwidth - i, halfheight - j) for j in range(dims[1])] for i in range(dims[1])])
+    kernel = numpy.array([[gabor(halfwidth - i,halfheight - j) for j in range(dims[1])] for i in range(dims[1])])
 
     def theFilter(image):
-        return cv2.filter2D(src=image, ddepth=-1, kernel=kernel, )
+        return cv2.filter2D(src = image, ddepth = -1, kernel = kernel, )
 
     return theFilter
 
@@ -90,26 +96,23 @@ def intensityConspicuity(image):
     """
         Creates the conspicuity map for the channel `intensity'.
     """
-    fs = features(image=im, channel=intensity)
+    fs = features(image = im, channel = intensity)
     return sumNormalizedFeatures(fs)
 
-def gaborConspicuity(image, steps, shape):
+def gaborConspicuity(image, steps):
     """
         Creates the conspicuity map for the channel `orientations'.
     """
-    #  numpy.uint8
-    # gaborConspicuity = numpy.zeros(shape)
-    gaborConspicuity = numpy.zeros(tuple(reversed(start_size)))
-    # gaborConspicuity = numpy.zeros((int(start_size[1]/8),int(start_size[0]/8))) #tatome
+    gaborConspicuity_ = numpy.zeros((start_size[1], start_size[0]), numpy.uint8)
     for step in range(steps):
-        theta = step * (math.pi / steps)
-        gaborFilter = makeGaborFilter(dims=(10, 10), lambd=2.5, theta=theta, psi=math.pi / 2, sigma=2.5, gamma=.5)
-        gaborFeatures = features(image=intensity(im), channel=gaborFilter)
+        theta = step * (math.pi/steps)
+        gaborFilter = makeGaborFilter(dims=(10,10), lambd=2.5, theta=theta, psi=math.pi/2, sigma=2.5, gamma=.5)
+        gaborFeatures = features(image = intensity(im), channel = gaborFilter)
         summedFeatures = sumNormalizedFeatures(gaborFeatures)
-        # breakpoint()
-        gaborConspicuity += N(summedFeatures)
-        # numpy.add(gaborConspicuity, summedFeatures, out=gaborConspicuity, casting="unsafe")
-    return gaborConspicuity
+        breakpoint()
+        #gaborConspicuity_ += N(summedFeatures)
+        np.add(gaborConspicuity_, N(summedFeatures), out=gaborConspicuity_, casting="unsafe")
+    return gaborConspicuity_
 
 def rgConspicuity(image):
     """
@@ -117,9 +120,9 @@ def rgConspicuity(image):
         of the color channel.
     """
     def rg(image):
-        r, g, _, __ = cv2.split(image)
-        return cv2.absdiff(r, g)
-    fs = features(image=image, channel=rg)
+        r,g,_,__ = cv2.split(image)
+        return cv2.absdiff(r,g)
+    fs = features(image = image, channel = rg)
     return sumNormalizedFeatures(fs)
 
 def byConspicuity(image):
@@ -128,13 +131,13 @@ def byConspicuity(image):
         of the color channel.
     """
     def by(image):
-        _, __, b, y = cv2.split(image)
-        return cv2.absdiff(b, y)
-    fs = features(image=image, channel=by)
+        _,__,b,y = cv2.split(image)
+        return cv2.absdiff(b,y)
+    fs = features(image = image, channel = by)
     return sumNormalizedFeatures(fs)
 
-# (640, 480)
-def sumNormalizedFeatures(features):
+#def sumNormalizedFeatures(features, levels=9, startSize=(640,480)):
+def sumNormalizedFeatures(features, levels=9):
     """
         Normalizes the feature maps in argument features and combines them into one.
         Arguments:
@@ -146,18 +149,10 @@ def sumNormalizedFeatures(features):
         returns:
             a combined feature map.
     """
-    # myStartSize = (start_size[0]*(levels-1),start_size[1]*(levels-1),)
-    myStartSize = (start_size[0]*(levels),start_size[1]*(levels),)
-    # myStartSize = start_size #tatome
-    commonWidth = myStartSize[0] / 2**(levels / 2 - 1)
-    commonHeight = myStartSize[1] / 2**(levels / 2 - 1)
-    # breakpoint()
+    startSize = (start_size[0]*(levels-1),start_size[1]*(levels-1))
+    commonWidth = startSize[0] / 2**(levels/2 - 1)
+    commonHeight = startSize[1] / 2**(levels/2 - 1)
     commonSize = int(commonWidth), int(commonHeight)
-
-    #DEBUG
-    commonSize = start_size
-
-
     logger.info("Size of conspicuity map: %s", commonSize)
     consp = N(cv2.resize(features[0][1], commonSize))
     for f in features[1:]:
@@ -170,20 +165,20 @@ def N(image):
         Normalization parameter as per Itti et al. (1998).
         returns a normalized feature map image.
     """
-    M = 8.  # an arbitrary global maximum to which the image is scaled.
+    M = 8.	# an arbitrary global maximum to which the image is scaled.
     # (When saving saliency maps as images, pixel values may become
     # too large or too small for the chosen image format depending
     # on this constant)
-    image = cv2.convertScaleAbs(image, alpha=M / image.max(), beta=0.)
-    w, h = image.shape
-    maxima = maximum_filter(image, size=(w / 10, h / 1))
+    image = cv2.convertScaleAbs(image, alpha=M/image.max(), beta=0.)
+    w,h = image.shape
+    maxima = maximum_filter(image, size=(w/10,h/1))
     maxima = (image == maxima)
     mnum = maxima.sum()
     logger.debug("Found %d local maxima.", mnum)
     maxima = numpy.multiply(maxima, image)
     mbar = float(maxima.sum()) / mnum
     logger.debug("Average of local maxima: %f.  Global maximum: %f", mbar, M)
-    return image * (M - mbar)**2
+    return image * (M-mbar)**2
 
 def makeNormalizedColorChannels(image, thresholdRatio=10.):
     """
@@ -201,14 +196,14 @@ def makeNormalizedColorChannels(image, thresholdRatio=10.):
     intens = intensity(image)
     threshold = intens.max() / thresholdRatio
     logger.debug("Threshold: %d", threshold)
-    r, g, b = cv2.split(image)
+    r,g,b = cv2.split(image)
     cv2.threshold(src=r, dst=r, thresh=threshold, maxval=0.0, type=cv2.THRESH_TOZERO)
     cv2.threshold(src=g, dst=g, thresh=threshold, maxval=0.0, type=cv2.THRESH_TOZERO)
     cv2.threshold(src=b, dst=b, thresh=threshold, maxval=0.0, type=cv2.THRESH_TOZERO)
     R = r - (g + b) / 2
     G = g - (r + b) / 2
     B = b - (g + r) / 2
-    Y = (r + g) / 2 - cv2.absdiff(r, g) / 2 - b
+    Y = (r + g) / 2 - cv2.absdiff(r,g) / 2 - b
 
     # Negative values are set to zero.
     cv2.threshold(src=R, dst=R, thresh=0., maxval=0.0, type=cv2.THRESH_TOZERO)
@@ -216,76 +211,20 @@ def makeNormalizedColorChannels(image, thresholdRatio=10.):
     cv2.threshold(src=B, dst=B, thresh=0., maxval=0.0, type=cv2.THRESH_TOZERO)
     cv2.threshold(src=Y, dst=Y, thresh=0., maxval=0.0, type=cv2.THRESH_TOZERO)
 
-    image = cv2.merge((R, G, B, Y))
+    image = cv2.merge((R,G,B,Y))
     return image
 
 def markMaxima(saliency):
     """
         Mark the maxima in a saliency map (a gray-scale image).
     """
-    maxima = maximum_filter(saliency, size=(20, 20))
+    maxima = maximum_filter(saliency, size=(5, 5))
     maxima = numpy.array(saliency == maxima, dtype=numpy.float64) * 255
-    r = cv2.max(saliency, maxima)
-    g = saliency
+    g = cv2.max(saliency, maxima)
+    r = saliency
     b = saliency
-    marked = cv2.merge((b, g, r))
+    marked = cv2.merge((b,g,r))
     return marked
-
-
-
-
-im = None
-start_size = None
-def main(args):
-    global im,start_size
-    if args.fileList is None and args.inputFile is None:
-        logger.error("Need either --fileList or --inputFile cmd line arguments.")
-        sys.exit()
-    elif args.fileList is not None and args.inputFile is not None:
-        logger.error("Need only one of --fileList or --inputFile cmd line arguments.")
-        sys.exit()
-    else:
-        if args.fileList:
-            print('we are reading filenames from a file.')
-            filenames = (filename[:-1] for filename in open(args.fileList))  # remove end-of line character
-        else:
-            print('filenames were given on the command line.')
-            filenames = [args.inputFile]
-        for filename in filenames:
-            im = cv2.imread(filename, cv2.COLOR_BGR2RGB)  # assume BGR, convert to RGB---more intuitive code.
-            start_size = (im.shape[1], im.shape[0])
-            if im is None:
-                logger.fatal("Could not load file \"%s.\"", filename)
-                sys.exit()
-
-            intensty = intensityConspicuity(im)
-            # breakpoint()
-            gabor = gaborConspicuity(im, 4, intensty.shape)
-
-            im = makeNormalizedColorChannels(im)
-            rg = rgConspicuity(im)
-            by = byConspicuity(im)
-            c = rg + by
-            saliency = 1. / 3 * (N(intensty) + N(c) + N(gabor))
-
-            if args.markMaxima:
-                saliency = markMaxima(saliency)
-
-            def writeCond(outFileName, image):
-                name, _ = os.path.splitext(os.path.basename(filename))
-                if outFileName and args.fileList:
-                    cv2.imwrite(outFileName % name, image)
-                elif outFileName:
-                    cv2.imwrite(outFileName, image)
-
-            writeCond(args.intensityOutput, intensty)
-            writeCond(args.gaborOutput, gabor)
-            writeCond(args.rgOutput, rg)
-            writeCond(args.byOutput, by)
-            writeCond(args.cOutput, .25 * c)
-            writeCond(args.saliencyOutput, saliency)
-
-
 
 
 if __name__ == "__main__":
@@ -293,23 +232,58 @@ if __name__ == "__main__":
 
     import argparse
     import sys
-    parser = argparse.ArgumentParser(description="Simple Itti-Koch-style conspicuity.")
-    parser.add_argument('--fileList', type=str, dest='fileList', action='store',
-                        help='Text file containing input file names, one per line.')
-    parser.add_argument('--inputFile', type=str, dest='inputFile', action='store',
-                        help='File to compute compute saliency list for.  Need either --fileList or --inputFile.')
-    parser.add_argument('--intensityOutput', type=str, dest='intensityOutput', action='store',
-                        help="Filename for intensity conspicuity map,")
-    parser.add_argument('--gaborOutput', type=str, dest='gaborOutput', action='store',
-                        help="Filename for intensity conspicuity map,")
-    parser.add_argument('--rgOutput', type=str, dest='rgOutput', action='store',
-                        help="Filename for rg conspicuity map,")
-    parser.add_argument('--byOutput', type=str, dest='byOutput', action='store',
-                        help="Filename for by conspicuity map,")
-    parser.add_argument('--cOutput', type=str, dest='cOutput', action='store',
-                        help="Filename for color conspicuity map,")
-    parser.add_argument('--saliencyOutput', type=str, dest='saliencyOutput', action='store',
-                        help="Filename for saliency map,")
+    parser = argparse.ArgumentParser(description = "Simple Itti-Koch-style conspicuity.")
+    parser.add_argument('--fileList', type=str, dest='fileList', action='store', help='Text file containing input file names, one per line.')
+    parser.add_argument('--inputFile', type=str, dest='inputFile', action='store', help='File to compute saliency list for.')
+    parser.add_argument('--inputDir', type=str, dest='inputDir', action='store', help='Directory to compute saliency list for.  Need --fileList or --inputFile or --inputDir.')
+    parser.add_argument('--outputDir', type=str, dest='outputDir', action='store', help="Output directory for all maps.")
     parser.add_argument("--markMaxima", action='store_true', help="Mark maximum saliency in output image.")
     args = parser.parse_args()
-    main(args)
+
+    if args.fileList is None and args.inputFile is None and args.inputDir is None:
+        logger.error("Need either --fileList or --inputFile or --inputDir cmd line arguments.")
+        sys.exit()
+    else:
+        if args.fileList:
+            # we are reading filenames from a file.
+            filenames = (filename[:-1] for filename in open(args.fileList)) # remove end-of line character
+        elif args.inputFile:
+            # filenames were given on the command line.
+            filenames = [args.inputFile]
+        else:
+            # read filenames from directory.
+            filenames = [join(args.inputDir, f) for f in listdir(args.inputDir)]
+
+        for filename in filenames:
+            im = cv2.imread(filename, cv2.COLOR_BGR2RGB) # assume BGR, convert to RGB---more intuitive code.
+            start_size = (im.shape[1], im.shape[0])
+
+            if im is None:
+                logger.fatal("Could not load file \"%s.\"", filename)
+                sys.exit()
+
+
+            intensty = intensityConspicuity(im)
+            gabor = gaborConspicuity(im, 4)
+
+            im = makeNormalizedColorChannels(im)
+            rg = rgConspicuity(im)
+            by = byConspicuity(im)
+            c = rg + by
+            saliency = 1./3 * (N(intensty) + N(c) + N(gabor))
+
+            if args.markMaxima:
+                saliency = markMaxima(saliency)
+
+            def writeCond(outputDir, image, desc='saliency'):
+                name, ext = os.path.splitext(os.path.basename(filename))
+                if outputDir:
+                    cv2.imwrite(join(outputDir, name + '_' + desc + '_maxima' + ext), image)
+            '''
+            writeCond(args.outputDir, intensty, 'intensity')
+            writeCond(args.outputDir, gabor, 'gabor')
+            writeCond(args.outputDir, rg, 'rg')
+            writeCond(args.outputDir, by, 'by')
+            writeCond(args.outputDir, .25 * c, 'c')
+            '''
+            writeCond(args.outputDir, saliency)

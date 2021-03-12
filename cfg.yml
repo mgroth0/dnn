@@ -35,7 +35,7 @@ profiles:
 #    NTRAIN: [40] # 446: 7 min 26 sec
 #    NTRAIN: [500] # 1853 30 min 53 sec
 #    NTRAIN: [500] # 1139 18.9 min, after switching from PROKO_INC to INC_ORIG... confused why... optimized? or luck? ...now 8.4 min for 3 epochs... time to increase ntrain
-    NTRAIN: [5000]
+    NTRAIN: [5000] #51.8 min
 
 
 
