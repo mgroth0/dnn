@@ -74,8 +74,6 @@ G
 _dnn,f/0/f03035c80884dbba22bfe4474f3730c93825c753
 ;
 Singularity,d/c/dc1f319a3170cc1e3659825bfb501112ad8e7deb
-7
-_dnn.py,0/7/07f12371974f06fed0822b4eb9ed4c636a718964
 ?
 environment.yml,5/4/54c391de2500e0856c23737daf64f9d931569110
 ?
@@ -182,8 +180,6 @@ P
  lib/salience/filter/saliency3.py,9/6/96c3b26e767fdadf989fcb8961adc87c76976545
 V
 &lib/salience/filter/salience_filter.py,c/f/cf617b2ef150b2644208e7b67e530c8d4cef5fb6
-?
-comp_signals.py,a/2/a2e672392f4da3d20c113341f1bd7c4e0e0ae612
 M
 lib/misc/scripts/custom_tf.py,0/5/059dc304f374681b725a4d41ca8f81065c701aa3
 A
@@ -212,9 +208,3 @@ o
 ?symmetry-manuscript/plos-latex-template/plos_latex_template.tex,9/d/9d2ce46a4d373da0bb6059a5065ba0b6278a987f
 A
 freecomp/model.py,a/4/a432d931098acee372fe115fdf63b64972258f7c
-L
-freecomp/scripts/example2.py,c/0/c023ab84cfd0789a898e440cb05a931ae8583cf5
-K
-freecomp/scripts/example.py,9/6/9673c2ad05f2cb9e7fd09750fa5b596662e62e09
-@
-freecomp_main.py,0/0/003777ae557f0397712e343ab30bcccc936eda1f

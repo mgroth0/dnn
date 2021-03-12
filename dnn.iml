@@ -27,7 +27,7 @@
       <excludeFolder url="file://$MODULE_DIR$/tf_bug1/data_transfer" />
       <excludeFolder url="file://$MODULE_DIR$/symmetry-manuscript/plos-latex-template/figs" />
     </content>
-    <orderEntry type="jdk" jdkName="3.8 (dnn)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.9 (dnn39)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="mlib" />
   </component>
