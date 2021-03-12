@@ -83,6 +83,7 @@ From: ubuntu:20.04
    /matt/miniconda3/bin/conda install -y -n $DNN_ENV scipy
    /matt/miniconda3/bin/conda install -y -n $DNN_ENV bs4
    /matt/miniconda3/bin/conda install -y -n $DNN_ENV packaging
+   /matt/miniconda3/bin/conda install -y -n $DNN_ENV colorama
 
    /matt/miniconda3/envs/"$DNN_ENV"/bin/pip install wolframclient
 
