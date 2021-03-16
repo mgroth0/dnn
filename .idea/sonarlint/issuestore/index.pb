@@ -198,42 +198,24 @@ X
 files.py,6/5/651a8940746ea8db54b240ab9dd999857a447c84
 X
 (lib/misc/scripts/keras_models_to_test.py,1/4/14934f38b99be83c63bdce64e04a3588ab334595
-@
-salience_test.py,8/c/8c33cabd072c38e43d6b0d3ba5c28a4e9352a7ce
 L
 lib/salience/filter/annoy.py,f/3/f3ec63bd49bf6cdaf6ab625b66f79ffbd09ff2d3
 N
 symmetry-manuscript/.gitignore,1/8/18b647b4a6b9636fc5a463e607960a441675de58
 o
 ?symmetry-manuscript/plos-latex-template/plos_latex_template.tex,9/d/9d2ce46a4d373da0bb6059a5065ba0b6278a987f
-S
-#freecomp/scripts/salience_filter.py,b/a/bac03de2bb6d7b85b385d43352ec0f731f1f0854
-G
-freecomp/scripts/rsa.py,1/d/1d43f91a5d8ebbbccb5ca60a889138a4048bd8b6
-R
-"freecomp/scripts/salience_keras.py,d/4/d41b70c6610d2f7f1772c2445d0b3969140ab464
 G
 freecomp/scripts/sym.py,d/7/d7bb7f9af7cb656be1a27ea20970a2e004430853
-<
-mlib/file.py,e/e/eea48bc2f6bae0511f4b5986e24a1cec37f6474e
 K
 freecomp/scripts/rsa/rsa.py,3/5/35b0d3bf837032ede97821019b842167da62bd82
-C
-mlib/proj/struct.py,2/0/20a4a7f6b320027fa97cb1a5c87a11184bc909bb
 N
 freecomp/model/comp_project.py,8/1/8164ca32ba57916514373ea8ac5f2e16548eeda8
 N
 freecomp/model/comp_signals.py,4/a/4a08ee588a3fdbc4e12ed4807cc1ec909e86cb47
-J
-mlib/proj/shell_project.py,d/8/d8959777aaaf0ac58be44c93607529e4bb3956b2
 P
  freecomp/model/FreeCompScript.py,0/f/0fa2c5bbaad8e698e0e2b3fbc6fb2561f073502f
-=
-mlib/shell.py,0/e/0e3ed3ac26d680c65cc636b351088768e733a368
 G
 freecomp/model/model.py,f/7/f79e89c2ea325d8f03021b1cebb7ceba07738bd0
-<
-mlib/host.py,9/c/9ce2b45df4dd04a921955d3b1dd4b85309e824ca
 \
 ,freecomp/scripts/salience/salience_filter.py,5/6/56d24b1360a2c2d877e1516f287f0ea26d37ad36
 [
