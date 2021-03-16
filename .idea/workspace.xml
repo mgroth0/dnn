@@ -101,10 +101,10 @@
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/freecomp/model" />
+      <recent name="$PROJECT_DIR$/freecomp/scripts/rsa" />
+      <recent name="$PROJECT_DIR$/freecomp/scripts/salience" />
       <recent name="$PROJECT_DIR$/../mlib/mlib/proj" />
       <recent name="$PROJECT_DIR$/freecomp/scripts" />
-      <recent name="$PROJECT_DIR$/_figs/salience_filter" />
-      <recent name="$PROJECT_DIR$/_figs/rsa_old/LSTM_old" />
     </key>
   </component>
   <component name="RemoteSynchronizer">

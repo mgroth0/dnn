@@ -4,7 +4,6 @@
     <exclude-output />
     <WolframLanguageLevel version="12.1" />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/freecomp" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/_ImageNetTesting" />
       <excludeFolder url="file://$MODULE_DIR$/_arch" />
       <excludeFolder url="file://$MODULE_DIR$/_data" />

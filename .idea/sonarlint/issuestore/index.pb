@@ -206,5 +206,9 @@ N
 symmetry-manuscript/.gitignore,1/8/18b647b4a6b9636fc5a463e607960a441675de58
 o
 ?symmetry-manuscript/plos-latex-template/plos_latex_template.tex,9/d/9d2ce46a4d373da0bb6059a5065ba0b6278a987f
-A
-freecomp/model.py,a/4/a432d931098acee372fe115fdf63b64972258f7c
+S
+#freecomp/scripts/salience_filter.py,b/a/bac03de2bb6d7b85b385d43352ec0f731f1f0854
+G
+freecomp/scripts/rsa.py,1/d/1d43f91a5d8ebbbccb5ca60a889138a4048bd8b6
+R
+"freecomp/scripts/salience_keras.py,d/4/d41b70c6610d2f7f1772c2445d0b3969140ab464
