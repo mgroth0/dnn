@@ -1,6 +1,5 @@
-
 print('top of dnn.py')
-from lib import makereport
+
 print('dnn.py: about to import log')
 from mlib.boot import log
 print('dnn.py: quarter through imports')
@@ -31,7 +30,6 @@ class DNN(Project):
         'ASD'
     ]
     def run(self, cfg):
-
         # keep modular
         assert not (cfg.REGEN_DATA and cfg.OVERWRITE_NORMS)  # btw, both imply killing worker before exp
 
@@ -41,7 +39,6 @@ class DNN(Project):
 
 
         shadow.SHOW_INDEX = False
-
 
         if len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'IMAGENET_COUNT':
             import count_imagenet_data
@@ -75,6 +72,7 @@ class DNN(Project):
             if cfg.offline:
                 API.offline_mode = True
                 Database.offline_mode = True
+                from lib import makereport
                 makereport.MAKEREPORT_ONLINE = False
             from mlib.km import kmscript  # keep modular
             if ismac():
