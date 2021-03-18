@@ -164,10 +164,11 @@ def main():
                     # 400 = len of one activation array
                     # breakpoint()
                     # acts = activations[net][c].load().reshape(500, 400)
-                    breakpoint()
-                    if DEBUG:
-                        pass
+                    # breakpoint()
+
                     acts = activations[net][c].load()
+                    # if DEBUG:
+                    #     pass
                 else:
                     acts = activations[net][c].load()['imageActivations']
                 log(f'total images per class: {len(acts)}')
