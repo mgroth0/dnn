@@ -8,7 +8,13 @@ fi
 if [ -d "$CONDA_HOME" ]; then
     exec "$CONDA_HOME/envs/dnn39/bin/python" "boot.py" "$@"
 else
-    cd /matt/dnn
-    exec python boot.py "$@"
+    if test -f "/matt/dnn"; then
+      cd /matt/dnn
+      exec python boot.py "$@"
+    else
+      exec /om2/user/mjgroth/miniconda3/envs/dnn39 boot.py "$@"
+    fi
+
+
 fi
 
