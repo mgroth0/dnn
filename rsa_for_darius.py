@@ -284,7 +284,7 @@ def main():
                 fdd = file.loado()
                 fdd.dataFile = file
                 fdd.imgFile = file.resrepext('png')
-                backend.makeAllPlots([fdd], overwrite=True)
+                backend.makeAllPlots([fdd], overwrite=True,force=False)
                 if cfg['get_scores']:
                     scores = debug_process(fdd, scores, result_folder, net, block_len, arch, size, 'AC', full_data)
 
