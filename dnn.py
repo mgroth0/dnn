@@ -80,6 +80,9 @@ class DNN(Project):
                 kmscript('activate run tool window')
             dnn(cfg)
 
+        print('printing dnn is finished string!')
+        print('__DNN_IS_FINISHED__')
+
     instructions = '''Generate some images, train/test a model, run analyses, and generate plots. Tested on Mac, but not yet on linux/Windows.
 
 - `./dnn -cfg=gen_images --INTERACT=0`
