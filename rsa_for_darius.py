@@ -88,8 +88,6 @@ CLASSES = [
     'Sd4'
 ]
 
-
-
 DEBUG = True
 
 def main():
@@ -124,7 +122,8 @@ def main():
                 classname = activations_mat.name_pre_ext
                 activations[modelname][classname] = activations_mat
     else:
-        folder = Folder('/matt/data/rsa_activations_shobhita2')
+        DATA_DIR = '/om2/user/mjgroth/data'
+        folder = DATA_DIR.resolve['rsa_activations_shobhita2']
         activations = {'LSTM': {}}
         files = {f.name.split('Cat')[1].split('_')[0]: f for f in folder.files}
         for c in CLASSES:
@@ -155,7 +154,7 @@ def main():
 
 
             # block_len = 100 if SHOBHITA else 10
-            block_len = 10 #DEBUG
+            block_len = 10  # DEBUG
 
             acts_for_rsa = None
 
@@ -218,23 +217,23 @@ def main():
                 {
                     'get_scores'       : True,
                     'average_per_block': False,
-                    'log_by_mean': False
+                    'log_by_mean'      : False
                 },
                 {
                     'get_scores'       : False,
                     'average_per_block': True,
-                    'log_by_mean': False
+                    'log_by_mean'      : False
                 },
                 {
                     'get_scores'       : False,
                     'average_per_block': False,
-                    'log_by_mean': True,
+                    'log_by_mean'      : True,
 
                 },
                 {
                     'get_scores'       : False,
                     'average_per_block': True,
-                    'log_by_mean': True
+                    'log_by_mean'      : True
                 }
             ]:
                 fdd = deepcopy(fd)
@@ -286,7 +285,7 @@ def main():
                 fdd.imgFile = file.resrepext('png')
                 backend.makeAllPlots([fdd], overwrite=True)
                 if cfg['get_scores']:
-                    scores = debug_process(fdd, scores, result_folder, net, block_len, arch, size, 'AC',full_data)
+                    scores = debug_process(fdd, scores, result_folder, net, block_len, arch, size, 'AC', full_data)
 
     save_scores(result_folder, scores)
 def save_scores(result_folder, scores):
@@ -341,7 +340,7 @@ norm = ''
 if NORMALIZE: norm = '_norm'
 
 @log_invokation
-def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot,full_data):
+def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, full_data):
     # fd = fd.viss[0]  # so confused why i have to do this locally but not on OM
 
     norm_rsa_mat = full_data / np.max(full_data)
@@ -421,7 +420,6 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot,fu
     similarity_NS_flat = arr(similarity_NS_flat)
     similarity_S_flat = arr(similarity_S_flat)
     sim_across_flat = arr(sim_across_flat)
-
 
     p_ns_s = scipy.stats.ttest_ind(similarity_NS_flat, similarity_S_flat, alternative='two-sided')[1]
     p_across_s = scipy.stats.ttest_ind(sim_across_flat, similarity_S_flat, alternative='less')[1]
