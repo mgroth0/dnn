@@ -12,7 +12,7 @@ else
       cd /matt/dnn
       exec python boot.py "$@"
     else
-      exec /om2/user/mjgroth/miniconda3/envs/dnn39 boot.py "$@"
+      exec /om2/user/mjgroth/miniconda3/envs/dnn39/bin/python boot.py "$@"
     fi
 
 
