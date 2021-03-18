@@ -50,6 +50,8 @@ class DNN(Project):
             # import rsa_for_darius
             import rsa_for_darius
             rsa_for_darius.main()
+            print('printing dnn is finished string!')
+            print('__DNN_IS_FINISHED__')
             return None
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'RSA_NEW':
             import rsa_for_darius
@@ -80,8 +82,7 @@ class DNN(Project):
                 kmscript('activate run tool window')
             dnn(cfg)
 
-        print('printing dnn is finished string!')
-        print('__DNN_IS_FINISHED__')
+
 
     instructions = '''Generate some images, train/test a model, run analyses, and generate plots. Tested on Mac, but not yet on linux/Windows.
 
