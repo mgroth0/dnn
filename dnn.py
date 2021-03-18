@@ -6,8 +6,8 @@ print('dnn.py: quarter through imports')
 from mlib.boot.lang import isblank, ismac
 print('dnn.py: half through imports')
 # breakpoint()
-from mlib.web import shadow
 from mlib.file import Folder
+from mlib.web import shadow
 from mlib.proj.struct import Project
 from mlib.boot.stream import arr, listmap, __
 
