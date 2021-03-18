@@ -53,6 +53,8 @@ print(f'NUM CPUS: {multiprocessing.cpu_count()}')
 
 SHOBHITA = True
 
+DEBUG_DOWNSAMPLE = True
+
 LAYERS = {
     "SQN"      : 'relu_conv10',  # 784
     "AlexNet"  : 'fc7',  # 4096
@@ -167,6 +169,8 @@ def main():
                     # breakpoint()
 
                     acts = activations[net][c].load()
+                    if DEBUG_DOWNSAMPLE:
+                        acts = acts[:, 0:100:]
                     # if DEBUG:
                     #     pass
                 else:
@@ -284,7 +288,7 @@ def main():
                 fdd = file.loado()
                 fdd.dataFile = file
                 fdd.imgFile = file.resrepext('png')
-                backend.makeAllPlots([fdd], overwrite=True,force=False)
+                backend.makeAllPlots([fdd], overwrite=True, force=False)
                 if cfg['get_scores']:
                     scores = debug_process(fdd, scores, result_folder, net, block_len, arch, size, 'AC', full_data)
 
