@@ -5,6 +5,7 @@ from mlib.boot import log
 print('dnn.py: quarter through imports')
 from mlib.boot.lang import isblank, ismac
 print('dnn.py: half through imports')
+breakpoint()
 from mlib.web import shadow
 from mlib.file import Folder
 from mlib.proj.struct import Project
