@@ -10,7 +10,8 @@ EPOCHS = 10
 LEARNING_RATE = 0.1
 DROPOUT = 0.25
 MOMENTUM = 0.9  # heavy ball momentum in gradient descent
-DATA_DIR = '/matt/data'
+# DATA_DIR = '/matt/data'
+DATA_DIR = '/om2/user/mjgroth/data'
 CUDA = torch.cuda.is_available()
 
 # Data loaders
