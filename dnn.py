@@ -1,4 +1,4 @@
-from lib.human_exp import human_exp
+
 print('top of dnn.py')
 from lib import makereport
 print('dnn.py: about to import log')
@@ -64,6 +64,7 @@ class DNN(Project):
             # print('here2, finished Darius-RSA')
             return None
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
+            from lib.human_exp import human_exp
             human_exp(cfg)
         else:
             flag_mode = ''.join(arr(cfg.FLAGS).filtered(
