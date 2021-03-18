@@ -123,7 +123,7 @@ def main():
                 activations[modelname][classname] = activations_mat
     else:
         DATA_DIR = '/om2/user/mjgroth/data'
-        folder = DATA_DIR.resolve['rsa_activations_shobhita2']
+        folder = Folder(DATA_DIR)['rsa_activations_shobhita2']
         activations = {'LSTM': {}}
         files = {f.name.split('Cat')[1].split('_')[0]: f for f in folder.files}
         for c in CLASSES:
