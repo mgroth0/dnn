@@ -54,8 +54,75 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 N_PER_CLASS = 5
 # N_PER_CLASS = 500
+
+DEBUG_DOWNSAMPLE = True
+
+# BLOCK_LEN = 100  # PIXELS_PER_CLASS
+# BLOCK_LEN = 500  # PIXELS_PER_CLASS
+
+# BLOCK_LEN = 100 if SHOBHITA else 10
+BLOCK_LEN = 10  # DEBUG
+
+CFG = [
+    {
+        'get_scores'       : True,
+        'average_per_block': False,
+        'log_by_mean'      : False
+    },
+    {
+        'get_scores'       : False,
+        'average_per_block': True,
+        'log_by_mean'      : False
+    },
+    {
+        'get_scores'       : False,
+        'average_per_block': False,
+        'log_by_mean'      : True,
+
+    },
+    {
+        'get_scores'       : False,
+        'average_per_block': True,
+        'log_by_mean'      : True
+    }
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -84,7 +151,7 @@ print(f'NUM CPUS: {multiprocessing.cpu_count()}')
 
 SHOBHITA = True
 
-DEBUG_DOWNSAMPLE = True
+
 
 LAYERS = {
     "SQN"      : 'relu_conv10',  # 784
@@ -181,13 +248,7 @@ def main():
             else:
                 net = arch + '_' + str(size)
 
-            # block_len = 100  # PIXELS_PER_CLASS
-            # block_len = 500  # PIXELS_PER_CLASS
 
-
-
-            # block_len = 100 if SHOBHITA else 10
-            block_len = 10  # DEBUG
 
             acts_for_rsa = None
 
@@ -245,33 +306,11 @@ def main():
                 layer_name='fc7',
                 layer_i=None,
                 classnames=CLASSES,
-                block_len=block_len,
+                block_len=BLOCK_LEN,
                 sort=False,
                 return_result=True
             )
-            for cfg in [
-                {
-                    'get_scores'       : True,
-                    'average_per_block': False,
-                    'log_by_mean'      : False
-                },
-                {
-                    'get_scores'       : False,
-                    'average_per_block': True,
-                    'log_by_mean'      : False
-                },
-                {
-                    'get_scores'       : False,
-                    'average_per_block': False,
-                    'log_by_mean'      : True,
-
-                },
-                {
-                    'get_scores'       : False,
-                    'average_per_block': True,
-                    'log_by_mean'      : True
-                }
-            ]:
+            for cfg in CFG:
                 fdd = deepcopy(fd)
                 rsa_mat = fdd.data
                 if cfg['average_per_block']:
@@ -290,7 +329,7 @@ def main():
                 # breakpoint()
 
                 log('resampling1')
-                lennnn = len(CLASSES) * block_len
+                lennnn = len(CLASSES) * BLOCK_LEN
                 full_data = fdd.data
                 if lennnn == fdd.data.shape[0]:
                     fdd.data = fdd.data.tolist()
@@ -321,7 +360,7 @@ def main():
                 fdd.imgFile = file.resrepext('png')
                 backend.makeAllPlots([fdd], overwrite=True, force=False)
                 if cfg['get_scores']:
-                    scores = debug_process(fdd, scores, result_folder, net, block_len, arch, size, 'AC', full_data)
+                    scores = debug_process(fdd, scores, result_folder, net, BLOCK_LEN, arch, size, 'AC', full_data)
 
     save_scores(result_folder, scores)
 def save_scores(result_folder, scores):
