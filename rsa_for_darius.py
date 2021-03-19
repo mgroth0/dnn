@@ -217,11 +217,12 @@ def main():
                 block_len=BLOCK_LEN,
                 sort=False,
                 return_result=True,
-                y_log_scale=cfg['log_by_mean'] # might not actually be by mean
+
             )
             for cfg in CFG:
                 fdd = deepcopy(fd)
                 rsa_mat = fdd.data
+                fdd.y_log_scale = cfg['log_by_mean']  # might not actually be by mean
                 if cfg['average_per_block']:
                     for i, c in enum(CLASSES):
                         for ii, cc in enum(CLASSES):
