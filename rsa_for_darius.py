@@ -99,6 +99,11 @@ CLASSES = [
     'Sd4'
 ]
 
+
+FORCED_RESOLUTION = len(CLASSES) * BLOCK_LEN
+
+
+
 DEBUG = True
 
 def main():
@@ -231,31 +236,16 @@ def main():
                             sr = slice(N_PER_CLASS * ii, N_PER_CLASS * (ii + 1))
                             comp_mat = rsa_mat[sc, sr]
                             avg_dis = np.mean(comp_mat)
-                            # fd.data = arr(fd.data)
                             fdd.data[sc, sr] = avg_dis
-                            # fd.data = fd.data.tolist()
 
-                # breakpoint()
-
-                log('resampling1')
-                lennnn = len(CLASSES) * BLOCK_LEN
                 full_data = fdd.data
-                if lennnn == fdd.data.shape[0]:
-                    fdd.data = fdd.data.tolist()
-                else:
-                    # DEBUG
-                    # for rowi,row in enum(fd.data):
-                    #     copy = fd.data[rowi]
-                    #     random.shuffle(copy)
-                    #     fd.data[rowi] = copy
 
-
-
-                    fdd.data = imutil.resampleim(np.array(fdd.data), lennnn, lennnn, nchan=1)[:, :, 0].tolist()
-                log('resampled2')
-
-                # need to do this again after downsampling
+                if not FORCED_RESOLUTION == fdd.data.shape[0]:
+                    fdd.data = imutil.resampleim(np.array(fdd.data), FORCED_RESOLUTION, FORCED_RESOLUTION, nchan=1)[:, :, 0]
                 fdd.confuse_target = np.max(fdd.data)
+                fdd.data = fdd.data.tolist()
+
+
 
                 fdd.make = True
                 extra = ''

@@ -1,5 +1,7 @@
 import numpy as np
 
+from mlib.term import log_invokation
+
 
 def make255(x):
     return np.uint8(x * 255)
@@ -14,7 +16,7 @@ import cv2
 import numpy as np
 
 
-
+@log_invokation
 def resampleim(im, heigh, width, nchan=1):
     # data = np.array(list(Image.fromarray(im).resize((width,heigh)).getdata()))
 
