@@ -435,18 +435,24 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, f
     else:
         err('bad')
 
+    VIOLIN = True
+
+    y = [similarity_NS, similarity_S, similarity_across]
+    if VIOLIN:
+        y = [similarity_NS_flat, similarity_S_flat, sim_across_flat]
+
     fd = PlotData(
-        y=[similarity_NS, similarity_S, similarity_across],
+        y=y,
         x=[
             'similarity_NS',
             'similarity_S',
             'similarity_across'
         ],
-        item_type='bar',
+        item_type='violin' if VIOLIN else 'bar',
         item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
         ylim=[0, 20],
         title=f'{net}: Dissimilarities of {LAYERS[arch]}',
-        err=[similarity_NS_std, similarity_S_stf, dissimilarity_across_std],
+        err=() if VIOLIN else [similarity_NS_std, similarity_S_stf, dissimilarity_across_std],
         xlabel='Class Comparison Groups',
         ylabel='Dissimilarity Score',
         bar_sideways_labels=False
