@@ -18,44 +18,9 @@ from mlib.term import log_invokation
 SANITY = False
 SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 N_PER_CLASS = 5
 # N_PER_CLASS = 500
-
 DEBUG_DOWNSAMPLE = True
-
-# BLOCK_LEN = 100  # PIXELS_PER_CLASS
-# BLOCK_LEN = 500  # PIXELS_PER_CLASS
 
 # BLOCK_LEN = 100 if SHOBHITA else 10
 BLOCK_LEN = 10  # DEBUG
@@ -84,38 +49,6 @@ CFG = [
     }
 ]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # (max) # NO LONGER IN SLURM BC REQUEST WONT GO THROUGH, SO CPUS MIGHT SHARED WITH OTHER PROCESSES. NUM CPUS: 56, request intstant, 1915 total
 
 # test
@@ -125,8 +58,6 @@ import multiprocessing
 print(f'NUM CPUS: {multiprocessing.cpu_count()}')
 
 SHOBHITA = True
-
-
 
 LAYERS = {
     "SQN"      : 'relu_conv10',  # 784
@@ -223,8 +154,6 @@ def main():
             else:
                 net = arch + '_' + str(size)
 
-
-
             acts_for_rsa = None
 
             for c in CLASSES:
@@ -272,7 +201,6 @@ def main():
                         axis=0
                     )
 
-            # breakpoint()
             fd = RSA(  # gets SIMILARITIES, not DiSSIMILARTIES due to fix()
                 f'L2 Norm of {LAYERS[arch]} from {net}',
                 acts_for_rsa,
@@ -327,6 +255,7 @@ def main():
                 extra = ''
                 if cfg['average_per_block']: extra = '_avg'
                 if cfg['log_by_mean']: extra += '_log'
+                fdd.title = fdd.title + f'({extra})'
                 file = result_folder[net + extra + ".mfig"]
                 file.save(fdd)
                 backend = MPLFigsBackend
