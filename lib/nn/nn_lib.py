@@ -176,7 +176,8 @@ def RSA(
         classnames=None,
         return_result=False,
         block_len=10,
-        fun=rsa_norm
+        fun=rsa_norm,
+        y_log_scale = False
 ):
     special_confuse_mat = zeros(len(rep), len(rep))
     classes = []
@@ -245,6 +246,13 @@ def RSA(
 
     special_confuse_mat = np.vectorize(fix)(special_confuse_mat)
 
+
+
+
+
+
+
+
     tit = f'L2-{nam}'
     if not return_result:
         title = f'{tit} ({nnstate.FLAGS.arch}{nnstate.FLAGS.ntrain}E{ei + 1})'
@@ -259,6 +267,7 @@ def RSA(
             block_len=block_len,
             row_headers=class_names,
             col_headers=class_names,
+            y_log_scale=y_log_scale
         ), tit, f'CM{ei + 1}', 'mfig')
     else:
         return RSAMatrix(
@@ -269,4 +278,5 @@ def RSA(
             block_len=block_len,
             row_headers=class_names,
             col_headers=class_names,
+            y_log_scale=y_log_scale
         )

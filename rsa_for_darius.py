@@ -216,7 +216,8 @@ def main():
                 classnames=CLASSES,
                 block_len=BLOCK_LEN,
                 sort=False,
-                return_result=True
+                return_result=True,
+                y_log_scale=cfg['log_by_mean'] # might not actually be by mean
             )
             for cfg in CFG:
                 fdd = deepcopy(fd)
