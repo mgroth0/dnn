@@ -20,10 +20,12 @@ SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 
 N_PER_CLASS = 5
 # N_PER_CLASS = 500
-DEBUG_DOWNSAMPLE = True
+DEBUG_DOWNSAMPLE = True  # downsample activations
 
 # BLOCK_LEN = 100 if SHOBHITA else 10
-BLOCK_LEN = 10  # DEBUG
+# BLOCK_LEN = 10  # DEBUG
+# if block_len != n_per_class, resampling happens
+BLOCK_LEN = N_PER_CLASS
 
 CFG = [
     {
