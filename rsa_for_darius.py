@@ -4,19 +4,15 @@ import numpy as np
 import scipy
 
 from lib.misc import imutil
-from lib.nn.nn_lib import RSA, rsa_corr
+from lib.nn.nn_lib import RSA
 from mlib.boot import log
 from mlib.boot.lang import enum, islinux, listkeys
-from mlib.boot.mlog import err
-from mlib.boot.stream import arr, concat, flatten, isnan, listitems, listmap, randperm
+from mlib.boot.stream import arr, concat, flatten, isnan, listmap, randperm
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.fig.PlotData import PlotData
 from mlib.file import File, Folder, mkdir
 from mlib.JsonSerializable import FigSet
 from mlib.term import log_invokation
-
-SANITY = False
-SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 
 N_PER_CLASS = 5
 # N_PER_CLASS = 500
@@ -59,9 +55,6 @@ IMAGE_FORMAT = 'svg'
 # test
 # N_PER_CLASS = 10
 
-import multiprocessing
-print(f'NUM CPUS: {multiprocessing.cpu_count()}')
-
 SHOBHITA = True
 
 LAYERS = {
@@ -99,20 +92,19 @@ CLASSES = [
     'Sd4'
 ]
 
-
 FORCED_RESOLUTION = len(CLASSES) * BLOCK_LEN
 
+SINGULARITY_DATA_FOLDER = Folder('/matt/data')
+# OM_DATA_FOLDER = SINGULARITY_DATA_FOLDER
+OM_DATA_FOLDER = Folder('/om2/user/mjgroth/data')
 
+MAC_DATA_FOLDER = Folder('_data')
 
-DEBUG = True
+DATA_FOLDER = OM_DATA_FOLDER if islinux() else MAC_DATA_FOLDER
 
 def main():
-    log('running rsa_for_darius')
     if not SHOBHITA:
-        if islinux():
-            imgActivations = Folder('/matt/data/imgActivationsForRSA')
-        else:
-            imgActivations = Folder('_data/imgActivationsForRSA')
+        imgActivations = DATA_FOLDER.resolve('imgActivationsForRSA')
         activations = {}
 
         for net_folder in imgActivations.files:
@@ -124,11 +116,9 @@ def main():
             if modelname not in activations:
                 activations[modelname] = {}
             arch, ntrain = modelname.split('_')
-            # breakpoint()
             net_folder.delete_icon_file_if_exists()
             log(f'net_folder:{net_folder}: getting activations')
             print('b4 files')
-            # stream.enable_debug = True
             the_files = net_folder.files
             print('after files')
             for activations_mat in the_files.filtered(
@@ -155,30 +145,16 @@ def main():
     for arch in NETS:
         log(f'in arch: {arch}')
         scores[arch] = {}
-
         arch_rand_perm = None
-
         for size in T_SIZES:
-            if SHOBHITA:
-                net = arch
-            else:
-                net = arch + '_' + str(size)
-
+            net = arch
+            if not SHOBHITA: net = f'{net}_{size}'
             acts_for_rsa = None
-
             for c in CLASSES:
                 if SHOBHITA:
-                    # 500 = num images
-                    # 400 = len of one activation array
-                    # breakpoint()
-                    # acts = activations[net][c].load().reshape(500, 400)
-                    # breakpoint()
-
                     acts = activations[net][c].load()
                     if DEBUG_DOWNSAMPLE:
                         acts = acts[:, 0:100:]
-                    # if DEBUG:
-                    #     pass
                 else:
                     acts = activations[net][c].load()['imageActivations']
                 log(f'total images per class: {len(acts)}')
@@ -241,11 +217,10 @@ def main():
                 full_data = fdd.data
 
                 if not FORCED_RESOLUTION == fdd.data.shape[0]:
-                    fdd.data = imutil.resampleim(np.array(fdd.data), FORCED_RESOLUTION, FORCED_RESOLUTION, nchan=1)[:, :, 0]
+                    fdd.data = imutil.resampleim(np.array(fdd.data), FORCED_RESOLUTION, FORCED_RESOLUTION, nchan=1)[:,
+                               :, 0]
                 fdd.confuse_target = np.max(fdd.data)
                 fdd.data = fdd.data.tolist()
-
-
 
                 fdd.make = True
                 extra = ''
@@ -282,42 +257,11 @@ def save_scores(result_folder, scores):
     }
     File(f'temp{norm}.p').save(debugData)
 
-@log_invokation
-def debug_process_post(plot):
-    result_folder = mkdir('_figs/rsa')
-    sqn_act_len = None
-
-    scores = {}
-    for arch in NETS:
-        log(f'in arch: {arch}')
-        scores[arch] = {}
-        arch_rand_perm = None
-        for size in T_SIZES:
-            if SHOBHITA:
-                net = arch
-            else:
-                net = arch + '_' + str(size)
-            block_len = 10
-
-            acts_for_rsa = None
-
-            file = result_folder[net + ".mfig"]
-            fd = file.loado()
-            fd.dataFile = file
-            fd.imgFile = file.resrepext(IMAGE_FORMAT)
-
-            scores = debug_process(fd, scores, result_folder, net, block_len, arch, size, plot)
-    save_scores(result_folder, scores)
-
-
 NORMALIZE = True
-norm = ''
-if NORMALIZE: norm = '_norm'
+norm = '_norm' if NORMALIZE else ''
 
 @log_invokation
 def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, full_data):
-    # fd = fd.viss[0]  # so confused why i have to do this locally but not on OM
-
     norm_rsa_mat = full_data / np.max(full_data)
     average = np.mean(norm_rsa_mat)
 
@@ -326,23 +270,16 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, f
     dissimilarity_across = 0
     similarity_across = 0
 
-    similarity_NS_flat = []
-    similarity_S_flat = []
-    sim_across_flat = []
-
-    # total_n = len(CLASSES) * len(CLASSES)
+    NS_similarities = []
+    S_similarities = []
+    NS_to_S_similarities = []
     dvs = [0, 0, 0]
 
     debug = [[], [], []]
 
     for i, c in enum(CLASSES):
-        # if i > 4: break
         for ii, cc in enum(CLASSES):
             if ii > i: continue
-
-            # sc = slice(block_len * i, block_len * (i + 1))
-            # sr = slice(block_len * ii, block_len * (ii + 1))
-            #
             sc = slice(N_PER_CLASS * i, N_PER_CLASS * (i + 1))
             sr = slice(N_PER_CLASS * ii, N_PER_CLASS * (ii + 1))
 
@@ -355,9 +292,6 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, f
             avg_dis = np.nanmean(comp_mat)
             all_dis = arr([num for num in flatten(comp_mat).tolist() if not isnan(num)])
 
-            # len([n for n in flatten(comp_mat).tolist() if n > 100])
-
-
             if NORMALIZE:
                 avg_dis = avg_dis / average
                 all_dis = all_dis / average
@@ -366,22 +300,18 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, f
                 similarity_NS += avg_dis
                 dvs[0] += 1
                 debug[0].append((c, cc))
-                similarity_NS_flat += flatten(all_dis).tolist()
+                NS_similarities += flatten(all_dis).tolist()
             elif c.startswith('S') and cc.startswith('S'):
                 similarity_S += avg_dis
                 dvs[1] += 1
                 debug[1].append((c, cc))
-                similarity_S_flat += flatten(all_dis).tolist()
+                S_similarities += flatten(all_dis).tolist()
             else:
                 similarity_across += avg_dis
                 dvs[2] += 1
                 debug[2].append((c, cc))
-                sim_across_flat += flatten(all_dis).tolist()
+                NS_to_S_similarities += flatten(all_dis).tolist()
                 if NORMALIZE:
-                    # avg_dis = avg_dis - ((avg_dis - 1) * 2)
-                    # avg_dis = avg_dis - ((2 * avg_dis) - 2)
-                    # avg_dis = avg_dis - (2 * avg_dis) + 2
-                    # avg_dis = (-2 * avg_dis) + 2 + avg_dis
                     avg_dis = -avg_dis + 2
                 else:
                     avg_dis = 1 - avg_dis
@@ -392,16 +322,13 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, f
     dissimilarity_across = dissimilarity_across / dvs[2]
     similarity_across = similarity_across / dvs[2]
 
-    similarity_NS_flat = arr(similarity_NS_flat)
-    similarity_S_flat = arr(similarity_S_flat)
-    sim_across_flat = arr(sim_across_flat)
+    NS_similarities = arr(NS_similarities)
+    S_similarities = arr(S_similarities)
+    NS_to_S_similarities = arr(NS_to_S_similarities)
 
-    p_ns_s = scipy.stats.ttest_ind(similarity_NS_flat, similarity_S_flat, alternative='two-sided')[1]
-    p_across_s = scipy.stats.ttest_ind(sim_across_flat, similarity_S_flat, alternative='less')[1]
-    p_across_ns = scipy.stats.ttest_ind(sim_across_flat, similarity_NS_flat, alternative='less')[1]
-
-    # scipy.stats.ttest_ind(similarity_NS_flat, similarity_S_flat, alternative='two-sided')
-    # scipy.stats.ttest_ind(sim_across_flat, similarity_S_flat, alternative='less')
+    p_ns_s = scipy.stats.ttest_ind(NS_similarities, S_similarities, alternative='two-sided')[1]
+    p_across_s = scipy.stats.ttest_ind(NS_to_S_similarities, S_similarities, alternative='less')[1]
+    p_across_ns = scipy.stats.ttest_ind(NS_to_S_similarities, NS_similarities, alternative='less')[1]
 
     print(f'{p_ns_s=}')
     print(f'{p_across_s=}')
@@ -413,28 +340,13 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, f
         'p_across_ns': p_across_ns
     })
 
-    # try:
-
-    similarity_NS_std = np.std(similarity_NS_flat)
-    similarity_S_stf = np.std(similarity_S_flat)
-    dissimilarity_across_std = np.std(sim_across_flat)
-    # except:
-    #     breakpoint()
-
-    if plot == 'AC':
-        scores[arch][size] = dissimilarity_across
-    elif plot == 'S':
-        scores[arch][size] = similarity_S
-    elif plot == 'NS':
-        scores[arch][size] = similarity_NS
-    else:
-        err('bad')
+    scores[arch][size] = {'AC': dissimilarity_across, 'S': similarity_S, 'NS': similarity_NS}[plot]
 
     VIOLIN = True
 
     y = [similarity_NS, similarity_S, similarity_across]
     if VIOLIN:
-        y = [similarity_NS_flat, similarity_S_flat, sim_across_flat]
+        y = [NS_similarities, S_similarities, NS_to_S_similarities]
 
     fd = PlotData(
         y=y,
@@ -447,7 +359,7 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, f
         item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
         ylim=[0, 20],
         title=f'{net}: Dissimilarities of {LAYERS[arch]}',
-        err=() if VIOLIN else [similarity_NS_std, similarity_S_stf, dissimilarity_across_std],
+        err=() if VIOLIN else [np.std(NS_similarities), np.std(S_similarities), np.std(NS_to_S_similarities)],
         xlabel='Class Comparison Groups',
         ylabel='Dissimilarity Score',
         bar_sideways_labels=False
@@ -464,143 +376,3 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, f
     fd.imgFile = file.resrepext(IMAGE_FORMAT)
 
     backend.makeAllPlots([fd], overwrite=True)
-    return scores
-
-
-
-
-def main2():
-    data = []
-    for arch in NETS:
-        line = []
-        for size in T_SIZES:
-            dis = File(f'_figs/rsa/{arch}_{size}_dis{norm}.mfig').load()['viss'][0]['y'][2]
-            line.append(dis)
-        data.append(line)
-    fd = PlotData(
-        y=data,
-        x=T_SIZES,
-        item_type='line',
-        item_color=[[1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 1, 0], [1, 0, 1], [0, 1, 1]],
-        ylim=[0, 25],
-
-        title=f'S-NS Dissimilarities Across Training Sizes',
-        xlabel='Training Size',
-        ylabel='Dissimilarity Score Between S and NS',
-    )
-
-    fd.make = True
-    result_folder = mkdir('_figs/rsa')
-    file = result_folder[f"line{norm}.mfig"]
-    file.save(fd)
-    backend = MPLFigsBackend
-    fd = file.loado()
-    fd.dataFile = file
-    fd.imgFile = file.resrepext(IMAGE_FORMAT)
-    backend.makeAllPlots([fd], overwrite=True)
-
-def sanity():
-    activations = SANITY_FILE.load()['activs']
-
-    result_folder = mkdir('_figs/rsa')
-
-    block_len = len(activations)
-
-    fd = RSA(
-        # f'L2 Norm of Sanity Test',
-        f'Correlation Sanity Test, Transposed',
-        activations.T,
-        None,
-        None,
-        layer_name='fc7',
-        layer_i=None,
-        classnames=[''],
-        block_len=block_len,
-        sort=False,
-        return_result=True,
-        fun=rsa_corr
-    )
-    fd.make = True
-    file = result_folder['sanity_transposed' + ".mfig"]
-    file.save(fd)
-    backend = MPLFigsBackend
-    fd = file.loado()
-    fd.dataFile = file
-    fd.imgFile = file.resrepext(IMAGE_FORMAT)
-    backend.makeAllPlots([fd], overwrite=True)
-
-
-PLOTS = {
-    'S' : 'Symmetry Representation Homogeneity',
-    'NS': 'Asymmetry Representation Homogeneity',
-    'AC': 'Dissimilarity Between Symmetry and Asymmetry Representations'
-}
-
-def test_line(plot):
-    fs = FigSet()
-    debugData = File(f'temp{norm}.p').load()
-    scores = debugData['scores']
-    c_map = debugData['c_map']
-    result_folder = debugData['result_folder']
-
-    for akey, arch in listitems(scores):
-        score_list = []
-        size_list = []
-        c_list = []
-        for sizekey, score in listitems(arch):
-            score_list.append(score)
-            size_list.append(sizekey)
-            c_list.append(c_map[akey])
-        fd = PlotData(
-            y=score_list,
-            x=size_list,
-            # item_type='scatter',
-            item_type='line',
-            # item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
-            item_color=c_map[akey],  # ,c_list,
-            ylim=[0, 20],
-            # title=akey,
-            # err=[0, 0, 0],
-            xlabel='Training Sizes',
-            ylabel=akey,  # 'Dissimilarity Score',
-            # x=[1, 2, 3],
-            bar_sideways_labels=False,
-        )
-        fd.make = True
-        fs.viss.append(fd)
-    fs.viss.append(PlotData(
-        y=[],
-        x=[],
-        item_type='scatter',
-        item_color=[],  # ,c_list,
-        title=PLOTS[plot],
-        xlabel='Training Sizes',
-        ylabel='Dissimilarity Score' if plot == 'AC' else 'Homogeneity Score',
-        bar_sideways_labels=False,
-    ))
-    fs.viss[-1].make = True
-    fs.make = True
-    file = result_folder[f"scatter_{plot}{norm}.mfig"]
-    for vis in fs.viss:
-        vis.title_size = 25
-    file.save(fs)
-    backend = MPLFigsBackend
-    fs = file.loado()
-    fs.file = file
-    fs.imgFile = file.resrepext(IMAGE_FORMAT)
-
-    # fs.viss[0].legend = listmap(
-    #     # akey, arch
-    #     lambda item: Line2D([0], [0], color=c_map[item[0]], lw=4, label=item[0]),
-    #     listitems(scores)
-    # )
-    backend.makeAllPlots([fs], overwrite=True)
-
-
-if __name__ == '__main__':
-    if SANITY:
-        sanity()
-    else:
-        main()
-        # main2()
-        test_line('AC')

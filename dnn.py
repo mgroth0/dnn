@@ -53,16 +53,6 @@ class DNN(Project):
             print('printing dnn is finished string!')
             print('__DNN_IS_FINISHED__')
             return None
-        elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'RSA_NEW':
-            import rsa_for_darius
-            rsa_for_darius.debug_process_post('AC')
-            rsa_for_darius.test_line('AC')
-            rsa_for_darius.debug_process_post('S')
-            rsa_for_darius.test_line('S')
-            rsa_for_darius.debug_process_post('NS')
-            rsa_for_darius.test_line('NS')
-            # print('here2, finished Darius-RSA')
-            return None
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
             from lib.human_exp import human_exp
             human_exp(cfg)
