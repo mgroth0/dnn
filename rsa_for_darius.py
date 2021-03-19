@@ -51,6 +51,9 @@ CFG = [
     }
 ]
 
+# IMAGE_FORMAT = 'png'
+IMAGE_FORMAT = 'svg'
+
 # (max) # NO LONGER IN SLURM BC REQUEST WONT GO THROUGH, SO CPUS MIGHT SHARED WITH OTHER PROCESSES. NUM CPUS: 56, request intstant, 1915 total
 
 # test
@@ -262,7 +265,7 @@ def main():
                 backend = MPLFigsBackend
                 fdd = file.loado()
                 fdd.dataFile = file
-                fdd.imgFile = file.resrepext('png')
+                fdd.imgFile = file.resrepext(IMAGE_FORMAT)
                 backend.makeAllPlots([fdd], overwrite=True, force=False)
                 if cfg['get_scores']:
                     scores = debug_process(fdd, scores, result_folder, net, BLOCK_LEN, arch, size, 'AC', full_data)
@@ -309,7 +312,7 @@ def debug_process_post(plot):
             file = result_folder[net + ".mfig"]
             fd = file.loado()
             fd.dataFile = file
-            fd.imgFile = file.resrepext('png')
+            fd.imgFile = file.resrepext(IMAGE_FORMAT)
 
             scores = debug_process(fd, scores, result_folder, net, block_len, arch, size, plot)
     save_scores(result_folder, scores)
@@ -466,7 +469,7 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, f
     backend = MPLFigsBackend
     fd = file.loado()
     fd.dataFile = file
-    fd.imgFile = file.resrepext('png')
+    fd.imgFile = file.resrepext(IMAGE_FORMAT)
 
     backend.makeAllPlots([fd], overwrite=True)
     return scores
@@ -501,7 +504,7 @@ def main2():
     backend = MPLFigsBackend
     fd = file.loado()
     fd.dataFile = file
-    fd.imgFile = file.resrepext('png')
+    fd.imgFile = file.resrepext(IMAGE_FORMAT)
     backend.makeAllPlots([fd], overwrite=True)
 
 def sanity():
@@ -531,7 +534,7 @@ def sanity():
     backend = MPLFigsBackend
     fd = file.loado()
     fd.dataFile = file
-    fd.imgFile = file.resrepext('png')
+    fd.imgFile = file.resrepext(IMAGE_FORMAT)
     backend.makeAllPlots([fd], overwrite=True)
 
 
@@ -592,7 +595,7 @@ def test_line(plot):
     backend = MPLFigsBackend
     fs = file.loado()
     fs.file = file
-    fs.imgFile = file.resrepext('png')
+    fs.imgFile = file.resrepext(IMAGE_FORMAT)
 
     # fs.viss[0].legend = listmap(
     #     # akey, arch
