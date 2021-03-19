@@ -18,31 +18,6 @@ from mlib.term import log_invokation
 SANITY = False
 SANITY_FILE = File('/Users/matt/Desktop/forMattActivs.mat')
 
-# on openmind 10 took ~400 sec
-# N_PER_CLASS = 10
-# N_PER_CLASS = 100
-# N_PER_CLASS = 15 # took 524 sec
-
-# N_PER_CLASS = 20  # took 687, with multiprocess took 363 (and again, 362)! (56 CPUS)
-# 100: 376, 347(2 sec slurm wait)
-# 5(actually 80(twice?? must be wrong, since i put 5 and i think node has only 56??)!???): 578(4 sec slurm wait)
-# 150(actually 56(twice)!???): 367(1 sec slurm wait)
-# NONE(56)
-
-# always requesting 60 (getting 56/80) from now on
-
-# N_PER_CLASS = 40 #65 sec slurm request, said I have 80 cpus... took 533 total (468 after slurm)
-
-# N_PER_CLASS = 10 #90 sec request, 324 total
-
-# N_PER_CLASS = 80 #161 request, 1409 total
-# N_PER_CLASS = 100  # 110 request, 2035 total
-# alexnet is taking 1 or 2 seconds for 100 images , but gnet ~50 secs and IRN ~110 secs
-# 100, after randperm and shorten each act to SQN len: 113 request, 464 total,
-# total images per class: 500 always
-# everything below uses shortening
-# N_PER_CLASS = 200 #request 112, total 602
-
 
 
 
