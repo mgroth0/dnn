@@ -260,13 +260,12 @@ def save_scores(result_folder, scores):
 
 NORMALIZE = True
 norm = '_norm' if NORMALIZE else ''
-
+def elim_id_diag(_pat):
+    for i in itr(_pat):
+        _pat[i, i] = np.nan
+    return _pat
 @log_invokation
 def debug_process(scores, result_folder, net, arch, size, plot, full_data):
-    def elim_id_diag(pat):
-        for i in itr(pat):
-            pat[i, i] = np.nan
-        return nat
     norm_rsa_mat = elim_id_diag(full_data / np.max(full_data))
     average = np.nanmean(norm_rsa_mat)
     simsets = {'AC': [], 'S': [], 'NS': []}
