@@ -221,9 +221,9 @@ def main():
                         FORCED_RESOLUTION,
                         nchan=1
                     )[:, :, 0]
-                fdd.confuse_target = np.max(fdd.data)
-                if isnan(fdd.confuse_target):
-                    breakpoint()
+                fdd.confuse_target = np.nanmax(fdd.data) # lru cached _patterns get nan'ed
+                # if isnan(fdd.confuse_target):
+                #     breakpoint()
                 fdd.data = fdd.data.tolist()
                 # breakpoint()
                 fdd.make = True
