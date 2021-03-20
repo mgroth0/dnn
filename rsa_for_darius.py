@@ -219,7 +219,7 @@ def main():
                     )[:, :, 0]
                 fdd.confuse_target = np.max(fdd.data)
                 fdd.data = fdd.data.tolist()
-                breakpoint()
+                # breakpoint()
                 fdd.make = True
                 extra = ''
                 if cfg['average_per_block']: extra = '_avg'
@@ -236,6 +236,8 @@ def main():
                 fdd.dataFile = file
                 fdd.imgFile = file.resrepext(IMAGE_FORMAT)
                 backend.makeAllPlots([fdd], overwrite=True, force=False)
+                if pattern:
+                    breakpoint()
                 if cfg['get_scores']:
                     scores = debug_process(scores, result_folder, net, arch, size, 'AC', full_data)
 
@@ -343,5 +345,5 @@ def _pattern(name, n_per_class=N_PER_CLASS):
         mat[2 * n_per_class:3 * n_per_class, 4 * n_per_class:5 * n_per_class] = 1
     else:
         err(f'unknown pattern: {name}')
-    breakpoint()
+    # breakpoint()
     return mat
