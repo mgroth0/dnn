@@ -334,7 +334,6 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     file = result_folder[f"{net}_dis{norm}.mfig"]
     fs = FigSet()
     fs.viss.append(fd)
-    fs.viss.append(td)
     file.save(fs)
     fd = file.loado()
     fd.dataFile = file
