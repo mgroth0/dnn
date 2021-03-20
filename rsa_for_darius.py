@@ -343,6 +343,10 @@ def _pattern(name, n_per_class=N_PER_CLASS):
             mat[s, s] = 1
         mat[4 * n_per_class:5 * n_per_class, 2 * n_per_class:3 * n_per_class] = 1
         mat[2 * n_per_class:3 * n_per_class, 4 * n_per_class:5 * n_per_class] = 1
+        example = mat[:half, :half]
+        mat[half:, :half] = example
+        mat[:half, half:] = example
+        mat[half:, half:] = example
     else:
         err(f'unknown pattern: {name}')
     # breakpoint()
