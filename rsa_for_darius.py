@@ -219,7 +219,7 @@ def main():
                     )[:, :, 0]
                 fdd.confuse_target = np.max(fdd.data)
                 fdd.data = fdd.data.tolist()
-
+                breakpoint()
                 fdd.make = True
                 extra = ''
                 if cfg['average_per_block']: extra = '_avg'
