@@ -334,7 +334,7 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, f
     print(f'{p_across_s=}')
     print(f'{p_across_ns=}')
 
-    result_folder[net + f"_stats{norm}.json"].save({
+    result_folder[f"{net}_stats{norm}.json"].save({
         'p_ns_s'     : p_ns_s,
         'p_across_s' : p_across_s,
         'p_across_ns': p_across_ns
