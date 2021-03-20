@@ -1,11 +1,13 @@
 from copy import deepcopy
 
 import numpy as np
+from functools import lru_cache
 
 from lib.misc import imutil
 from lib.nn.nn_lib import RSA_GETS_SIMS_NOT_DESIMS
 from mlib.boot import log
 from mlib.boot.lang import enum, islinux, listkeys, listvalues
+from mlib.boot.mlog import err
 from mlib.boot.stream import arr, concat, flatten, isnan, itr, listmap, randperm
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.fig.PlotData import PlotData
@@ -23,28 +25,38 @@ N_PER_CLASS = 5
 BLOCK_LEN = N_PER_CLASS
 DEBUG_DOWNSAMPLE = slice(0, None, 100)
 CFG = [
-    {
-        'get_scores'       : True,
-        'average_per_block': False,
-        'log_by_mean'      : False
-    },
-    {
-        'get_scores'       : False,
-        'average_per_block': True,
-        'log_by_mean'      : False
-    },
-    {
-        'get_scores'       : False,
-        'average_per_block': False,
-        'log_by_mean'      : True,
-
-    },
-    {
-        'get_scores'       : False,
-        'average_per_block': True,
-        'log_by_mean'      : True
-    }
-]
+          {
+              'get_scores'       : True,
+              'average_per_block': False,
+              'log_by_mean'      : False,
+              'pattern'          : None
+          },
+          {
+              'get_scores'       : False,
+              'average_per_block': True,
+              'log_by_mean'      : False,
+              'pattern'          : None
+          },
+          {
+              'get_scores'       : False,
+              'average_per_block': False,
+              'log_by_mean'      : True,
+              'pattern'          : None
+          },
+          {
+              'get_scores'       : False,
+              'average_per_block': True,
+              'log_by_mean'      : True,
+              'pattern'          : None
+          }
+      ] + [
+          {
+              'get_scores'       : False,
+              'average_per_block': False,
+              'log_by_mean'      : False,
+              'pattern'          : name
+          } for name in ["sym", "band", "dark", "width"]
+      ]
 
 # IMAGE_FORMAT = 'png'
 IMAGE_FORMAT = 'svg'
@@ -100,6 +112,8 @@ OM_DATA_FOLDER = Folder('/om2/user/mjgroth/data')
 MAC_DATA_FOLDER = Folder('_data')
 
 DATA_FOLDER = OM_DATA_FOLDER if islinux() else MAC_DATA_FOLDER
+
+
 
 def main():
     if not SHOBHITA:
@@ -182,7 +196,9 @@ def main():
             )
             for cfg in CFG:
                 fdd = deepcopy(fd)
-                rsa_mat = fdd.data
+                pattern = cfg['pattern']
+                if pattern:
+                    fdd.data = _pattern(pattern)
                 fdd.y_log_scale = cfg['log_by_mean']  # might not actually be by mean
                 if cfg['average_per_block']:
                     for i, c in enum(CLASSES):
@@ -190,13 +206,17 @@ def main():
                             if i < ii: continue
                             sc = slice(N_PER_CLASS * i, N_PER_CLASS * (i + 1))
                             sr = slice(N_PER_CLASS * ii, N_PER_CLASS * (ii + 1))
-                            fdd.data[sc, sr] = np.mean(rsa_mat[sc, sr])
+                            fdd.data[sc, sr] = np.mean(fdd.data[sc, sr])
 
                 full_data = fdd.data
 
                 if not FORCED_RESOLUTION == fdd.data.shape[0]:
-                    fdd.data = imutil.resampleim(np.array(fdd.data), FORCED_RESOLUTION, FORCED_RESOLUTION, nchan=1)[:,
-                               :, 0]
+                    fdd.data = imutil.resampleim(
+                        np.array(fdd.data),
+                        FORCED_RESOLUTION,
+                        FORCED_RESOLUTION,
+                        nchan=1
+                    )[:, :, 0]
                 fdd.confuse_target = np.max(fdd.data)
                 fdd.data = fdd.data.tolist()
 
@@ -204,8 +224,12 @@ def main():
                 extra = ''
                 if cfg['average_per_block']: extra = '_avg'
                 if cfg['log_by_mean']: extra += '_log'
-                fdd.title = f'{fdd.title}({extra})'
-                file = result_folder[f"{net}{extra}.mfig"]
+                if pattern:
+                    fdd.title = pattern
+                    file = result_folder[f"{pattern}.mfig"]
+                else:
+                    fdd.title = f'{fdd.title}({extra})'
+                    file = result_folder[f"{net}{extra}.mfig"]
                 file.save(fdd)
                 backend = MPLFigsBackend
                 fdd = file.loado()
@@ -286,3 +310,37 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     fd.dataFile = file
     fd.imgFile = file.resrepext(IMAGE_FORMAT)
     MPLFigsBackend.makeAllPlots([fd], overwrite=True)
+
+
+@lru_cache()
+def _pattern(name, n_per_class=N_PER_CLASS):
+    length = n_per_class * 10
+    half = length / 2
+    mat = np.zeros((length, length))
+    if name == 'sym':
+        mat[0:half, 0:half] = 1
+        mat[half:, half:] = 1
+    elif name == 'band':
+        mat[:n_per_class, :n_per_class] = 1
+        mat[n_per_class:half, n_per_class:half] = 1
+        example = mat[:half, :half]
+        mat[half:, :half] = example
+        mat[:half, half:] = example
+        mat[half:, half:] = example
+    elif name == 'dark':
+        v4 = half - n_per_class
+        mat[:v4, :v4] = 1
+        mat[v4:half, v4:half] = 1
+        example = mat[:half, :half]
+        mat[half:, :half] = example
+        mat[:half, half:] = example
+        mat[half:, half:] = example
+    elif name == 'width':
+        for n in range(5):
+            s = slice(n * n_per_class, (n + 1) * n_per_class)
+            mat[s, s] = 1
+        mat[4 * n_per_class:5 * n_per_class, 2 * n_per_class:3 * n_per_class] = 1
+        mat[2 * n_per_class:3 * n_per_class, 4 * n_per_class:5 * n_per_class] = 1
+    else:
+        err(f'unknown pattern: {name}')
+    return n
