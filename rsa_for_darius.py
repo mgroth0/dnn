@@ -11,6 +11,7 @@ from mlib.boot.mlog import err
 from mlib.boot.stream import arr, concat, flatten, isnan, itr, listmap, randperm
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.fig.PlotData import PlotData
+from mlib.fig.TableData import TableData
 from mlib.file import File, Folder, mkdir
 from mlib.JsonSerializable import FigSet
 from mlib.stats import ttests
@@ -285,7 +286,33 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
                 si = 'AC'
             simsets[si] += flatten(all_dis).tolist()
     simsets = {k: arr(v) for k, v in simsets.items()}
-    result_folder[f"{net}_stats{norm}.json"].save(ttests(simsets))
+
+
+    # result_folder[f"{net}_stats{norm}.json"].save()
+    td = TableData(
+        data=[[k, v] for k, v in  ttests(simsets)],
+        # y=y,
+        # x=listkeys(simsets),
+        # item_type='violin' if VIOLIN else 'bar',
+        # item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
+        # ylim=[0, 20],
+        title=f'{net}: {LAYERS[arch]}, pvalues',
+        # err=() if VIOLIN else [np.std(v) for v in simsets.values()],
+        # xlabel='Class Comparison Groups',
+        # ylabel='Similarity Score',
+        # bar_sideways_labels=False
+    )
+    td.make = True
+    td.title_size = 20
+    file = result_folder[f"{net}_dis{norm}_table.mfig"]
+    ts = FigSet()
+    ts.viss.append(td)
+    file.save(ts)
+    td = file.loado()
+    td.dataFile = file
+    td.imgFile = file.resrepext(IMAGE_FORMAT)
+    MPLFigsBackend.makeAllPlots([td], overwrite=True)
+
     means = {k: np.nanmean(v) for k, v in simsets.items()}
     scores[arch][size] = means[plot]
     VIOLIN = True
@@ -304,9 +331,12 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     )
     fd.make = True
     fd.title_size = 20
+
+
     file = result_folder[f"{net}_dis{norm}.mfig"]
     fs = FigSet()
     fs.viss.append(fd)
+    fs.viss.append(td)
     file.save(fs)
     fd = file.loado()
     fd.dataFile = file
@@ -325,29 +355,21 @@ def _pattern(name, n_per_class=N_PER_CLASS):
     elif name == 'band':
         mat[:n_per_class, :n_per_class] = 1
         mat[n_per_class:half, n_per_class:half] = 1
-        example = mat[:half, :half]
-        mat[half:, :half] = example
-        mat[:half, half:] = example
-        mat[half:, half:] = example
     elif name == 'dark':
         v4 = half - n_per_class
         mat[:v4, :v4] = 1
         mat[v4:half, v4:half] = 1
-        example = mat[:half, :half]
-        mat[half:, :half] = example
-        mat[:half, half:] = example
-        mat[half:, half:] = example
     elif name == 'width':
         for n in range(5):
             s = slice(n * n_per_class, (n + 1) * n_per_class)
             mat[s, s] = 1
         mat[4 * n_per_class:5 * n_per_class, 2 * n_per_class:3 * n_per_class] = 1
         mat[2 * n_per_class:3 * n_per_class, 4 * n_per_class:5 * n_per_class] = 1
+    else:
+        err(f'unknown pattern: {name}')
+    if name in ['band', 'dark', 'width']:
         example = mat[:half, :half]
         mat[half:, :half] = example
         mat[:half, half:] = example
         mat[half:, half:] = example
-    else:
-        err(f'unknown pattern: {name}')
-    # breakpoint()
     return mat
