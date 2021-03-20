@@ -32,7 +32,7 @@ N_PER_CLASS, DEBUG_DOWNSAMPLE = [
 
 
 
-    (10, slice(None, None, 50))
+    (10, slice(None, None, 50))  # 107 sec
 
 
 
@@ -129,6 +129,7 @@ CLASSES = [
 ]
 
 FORCED_RESOLUTION = len(CLASSES) * BLOCK_LEN
+PATTERN_RESOLUTION = min(FORCED_RESOLUTION, 100)
 
 SINGULARITY_DATA_FOLDER = Folder('/matt/data')
 # OM_DATA_FOLDER = SINGULARITY_DATA_FOLDER
@@ -223,6 +224,8 @@ def main():
                 fdd = deepcopy(fd)
                 pattern = cfg['pattern']
                 if pattern:
+                    if not SHOBHITA:
+                        err('make sure not to run pattern images multiple time with darius nets')
                     fdd.data = _pattern(pattern)
                 fdd.y_log_scale = cfg['log_by_mean']  # might not actually be by mean
                 if cfg['average_per_block']:
@@ -235,11 +238,12 @@ def main():
 
                 full_data = fdd.data
 
-                if not FORCED_RESOLUTION == fdd.data.shape[0]:
+                forced_res = PATTERN_RESOLUTION if pattern else FORCED_RESOLUTION
+                if not forced_res == fdd.data.shape[0]:
                     fdd.data = imutil.resampleim(
                         np.array(fdd.data),
-                        FORCED_RESOLUTION,
-                        FORCED_RESOLUTION,
+                        forced_res,
+                        forced_res,
                         nchan=1
                     )[:, :, 0]
                 fdd.confuse_target = np.nanmax(fdd.data)  # lru cached _patterns get nan'ed
@@ -316,8 +320,6 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
             simsets[si] += flatten(all_dis).tolist()
     simsets = {k: arr(v) for k, v in simsets.items()}
 
-    import numpy.ma as ma
-
     # A = [1, 2, 3, 4, 5, np.NaN]
     # B = [2, 3, 4, 5.25, np.NaN, 100]
 
@@ -334,11 +336,12 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     import pandas as pd
     # pandas is supposedly better at handling nans
     try:
-        coefs = {pat: pd.concat([pd.DataFrame(flat(norm_rsa_mat)),pd.DataFrame(flat(elim_id_diag(_pattern(pat))))],axis=1).cov().iat[0, 1] / (np.nanstd(flat(norm_rsa_mat)) * np.nanstd(flat(elim_id_diag(_pattern(pat))))) for pat in _PATTERNS}
+        coefs = {pat: pd.concat([pd.DataFrame(flat(norm_rsa_mat)), pd.DataFrame(flat(elim_id_diag(_pattern(pat))))],
+                                axis=1).cov().iat[0, 1] / (
+                              np.nanstd(flat(norm_rsa_mat)) * np.nanstd(flat(elim_id_diag(_pattern(pat))))) for pat
+                 in _PATTERNS}
     except:
         breakpoint()
-
-
 
     # breakpoint()
 
