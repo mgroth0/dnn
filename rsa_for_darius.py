@@ -235,7 +235,9 @@ def main():
                 fdd = file.loado()
                 fdd.dataFile = file
                 fdd.imgFile = file.resrepext(IMAGE_FORMAT)
-                backend.makeAllPlots([fdd], overwrite=True, force=False,debug=bool(pattern))
+                backend.makeAllPlots([fdd], overwrite=True, force=False,
+                                     # debug=bool(pattern)
+                                     )
                 if cfg['get_scores']:
                     scores = debug_process(scores, result_folder, net, arch, size, 'AC', full_data)
 
