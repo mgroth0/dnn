@@ -343,4 +343,5 @@ def _pattern(name, n_per_class=N_PER_CLASS):
         mat[2 * n_per_class:3 * n_per_class, 4 * n_per_class:5 * n_per_class] = 1
     else:
         err(f'unknown pattern: {name}')
+    breakpoint()
     return mat
