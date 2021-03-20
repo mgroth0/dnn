@@ -32,12 +32,12 @@ N_PER_CLASS, DEBUG_DOWNSAMPLE = [
 
 
 
-    (10, slice(None, None, 50))  # 107 sec
+    # (10, slice(None, None, 50))  # 110 sec
 
 
 
     # max, final
-    # (500, slice(None, None, None))
+    (500, slice(None, None, None))
 
 
 ][0]
