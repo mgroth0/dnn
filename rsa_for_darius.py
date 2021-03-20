@@ -9,7 +9,7 @@ from lib.nn.nn_lib import RSA_GETS_SIMS_NOT_DESIMS
 from mlib.boot import log
 from mlib.boot.lang import enum, islinux, listkeys, listvalues
 from mlib.boot.mlog import err
-from mlib.boot.stream import arr, concat, flatten, isnan, itr, listitems, listmap, randperm
+from mlib.boot.stream import arr, concat, flat, flatten, isnan, itr, listitems, listmap, randperm
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.fig.PlotData import PlotData
 from mlib.fig.TableData import TableData
@@ -17,6 +17,8 @@ from mlib.file import File, Folder, mkdir
 from mlib.JsonSerializable import FigSet
 from mlib.stats import ttests
 from mlib.term import log_invokation
+
+_PATTERNS = ["sym", "band", "dark", "width"]
 
 N_PER_CLASS = 5
 # N_PER_CLASS = 500
@@ -57,7 +59,7 @@ CFG = [
               'average_per_block': False,
               'log_by_mean'      : False,
               'pattern'          : name
-          } for name in ["sym", "band", "dark", "width"]
+          } for name in _PATTERNS
       ]
 
 # IMAGE_FORMAT = 'png'
@@ -261,8 +263,12 @@ norm = '_norm' if NORMALIZE else ''
 
 @log_invokation
 def debug_process(scores, result_folder, net, arch, size, plot, full_data):
-    norm_rsa_mat = full_data / np.max(full_data)
-    average = np.mean(norm_rsa_mat)
+    def elim_id_diag(pat):
+        for i in itr(pat):
+            pat[i, i] = np.nan
+        return nat
+    norm_rsa_mat = elim_id_diag(full_data / np.max(full_data))
+    average = np.nanmean(norm_rsa_mat)
     simsets = {'AC': [], 'S': [], 'NS': []}
     for i, c in enum(CLASSES):
         for ii, cc in enum(CLASSES):
@@ -271,9 +277,9 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
                 slice(N_PER_CLASS * i, N_PER_CLASS * (i + 1)),
                 slice(N_PER_CLASS * ii, N_PER_CLASS * (ii + 1))
             ]
-            if c == cc:
-                for cmi in itr(comp_mat):
-                    comp_mat[cmi, slice(cmi, None)] = np.nan
+            # if c == cc:
+            #     for cmi in itr(comp_mat):
+            #         comp_mat[cmi, slice(cmi, None)] = np.nan
             all_dis = arr([num for num in flatten(comp_mat).tolist() if not isnan(num)])
 
             if NORMALIZE:
@@ -287,6 +293,13 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
                 si = 'AC'
             simsets[si] += flatten(all_dis).tolist()
     simsets = {k: arr(v) for k, v in simsets.items()}
+
+    cov = {pat: np.corrcoef(
+        flat(norm_rsa_mat),
+        flat(elim_id_diag(_pattern(pat)))
+    ) for pat in _PATTERNS}
+
+    breakpoint()
 
     # result_folder[f"{net}_stats{norm}.json"].save()
     td = TableData(
