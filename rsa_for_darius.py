@@ -291,16 +291,7 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     # result_folder[f"{net}_stats{norm}.json"].save()
     td = TableData(
         data=[[k, json.dumps(v, indent=2)] for k, v in listitems(ttests(simsets))],
-        # y=y,
-        # x=listkeys(simsets),
-        # item_type='violin' if VIOLIN else 'bar',
-        # item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
-        # ylim=[0, 20],
         title=f'{net}: {LAYERS[arch]}, pvalues',
-        # err=() if VIOLIN else [np.std(v) for v in simsets.values()],
-        # xlabel='Class Comparison Groups',
-        # ylabel='Similarity Score',
-        # bar_sideways_labels=False
     )
     td.make = True
     td.title_size = 20
