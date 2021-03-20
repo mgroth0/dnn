@@ -293,10 +293,17 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
             simsets[si] += flatten(all_dis).tolist()
     simsets = {k: arr(v) for k, v in simsets.items()}
 
-    cov = {pat: np.corrcoef(
-        flat(norm_rsa_mat),
-        flat(elim_id_diag(_pattern(pat)))
-    ) for pat in _PATTERNS}
+    import numpy.ma as ma
+
+    # A = [1, 2, 3, 4, 5, np.NaN]
+    # B = [2, 3, 4, 5.25, np.NaN, 100]
+
+    # print(ma.corrcoef(ma.masked_invalid(A), ma.masked_invalid(B)))
+
+    coefs = {pat: ma.corrcoef(
+        ma.masked_invalid(flat(norm_rsa_mat)),
+        ma.masked_invalid(flat(elim_id_diag(_pattern(pat))))
+    )[0, 1] / (np.nanstd(flat(norm_rsa_mat)) * np.nanstd(flat(elim_id_diag(_pattern(pat))))) for pat in _PATTERNS}
 
     breakpoint()
 
