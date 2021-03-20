@@ -222,6 +222,8 @@ def main():
                         nchan=1
                     )[:, :, 0]
                 fdd.confuse_target = np.max(fdd.data)
+                if isnan(fdd.confuse_target):
+                    breakpoint()
                 fdd.data = fdd.data.tolist()
                 # breakpoint()
                 fdd.make = True
@@ -311,9 +313,9 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
 
     # result_folder[f"{net}_stats{norm}.json"].save()
     td = TableData(
-        data=[[k, json.dumps(v, indent=2)] for k, v in listitems(ttests(simsets))] + [
+        data=[[k, json.dumps(v, indent=2)] for k, v in listitems(ttests(simsets))] + [[
             "Pattern Correlation Coefficients", json.dumps(coefs, indent=2)
-        ],
+        ]],
         title=f'{net}: {LAYERS[arch]}, pvalues',
     )
     td.make = True
