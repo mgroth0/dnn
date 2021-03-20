@@ -18,16 +18,37 @@ from mlib.JsonSerializable import FigSet
 from mlib.stats import ttests
 from mlib.term import log_invokation
 
+
+
+
+
+
+# (times includes latex, which is now about 40 sec, plus a bunch of other setup and finish-up stuff)
+N_PER_CLASS, DEBUG_DOWNSAMPLE = [
+
+
+
+    # (5, slice(0, None, 100),)  # 84 sec
+
+
+
+    (10, slice(None, None, 50))
+
+
+
+    # max, final
+    # (500, slice(None, None, None))
+
+
+][0]
+
+# if block_len != n_per_class, resampling happens
+BLOCK_LEN = min(N_PER_CLASS, 100)
+# doing more than about 100 breaks my code. Maybe the just cant make higher res images. Then again, I might be using svgs now. Maybe try increasing this later
+
+
 _PATTERNS = ["sym", "band", "dark", "width"]
 
-N_PER_CLASS = 5
-# N_PER_CLASS = 500
-
-# BLOCK_LEN = 100 if SHOBHITA else 10
-# BLOCK_LEN = 10  # DEBUG
-# if block_len != n_per_class, resampling happens
-BLOCK_LEN = N_PER_CLASS
-DEBUG_DOWNSAMPLE = slice(0, None, 100)
 CFG = [
           {
               'get_scores'       : True,
@@ -221,7 +242,7 @@ def main():
                         FORCED_RESOLUTION,
                         nchan=1
                     )[:, :, 0]
-                fdd.confuse_target = np.nanmax(fdd.data) # lru cached _patterns get nan'ed
+                fdd.confuse_target = np.nanmax(fdd.data)  # lru cached _patterns get nan'ed
                 # if isnan(fdd.confuse_target):
                 #     breakpoint()
                 fdd.data = fdd.data.tolist()
