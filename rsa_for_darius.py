@@ -16,13 +16,12 @@ from mlib.term import log_invokation
 
 N_PER_CLASS = 5
 # N_PER_CLASS = 500
-DEBUG_DOWNSAMPLE = True  # downsample activations
 
 # BLOCK_LEN = 100 if SHOBHITA else 10
 # BLOCK_LEN = 10  # DEBUG
 # if block_len != n_per_class, resampling happens
 BLOCK_LEN = N_PER_CLASS
-
+DEBUG_DOWNSAMPLE = slice(0, None, step=100)
 CFG = [
     {
         'get_scores'       : True,
@@ -107,20 +106,14 @@ def main():
         imgActivations = DATA_FOLDER.resolve('imgActivationsForRSA')
         activations = {}
 
-        for net_folder in imgActivations.files:
+        for net_folder in imgActivations.folders:
             log(f'net_folder:{net_folder}')
-            if not net_folder.isdir:
-                continue
-            net_folder = Folder(net_folder)
             modelname = net_folder.name
             if modelname not in activations:
                 activations[modelname] = {}
-            arch, ntrain = modelname.split('_')
             net_folder.delete_icon_file_if_exists()
             log(f'net_folder:{net_folder}: getting activations')
-            print('b4 files')
             the_files = net_folder.files
-            print('after files')
             for activations_mat in the_files.filtered(
                     lambda x: x.ext == 'mat'
             ):
@@ -128,12 +121,11 @@ def main():
                 classname = activations_mat.name_pre_ext
                 activations[modelname][classname] = activations_mat
     else:
-        DATA_DIR = '/om2/user/mjgroth/data'
-        folder = Folder(DATA_DIR)['rsa_activations_shobhita2']
-        activations = {'LSTM': {}}
+        folder = DATA_FOLDER['rsa_activations_shobhita2']
         files = {f.name.split('Cat')[1].split('_')[0]: f for f in folder.files}
-        for c in CLASSES:
-            activations['LSTM'][c] = folder[files[c].name]
+        activations = {
+            'LSTM': {c: folder[files[c].name] for c in CLASSES}
+        }
 
     log(f'finished net_folder loop')
 
@@ -151,12 +143,10 @@ def main():
             if not SHOBHITA: net = f'{net}_{size}'
             acts_for_rsa = None
             for c in CLASSES:
-                if SHOBHITA:
-                    acts = activations[net][c].load()
-                    if DEBUG_DOWNSAMPLE:
-                        acts = acts[:, 0:100:]
-                else:
-                    acts = activations[net][c].load()['imageActivations']
+                acts = activations[net][c]
+                if not SHOBHITA:
+                    acts = acts['imageActivations']
+                acts = acts[DEBUG_DOWNSAMPLE]
                 log(f'total images per class: {len(acts)}')
                 log(f'total acts per image: {len(acts[0])}')
                 if sqn_act_len is None:
@@ -210,9 +200,7 @@ def main():
                             if i < ii: continue
                             sc = slice(N_PER_CLASS * i, N_PER_CLASS * (i + 1))
                             sr = slice(N_PER_CLASS * ii, N_PER_CLASS * (ii + 1))
-                            comp_mat = rsa_mat[sc, sr]
-                            avg_dis = np.mean(comp_mat)
-                            fdd.data[sc, sr] = avg_dis
+                            fdd.data[sc, sr] = np.mean(rsa_mat[sc, sr])
 
                 full_data = fdd.data
 
@@ -235,7 +223,7 @@ def main():
                 fdd.imgFile = file.resrepext(IMAGE_FORMAT)
                 backend.makeAllPlots([fdd], overwrite=True, force=False)
                 if cfg['get_scores']:
-                    scores = debug_process(fdd, scores, result_folder, net, BLOCK_LEN, arch, size, 'AC', full_data)
+                    scores = debug_process(scores, result_folder, net, arch, size, 'AC', full_data)
 
     save_scores(result_folder, scores)
 def save_scores(result_folder, scores):
@@ -248,8 +236,7 @@ def save_scores(result_folder, scores):
         "RN18"     : [0, 1, 1],  # 25088,
         "LSTM"     : [0, 0, 0]
     }
-    fs = FigSet()
-
+    breakpoint()
     debugData = {
         'scores'       : scores,
         'c_map'        : c_map,
@@ -261,29 +248,21 @@ NORMALIZE = True
 norm = '_norm' if NORMALIZE else ''
 
 @log_invokation
-def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, full_data):
+def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     norm_rsa_mat = full_data / np.max(full_data)
     average = np.mean(norm_rsa_mat)
 
-    similarity_NS = 0
-    similarity_S = 0
-    dissimilarity_across = 0
-    similarity_across = 0
-
-    NS_similarities = []
-    S_similarities = []
-    NS_to_S_similarities = []
+    similarity_NS = similarity_S = dissimilarity_across = similarity_across = 0
+    NS_similarities = S_similarities = NS_to_S_similarities = []
     dvs = [0, 0, 0]
-
     debug = [[], [], []]
-
     for i, c in enum(CLASSES):
         for ii, cc in enum(CLASSES):
             if ii > i: continue
-            sc = slice(N_PER_CLASS * i, N_PER_CLASS * (i + 1))
-            sr = slice(N_PER_CLASS * ii, N_PER_CLASS * (ii + 1))
-
-            comp_mat = norm_rsa_mat[sc, sr]
+            comp_mat = norm_rsa_mat[
+                slice(N_PER_CLASS * i, N_PER_CLASS * (i + 1)),
+                slice(N_PER_CLASS * ii, N_PER_CLASS * (ii + 1))
+            ]
             if c == cc:
                 for cmi, row in enum(comp_mat):
                     for cmii, col in enum(row):
@@ -366,13 +345,12 @@ def debug_process(fd, scores, result_folder, net, block_len, arch, size, plot, f
     )
     fd.make = True
     fd.title_size = 20
-    file = result_folder[net + f"_dis{norm}.mfig"]
+    file = result_folder[f"{net}_dis{norm}.mfig"]
     fs = FigSet()
     fs.viss.append(fd)
     file.save(fs)
-    backend = MPLFigsBackend
     fd = file.loado()
     fd.dataFile = file
     fd.imgFile = file.resrepext(IMAGE_FORMAT)
 
-    backend.makeAllPlots([fd], overwrite=True)
+    MPLFigsBackend.makeAllPlots([fd], overwrite=True)
