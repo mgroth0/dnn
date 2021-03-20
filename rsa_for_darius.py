@@ -21,7 +21,7 @@ N_PER_CLASS = 5
 # BLOCK_LEN = 10  # DEBUG
 # if block_len != n_per_class, resampling happens
 BLOCK_LEN = N_PER_CLASS
-DEBUG_DOWNSAMPLE = slice(0, None, step=100)
+DEBUG_DOWNSAMPLE = slice(0, None, 100)
 CFG = [
     {
         'get_scores'       : True,
