@@ -300,6 +300,8 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
 
     # print(ma.corrcoef(ma.masked_invalid(A), ma.masked_invalid(B)))
 
+    breakpoint()
+
     coefs = {pat: ma.corrcoef(
         ma.masked_invalid(flat(norm_rsa_mat)),
         ma.masked_invalid(flat(elim_id_diag(_pattern(pat))))
