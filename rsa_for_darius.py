@@ -324,11 +324,17 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     # print(ma.corrcoef(ma.masked_invalid(A), ma.masked_invalid(B)))
 
     # breakpoint()
+
+    # BUGGY!
+    # try:
+    #     coefs = {pat: ma.cov(ma.masked_invalid(flat(norm_rsa_mat)),ma.masked_invalid(flat(elim_id_diag(_pattern(pat)))))[0, 1] / (np.nanstd(flat(norm_rsa_mat)) * np.nanstd(flat(elim_id_diag(_pattern(pat))))) for pat in _PATTERNS}
+    # except:
+    #     breakpoint()
+
+    import pandas as pd
+    # pandas is supposedly better at handling nans
     try:
-        coefs = {pat: ma.cov(
-            ma.masked_invalid(flat(norm_rsa_mat)),
-            ma.masked_invalid(flat(elim_id_diag(_pattern(pat))))
-        )[0, 1] / (np.nanstd(flat(norm_rsa_mat)) * np.nanstd(flat(elim_id_diag(_pattern(pat))))) for pat in _PATTERNS}
+        coefs = {pat: pd.concat([pd.DataFrame(flat(norm_rsa_mat)),pd.DataFrame(flat(elim_id_diag(_pattern(pat))))]).cov().iat[0, 1] / (np.nanstd(flat(norm_rsa_mat)) * np.nanstd(flat(elim_id_diag(_pattern(pat))))) for pat in _PATTERNS}
     except:
         breakpoint()
 
