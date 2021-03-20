@@ -165,7 +165,7 @@ def fun_wrap(i):
     return results
 
 @log_invokation
-def RSA(
+def RSA_GETS_SIMS_NOT_DESIMS(
         nam,
         rep,
         y_true,

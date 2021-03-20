@@ -7,7 +7,7 @@ from abc import abstractmethod, ABC
 from arch.model_wrapper import ModelWrapper
 import lib.nn.net_mets as net_mets
 import lib.nn.nnstate as nnstate
-from lib.nn.nn_lib import RSA
+from lib.nn.nn_lib import RSA_GETS_SIMS_NOT_DESIMS
 print('assembled_model.py: half through imports')
 from mlib.abstract_attributes import Abstract
 from mlib.boot import log
@@ -126,9 +126,9 @@ class AssembledModel(ModelWrapper, ABC):
         inter_shape = inter_activations.shape
         inter_activations = np.reshape(inter_activations, (inter_shape[0], -1))
 
-        RSA('Output', y_pred, y_true, ei, layer_name='Output', layer_i='-1')
-        RSA('Inter', inter_activations, y_true, ei, layer_name=inter_lay_name, layer_i=self.INTER_LAY)
-        RSA('Raw', raw_images, y_true, ei)
+        RSA_GETS_SIMS_NOT_DESIMS('Output', y_pred, y_true, ei, layer_name='Output', layer_i='-1')
+        RSA_GETS_SIMS_NOT_DESIMS('Inter', inter_activations, y_true, ei, layer_name=inter_lay_name, layer_i=self.INTER_LAY)
+        RSA_GETS_SIMS_NOT_DESIMS('Raw', raw_images, y_true, ei)
 
         for met in net_mets.METS_TO_USE():
             met(y_true, y_pred)

@@ -1,17 +1,17 @@
 from copy import deepcopy
 
 import numpy as np
-import scipy
 
 from lib.misc import imutil
-from lib.nn.nn_lib import RSA
+from lib.nn.nn_lib import RSA_GETS_SIMS_NOT_DESIMS
 from mlib.boot import log
-from mlib.boot.lang import enum, islinux, listkeys
-from mlib.boot.stream import arr, concat, flatten, isnan, listmap, randperm
+from mlib.boot.lang import enum, islinux, listkeys, listvalues
+from mlib.boot.stream import arr, concat, flatten, isnan, itr, listmap, randperm
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.fig.PlotData import PlotData
 from mlib.file import File, Folder, mkdir
 from mlib.JsonSerializable import FigSet
+from mlib.stats import ttests
 from mlib.term import log_invokation
 
 N_PER_CLASS = 5
@@ -105,21 +105,14 @@ def main():
     if not SHOBHITA:
         imgActivations = DATA_FOLDER.resolve('imgActivationsForRSA')
         activations = {}
-
         for net_folder in imgActivations.folders:
-            log(f'net_folder:{net_folder}')
             modelname = net_folder.name
             if modelname not in activations:
                 activations[modelname] = {}
-            net_folder.delete_icon_file_if_exists()
-            log(f'net_folder:{net_folder}: getting activations')
-            the_files = net_folder.files
-            for activations_mat in the_files.filtered(
+            for activations_mat in net_folder.files.filtered(
                     lambda x: x.ext == 'mat'
             ):
-                log(f'net_folder:{net_folder}: {activations_mat.name_pre_ext}')
-                classname = activations_mat.name_pre_ext
-                activations[modelname][classname] = activations_mat
+                activations[modelname][activations_mat.name_pre_ext] = activations_mat
     else:
         folder = DATA_FOLDER['rsa_activations_shobhita2']
         files = {f.name.split('Cat')[1].split('_')[0]: f for f in folder.files}
@@ -128,7 +121,6 @@ def main():
         }
 
     log(f'finished net_folder loop')
-
     result_folder = mkdir('_figs/rsa')
     result_folder.clear()
     sqn_act_len = None
@@ -164,9 +156,7 @@ def main():
                         only_one[1] = False
                     return a[arch_rand_perm][0:sqn_act_len]
 
-                log('shortening')
                 acts = listmap(shorten, acts)
-                log('shortened!')
 
                 if acts_for_rsa is None:
                     acts_for_rsa = acts
@@ -177,7 +167,7 @@ def main():
                         axis=0
                     )
 
-            fd = RSA(  # gets SIMILARITIES, not DiSSIMILARTIES due to fix()
+            fd = RSA_GETS_SIMS_NOT_DESIMS(
                 f'L2 Norm of {LAYERS[arch]} from {net}',
                 acts_for_rsa,
                 None,
@@ -214,8 +204,8 @@ def main():
                 extra = ''
                 if cfg['average_per_block']: extra = '_avg'
                 if cfg['log_by_mean']: extra += '_log'
-                fdd.title = fdd.title + f'({extra})'
-                file = result_folder[net + extra + ".mfig"]
+                fdd.title = f'{fdd.title}({extra})'
+                file = result_folder[f"{net}{extra}.mfig"]
                 file.save(fdd)
                 backend = MPLFigsBackend
                 fdd = file.loado()
@@ -236,13 +226,7 @@ def save_scores(result_folder, scores):
         "RN18"     : [0, 1, 1],  # 25088,
         "LSTM"     : [0, 0, 0]
     }
-    breakpoint()
-    debugData = {
-        'scores'       : scores,
-        'c_map'        : c_map,
-        'result_folder': result_folder
-    }
-    File(f'temp{norm}.p').save(debugData)
+    File(f'temp{norm}.p').save(locals())
 
 NORMALIZE = True
 norm = '_norm' if NORMALIZE else ''
@@ -251,11 +235,7 @@ norm = '_norm' if NORMALIZE else ''
 def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     norm_rsa_mat = full_data / np.max(full_data)
     average = np.mean(norm_rsa_mat)
-
-    similarity_NS = similarity_S = dissimilarity_across = similarity_across = 0
-    NS_similarities = S_similarities = NS_to_S_similarities = []
-    dvs = [0, 0, 0]
-    debug = [[], [], []]
+    simsets = {'AC': [], 'S': [], 'NS': []}
     for i, c in enum(CLASSES):
         for ii, cc in enum(CLASSES):
             if ii > i: continue
@@ -264,83 +244,36 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
                 slice(N_PER_CLASS * ii, N_PER_CLASS * (ii + 1))
             ]
             if c == cc:
-                for cmi, row in enum(comp_mat):
-                    for cmii, col in enum(row):
-                        if cmi <= cmii:
-                            comp_mat[cmi, cmii] = np.nan
-            avg_dis = np.nanmean(comp_mat)
+                for cmi in itr(comp_mat):
+                    comp_mat[cmi, slice(cmi, None)] = np.nan
             all_dis = arr([num for num in flatten(comp_mat).tolist() if not isnan(num)])
 
             if NORMALIZE:
-                avg_dis = avg_dis / average
                 all_dis = all_dis / average
 
             if c.startswith('NS') and cc.startswith('NS'):
-                similarity_NS += avg_dis
-                dvs[0] += 1
-                debug[0].append((c, cc))
-                NS_similarities += flatten(all_dis).tolist()
+                si = 'NS'
             elif c.startswith('S') and cc.startswith('S'):
-                similarity_S += avg_dis
-                dvs[1] += 1
-                debug[1].append((c, cc))
-                S_similarities += flatten(all_dis).tolist()
+                si = 'S'
             else:
-                similarity_across += avg_dis
-                dvs[2] += 1
-                debug[2].append((c, cc))
-                NS_to_S_similarities += flatten(all_dis).tolist()
-                if NORMALIZE:
-                    avg_dis = -avg_dis + 2
-                else:
-                    avg_dis = 1 - avg_dis
-                dissimilarity_across += avg_dis
-
-    similarity_NS = similarity_NS / dvs[0]
-    similarity_S = similarity_S / dvs[1]
-    dissimilarity_across = dissimilarity_across / dvs[2]
-    similarity_across = similarity_across / dvs[2]
-
-    NS_similarities = arr(NS_similarities)
-    S_similarities = arr(S_similarities)
-    NS_to_S_similarities = arr(NS_to_S_similarities)
-
-    p_ns_s = scipy.stats.ttest_ind(NS_similarities, S_similarities, alternative='two-sided')[1]
-    p_across_s = scipy.stats.ttest_ind(NS_to_S_similarities, S_similarities, alternative='less')[1]
-    p_across_ns = scipy.stats.ttest_ind(NS_to_S_similarities, NS_similarities, alternative='less')[1]
-
-    print(f'{p_ns_s=}')
-    print(f'{p_across_s=}')
-    print(f'{p_across_ns=}')
-
-    result_folder[f"{net}_stats{norm}.json"].save({
-        'p_ns_s'     : p_ns_s,
-        'p_across_s' : p_across_s,
-        'p_across_ns': p_across_ns
-    })
-
-    scores[arch][size] = {'AC': dissimilarity_across, 'S': similarity_S, 'NS': similarity_NS}[plot]
-
+                si = 'AC'
+            simsets[si] += flatten(all_dis).tolist()
+    simsets = {k: arr(v) for k, v in simsets.items()}
+    result_folder[f"{net}_stats{norm}.json"].save(ttests(simsets))
+    means = {k: np.nanmean(v) for k, v in simsets.items()}
+    scores[arch][size] = means[plot]
     VIOLIN = True
-
-    y = [similarity_NS, similarity_S, similarity_across]
-    if VIOLIN:
-        y = [NS_similarities, S_similarities, NS_to_S_similarities]
-
+    y = listvalues(simsets) if VIOLIN else listvalues(means)
     fd = PlotData(
         y=y,
-        x=[
-            'similarity_NS',
-            'similarity_S',
-            'similarity_across'
-        ],
+        x=listkeys(simsets),
         item_type='violin' if VIOLIN else 'bar',
         item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
         ylim=[0, 20],
-        title=f'{net}: Dissimilarities of {LAYERS[arch]}',
-        err=() if VIOLIN else [np.std(NS_similarities), np.std(S_similarities), np.std(NS_to_S_similarities)],
+        title=f'{net}: Similarity scores of {LAYERS[arch]}',
+        err=() if VIOLIN else [np.std(v) for v in simsets.values()],
         xlabel='Class Comparison Groups',
-        ylabel='Dissimilarity Score',
+        ylabel='Similarity Score',
         bar_sideways_labels=False
     )
     fd.make = True
@@ -352,5 +285,4 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     fd = file.loado()
     fd.dataFile = file
     fd.imgFile = file.resrepext(IMAGE_FORMAT)
-
     MPLFigsBackend.makeAllPlots([fd], overwrite=True)
