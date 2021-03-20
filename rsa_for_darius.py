@@ -334,7 +334,7 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     import pandas as pd
     # pandas is supposedly better at handling nans
     try:
-        coefs = {pat: pd.concat([pd.DataFrame(flat(norm_rsa_mat)),pd.DataFrame(flat(elim_id_diag(_pattern(pat))))]).cov().iat[0, 1] / (np.nanstd(flat(norm_rsa_mat)) * np.nanstd(flat(elim_id_diag(_pattern(pat))))) for pat in _PATTERNS}
+        coefs = {pat: pd.concat([pd.DataFrame(flat(norm_rsa_mat)),pd.DataFrame(flat(elim_id_diag(_pattern(pat))))],axis=1).cov().iat[0, 1] / (np.nanstd(flat(norm_rsa_mat)) * np.nanstd(flat(elim_id_diag(_pattern(pat))))) for pat in _PATTERNS}
     except:
         breakpoint()
 
