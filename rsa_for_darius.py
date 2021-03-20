@@ -1,5 +1,6 @@
 from copy import deepcopy
 
+import json
 import numpy as np
 from functools import lru_cache
 
@@ -289,7 +290,7 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
 
     # result_folder[f"{net}_stats{norm}.json"].save()
     td = TableData(
-        data=[[k, v] for k, v in listitems(ttests(simsets))],
+        data=[[k, json.dumps(v, indent=2)] for k, v in listitems(ttests(simsets))],
         # y=y,
         # x=listkeys(simsets),
         # item_type='violin' if VIOLIN else 'bar',
