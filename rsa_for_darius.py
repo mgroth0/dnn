@@ -300,18 +300,20 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
 
     # print(ma.corrcoef(ma.masked_invalid(A), ma.masked_invalid(B)))
 
-    breakpoint()
+    # breakpoint()
 
-    coefs = {pat: ma.corrcoef(
+    coefs = {pat: ma.cov(
         ma.masked_invalid(flat(norm_rsa_mat)),
         ma.masked_invalid(flat(elim_id_diag(_pattern(pat))))
     )[0, 1] / (np.nanstd(flat(norm_rsa_mat)) * np.nanstd(flat(elim_id_diag(_pattern(pat))))) for pat in _PATTERNS}
 
-    breakpoint()
+    # breakpoint()
 
     # result_folder[f"{net}_stats{norm}.json"].save()
     td = TableData(
-        data=[[k, json.dumps(v, indent=2)] for k, v in listitems(ttests(simsets))],
+        data=[[k, json.dumps(v, indent=2)] for k, v in listitems(ttests(simsets))] + [
+            "Pattern Correlation Coefficients", json.dumps(coefs, indent=2)
+        ],
         title=f'{net}: {LAYERS[arch]}, pvalues',
     )
     td.make = True
