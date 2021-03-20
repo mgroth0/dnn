@@ -315,10 +315,10 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
 @lru_cache()
 def _pattern(name, n_per_class=N_PER_CLASS):
     length = n_per_class * 10
-    half = length / 2
+    half = int(length / 2)
     mat = np.zeros((length, length))
     if name == 'sym':
-        mat[0:half, 0:half] = 1
+        mat[:half, :half] = 1
         mat[half:, half:] = 1
     elif name == 'band':
         mat[:n_per_class, :n_per_class] = 1
