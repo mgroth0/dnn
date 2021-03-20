@@ -8,7 +8,7 @@ from lib.nn.nn_lib import RSA_GETS_SIMS_NOT_DESIMS
 from mlib.boot import log
 from mlib.boot.lang import enum, islinux, listkeys, listvalues
 from mlib.boot.mlog import err
-from mlib.boot.stream import arr, concat, flatten, isnan, itr, listmap, randperm
+from mlib.boot.stream import arr, concat, flatten, isnan, itr, listitems, listmap, randperm
 from mlib.fig.makefigslib import MPLFigsBackend
 from mlib.fig.PlotData import PlotData
 from mlib.fig.TableData import TableData
@@ -287,10 +287,9 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
             simsets[si] += flatten(all_dis).tolist()
     simsets = {k: arr(v) for k, v in simsets.items()}
 
-
     # result_folder[f"{net}_stats{norm}.json"].save()
     td = TableData(
-        data=[[k, v] for k, v in  ttests(simsets)],
+        data=[[k, v] for k, v in listitems(ttests(simsets))],
         # y=y,
         # x=listkeys(simsets),
         # item_type='violin' if VIOLIN else 'bar',
@@ -331,7 +330,6 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     )
     fd.make = True
     fd.title_size = 20
-
 
     file = result_folder[f"{net}_dis{norm}.mfig"]
     fs = FigSet()
