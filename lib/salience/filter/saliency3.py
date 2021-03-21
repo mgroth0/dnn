@@ -155,7 +155,7 @@ def sumNormalizedFeatures(features):
     commonSize = int(commonWidth), int(commonHeight)
 
     #DEBUG
-    commonSize = start_size
+    # commonSize = start_size
 
 
     logger.info("Size of conspicuity map: %s", commonSize)
