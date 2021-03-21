@@ -6,6 +6,8 @@ import math
 import numpy
 from scipy.ndimage.filters import maximum_filter
 
+from lib.misc.imutil import resampleim
+
 logger = logging.getLogger(__name__)
 
 # levels = 3
@@ -100,7 +102,7 @@ def gaborConspicuity(image, steps, shape):
     #  numpy.uint8
     # gaborConspicuity = numpy.zeros(shape)
     # gaborConspicuity = numpy.zeros(tuple(reversed(start_size)))
-    gaborConspicuity = numpy.zeros((int(start_size[1]/8),int(start_size[0]/8))) #tatome
+    gaborConspicuity = numpy.zeros((int(start_size[1] / 8), int(start_size[0] / 8)))  # tatome
     for step in range(steps):
         theta = step * (math.pi / steps)
         gaborFilter = makeGaborFilter(dims=(10, 10), lambd=2.5, theta=theta, psi=math.pi / 2, sigma=2.5, gamma=.5)
@@ -112,7 +114,6 @@ def gaborConspicuity(image, steps, shape):
         except:
             breakpoint()
         # numpy.add(gaborConspicuity, summedFeatures, out=gaborConspicuity, casting="unsafe")
-
 
     # https://gist.github.com/tatome/d491c8b1ec5ed8d4744c
     #     https://github.com/shuuchen/saliency/blob/0b12125ca49541e8008707f1c4b35303b63d58ef/saliency.py
@@ -142,6 +143,9 @@ def byConspicuity(image):
     fs = features(image=image, channel=by)
     return sumNormalizedFeatures(fs)
 
+def _test_common_size(size):
+    return (size / 2**(levels / 2 - 1)).is_integer()
+
 # (640, 480)
 def sumNormalizedFeatures(features):
     """
@@ -157,13 +161,13 @@ def sumNormalizedFeatures(features):
     """
     # myStartSize = (start_size[0]*(levels-1),start_size[1]*(levels-1),)
     # myStartSize = (start_size[0]*(levels),start_size[1]*(levels),)
-    myStartSize = start_size #tatome
+    myStartSize = start_size  # tatome
     commonWidth = myStartSize[0] / 2**(levels / 2 - 1)
     commonHeight = myStartSize[1] / 2**(levels / 2 - 1)
     breakpoint()
     commonSize = int(commonWidth), int(commonHeight)
 
-    #DEBUG
+    # DEBUG
     # commonSize = start_size
     logger.info("Size of conspicuity map: %s", commonSize)
     consp = N(cv2.resize(features[0][1], commonSize))
@@ -244,7 +248,7 @@ def markMaxima(saliency):
 im = None
 start_size = None
 def main(args):
-    global im,start_size
+    global im, start_size
     if args.fileList is None and args.inputFile is None:
         logger.error("Need either --fileList or --inputFile cmd line arguments.")
         sys.exit()
@@ -260,6 +264,10 @@ def main(args):
             filenames = [args.inputFile]
         for filename in filenames:
             im = cv2.imread(filename, cv2.COLOR_BGR2RGB)  # assume BGR, convert to RGB---more intuitive code.
+            while (not _test_common_size(im.shape[0]) or _test_common_size(im.shape[1])):
+                print(f'image size {im.shape[0]},{im.shape[1]} does not divide evenly. Downsampling...')
+                im = resampleim(im, im.shape[0] - 1, im.shape[1] - 1, nchan=3)
+            print(f'final image size: {im.shape[0]},{im.shape[1]}')
             start_size = (im.shape[1], im.shape[0])
             if im is None:
                 logger.fatal("Could not load file \"%s.\"", filename)
