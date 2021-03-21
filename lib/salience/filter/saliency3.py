@@ -99,8 +99,8 @@ def gaborConspicuity(image, steps, shape):
     """
     #  numpy.uint8
     # gaborConspicuity = numpy.zeros(shape)
-    gaborConspicuity = numpy.zeros(tuple(reversed(start_size)))
-    # gaborConspicuity = numpy.zeros((int(start_size[1]/8),int(start_size[0]/8))) #tatome
+    # gaborConspicuity = numpy.zeros(tuple(reversed(start_size)))
+    gaborConspicuity = numpy.zeros((int(start_size[1]/8),int(start_size[0]/8))) #tatome
     for step in range(steps):
         theta = step * (math.pi / steps)
         gaborFilter = makeGaborFilter(dims=(10, 10), lambd=2.5, theta=theta, psi=math.pi / 2, sigma=2.5, gamma=.5)
@@ -112,6 +112,12 @@ def gaborConspicuity(image, steps, shape):
         except:
             breakpoint()
         # numpy.add(gaborConspicuity, summedFeatures, out=gaborConspicuity, casting="unsafe")
+
+
+    # https://gist.github.com/tatome/d491c8b1ec5ed8d4744c
+    #     https://github.com/shuuchen/saliency/blob/0b12125ca49541e8008707f1c4b35303b63d58ef/saliency.py
+
+
     return gaborConspicuity
 
 def rgConspicuity(image):
@@ -150,11 +156,11 @@ def sumNormalizedFeatures(features):
             a combined feature map.
     """
     # myStartSize = (start_size[0]*(levels-1),start_size[1]*(levels-1),)
-    myStartSize = (start_size[0]*(levels),start_size[1]*(levels),)
-    # myStartSize = start_size #tatome
+    # myStartSize = (start_size[0]*(levels),start_size[1]*(levels),)
+    myStartSize = start_size #tatome
     commonWidth = myStartSize[0] / 2**(levels / 2 - 1)
     commonHeight = myStartSize[1] / 2**(levels / 2 - 1)
-    # breakpoint()
+    breakpoint()
     commonSize = int(commonWidth), int(commonHeight)
 
     #DEBUG
