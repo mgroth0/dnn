@@ -489,7 +489,7 @@ class PreDataset:
 # def __getitem__(self, idx):
 #     return self.xy[idx]
 
-
+@log_invokation()
 def gen_main(FLAGS, _IMAGES_FOLDER, HUMAN_IMAGE_FOLDER):
     log('in gen!')
     _IMAGES_FOLDER.clearIfExists()
