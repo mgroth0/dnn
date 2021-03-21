@@ -213,7 +213,7 @@ configs:
     TRANSFER_LEARNING: False
     PRED_SIZE: 2
 
-
+    INTERACT: True
 
     BATCH_SIZE: 20
 #    EPOCHS: 1 #280 sec = 4min, 40sec
