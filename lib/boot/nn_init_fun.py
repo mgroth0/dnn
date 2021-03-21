@@ -32,8 +32,10 @@ def setupTensorFlow(FLAGS=None) -> ModuleType:
 
     # DEBUG
 
+
+    #  Turn these off for OpenMind/Slurm and on for Polestar with no slurm????????
     # os.environ["CUDA_VISIBLE_DEVICES"] = '2'
-    os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+    # os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = TF_LOG_CPP  # BEFORE importing tf... now I think it worked!
 
