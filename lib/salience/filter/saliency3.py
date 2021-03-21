@@ -156,13 +156,14 @@ def sumNormalizedFeatures(features):
 
     #DEBUG
     # commonSize = start_size
-
-
-    logger.info("Size of conspicuity map: %s", commonSize)
-    consp = N(cv2.resize(features[0][1], commonSize))
-    for f in features[1:]:
-        resized = N(cv2.resize(f[1], commonSize))
-        consp = cv2.add(consp, resized)
+    try:
+        logger.info("Size of conspicuity map: %s", commonSize)
+        consp = N(cv2.resize(features[0][1], commonSize))
+        for f in features[1:]:
+            resized = N(cv2.resize(f[1], commonSize))
+            consp = cv2.add(consp, resized)
+    except:
+        breakpoint()
     return consp
 
 def N(image):
