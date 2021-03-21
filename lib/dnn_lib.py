@@ -66,7 +66,7 @@ def dnn(
 
 
 
-
+            assert not cfg.GUI
             muscle.run_all_jobs_main(
                 jobs,
                 serial=cfg.RUN_EXPS_IN_SERIAL,
