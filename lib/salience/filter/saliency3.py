@@ -108,7 +108,7 @@ def gaborConspicuity(image, steps, shape):
         gaborFilter = makeGaborFilter(dims=(10, 10), lambd=2.5, theta=theta, psi=math.pi / 2, sigma=2.5, gamma=.5)
         gaborFeatures = features(image=intensity(im), channel=gaborFilter)
         summedFeatures = sumNormalizedFeatures(gaborFeatures)
-        # breakpoint()
+        breakpoint()
         try:
             gaborConspicuity += N(summedFeatures)
         except:
