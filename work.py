@@ -32,6 +32,7 @@ def main(FLAGS):
         result_folder = nnet_main(FLAGS)
     result_folder.zip_in_place()
     result_folder.delete()
+    nn_init_fun.NRC_IS_FINISHED()
 
 
 if __name__ == '__main__':
@@ -55,4 +56,4 @@ if __name__ == '__main__':
         REGEN_NTRAIN=int,
         PRED_SIZE=int
     )
-    nn_init_fun.NRC_IS_FINISHED()
+

@@ -85,8 +85,9 @@ def runWithMultiProcess(main_nn_fun):
     #
     # BATCH_SIZE = None  # * len(
     # # BATCH_SIZE = BATCH_SIZE_PER_REPLICA  # * len(tf.config.list_physical_devices('GPU')) if MULTI_GPU else BATCH_SIZE_PER_REPLICA
-
+class NRC_IS_FINISHED_Exception(Exception): pass
 def NRC_IS_FINISHED():
+    raise NRC_IS_FINISHED_Exception()
     # when imported, loggy upgrades this function to use log
     pub_print_warn()
     print('NRC IS FINISHED')
