@@ -34,10 +34,10 @@ N_PER_CLASS, DEBUG_DOWNSAMPLE = [
 
     # (10, slice(None, None, 50))  # 110 sec
 
-
+    (500, slice(None, None, 100))
 
     # max, final
-    (500, slice(None, None, None))
+    # (500, slice(None, None, None))  # froze? said "Starting CPU Pool Test" at 13 sec for ~30 min
 
 
 ][0]
