@@ -367,18 +367,21 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     scores[arch][size] = means[plot]
     VIOLIN = True
     y = listvalues(simsets) if VIOLIN else listvalues(means)
-    fd = PlotData(
-        y=y,
-        x=listkeys(simsets),
-        item_type='violin' if VIOLIN else 'bar',
-        item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
-        ylim=[0, 20],
-        title=f'{net}: Similarity scores of {LAYERS[arch]}',
-        err=() if VIOLIN else [np.std(v) for v in simsets.values()],
-        xlabel='Class Comparison Groups',
-        ylabel='Similarity Score',
-        bar_sideways_labels=False
-    )
+    try:
+        fd = PlotData(
+            y=y,
+            x=listkeys(simsets),
+            item_type='violin' if VIOLIN else 'bar',
+            item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
+            ylim=[0, 20],
+            title=f'{net}: Similarity scores of {LAYERS[arch]}',
+            err=() if VIOLIN else [np.std(v) for v in simsets.values()],
+            xlabel='Class Comparison Groups',
+            ylabel='Similarity Score',
+            bar_sideways_labels=False
+        )
+    except: # ValueError: zero-size array
+        breakpoint()
     fd.make = True
     fd.title_size = 20
 
