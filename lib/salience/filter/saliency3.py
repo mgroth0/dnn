@@ -107,7 +107,10 @@ def gaborConspicuity(image, steps, shape):
         gaborFeatures = features(image=intensity(im), channel=gaborFilter)
         summedFeatures = sumNormalizedFeatures(gaborFeatures)
         # breakpoint()
-        gaborConspicuity += N(summedFeatures)
+        try:
+            gaborConspicuity += N(summedFeatures)
+        except:
+            breakpoint()
         # numpy.add(gaborConspicuity, summedFeatures, out=gaborConspicuity, casting="unsafe")
     return gaborConspicuity
 
@@ -156,14 +159,11 @@ def sumNormalizedFeatures(features):
 
     #DEBUG
     # commonSize = start_size
-    try:
-        logger.info("Size of conspicuity map: %s", commonSize)
-        consp = N(cv2.resize(features[0][1], commonSize))
-        for f in features[1:]:
-            resized = N(cv2.resize(f[1], commonSize))
-            consp = cv2.add(consp, resized)
-    except:
-        breakpoint()
+    logger.info("Size of conspicuity map: %s", commonSize)
+    consp = N(cv2.resize(features[0][1], commonSize))
+    for f in features[1:]:
+        resized = N(cv2.resize(f[1], commonSize))
+        consp = cv2.add(consp, resized)
     return consp
 
 def N(image):
