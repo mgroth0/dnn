@@ -82,8 +82,8 @@ class DNN_Job(Job):
     if ismac():
         LOCAL_PY = f'{expanduser("~")}/miniconda3/envs/dnn/bin/python'
     else:
-        os.environ["CONDA_HOME"] = '/om2/user/mjgroth/miniconda3/envs/dnn39/lib/python'
-        LOCAL_PY = f'{os.environ["CONDA_HOME"]}/envs/dnn/bin/python'
+        os.environ["CONDA_HOME"] = '/om2/user/mjgroth/miniconda3'
+        LOCAL_PY = f'{os.environ["CONDA_HOME"]}/envs/dnn39/bin/python'
     LOCAL_SCRIPT = f'work.py'
 
     def __str__(self):
