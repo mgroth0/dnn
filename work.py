@@ -1,6 +1,5 @@
 import json
 
-from lib.boot import nn_init_fun
 from mlib.boot.mlog import setTic, setup_logging
 from mlib.input import margparse
 
