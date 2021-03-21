@@ -3,6 +3,7 @@ from itertools import chain
 from lib.boot import nn_init_fun
 from mlib.boot.lang import enum
 from mlib.str import utf_decode
+from rsa_for_darius import DATA_FOLDER
 print('gen_preproc_ims.py: top')
 import glob
 import random
@@ -518,7 +519,7 @@ def gen_main(FLAGS, _IMAGES_FOLDER, HUMAN_IMAGE_FOLDER):
 
     if FLAGS.salience:
         log('in gen salience!')
-        root = mlib.file.Folder('/matt/data/ImageNet/output_tf')
+        root = DATA_FOLDER.resolve('ImageNet/output_tf')
         filenames = root.glob('train*').map(lambda x: x.abspath).tolist()  # validation
         import tensorflow as tf
         ds = tf.data.TFRecordDataset(filenames)

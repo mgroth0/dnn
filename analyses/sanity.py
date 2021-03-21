@@ -19,6 +19,7 @@ from mlib.boot.stream import __, arr, concat, ints, isnan, listitems, listmap, m
 from mlib.fig.text_table_wrap import TextTableWrapper
 from mlib.file import File, Folder
 from mlib.web.html import DataCell, Div, H3, HTML_Pre, Table, TableRow
+from rsa_for_darius import DATA_FOLDER
 class SanitySet(Enum):
     Set100 = auto()
     # Set50000 = auto()
@@ -74,7 +75,7 @@ class SanityAnalysis(PostBuildAnalysis):
                 # , r['ml2tf'][pp_name] =
                 if SANITY_SET != SanitySet.Set100:
                     import tensorflow as tf
-                    root = Folder('/matt/data/ImageNet/output')
+                    DATA_FOLDER.resolve('ImageNet/output')
                     # root = Folder('/matt/data/ImageNet/output_tf')
                     filenames = root.glob('validation*').map(lambda f: f.abspath).tolist()
                     r[f'tf']['y_true'] = [None] * SANITY_SET.num

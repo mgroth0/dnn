@@ -4,6 +4,7 @@ from arch.proko_inc import NoBN_INC_PROKO
 from mlib.boot.mlog import err
 from mlib.boot.stream import listitems
 from mlib.file import Folder
+from rsa_for_darius import DATA_FOLDER
 print('nn_main.py: top')
 print('nn_main.py: about to do arch imports')
 from arch import ALEX, GNET, INC, SCRATCH, AssembledModel
@@ -45,9 +46,7 @@ def nnet_main(FLAGS):
         class_map = {'dog': 0, 'cat': 1}
 
         # dogcatfolder = '/matt/data/tf_bug1/' #small set with hundreds I generated from imagenet
-        dogcatfolder = '/matt/data/tf_bug1/dogscats'  # thousands, downloaded from kaggle
-
-        dogcatfolder = Folder(dogcatfolder)
+        dogcatfolder = DATA_FOLDER.resolve('tf_bug1/dogscats')  # thousands, downloaded from kaggle
         ntrain_folder = dogcatfolder['ntrain']
         dummy_folder = dogcatfolder['dummy'].mkdir()
         ntrain_folder.deleteIfExists().mkdir()
