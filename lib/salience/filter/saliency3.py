@@ -4,9 +4,8 @@ import cv2
 import logging
 import math
 import numpy
+import numpy as np
 from scipy.ndimage.filters import maximum_filter
-
-from lib.misc.imutil import resampleim
 
 logger = logging.getLogger(__name__)
 
@@ -108,9 +107,11 @@ def gaborConspicuity(image, steps, shape):
         gaborFilter = makeGaborFilter(dims=(10, 10), lambd=2.5, theta=theta, psi=math.pi / 2, sigma=2.5, gamma=.5)
         gaborFeatures = features(image=intensity(im), channel=gaborFilter)
         summedFeatures = sumNormalizedFeatures(gaborFeatures)
-        breakpoint()
+        # breakpoint()
         try:
-            gaborConspicuity += N(summedFeatures)
+            # gaborConspicuity += N(summedFeatures)
+            gaborConspicuity += numpy.broadcast_to(N(summedFeatures), gaborConspicuity.shape)  # HACK
+            # np.ndarray
         except:
             breakpoint()
         # numpy.add(gaborConspicuity, summedFeatures, out=gaborConspicuity, casting="unsafe")
@@ -164,7 +165,7 @@ def sumNormalizedFeatures(features):
     myStartSize = start_size  # tatome
     commonWidth = myStartSize[0] / 2**(levels / 2 - 1)
     commonHeight = myStartSize[1] / 2**(levels / 2 - 1)
-    breakpoint()
+    # breakpoint()
     commonSize = int(commonWidth), int(commonHeight)
 
     # DEBUG
