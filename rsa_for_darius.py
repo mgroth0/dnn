@@ -35,6 +35,8 @@ N_PER_CLASS, DEBUG_DOWNSAMPLE = [
     # (10, slice(None, None, 50))  # 110 sec
 
     (500, slice(None, None, 100))
+    # ValueError: zero-size array for violin plot? Try smaller sizes...
+
 
     # max, final
     # (500, slice(None, None, None))  # froze? said "Starting CPU Pool Test" at 13 sec for ~30 min
@@ -367,21 +369,19 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     scores[arch][size] = means[plot]
     VIOLIN = True
     y = listvalues(simsets) if VIOLIN else listvalues(means)
-    try:
-        fd = PlotData(
-            y=y,
-            x=listkeys(simsets),
-            item_type='violin' if VIOLIN else 'bar',
-            item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
-            ylim=[0, 20],
-            title=f'{net}: Similarity scores of {LAYERS[arch]}',
-            err=() if VIOLIN else [np.std(v) for v in simsets.values()],
-            xlabel='Class Comparison Groups',
-            ylabel='Similarity Score',
-            bar_sideways_labels=False
-        )
-    except: # ValueError: zero-size array
-        breakpoint()
+
+    fd = PlotData(
+        y=y,
+        x=listkeys(simsets),
+        item_type='violin' if VIOLIN else 'bar',
+        item_color=[[0, 0, 1], [0, 0, 1], [0, 0, 1]],
+        ylim=[0, 20],
+        title=f'{net}: Similarity scores of {LAYERS[arch]}',
+        err=() if VIOLIN else [np.std(v) for v in simsets.values()],
+        xlabel='Class Comparison Groups',
+        ylabel='Similarity Score',
+        bar_sideways_labels=False
+    )
     fd.make = True
     fd.title_size = 20
 
@@ -392,7 +392,10 @@ def debug_process(scores, result_folder, net, arch, size, plot, full_data):
     fd = file.loado()
     fd.dataFile = file
     fd.imgFile = file.resrepext(IMAGE_FORMAT)
-    MPLFigsBackend.makeAllPlots([fd], overwrite=True)
+    try:
+        MPLFigsBackend.makeAllPlots([fd], overwrite=True)
+    except:  # ValueError: zero-size array
+        breakpoint()
 
 
 @lru_cache()
