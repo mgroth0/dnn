@@ -1,26 +1,46 @@
+# coding=utf-8
+#
+# !/usr/bin/python
+#
+# Copyright 2013 Johannes Bauer, Universitaet Hamburg
+#
+# This file is free software.  Do with it whatever you like.
+# It comes with no warranty, explicit or implicit, whatsoever.
+#
+# This python script implements an early version of Itti and Koch's
+# saliency model.  Specifically, it was written according to the
+# information contained in the following paper:
+#
+#   Laurent Itti, Christof Koch, and Ernst Niebur. A model of
+#   Saliency-Based visual attention for rapid scene analysis. IEEE
+#   Transactions on Pattern Analysis and Machine Intelligence,
+#   20(11):1254–1259, 1998.
+#
+# If you find it useful or if you have any questions, do not
+# hesitate to contact me at
+#   bauer at informatik dot uni dash hamburg dot de.
+#
+# For information on how to use this script, type
+#   > python saliency.py -h
+# on the command line.
+#
+
 import os.path
 
-import cv2
 import logging
 import math
+# import cv2
 import numpy
-import numpy as np
+import sys
 from scipy.ndimage.filters import maximum_filter
 
-from mlib.boot.mlog import err
-
-
-err('can not use this code! just look at the original by tatome here https://gist.github.com/tatome/d491c8b1ec5ed8d4744c\n\nOn line43, start_size is set to (60,480). It looks like a parameter, btu it actually functions as a constant because the parameter is never set and always assuem the default value. Then on line 56, the comment says that this value MUST be divisbable by 2^levels. Well levels is 9 and is also a fake parameter that also functions a constant. 2^9 is 512, and neither 640 nor 480 are divisible by 512. Therefore looks like I need to start understand this algortihm from scratch or find a better one with cleaner code.')
-
+if sys.version_info[0] != 2:
+    raise Exception("This script was written for Python version 2.  You're running Python %s." % sys.version)
 
 logger = logging.getLogger(__name__)
 
-# levels = 3
-levels = 9  # DEFAULT
-# levels=8
 
-# (640, 480)
-def features(image, channel):
+def features(image, channel, levels=9, start_size=(640, 480), ):
     """
         Extracts features by down-scaling the image levels times,
         transforms the image by applying the function channel to
@@ -41,12 +61,12 @@ def features(image, channel):
         image = cv2.resize(image, dsize=start_size)
 
     scales = [image]
-    for l in range(levels - 1):
+    for l in xrange(levels - 1):
         logger.debug("scaling at level %d", l)
         scales.append(cv2.pyrDown(scales[-1]))
 
     features = []
-    for i in range(1, levels - 5):
+    for i in xrange(1, levels - 5):
         big = scales[i]
         for j in (3, 4):
             logger.debug("computing features for levels %d and %d", i, i + j)
@@ -100,32 +120,17 @@ def intensityConspicuity(image):
     fs = features(image=im, channel=intensity)
     return sumNormalizedFeatures(fs)
 
-def gaborConspicuity(image, steps, shape):
+def gaborConspicuity(image, steps):
     """
         Creates the conspicuity map for the channel `orientations'.
     """
-    #  numpy.uint8
-    # gaborConspicuity = numpy.zeros(shape)
-    # gaborConspicuity = numpy.zeros(tuple(reversed(start_size)))
-    gaborConspicuity = numpy.zeros((int(start_size[1] / 8), int(start_size[0] / 8)))  # tatome
+    gaborConspicuity = numpy.zeros((60, 80), numpy.uint8)
     for step in range(steps):
         theta = step * (math.pi / steps)
         gaborFilter = makeGaborFilter(dims=(10, 10), lambd=2.5, theta=theta, psi=math.pi / 2, sigma=2.5, gamma=.5)
         gaborFeatures = features(image=intensity(im), channel=gaborFilter)
         summedFeatures = sumNormalizedFeatures(gaborFeatures)
-        # breakpoint()
-        try:
-            # gaborConspicuity += N(summedFeatures)
-            gaborConspicuity += numpy.broadcast_to(N(summedFeatures), gaborConspicuity.shape)  # HACK
-            # np.ndarray
-        except:
-            breakpoint()
-        # numpy.add(gaborConspicuity, summedFeatures, out=gaborConspicuity, casting="unsafe")
-
-    # https://gist.github.com/tatome/d491c8b1ec5ed8d4744c
-    #     https://github.com/shuuchen/saliency/blob/0b12125ca49541e8008707f1c4b35303b63d58ef/saliency.py
-
-
+        gaborConspicuity += N(summedFeatures)
     return gaborConspicuity
 
 def rgConspicuity(image):
@@ -150,11 +155,7 @@ def byConspicuity(image):
     fs = features(image=image, channel=by)
     return sumNormalizedFeatures(fs)
 
-def _test_common_size(size):
-    return (size / 2**(levels / 2 - 1)).is_integer()
-
-# (640, 480)
-def sumNormalizedFeatures(features):
+def sumNormalizedFeatures(features, levels=9, startSize=(640, 480)):
     """
         Normalizes the feature maps in argument features and combines them into one.
         Arguments:
@@ -166,16 +167,9 @@ def sumNormalizedFeatures(features):
         returns:
             a combined feature map.
     """
-    # myStartSize = (start_size[0]*(levels-1),start_size[1]*(levels-1),)
-    # myStartSize = (start_size[0]*(levels),start_size[1]*(levels),)
-    myStartSize = start_size  # tatome
-    commonWidth = myStartSize[0] / 2**(levels / 2 - 1)
-    commonHeight = myStartSize[1] / 2**(levels / 2 - 1)
-    # breakpoint()
-    commonSize = int(commonWidth), int(commonHeight)
-
-    # DEBUG
-    # commonSize = start_size
+    commonWidth = startSize[0] / 2**(levels / 2 - 1)
+    commonHeight = startSize[1] / 2**(levels / 2 - 1)
+    commonSize = commonWidth, commonHeight
     logger.info("Size of conspicuity map: %s", commonSize)
     consp = N(cv2.resize(features[0][1], commonSize))
     for f in features[1:]:
@@ -250,68 +244,6 @@ def markMaxima(saliency):
     return marked
 
 
-
-
-im = None
-start_size = None
-def main(args):
-    global im, start_size
-    if args.fileList is None and args.inputFile is None:
-        logger.error("Need either --fileList or --inputFile cmd line arguments.")
-        sys.exit()
-    elif args.fileList is not None and args.inputFile is not None:
-        logger.error("Need only one of --fileList or --inputFile cmd line arguments.")
-        sys.exit()
-    else:
-        if args.fileList:
-            print('we are reading filenames from a file.')
-            filenames = (filename[:-1] for filename in open(args.fileList))  # remove end-of line character
-        else:
-            print('filenames were given on the command line.')
-            filenames = [args.inputFile]
-        for filename in filenames:
-            im = cv2.imread(filename, cv2.COLOR_BGR2RGB)  # assume BGR, convert to RGB---more intuitive code.
-            # while (not _test_common_size(im.shape[0]) or _test_common_size(im.shape[1])):
-            #     print(f'image size {im.shape[0]},{im.shape[1]} does not divide evenly. Downsampling to (640,480)...')
-            #     # im = resampleim(im, im.shape[0] - 1, im.shape[1] - 1, nchan=3)
-            #     im = resampleim(im, 640, 480, nchan=3)
-            # print(f'final image size: {im.shape[0]},{im.shape[1]}')
-            print(f'image size: {im.shape[0]},{im.shape[1]}')
-            start_size = (im.shape[1], im.shape[0])
-            if im is None:
-                logger.fatal("Could not load file \"%s.\"", filename)
-                sys.exit()
-
-            intensty = intensityConspicuity(im)
-            # breakpoint()
-            gabor = gaborConspicuity(im, 4, intensty.shape)
-
-            im = makeNormalizedColorChannels(im)
-            rg = rgConspicuity(im)
-            by = byConspicuity(im)
-            c = rg + by
-            saliency = 1. / 3 * (N(intensty) + N(c) + N(gabor))
-
-            if args.markMaxima:
-                saliency = markMaxima(saliency)
-
-            def writeCond(outFileName, image):
-                name, _ = os.path.splitext(os.path.basename(filename))
-                if outFileName and args.fileList:
-                    cv2.imwrite(outFileName % name, image)
-                elif outFileName:
-                    cv2.imwrite(outFileName, image)
-
-            writeCond(args.intensityOutput, intensty)
-            writeCond(args.gaborOutput, gabor)
-            writeCond(args.rgOutput, rg)
-            writeCond(args.byOutput, by)
-            writeCond(args.cOutput, .25 * c)
-            writeCond(args.saliencyOutput, saliency)
-
-
-
-
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
@@ -336,4 +268,50 @@ if __name__ == "__main__":
                         help="Filename for saliency map,")
     parser.add_argument("--markMaxima", action='store_true', help="Mark maximum saliency in output image.")
     args = parser.parse_args()
-    main(args)
+
+    if args.fileList is None and args.inputFile is None:
+        logger.error("Need either --fileList or --inputFile cmd line arguments.")
+        sys.exit()
+    elif args.fileList is not None and args.inputFile is not None:
+        logger.error("Need only one of --fileList or --inputFile cmd line arguments.")
+        sys.exit()
+    else:
+        if args.fileList:
+            # we are reading filenames from a file.
+            filenames = (filename[:-1] for filename in open(args.fileList))  # remove end-of line character
+        else:
+            # filenames were given on the command line.
+            filenames = [args.inputFile]
+
+        for filename in filenames:
+            im = cv2.imread(filename, cv2.COLOR_BGR2RGB)  # assume BGR, convert to RGB---more intuitive code.
+
+            if im is None:
+                logger.fatal("Could not load file \"%s.\"", filename)
+                sys.exit()
+
+            intensty = intensityConspicuity(im)
+            gabor = gaborConspicuity(im, 4)
+
+            im = makeNormalizedColorChannels(im)
+            rg = rgConspicuity(im)
+            by = byConspicuity(im)
+            c = rg + by
+            saliency = 1. / 3 * (N(intensty) + N(c) + N(gabor))
+
+            if args.markMaxima:
+                saliency = markMaxima(saliency)
+
+            def writeCond(outFileName, image):
+                name, _ = os.path.splitext(os.path.basename(filename))
+                if outFileName and args.fileList:
+                    cv2.imwrite(outFileName % name, image)
+                elif outFileName:
+                    cv2.imwrite(outFileName, image)
+
+            writeCond(args.intensityOutput, intensty)
+            writeCond(args.gaborOutput, gabor)
+            writeCond(args.rgOutput, rg)
+            writeCond(args.byOutput, by)
+            writeCond(args.cOutput, .25 * c)
+            writeCond(args.saliencyOutput, saliency)
