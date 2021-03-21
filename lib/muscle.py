@@ -69,6 +69,8 @@ class Muscle:
                 log('quiting app')
                 signal.emit('QUIT MY APP')
 
+
+
         if gui:
             status_reporter.run_app(function=run_all_jobs)
         else:
