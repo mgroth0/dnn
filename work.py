@@ -1,5 +1,6 @@
 import json
 
+from lib.boot import nn_init_fun
 from mlib.boot.mlog import setTic, setup_logging
 from mlib.input import margparse
 
@@ -31,7 +32,7 @@ def main(FLAGS):
         result_folder = nnet_main(FLAGS)
     result_folder.zip_in_place()
     result_folder.delete()
-    nn_init_fun.NRC_IS_FINISHED()
+
 
 if __name__ == '__main__':
     FLAGS = margparse(
@@ -54,3 +55,4 @@ if __name__ == '__main__':
         REGEN_NTRAIN=int,
         PRED_SIZE=int
     )
+    nn_init_fun.NRC_IS_FINISHED()
