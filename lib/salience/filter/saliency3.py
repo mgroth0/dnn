@@ -264,11 +264,12 @@ def main(args):
             filenames = [args.inputFile]
         for filename in filenames:
             im = cv2.imread(filename, cv2.COLOR_BGR2RGB)  # assume BGR, convert to RGB---more intuitive code.
-            while (not _test_common_size(im.shape[0]) or _test_common_size(im.shape[1])):
-                print(f'image size {im.shape[0]},{im.shape[1]} does not divide evenly. Downsampling to (640,480)...')
-                # im = resampleim(im, im.shape[0] - 1, im.shape[1] - 1, nchan=3)
-                im = resampleim(im, 640, 480, nchan=3)
-            print(f'final image size: {im.shape[0]},{im.shape[1]}')
+            # while (not _test_common_size(im.shape[0]) or _test_common_size(im.shape[1])):
+            #     print(f'image size {im.shape[0]},{im.shape[1]} does not divide evenly. Downsampling to (640,480)...')
+            #     # im = resampleim(im, im.shape[0] - 1, im.shape[1] - 1, nchan=3)
+            #     im = resampleim(im, 640, 480, nchan=3)
+            # print(f'final image size: {im.shape[0]},{im.shape[1]}')
+            print(f'image size: {im.shape[0]},{im.shape[1]}')
             start_size = (im.shape[1], im.shape[0])
             if im is None:
                 logger.fatal("Could not load file \"%s.\"", filename)
