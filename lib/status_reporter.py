@@ -33,11 +33,12 @@ class StatusReporter:
         self.REP_BAR_LENGTH = 100
     def report(self, signal, t, exps):
         if not self.remote:
-            if signal is not None:
-                signal.emit('no local report yet')
-            else:
-                log('no local report yet')
-            return
+            if False: # DEBUG
+                if signal is not None:
+                    signal.emit('no local report yet')
+                else:
+                    log('no local report yet')
+                return
         the_report = '\n\n\t\t\t~~JOB REPORT~~'
         if self.first_report['']: signal.emit(the_report)
         for e in exps:
