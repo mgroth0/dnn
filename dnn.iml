@@ -25,6 +25,22 @@
       <excludeFolder url="file://$MODULE_DIR$/rsa" />
       <excludeFolder url="file://$MODULE_DIR$/tf_bug1/data_transfer" />
       <excludeFolder url="file://$MODULE_DIR$/symmetry-manuscript/plos-latex-template/figs" />
+      <excludeFolder url="file://$MODULE_DIR$/freecomp/data" />
+      <excludeFolder url="file://$MODULE_DIR$/tf_bug1" />
+      <excludeFolder url="file://$MODULE_DIR$/human_exps/contour_pilot/backups" />
+      <excludeFolder url="file://$MODULE_DIR$/human_exps/contour_pilot/build" />
+      <excludeFolder url="file://$MODULE_DIR$/human_exps/contour_pilot/figs" />
+      <excludeFolder url="file://$MODULE_DIR$/human_exps/mc_wait_pilot/backups" />
+      <excludeFolder url="file://$MODULE_DIR$/human_exps/mc_wait_pilot/build" />
+      <excludeFolder url="file://$MODULE_DIR$/human_exps/mc_wait_pilot/figs" />
+      <excludeFolder url="file://$MODULE_DIR$/human_exps/time_pilot/data" />
+      <excludeFolder url="file://$MODULE_DIR$/human_exps/time_pilot/figs" />
+      <excludeFolder url="file://$MODULE_DIR$/docs" />
+      <excludeFolder url="file://$MODULE_DIR$/docs_local" />
+      <excludeFolder url="file://$MODULE_DIR$/data" />
+      <excludeFolder url="file://$MODULE_DIR$/backups" />
+      <excludeFolder url="file://$MODULE_DIR$/_sanity_results" />
+      <excludeFolder url="file://$MODULE_DIR$/.vagrant" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9 (dnn39)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
