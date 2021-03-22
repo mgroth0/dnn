@@ -72,6 +72,7 @@ class DNN(Project):
             if ismac():
                 kmscript('activate run tool window')
             dnn(cfg)
+            print('__DNN_IS_FINISHED__')
 
 
 
