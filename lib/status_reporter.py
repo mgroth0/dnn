@@ -68,7 +68,7 @@ class StatusReporter:
         for idx, perc in enum(percents):
             gpu_report += f'\n{idx}\t{insertZeros(perc, 2)}% {Progress.prog_bar(perc, BAR_LENGTH=self.REP_BAR_LENGTH)}'
         the_report += gpu_report
-        if self.first_report['']: signal.emit(the_report)
+        if self.first_report[''] and signal is not None: signal.emit(the_report)
         log('GETTING MEM REPORT')
         mem_report = '\n\n\t\t\t~~MEM REPORT~~'
         self.statusP.sendline(f'free -h; echo ${self.DONE_VAR}')
@@ -80,7 +80,7 @@ class StatusReporter:
                 if self.MATT_STR not in line:
                     mem_report += f'\n{line}'
         the_report += mem_report
-        if self.first_report['']: signal.emit(the_report)
+        if self.first_report[''] and signal is not None: signal.emit(the_report)
         log('\nGETTING CPU REPORT')
         cpu_report = '\n\n\t\t\t~~CPU REPORT~~'
         self.statusP.sendline(
