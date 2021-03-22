@@ -108,7 +108,8 @@ class StatusReporter:
         else:
             the_report += f'problem getting cpu_report ({len(cpu_stuff)=})'
         log('sending signal with REPORT')
-        signal.emit(the_report)
+        if signal is not None:
+            signal.emit(the_report)
         log('sent signal with REPORT')
         self.next_report[''] = t + 1
         self.first_report[''] = False
