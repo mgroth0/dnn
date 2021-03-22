@@ -40,12 +40,12 @@ class StatusReporter:
                     log('no local report yet')
                 return
         the_report = '\n\n\t\t\t~~JOB REPORT~~'
-        if self.first_report['']: signal.emit(the_report)
+        if self.first_report[''] and signal is not None: signal.emit(the_report)
         for e in exps:
             the_report += f'\n{e.status()}'
-            if self.first_report['']: signal.emit(the_report)
+            if self.first_report[''] and signal is not None: signal.emit(the_report)
         the_report += '\n\n'
-        if self.first_report['']: signal.emit(the_report)
+        if self.first_report[''] and signal is not None: signal.emit(the_report)
 
         print(the_report)
 
