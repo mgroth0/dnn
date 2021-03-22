@@ -1,15 +1,14 @@
 from dataclasses import dataclass
-from typing import ClassVar
 
 import sys
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
+from typing import ClassVar
 
 from lib.misc import google_compute
 from mlib.boot import log
 from mlib.boot.lang import enum
-from mlib.boot.stream import listmap, insertZeros
+from mlib.boot.stream import insertZeros, listmap
 from mlib.guiutil import SimpleApp
 from mlib.km import activateIdea
 from mlib.shell import ishell
@@ -33,7 +32,7 @@ class StatusReporter:
         self.REP_BAR_LENGTH = 100
     def report(self, signal, t, exps):
         if not self.remote:
-            if False: # DEBUG
+            if False:  # DEBUG
                 if signal is not None:
                     signal.emit('no local report yet')
                 else:
