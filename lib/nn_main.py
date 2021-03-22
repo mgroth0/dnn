@@ -58,8 +58,22 @@ def nnet_main(FLAGS):
             for im in files[0:FLAGS.ntrain]:
                 im.copyinto(ntrain_folder[k])
 
+        NTEST = 100
+
+        ntest_folder = dogcatfolder['ntest']
+        ntest_folder.deleteIfExists().mkdir()
+        for k, v in listitems(class_map):
+            log('getting files')
+            files = dogcatfolder['Testing'][k].files.tolist()
+            random.shuffle(files)
+            log('looping files')
+            for im in files[0:NTEST]:
+                im.copyinto(ntest_folder[k])
+
+
+
         GPU_TRAIN_FOLDER = NN_Data_Dir(ntrain_folder.abspath)
-        GPU_TEST_FOLDER = NN_Data_Dir(dogcatfolder['Testing'].abspath)
+        GPU_TEST_FOLDER = NN_Data_Dir(ntest_folder.abspath)
         GPU_RSA_FOLDER = NN_Data_Dir(dummy_folder.abspath)
     else:
         GPU_IMAGES_FOLDER = _IMAGES_FOLDER[f'gpu{FLAGS.mygpufordata}']
