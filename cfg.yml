@@ -62,7 +62,7 @@ configs:
     PRUNE_REPORT_API: False
 
   #  scientifically relevant but modifiable
-    EPOCHS: 10
+#    EPOCHS: 10
     REPEAT_ALL: 1
     BATCH_SIZE: 10 # this might interact with the sizes of data above options for
     PRED_SIZE: 1000
@@ -113,17 +113,17 @@ configs:
     MODE: JUSTRUN
   gen_images:
     <<: *file_op_cfg
-    EPOCHS: 0
+#    EPOCHS: 0
     REGEN_DATA: True
     EXPS: []
   pre_pre_process:
     <<: *file_op_cfg
-    EPOCHS: 1
+#    EPOCHS: 1
     OVERWRITE_NORMS: True
   test_four:
     <<: *all
     NTRAIN: ["i0","i1"] #  these are now indexes
-    EPOCHS: 2
+#    EPOCHS: 2
     EXPS:
       -
         <<: *default_exp
@@ -134,7 +134,7 @@ configs:
   run_one: &run_one
     <<: *all
     RUN_EXPS_IN_SERIAL: True
-    EPOCHS: 1
+#    EPOCHS: 1
     NTRAIN: ["i0"] #  these are now indexes
     EXPS:
       -
@@ -142,7 +142,7 @@ configs:
         arch: ALEX
   test_one: &test_one
     <<: *debug
-    EPOCHS: 2
+#    EPOCHS: 2
     NTRAIN: ["i0"] #  these are now indexes
     EXPS:
       -
@@ -218,7 +218,7 @@ configs:
     BATCH_SIZE: 20
 #    EPOCHS: 1 #280 sec = 4min, 40sec
 #    EPOCHS: 10 #332 sec = 5 min 32 sec
-    EPOCHS: 3
+#    EPOCHS: 3
 
 
 #    PIPELINE: SANITY TRAIN # VAL # REC
