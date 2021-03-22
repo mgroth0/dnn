@@ -37,6 +37,7 @@ ARCH_MAP = {
 
 @log_invokation()
 def nnet_main(FLAGS):
+    FLAGS.epochs = int(FLAGS.epochs)
     _IMAGES_FOLDER = pwdf()['_images'].mkdirs(mker=True)
     HUMAN_IMAGE_FOLDER = pwdf()['_images_human'].mkdirs(mker=True)
 
