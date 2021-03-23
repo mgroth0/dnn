@@ -16,6 +16,34 @@ import cv2
 import numpy as np
 
 
+def crop_or_pad(
+        input_img: np.ndarray,
+        newheight: int,
+        axis=0
+) -> np.ndarray:
+    assert len(input_img.shape) == 3
+    if input_img.shape[axis] > newheight:
+        overby = input_img.shape[axis] - newheight
+        if overby % 2 > 0:
+            topcrop = ((overby - 1) / 2) + 1
+        else:
+            topcrop = overby / 2
+        bottomcrop = int(overby / 2)
+        _, input_img, _ = np.split(input_img, [int(topcrop), -bottomcrop], axis=axis)
+        # input_img = input_img[int(topcrop):-bottomcrop, :]
+    elif input_img.shape[axis] < newheight:
+        underby = newheight - input_img.shape[axis]
+        if underby % 2 > 0:
+            toppad = ((underby - 1) / 2) + 1
+        else:
+            toppad = underby / 2
+        bottompad = int(underby / 2)
+        arg = [(0, 0), (0, 0), (0, 0)]
+        arg[axis] = (int(toppad), bottompad)
+        input_img = np.pad(input_img, arg, constant_values=0)
+    return input_img
+
+
 @log_invokation
 def resampleim(im, heigh, width, nchan=1):
     # data = np.array(list(Image.fromarray(im).resize((width,heigh)).getdata()))
@@ -59,4 +87,3 @@ def resampleim(im, heigh, width, nchan=1):
 # from skimage.transform import resize
 # import numpy as np
 # import math
-

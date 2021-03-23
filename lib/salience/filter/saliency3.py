@@ -10,9 +10,6 @@ from scipy.ndimage.filters import maximum_filter
 from mlib.boot.mlog import err
 
 
-err('can not use this code! just look at the original by tatome here https://gist.github.com/tatome/d491c8b1ec5ed8d4744c\n\nOn line43, start_size is set to (60,480). It looks like a parameter, btu it actually functions as a constant because the parameter is never set and always assuem the default value. Then on line 56, the comment says that this value MUST be divisbable by 2^levels. Well levels is 9 and is also a fake parameter that also functions a constant. 2^9 is 512, and neither 640 nor 480 are divisible by 512. Therefore looks like I need to start understand this algortihm from scratch or find a better one with cleaner code.')
-
-
 logger = logging.getLogger(__name__)
 
 # levels = 3
@@ -255,6 +252,12 @@ def markMaxima(saliency):
 im = None
 start_size = None
 def main(args):
+
+    err('can not use this code! just look at the original by tatome here https://gist.github.com/tatome/d491c8b1ec5ed8d4744c\n\nOn line43, start_size is set to (60,480). It looks like a parameter, btu it actually functions as a constant because the parameter is never set and always assuem the default value. Then on line 56, the comment says that this value MUST be divisbable by 2^levels. Well levels is 9 and is also a fake parameter that also functions a constant. 2^9 is 512, and neither 640 nor 480 are divisible by 512. Therefore looks like I need to start understand this algortihm from scratch or find a better one with cleaner code.')
+
+
+
+
     global im, start_size
     if args.fileList is None and args.inputFile is None:
         logger.error("Need either --fileList or --inputFile cmd line arguments.")

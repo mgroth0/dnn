@@ -121,7 +121,7 @@ def nnet_main(FLAGS):
 
     return trainTestRecord(net, '', FLAGS.epochs)
 
-
+# https://stackoverflow.com/questions/65415799/fit-works-as-expected-but-then-during-evaluate-model-performs-at-chance/66692755#66692755
 def trainTestRecord(net: AssembledModel, nam, nepochs):
     mets_for_each_epoch = []
     nnstate.step_counter = 1
