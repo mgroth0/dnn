@@ -1,9 +1,11 @@
-import os
+from copy import deepcopy
 from os.path import expanduser
 
-from mlib.JsonSerializable import obj
-from mlib.boot.lang import listkeys, ismac
+import os
+
+from mlib.boot.lang import ismac, listkeys
 from mlib.job import Job
+from mlib.JsonSerializable import obj
 from mlib.str import lengthen_str
 from mlib.term import log_invokation
 
@@ -30,38 +32,38 @@ def build_job(
 ):
     return DNN_Job(
         job_args={
-            'tic'         : cfg.tic,
+            'tic'              : cfg.tic,
 
-            'expid'       : '0' if experiment is None else experiment.expid,
+            'expid'            : '0' if experiment is None else experiment.expid,
 
-            'arch'        : 'JUST_CLEAR_FILES_AND_GEN_DATASET' if experiment is None else experiment.arch,
-            'ntrain'      : 0 if experiment is None else experiment.ntrain,
+            'arch'             : 'JUST_CLEAR_FILES_AND_GEN_DATASET' if experiment is None else experiment.arch,
+            'ntrain'           : 0 if experiment is None else experiment.ntrain,
 
-            'proto_model' : cfg.proto_model,
-            'pipeline'    : '' if experiment is None else cfg.PIPELINE.replace(' ', ''),
+            'proto_model'      : cfg.proto_model,
+            'pipeline'         : '' if experiment is None else cfg.PIPELINE.replace(' ', ''),
 
-            'epochs'      : cfg.EPOCHS,
-            'batchsize'   : 0 if experiment is None else cfg.BATCH_SIZE,
-            'verbose'     : cfg.VERBOSE,
-            'normtrainims': False if experiment is None else cfg.NORM_TRAIN_IMS,
+            'epochs'           : cfg.EPOCHS,
+            'batchsize'        : 0 if experiment is None else cfg.BATCH_SIZE,
+            'verbose'          : cfg.VERBOSE,
+            'normtrainims'     : False if experiment is None else cfg.NORM_TRAIN_IMS,
 
-            'salience':  cfg.salience,
-            'TRANSFER_LEARNING':  cfg.TRANSFER_LEARNING,
-            'REGEN_NTRAIN': cfg.REGEN_NTRAIN,
-            'PRED_SIZE': cfg.PRED_SIZE,
+            'salience'         : cfg.salience,
+            'TRANSFER_LEARNING': cfg.TRANSFER_LEARNING,
+            'REGEN_NTRAIN'     : cfg.REGEN_NTRAIN,
+            'PRED_SIZE'        : cfg.PRED_SIZE,
 
-            'deletenorms' : cfg.OVERWRITE_NORMS if experiment is None else False,
-            'gen'         : cfg.REGEN_DATA if experiment is None else False  # implies kill
+            'deletenorms'      : cfg.OVERWRITE_NORMS if experiment is None else False,
+            'gen'              : cfg.REGEN_DATA if experiment is None else False  # implies kill
         },
         job_cfg_arg=obj({
-            'gen_cfg': {
+            'gen_cfg' : {
                 'num_gpus'          : max(len(listkeys(muscle.GPU_IN_USE)), 2),
                 'TRAINING_SET_SIZES': cfg.NTRAIN,
                 'EVAL_SIZE'         : cfg.eval_nperc,
                 'RSA_SIZE_PER_CLASS': cfg.rsa_nperc,
             } if experiment is None else None,
-            'root'   : cfg.root,
-            'full_cfg': cfg.toDict()
+            'root'    : cfg.root,
+            'full_cfg': deepcopy(cfg).toDict()  # REDUNDANT! also needs deepcopy because stupid toDict is in place
         }),
         gpus=gpus,  # [0,1,2,3] if RUN_EXPS_IN_SERIAL else, if empty is actually set to use all 4 in muscle
         interact=cfg.INTERACT,
