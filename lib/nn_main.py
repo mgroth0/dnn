@@ -59,7 +59,8 @@ def nnet_main(FLAGS):
             for im in files[0:FLAGS.ntrain]:
                 im.copyinto(ntrain_folder[k])
 
-        NTEST = 100
+        # NTEST = 100
+        NTEST = FLAGS.batchsize / len(listitems(class_map))
 
         ntest_folder = dogcatfolder['ntest']
         ntest_folder.deleteIfExists().mkdir()
