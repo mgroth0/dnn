@@ -15,7 +15,7 @@ def main(FLAGS):
     from lib.nn_main import nnet_main
     from mlib.gpu import mygpus
     FLAGS.mygpus = mygpus()
-    if isinstance(FLAGS.cfg,str):
+    if isinstance(FLAGS.cfg, str):
         FLAGS.cfg_cfg = json.loads(FLAGS.cfg)
     else:
         FLAGS.cfg_cfg = FLAGS.cfg.toDict()
@@ -59,4 +59,3 @@ if __name__ == '__main__':
         REGEN_NTRAIN=int,
         PRED_SIZE=int
     )
-

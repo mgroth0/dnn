@@ -60,7 +60,8 @@ def build_job(
                 'EVAL_SIZE'         : cfg.eval_nperc,
                 'RSA_SIZE_PER_CLASS': cfg.rsa_nperc,
             } if experiment is None else None,
-            'root'   : cfg.root
+            'root'   : cfg.root,
+            'full_cfg': cfg.toDict()
         }),
         gpus=gpus,  # [0,1,2,3] if RUN_EXPS_IN_SERIAL else, if empty is actually set to use all 4 in muscle
         interact=cfg.INTERACT,

@@ -383,7 +383,7 @@ class PreDataset:
                             the_new = imd
 
                             data = File(imd.file).load()
-                            if nnstate.FLAGS.cfg_cfg['SFILT']:
+                            if nnstate.FLAGS.cfg_cfg['full_cfg']['SFILT']:
                                 data = sfilt.experiment_function_pre_preprocess(data)
 
                             the_new.data = preprocessors(HW)[pp_type].preprocess(data)
