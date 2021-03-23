@@ -43,6 +43,27 @@ def crop_or_pad(
         input_img = np.pad(input_img, arg, constant_values=0)
     return input_img
 
+def resizeim(input_img, height, width, fit_dim='width'):
+    assert fit_dim in ['height', 'width']
+    if fit_dim == 'width':
+        input_img = fitim(input_img, None, width)
+    else:
+        input_img = fitim(input_img, height, None)
+    if fit_dim == 'height':
+        input_img = crop_or_pad(input_img, height, axis=0)
+    else:
+        input_img = crop_or_pad(input_img, width, axis=1)
+    return input_img
+
+def fitim(input_img, height, width):
+    assert ((height is None) or (width is None)) and not ((height is None) and (width is None))
+    assert len(input_img.shape) == 3
+    if height is None:
+        ratio = width / input_img.shape[1]
+        return resampleim(input_img, int(input_img.shape[0] * ratio), width, nchan=3)
+    else:
+        ratio = height / input_img.shape[0]
+        return resampleim(input_img, height, int(input_img.shape[1] * ratio), nchan=3)
 
 @log_invokation
 def resampleim(im, heigh, width, nchan=1):

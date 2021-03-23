@@ -7,6 +7,12 @@ from mlib.boot.stream import zeros
 
 class MattSalienceFilter(ImageTransformation):
 
+    def experiment_function_pre_preprocess(self, data):
+        smap = self.transform(data)
+        # smap = resampleim(smap, HW, HW, nchan=1)
+        smap = np.reshape(smap, tuple(list(smap.shape) + [1]))
+        smap = np.repeat(smap, 3, axis=2)
+        return smap
 
     def _transform(self, input: np.ndarray) -> np.ndarray:
         print('hello world')

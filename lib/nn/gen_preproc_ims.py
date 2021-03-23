@@ -1,6 +1,7 @@
 from itertools import chain
 
 from lib.boot import nn_init_fun
+from lib.salience.filter.salience_filter import MattSalienceFilter
 from mlib.boot.lang import enum
 from mlib.str import utf_decode
 from rsa_for_darius import DATA_FOLDER
@@ -234,9 +235,9 @@ def load_and_preprocess_ims(TRAIN_TEST_SPLIT, data_dir, normalize_single_images)
                 class_label_map[the_name] = next_label
                 next_label = next_label + 1
         for ff in f.files:
-            if not ff.ext == 'png' and not ff.abspath.split('.')[-1] in ['png', 'jpg', 'jpeg']: # cat.123.png
-                    log('problem with $', ff)
-                    err('all files in data_dir folders should be images')
+            if not ff.ext == 'png' and not ff.abspath.split('.')[-1] in ['png', 'jpg', 'jpeg']:  # cat.123.png
+                log('problem with $', ff)
+                err('all files in data_dir folders should be images')
 
     CLASS_NAMES = np.array([item.name for item in data_dir.glob('*') if mlib.file.filename != "LICENSE.txt"])
     if nnstate.use_reduced_map:
@@ -373,14 +374,20 @@ class PreDataset:
 
             # did this?
             warn('NEED TO MERGE getReal and PREPROCESSOR CODE. USE PREPROCESSOR.')
-
+            sfilt = MattSalienceFilter()
             with Progress(len(self.imds)) as prog:
                 for imd in self.imds:
                     i += 1
                     if i <= nnstate.FLAGS.batchsize:
                         if nnstate.FLAGS.salience:
                             the_new = imd
-                            the_new.data = preprocessors(HW)[pp_type].preprocess(File(imd.file))
+
+                            data = File(imd.file).load()
+                            if nnstate.FLAGS.SFILT:
+                                data = sfilt.experiment_function_pre_preprocess(data)
+
+                            the_new.data = preprocessors(HW)[pp_type].preprocess(data)
+
                             # I think I fixed this. problem was preprocess resize was not resizing if one of the dimensions was right but not the other. Used an 'and' when I should have used an 'or'.
                             # if (str(type(the_new.data)) != "<class 'numpy.ndarray'>") or (
                             #         str(the_new.data.dtype) != "float32") or str(
