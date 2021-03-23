@@ -17,6 +17,8 @@ class MattSalienceFilter(ImageTransformation):
     def _transform(self, input: np.ndarray) -> np.ndarray:
         print('hello world')
 
+
+
         x = input
 
         x = input + 1  # I think this is necessary or else we will be dividing by zero at some points?
@@ -51,8 +53,11 @@ class MattSalienceFilter(ImageTransformation):
                         surround_intense = sum(surround_im[px_row_sur, px_col_sur])
                         feat_intense[px_row, px_col] = abs(center_intense - surround_intense)
 
-                        center_rg = (center_im[px_row, px_col][0] / center_intense) - (
+                        try:
+                            center_rg = (center_im[px_row, px_col][0] / center_intense) - (
                                 center_im[px_row, px_col][1] / center_intense)
+                        except:
+                            breakpoint()
 
                         surround_gr = (surround_im[px_row_sur, px_col_sur][1] / surround_intense) - (
                                 surround_im[px_row_sur, px_col_sur][0] / surround_intense)
