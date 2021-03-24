@@ -1,4 +1,4 @@
 {
     "EPOCHS": 1,
-    "SFILT": true
+    "SFILT": false
 }
