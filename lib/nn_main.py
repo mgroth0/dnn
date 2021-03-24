@@ -1,7 +1,7 @@
 import random
 
 from arch.proko_inc import NoBN_INC_PROKO
-from mlib.boot.mlog import err
+from mlib.boot.mlog import err, PipelineSection
 from mlib.boot.stream import listitems
 from mlib.file import Folder
 from rsa_for_darius import DATA_FOLDER
@@ -129,8 +129,12 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
 
     import lib.nn.net_mets as net_mets
 
+
+
     reset_global_met_log()
     for i in range(nepochs):
+        if i == 0:
+            PipelineSection.TRAINING.start()
         nam = 'train'
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':fit'
         # log(f'moving_mean(pre-train):{net.net.moving_mean}')
@@ -157,6 +161,8 @@ def trainTestRecord(net: AssembledModel, nam, nepochs):
         # log(f'moving_var(post-train):{net.net.moving_var}')
         # breakpoint()
         nnstate.MET_PHASE = 'epoch' + str(i + 1) + ':eval'
+        if i == nepochs - 1:
+            PipelineSection.TRAINING.end()
         if nnstate.EVAL_AND_REC_EVERY_EPOCH or i == nepochs - 1:
             if 'VAL' in nnstate.FLAGS.pipeline:
                 nnstate.PIPELINE_PHASE = 'VAL'
