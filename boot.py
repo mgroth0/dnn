@@ -1,3 +1,8 @@
+import sys
+for s in sys.argv:
+    if '--tic=' in s:
+        import mlib.boot.mlog
+        mlib.boot.mlog.setTic(float(s.replace('--tic=', '')))
 from mlib.boot import exec_proj
 exec_proj.dummy = None
 import os
