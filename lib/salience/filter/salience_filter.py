@@ -1,4 +1,3 @@
-import cv2
 import numpy as np
 from numpy import amax, amin, mean, vectorize
 
@@ -15,6 +14,7 @@ class MattSalienceFilter(ImageTransformation):
         return smap
 
     def _transform(self, input: np.ndarray) -> np.ndarray:
+        import cv2  # 3 SECOND IMPORT
         print('hello world')
 
         x = input

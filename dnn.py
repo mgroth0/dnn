@@ -1,6 +1,4 @@
-
-
-from lib.nn_main import nnet_main
+from boot import finish_dnn_remote
 print('top of dnn.py')
 
 print('dnn.py: about to import log')
@@ -13,6 +11,8 @@ from mlib.file import Folder
 from mlib.web import shadow
 from mlib.proj.struct import Project
 from mlib.boot.stream import arr, listmap, __
+
+
 
 log('defining DNN Project')
 class DNN(Project):
@@ -53,8 +53,7 @@ class DNN(Project):
             # import rsa_for_darius
             import rsa_for_darius
             rsa_for_darius.main()
-            print('printing dnn is finished string!')
-            print('__DNN_IS_FINISHED__')
+            finish_dnn_remote()
             return None
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:
             from lib.human_exp import human_exp
@@ -74,7 +73,7 @@ class DNN(Project):
             if ismac():
                 kmscript('activate run tool window')
             dnn(cfg)
-            print('__DNN_IS_FINISHED__')
+            finish_dnn_remote()
 
 
 

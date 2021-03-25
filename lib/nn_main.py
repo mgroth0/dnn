@@ -46,7 +46,6 @@ def nnet_main(FLAGS):
     if FLAGS.salience:
         class_map = {'dog': 0, 'cat': 1}
 
-        # dogcatfolder = '/matt/data/tf_bug1/' #small set with hundreds I generated from imagenet
         dogcatfolder = DATA_FOLDER.resolve('tf_bug1/dogscats')  # thousands, downloaded from kaggle
         ntrain_folder = dogcatfolder['ntrain']
         dummy_folder = dogcatfolder['dummy'].mkdir()

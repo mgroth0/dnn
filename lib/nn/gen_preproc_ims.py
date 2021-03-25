@@ -31,13 +31,7 @@ from mlib.term import log_invokation, Progress
 print('gen_preproc_ims.py: finished imports')
 LINUX_HOME = '/home/matt/'
 
-class NN_Data_Dir(File):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.norm = File(f'{self.abspath}_std')
-    @log_invokation(with_args=True)
-    def delete_norm_dir(self):
-        return self.norm.deleteIfExists()
+
 
 BLACK_AND_WHITE = False
 

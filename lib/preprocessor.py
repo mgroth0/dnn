@@ -38,7 +38,6 @@ def preprocessors(hw): return {
     'INC_DEBUG'           : Inc_debug_preprocess()
 }
 
-import cv2
 
 class Inc_debug_preprocess():
     def preprocess(self, im):
@@ -51,6 +50,7 @@ class Inc_debug_preprocess():
 
         # imdata = mpimg.imread(file)
         from arch.INC_ORIG import INC_HW
+        import cv2  # 3 SECOND IMPORT
         imdata = cv2.resize(im, dsize=(INC_HW, INC_HW), interpolation=cv2.INTER_LINEAR) * 255.0
         import tensorflow as tf
         imdata = tf.keras.applications.inception_resnet_v2.preprocess_input(
