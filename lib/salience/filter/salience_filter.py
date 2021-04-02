@@ -2,32 +2,16 @@ import numpy as np
 from numpy import amax, amin, mean, vectorize
 
 from lib.image.ImageTransformation import ImageTransformation
+from mlib.boot.mlog import err
 from mlib.boot.stream import zeros
 
 class MattSalienceFilter(ImageTransformation):
 
-    def experiment_function_pre_preprocess(self, data):
-        smap = self.transform(data)
-        # smap = resampleim(smap, HW, HW, nchan=1)
-        smap = np.reshape(smap, tuple(list(smap.shape) + [1]))
-        smap = np.repeat(smap, 3, axis=2)
-        return smap
-
-    def _transform(self, input: np.ndarray) -> np.ndarray:
-        import cv2  # 3 SECOND IMPORT
-        print('hello world')
-
-        x = input
-
-        x = input + 1  # I think this is necessary or else we will be dividing by zero at some points?
-        # Nothing told me to do this, I'm just trying to fix what I think is a divide by zero error
-
+    def _transform(self, x: np.ndarray) -> np.ndarray:
         scales = [x]
         for i in range(1, 9):
+            import cv2  # 3 SECOND IMPORT
             x = cv2.pyrDown(x)
-
-            #  looks like even if we add 1 to the input, the scales themselves still can have pixels that are zero (r,g,b all zero). I've chechked, and even when the input has no pixel even close to zero, the output of pyrDown sometimes does. So I'm going to add 1 here too, for now.
-            x = x + 1
 
             scales.append(x)
 
@@ -55,7 +39,8 @@ class MattSalienceFilter(ImageTransformation):
                         center_intense = sum(center_im[px_row, px_col])
                         surround_intense = sum(surround_im[px_row_sur, px_col_sur])
                         feat_intense[px_row, px_col] = abs(center_intense - surround_intense)
-
+                        err('stick with intensity for now, do full learning experiments with it before moving on!')
+                        err('DUH! if its black its black... its zero.')
                         center_rg = (center_im[px_row, px_col][0] / center_intense) - (
                                 center_im[px_row, px_col][1] / center_intense)
 
@@ -101,5 +86,5 @@ class MattSalienceFilter(ImageTransformation):
                 self.intermediate_hook(f'feat_by_{center}_{surround}', vectorize(vis)(feat_by))
 
         #
-
+        err('step 1. figure out what resolution it is supposed to return')
         return output  # not done?

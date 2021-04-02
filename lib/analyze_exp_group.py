@@ -2,12 +2,12 @@ import copy
 
 import numpy as np
 
-from lib.cta_lib import FinalResult, AverageResult
-from lib.dnn_proj_struct import experiments_from_folder, DNN_ExperimentGroup
+from lib.cta_lib import AverageResult, FinalResult
+from lib.dnn_proj_struct import DNN_ExperimentGroup, experiments_from_folder
 from mlib.analyses import ANALYSES, AnalysisMode
 from mlib.boot import log
 from mlib.boot.lang import enum
-from mlib.boot.stream import listmap, __, arr2d, itr, flatmax
+from mlib.boot.stream import __, arr2d, flatmax, itr, listmap
 from mlib.fig.PlotData import CONTRAST_COLORS
 from mlib.fig.TableData import ConfusionMatrix
 from mlib.str import StringExtension
@@ -70,10 +70,6 @@ def analyze_exp_group(
             if not cfg.salience:
                 results_to_compile.append(maybe_avg_result(f'val', NEPOCHS, is_table=True))
 
-
-
-
-
             results_to_compile = [r for r in results_to_compile if r is not None]
             for exp in experiments.filtered(
                     lambda e: e.arch == arch and e.ntrain == ntrain,
@@ -108,7 +104,7 @@ def analyze_exp_group(
                         avg = np.mean(res.data, axis=2)
                     else:
                         avg = res.data[:, :, 0]
-                    res.j.viss[0].confuse_target = flatmax(avg)
+                    res.j.viss[0].confuse_max = flatmax(avg)
                     # res.j.viss[0].title_size = 30
                     if res.is_table:
                         avg = np.concatenate((res.row_headers[1:], avg), axis=1)
@@ -121,7 +117,7 @@ def analyze_exp_group(
                         res.j.viss = [ConfusionMatrix(
                             data=avg.tolist(),
                             title="Final Training MCCs",
-                            confuse_target=1,
+                            confuse_min=0,
                             confuse_max=1,
                             headers_included=True,
                             make=True,

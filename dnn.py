@@ -51,8 +51,8 @@ class DNN(Project):
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] == 'RSA_MAIN':
             # print('here1, doing Darius-RSA')
             # import rsa_for_darius
-            import rsa_for_darius
-            rsa_for_darius.main()
+            import rsa_comp
+            rsa_comp.main()
             finish_dnn_remote()
             return None
         elif len(cfg.FLAGS) == 1 and cfg.FLAGS[0] in self._human_exp_flags:

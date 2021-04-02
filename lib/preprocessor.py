@@ -80,6 +80,11 @@ class Preprocessor:
 
             im = im.load()
 
+        if len(im.shape) == 2:
+            im = np.reshape(im, tuple(list(im.shape) + [1]))
+        if im.shape[2] == 1:
+            im = np.repeat(im, 3, axis=2)
+
         assert self.data_format == 'channels_last'
         assert self.channel_axis == 3
         assert self.nchan == 3

@@ -24,7 +24,6 @@
       <excludeFolder url="file://$MODULE_DIR$/_images_human_copy_4" />
       <excludeFolder url="file://$MODULE_DIR$/rsa" />
       <excludeFolder url="file://$MODULE_DIR$/tf_bug1/data_transfer" />
-      <excludeFolder url="file://$MODULE_DIR$/symmetry-manuscript/plos-latex-template/figs" />
       <excludeFolder url="file://$MODULE_DIR$/freecomp/data" />
       <excludeFolder url="file://$MODULE_DIR$/tf_bug1" />
       <excludeFolder url="file://$MODULE_DIR$/human_exps/contour_pilot/backups" />
@@ -41,6 +40,10 @@
       <excludeFolder url="file://$MODULE_DIR$/backups" />
       <excludeFolder url="file://$MODULE_DIR$/_sanity_results" />
       <excludeFolder url="file://$MODULE_DIR$/.vagrant" />
+      <excludeFolder url="file://$MODULE_DIR$/tex/symmetry-manuscript/plos-latex-template/figs" />
+      <excludeFolder url="file://$MODULE_DIR$/tex" />
+      <excludeFolder url="file://$MODULE_DIR$/freecomp/tex" />
+      <excludeFolder url="file://$MODULE_DIR$/_boot_remote_result_folder" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9 (dnn39)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

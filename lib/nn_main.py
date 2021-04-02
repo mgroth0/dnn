@@ -4,7 +4,7 @@ from arch.proko_inc import NoBN_INC_PROKO
 from mlib.boot.mlog import err, PipelineSection
 from mlib.boot.stream import listitems
 from mlib.file import Folder
-from rsa_for_darius import DATA_FOLDER
+from rsa_comp import DATA_FOLDER
 print('nn_main.py: top')
 print('nn_main.py: about to do arch imports')
 from arch import ALEX, GNET, INC, SCRATCH, AssembledModel

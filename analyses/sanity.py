@@ -19,7 +19,7 @@ from mlib.boot.stream import __, arr, concat, ints, isnan, listitems, listmap, m
 from mlib.fig.text_table_wrap import TextTableWrapper
 from mlib.file import File, Folder
 from mlib.web.html import DataCell, Div, H3, HTML_Pre, Table, TableRow
-from rsa_for_darius import DATA_FOLDER
+from rsa_comp import DATA_FOLDER
 class SanitySet(Enum):
     Set100 = auto()
     # Set50000 = auto()

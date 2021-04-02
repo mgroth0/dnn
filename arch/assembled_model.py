@@ -1,4 +1,7 @@
+from lib.dnn_data_saving import save_dnn_data
+from lib.nn.nn_lib import rsa_norm
 from lib.nn.tf_lib import Verbose
+from mlib.datamodel.DataModelBase import Class, ClassSet, FeatureMatrix
 print('assembled_model.py: top')
 from typing import Optional
 import numpy as np
@@ -7,11 +10,10 @@ from abc import abstractmethod, ABC
 from arch.model_wrapper import ModelWrapper
 import lib.nn.net_mets as net_mets
 import lib.nn.nnstate as nnstate
-from lib.nn.nn_lib import RSA_GETS_SIMS_NOT_DESIMS
 print('assembled_model.py: half through imports')
 from mlib.abstract_attributes import Abstract
 from mlib.boot import log
-from mlib.boot.lang import listkeys, cn
+from mlib.boot.lang import enum, listkeys, cn
 from mlib.boot.mlog import warn, err
 from mlib.boot.stream import zeros, arr, itr
 from mlib.file import File, Folder
@@ -44,7 +46,7 @@ class AssembledModel(ModelWrapper, ABC):
 
 
     @log_invokation(with_class=True)
-    def build_net(self,FLAGS):
+    def build_net(self, FLAGS):
         dims = [self.HEIGHT_WIDTH, self.HEIGHT_WIDTH, self.HEIGHT_WIDTH]
         dims[self.CI] = 3
         from tensorflow.python.keras import Input
@@ -126,9 +128,23 @@ class AssembledModel(ModelWrapper, ABC):
         inter_shape = inter_activations.shape
         inter_activations = np.reshape(inter_activations, (inter_shape[0], -1))
 
-        RSA_GETS_SIMS_NOT_DESIMS('Output', y_pred, y_true, ei, layer_name='Output', layer_i='-1')
-        RSA_GETS_SIMS_NOT_DESIMS('Inter', inter_activations, y_true, ei, layer_name=inter_lay_name, layer_i=self.INTER_LAY)
-        RSA_GETS_SIMS_NOT_DESIMS('Raw', raw_images, y_true, ei)
+        BLOCK_LEN = 10  # I'm writing this bc I think it was always 10 back when I ran this code
+        TEST_CLASS_MAP = nnstate.CURRENT_TRUE_MAP
+        clas_set = ClassSet([Class(name=k, index=v) for k, v in TEST_CLASS_MAP.items()])
+        def run_and_save_rsa(nam, mat1, layer_name=None, layer_i=None):
+            index_to_cn = {v: k for k, v in TEST_CLASS_MAP.items()}
+            feature_matrix = FeatureMatrix(mat1, clas_set, [Class(index_to_cn[iii], iii) for iii, yt in enum(y_true)])
+            feature_matrix.sort_by_class_name()
+            fd = feature_matrix.compare(rsa_norm).image_plot()
+            tit = f'L2-{nam}'
+            fd.title = f'{tit} ({nnstate.FLAGS.arch}{nnstate.FLAGS.ntrain}E{ei + 1})'
+            if nam == 'Inter':
+                fd.title = f'{fd.title}(Layer{layer_i}:{layer_name})'
+            save_dnn_data(fd, tit, f'CM{ei + 1}', 'mfig')
+
+        run_and_save_rsa('Output', y_pred, layer_name='Output', layer_i='-1')
+        run_and_save_rsa('Inter', inter_activations, layer_name=inter_lay_name, layer_i=self.INTER_LAY)
+        run_and_save_rsa('Raw', raw_images)
 
         for met in net_mets.METS_TO_USE():
             met(y_true, y_pred)

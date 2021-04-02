@@ -4,7 +4,7 @@ from lib.boot import nn_init_fun
 from lib.salience.filter.salience_filter import MattSalienceFilter
 from mlib.boot.lang import enum
 from mlib.str import utf_decode
-from rsa_for_darius import DATA_FOLDER
+from rsa_comp import DATA_FOLDER
 print('gen_preproc_ims.py: top')
 import glob
 import random
@@ -378,7 +378,7 @@ class PreDataset:
 
                             data = File(imd.file).load()
                             if nnstate.FLAGS.cfg_cfg['full_cfg']['SFILT']:
-                                data = sfilt.experiment_function_pre_preprocess(data)
+                                data = sfilt.transform(data)
 
                             the_new.data = preprocessors(HW)[pp_type].preprocess(data)
 

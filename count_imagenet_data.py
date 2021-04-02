@@ -6,7 +6,7 @@ from mlib.boot.lang import enum
 from mlib.boot.stream import listitems
 from mlib.file import File, Folder
 from mlib.str import utf_decode
-from rsa_for_darius import DATA_FOLDER
+from rsa_comp import DATA_FOLDER
 def count():
     log('count here 1')
     data = {

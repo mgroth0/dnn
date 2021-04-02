@@ -14,8 +14,7 @@ def saveTestValResults(ARCH, nam, ds, ei):
             alphabetize=True
         ).T,
         title=f'{ARCH} E{ei + 1}',
-        confuse_max=len(ds),
-        confuse_target=len(ds) / nnstate.num_pred_classes(),
+        confuse_max=len(ds) / nnstate.num_pred_classes(),
         headers_included=True
     ), f'{nam}', f'CM{ei + 1}', 'mfig')
 

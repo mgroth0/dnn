@@ -4,10 +4,10 @@ import cv2
 import logging
 import math
 import numpy
-import numpy as np
 from scipy.ndimage.filters import maximum_filter
 
-from mlib.boot.mlog import err
+from mlib.boot.mlog import err, info
+from mlib.JsonSerializable import obj
 
 
 logger = logging.getLogger(__name__)
@@ -252,11 +252,7 @@ def markMaxima(saliency):
 im = None
 start_size = None
 def main(args):
-
     err('can not use this code! just look at the original by tatome here https://gist.github.com/tatome/d491c8b1ec5ed8d4744c\n\nOn line43, start_size is set to (60,480). It looks like a parameter, btu it actually functions as a constant because the parameter is never set and always assuem the default value. Then on line 56, the comment says that this value MUST be divisbable by 2^levels. Well levels is 9 and is also a fake parameter that also functions a constant. 2^9 is 512, and neither 640 nor 480 are divisible by 512. Therefore looks like I need to start understand this algortihm from scratch or find a better one with cleaner code.')
-
-
-
 
     global im, start_size
     if args.fileList is None and args.inputFile is None:
@@ -340,3 +336,20 @@ if __name__ == "__main__":
     parser.add_argument("--markMaxima", action='store_true', help="Mark maximum saliency in output image.")
     args = parser.parse_args()
     main(args)
+
+def bad_tatome_code():
+    info('starting theirs')
+    for small in ['', '_small']:
+        main(obj({
+            # 'inputFile': '_figs/salience_filter/input.png',
+            # 'intensityOutput': '_figs/salience_filter/tatome/intensity.png',
+            'inputFile'      : f'_figs/salience_filter/input{small}.png',
+            'intensityOutput': f'_figs/salience_filter/tatome/intensity{small}.png',
+            'fileList'       : None,
+            'gaborOutput'    : f'_figs/salience_filter/tatome/gabor{small}.png',
+            'rgOutput'       : f'_figs/salience_filter/tatome/rg{small}.png',
+            'byOutput'       : f'_figs/salience_filter/tatome/by{small}.png',
+            'cOutput'        : f'_figs/salience_filter/tatome/c{small}.png',
+            'saliencyOutput' : f'_figs/salience_filter/tatome/saliency{small}.png',
+            'markMaxima'     : None
+        }))

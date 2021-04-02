@@ -18,3 +18,7 @@ bfg.jar
 data/
 freecfg.json
 cache/
+.git/ #for rsync
+tex/
+status/
+*.pkl

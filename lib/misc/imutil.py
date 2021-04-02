@@ -1,5 +1,6 @@
 import numpy as np
 
+from mlib.boot.mlog import LogLevel
 from mlib.term import log_invokation
 
 
@@ -42,13 +43,13 @@ def crop_or_pad(
         input_img = np.pad(input_img, arg, constant_values=0)
     return input_img
 
-def resizeim(input_img, height, width, fit_dim='width'):
-    assert fit_dim in ['height', 'width']
-    if fit_dim == 'width':
+def resizeim(input_img, height, width, fit_dim=1):
+    assert fit_dim in [0, 1]
+    if fit_dim == 1:
         input_img = fitim(input_img, None, width)
     else:
         input_img = fitim(input_img, height, None)
-    if fit_dim == 'height':
+    if fit_dim == 0:
         input_img = crop_or_pad(input_img, height, axis=0)
     else:
         input_img = crop_or_pad(input_img, width, axis=1)
@@ -64,7 +65,7 @@ def fitim(input_img, height, width):
         ratio = height / input_img.shape[0]
         return resampleim(input_img, height, int(input_img.shape[1] * ratio), nchan=3)
 
-@log_invokation
+@log_invokation(level=LogLevel.INFO)
 def resampleim(im, heigh, width, nchan=1):
     import cv2  # 3 SECOND IMPORT
     imA = cv2.resize(im, dsize=(width, heigh), interpolation=cv2.INTER_LINEAR)
