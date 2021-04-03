@@ -1,4 +1,7 @@
 import os
+
+from mlib.fig.PlotData import FigData
+from mlib.file import Folder
 os.chdir('..')
 from lib import rsa_comp
 from lib.rsa_comp_helpers import rsa_pattern, SYM_CLASS_SET_PATTERNS
@@ -10,13 +13,11 @@ from lib.rsa_figs import RSAImagePlot
 # cd dnn
 # PYTHONPATH=../mlib python3 main/rsa.py
 
+# set this to the path where you want figures to go
+FigData.folder = Folder('figs')
 
 if __name__ == '__main__':
-
-
-
     for pat in SYM_CLASS_SET_PATTERNS.keys():
-        # noinspection PyTypeChecker
         RSAImagePlot(
             tags=['PATTERN', pat],
             comp_mat=rsa_pattern(pat, 10),
@@ -25,7 +26,6 @@ if __name__ == '__main__':
             pattern=pat,
             arch='PATTERN'
         ).save().build()
-
     def rsa_main(self, _CFG):
         rsa_comp.main(
             N_PER_CLASS=5,
