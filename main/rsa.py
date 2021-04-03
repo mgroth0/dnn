@@ -1,8 +1,20 @@
+import os
+
 from lib import rsa_comp
 from lib.rsa_comp_helpers import rsa_pattern, SYM_CLASS_SET_PATTERNS
 from lib.rsa_figs import RSAImagePlot
 
+# go  into a new, empty directory
+# clone  https://github.com/mgroth0/dnn.git
+# clone https://github.com/mgroth0/mlib
+# cd dnn
+# PYTHONPATH=../mlib python3 main/rsa.py
+
+
 if __name__ == '__main__':
+
+    os.chdir('..')
+
     for pat in SYM_CLASS_SET_PATTERNS.keys():
         # noinspection PyTypeChecker
         RSAImagePlot(
