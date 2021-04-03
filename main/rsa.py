@@ -47,3 +47,4 @@ if __name__ == '__main__':
         MULTIPROCESS=False,
         GPU=False
     )
+    os._exit(0)  # aggressive exit because there are some threads somewhere I forgot to make daemon
