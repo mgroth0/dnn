@@ -1,5 +1,6 @@
 import os
 
+import mlib.val
 from mlib.fig.PlotData import FigData
 from mlib.file import Folder
 os.chdir('..')
@@ -12,6 +13,10 @@ from lib.rsa_figs import RSAImagePlot
 # clone https://github.com/mgroth0/mlib
 # cd dnn
 # PYTHONPATH=.:../mlib python3 main/rsa.py
+
+# set this to where data files are located
+# neccesary files: jet.mat and activations
+mlib.val.DATA_FOLDER = Folder('/om2/user/mjgroth/data')
 
 # set this to the path where you want figures to go
 FigData.FOLDER = Folder('figs')

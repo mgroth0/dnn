@@ -1,12 +1,9 @@
 import copy
 
-import numpy as np
-
 from mlib.boot.stream import ismember, mod, numel, randperm
 from mlib.file import Folder
 
-SINGULARITY_DATA_FOLDER = Folder('/matt/data')
-OM_DATA_FOLDER = Folder('/om2/user/mjgroth/data')
+
 
 def calc_steps(N_IMAGES, TRAIN_TEST_SPLIT, BATCH_SIZE):
     N_TRAIN_IMAGES = int(N_IMAGES * TRAIN_TEST_SPLIT)
