@@ -8,11 +8,18 @@ from lib import rsa_comp
 from lib.rsa_comp_helpers import rsa_pattern, SYM_CLASS_SET_PATTERNS
 from lib.rsa_figs import RSAImagePlot
 
+# prepare a python environment with the required packages
+# (TDOO) set up a proper requirements.json or share the conda environment folder
+# for now, please use /om2/user/mjgroth/miniconda3/envs/dnn39/bin/python3
+
 # go  into a new, empty directory
 # clone  https://github.com/mgroth0/dnn.git
 # clone https://github.com/mgroth0/mlib
 # cd dnn
-# PYTHONPATH=.:../mlib python3 main/rsa.py
+
+# Use the python environment from above here
+# PYTHONPATH=.:../mlib <python3> main/rsa.py
+
 
 # set this to where data files are located
 # neccesary files: jet.mat and activations

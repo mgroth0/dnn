@@ -5,7 +5,6 @@ from functools import lru_cache
 
 from lib.datamodel.Mats import ComparisonMatrix, FeatureMatrix
 from lib.datamodel.Statistical import StatisticalArrays
-from lib.nn.nn_lib import OM_DATA_FOLDER
 from lib.rsa_figs import method_strings, pattern_strings
 from lib.RSA_sym_model import RSA_CLASSES, RSA_LAYERS
 from mlib.boot.crunch import section
@@ -15,6 +14,7 @@ from mlib.boot.stream import arr, concat, flatten, isnan, randperm
 from mlib.mat import rel_mat
 from mlib.math import nan_above_eye, naneye
 from mlib.str import suffix_int
+from mlib.val import OM_DATA_FOLDER
 
 
 
