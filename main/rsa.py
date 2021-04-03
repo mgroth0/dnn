@@ -11,10 +11,10 @@ from lib.rsa_figs import RSAImagePlot
 # clone  https://github.com/mgroth0/dnn.git
 # clone https://github.com/mgroth0/mlib
 # cd dnn
-# PYTHONPATH=../mlib python3 main/rsa.py
+# PYTHONPATH=.:../mlib python3 main/rsa.py
 
 # set this to the path where you want figures to go
-FigData.folder = Folder('figs')
+FigData.FOLDER = Folder('figs')
 
 if __name__ == '__main__':
     for pat in SYM_CLASS_SET_PATTERNS.keys():
