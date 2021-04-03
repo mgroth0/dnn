@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from random import randrange
 
 import numpy as np
 from pandas import DataFrame
@@ -32,7 +31,7 @@ class FeatureMatrix(RectangularMatrix):
             self.ground_truth.append(z[1])
         self.data = arr(templist)
 
-    def compare(self, fun: Type[Correlation], MULTIPROCESS=False):
+    def compare(self, fun: Type[Correlation], GPU=False):
         special_confuse_mat = zeros(len(self.data), len(self.data))
 
         if (fun == PearsonCorrelation) and any([min(x) == max(x) for x in self.data]):
@@ -41,26 +40,53 @@ class FeatureMatrix(RectangularMatrix):
         #     # two arrays are commpared that have a zero standard deviation product (divide by zero)
         #     # Using an if statement above, I should prevent this
 
-        funfun = fun.fun
         data = self.data  # pleasework
         def _fun(i):  # cannot be lambda?
-            return [(i, j, funfun(data[i, :], data[j, :])) for j in itr(data)]
+            return [(i, j, fun.fun(data[i, :], data[j, :])) for j in itr(data)]
+        def _fun_tf(data):  # cannot be lambda?
+            return fun.fun_tf(data)
+
+        MULTIPROCESS = False
+
         from pathos.multiprocessing import ProcessPool
 
 
         if islinux() and MULTIPROCESS:
+            #     slower than GPU
+            #     BUGGY
+            #     not optimized
+
             with ProcessPool() as p:
-                if islinux():
-                    mapid = randrange(0,10000)
-                    print(f'starting map {mapid}')
-                    r = p.map(_fun, itr(self.data))
-                    print(f'finished map {mapid}')
+                # if islinux():
+                # mapid = randrange(0,10000)
+                # print(f'starting map {mapid}')
+                r = p.map(_fun, itr(self.data))
+            for results in r:
+                for rr in results:
+                    special_confuse_mat[rr[0], rr[1]] = rr[2]
+
+        elif islinux() and GPU:
+            import tensorflow as tf
+            special_confuse_mat = tf.zeros((len(self.data), len(self.data)))
+
+
+
+
+
+
+
+            with tf.device('/GPU:0'):
+                special_confuse_mat = _fun_tf(self.data).numpy()
+
+            # results[net] = rsa.numpy()
+            # tfdata = tf.convert_to_tensor(self.data).cuda()
+
         else:
             r = listmap(_fun, itr(self.data))
 
-        for results in r:
-            for rr in results:
-                special_confuse_mat[rr[0], rr[1]] = rr[2]
+            for results in r:
+                for rr in results:
+                    special_confuse_mat[rr[0], rr[1]] = rr[2]
 
         return ComparisonMatrix(
             data=nan_above_eye(naneye(special_confuse_mat)),
@@ -92,10 +118,6 @@ class ComparisonMatrix(RectangularMatrix):
             return self.data[
                 np.where(arr(self.ground_truth) == item[0], True, False),
                 np.where(arr(self.ground_truth) == item[1], True, False)
-
-                #
-                # slice(N_PER_CLASS * i, N_PER_CLASS * (i + 1)),
-                # slice(N_PER_CLASS * ii, N_PER_CLASS * (ii + 1))
             ]
         else:
             return super().__getitem__(item)
@@ -122,5 +144,7 @@ class ComparisonMatrix(RectangularMatrix):
             classnames=[c.name for c in self.class_set],
             title=f'{self.method_used}'
         )
+
+
 class MathFail(Exception):
     pass

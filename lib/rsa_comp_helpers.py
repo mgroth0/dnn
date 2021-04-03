@@ -10,6 +10,7 @@ from lib.rsa_figs import method_strings, pattern_strings
 from lib.RSA_sym_model import RSA_CLASSES, RSA_LAYERS
 from mlib.boot.crunch import section
 from mlib.boot.lang import enum, listkeys
+from mlib.boot.mlog import progress
 from mlib.boot.stream import arr, concat, flatten, isnan, randperm
 from mlib.mat import rel_mat
 from mlib.math import nan_above_eye, naneye
@@ -75,24 +76,12 @@ def separate_comp_mat_by_classes_compared(
             if ii > i: continue
             comp_mat = normalized1[c, cc]
             normalized2 = arr([num for num in flatten(comp_mat).tolist() if not isnan(num)]) / average
-
             groupname1 = simkeys[SYM_CLASS_SET_PATTERNS[pattern][i]]
             groupname2 = simkeys[SYM_CLASS_SET_PATTERNS[pattern][ii]]
             if groupname1 == groupname2:
-                # if groupname1 == 'NB':
-                #     breakpoint()  # DEBUG
                 simsets[groupname1] += flatten(normalized2)
             else:
-                # try:
                 simsets['AC'] += flatten(normalized2)
-                # except:
-                #     breakpoint()
-
-            # if SYM_CLASS_SET_PATTERNS["sym"][i] == SYM_CLASS_SET_PATTERNS["sym"][ii]:
-            #     si = 'S' if SYM_CLASS_SET_PATTERNS["sym"][i] else 'NS'
-            # else:
-            #     si = 'AC'
-            # simsets[si] += flatten(normalized2)
 
     return StatisticalArrays(
         ylabel=f'{sim_string} Score ({method_strings[method_name]}) ({pattern_strings[pattern]})',
@@ -154,6 +143,7 @@ def _darius_and_shobhita_acts(
             for activations_mat in net_folder.files.filtered(
                     lambda x: x.ext == 'mat'
             ):
+                # breakpoint()
                 activations[modelname][activations_mat.name_pre_ext] = activations_mat
     else:
         folder = ACTIVATIONS_FOLDER['rsa_activations_shobhita2']
@@ -173,7 +163,9 @@ def _darius_and_shobhita_acts(
                     if not SHOBHITA:
                         acts = acts['imageActivations']
 
+
                     if arch_rand_perm is None:
+                        progress(f"activation size of {net}: {len(acts[0])}")
                         arch_rand_perm = randperm(range(len(acts[0])))
 
                     acts = [a[arch_rand_perm][:ACT_SIZE] for a in acts[0:N_PER_CLASS]]

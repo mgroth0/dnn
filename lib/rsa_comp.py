@@ -20,7 +20,8 @@ def main(
         INCLUDE_DARIUS,
         ALL_METHODS,
         EXCLUDE_DARIUS_SMALLER_TRAIN_SIZES,
-        MULTIPROCESS
+        MULTIPROCESS,
+        GPU
 ):
     @run_in_thread
     def print_status_updates():
@@ -44,7 +45,7 @@ def main(
         with crunch.get_manager().prepare_for_multiprocessing() as manager:
             assert isinstance(crunch.get_manager().PIPELINE_SECTIONS["Startup"], DictProxy)
             global_result_list = non_daemon_process_map(
-                lambda t: process_activation_data(*t, manager=manager, MULTIPROCESS=MULTIPROCESS),
+                lambda t: process_activation_data(*t, manager=manager, MULTIPROCESS=MULTIPROCESS,GPU=GPU),
                 thegen(),
             )
 
@@ -81,7 +82,8 @@ def process_activation_data(
         ALL_METHODS,
         N_PER_CLASS,
         manager=None,
-        MULTIPROCESS=False
+        MULTIPROCESS=False,
+        GPU = False
 ):
     import mlib.boot.global_manager_ref
     mlib.boot.global_manager_ref.manager = manager  # NEED TO TWICE, IN THE SUBPROCESS CODE, AND IN THE PARENT CODE
@@ -91,7 +93,7 @@ def process_activation_data(
             mname = method.__name__
             with section(f"{mname}: {net}"):
                 try:
-                    yield method.HIGH_IS_SIMILAR, mname, feature_mat.compare(method, MULTIPROCESS=MULTIPROCESS)
+                    yield method.HIGH_IS_SIMILAR, mname, feature_mat.compare(method, GPU=GPU)
                     if not ALL_METHODS:
                         break
                 except MathFail:

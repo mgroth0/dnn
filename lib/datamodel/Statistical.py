@@ -19,7 +19,6 @@ class StatisticalArrays(CategoricalUnorderedArrays):
     def violin(self):
         fd = PlotData(
             y=[y.tolist() for y in listvalues(self.data)],
-            # converting to lists here dint help the problem, so maybe i can remove that...
             item_type='violin',
             **self._common(),
         )
@@ -49,10 +48,7 @@ class StatisticalArrays(CategoricalUnorderedArrays):
                     c += 1
                     continue
                 if name not in r: r[name] = {}
-                # try:
                 pvalues = {alt: stats.ttest_ind(mat, mat2, alternative=alt)[1] for alt in ALTS}
-                # except:
-                #     breakpoint()
                 r[name][name2] = deepcopy(pvalues)
                 if redundant_full:
                     if name2 not in r: r[name2] = {}

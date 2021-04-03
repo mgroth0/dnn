@@ -17,11 +17,18 @@ class Correlation(ABC):
         assert len(array1.shape) == 1 and len(array2.shape) == 1
         assert len(array1) == len(array2)
         return cls._fun(array1, array2)
+
+
+
     @staticmethod
     def _fun(array1, array2): pass
 
 class L2_Norm(Correlation):
     HIGH_IS_SIMILAR = False
+    def fun_tf(self,feature_mat):
+        import tensorflow as tf
+        data_tf = tf.math.l2_normalize(feature_mat, axis=1)
+        return  tf.matmul(data_tf, tf.transpose(data_tf))
     @staticmethod
     def _fun(array1, array2):
         return np.linalg.norm(array1 - array2)
