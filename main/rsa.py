@@ -1,5 +1,5 @@
 import os
-
+os.chdir('..')
 from lib import rsa_comp
 from lib.rsa_comp_helpers import rsa_pattern, SYM_CLASS_SET_PATTERNS
 from lib.rsa_figs import RSAImagePlot
@@ -13,7 +13,7 @@ from lib.rsa_figs import RSAImagePlot
 
 if __name__ == '__main__':
 
-    os.chdir('..')
+
 
     for pat in SYM_CLASS_SET_PATTERNS.keys():
         # noinspection PyTypeChecker
