@@ -25,8 +25,8 @@ from lib.rsa_figs import RSAImagePlot
 # neccesary files: jet.mat and activations
 mlib.val.DATA_FOLDER = Folder('/om2/user/mjgroth/data')
 
-# set this to the path where you want figures to go
-FigData.FOLDER = Folder('figs')
+# set this to the FULL path where you want figures to go
+FigData.FOLDER = Folder('/om2/user/mjgroth/temp/dnn/figs')
 
 if __name__ == '__main__':
     for pat in SYM_CLASS_SET_PATTERNS.keys():
