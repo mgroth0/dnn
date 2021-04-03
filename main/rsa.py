@@ -38,13 +38,12 @@ if __name__ == '__main__':
             pattern=pat,
             arch='PATTERN'
         ).save().build()
-    def rsa_main(self, _CFG):
-        rsa_comp.main(
-            N_PER_CLASS=5,
-            ACT_SIZE=10,
-            INCLUDE_DARIUS=True,
-            ALL_METHODS=False,
-            EXCLUDE_DARIUS_SMALLER_TRAIN_SIZES=True,
-            MULTIPROCESS=False,
-            GPU=False
-        )
+    rsa_comp.main(
+        N_PER_CLASS=5,
+        ACT_SIZE=10,
+        INCLUDE_DARIUS=True,
+        ALL_METHODS=False,
+        EXCLUDE_DARIUS_SMALLER_TRAIN_SIZES=True,
+        MULTIPROCESS=False,
+        GPU=False
+    )
